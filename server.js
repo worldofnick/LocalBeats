@@ -41,6 +41,31 @@ function handleError(res, reason, message, code) {
   res.status(code || 500).json({"error": message});
 }
 
+
+
+/*  "/api/profile"
+ *    GET: gets a user profile info from an id
+ *    POST: creates a new profile
+ *    PUT: updates a users profile from an id
+ *    DELETE: delets a users profile from an id
+ */
+
+ app.get("/api/profile", function(req, res) {
+  res.status(200).json(docs);
+ });
+
+ app.post("/api/profile", function(req, res) {
+  res.status(200).json(docs);
+ });
+
+ app.put("/api/profile", function(req, res) {
+  res.status(200).json(docs);
+ });
+
+ app.delete("/api/delete", function(req, res) {
+  res.status(200).json(docs);
+ });
+
 /*  "/api/contacts"
  *    GET: finds all contacts
  *    POST: creates a new contact
