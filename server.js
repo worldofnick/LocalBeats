@@ -4,6 +4,7 @@ var mongodb = require("mongodb");
 var ObjectID = mongodb.ObjectID;
 
 var CONTACTS_COLLECTION = "contacts";
+var USERS_COLLECTION = "users";
 
 var app = express();
 app.use(bodyParser.json());
@@ -54,15 +55,22 @@ function handleError(res, reason, message, code) {
   res.status(200).json(docs);
  });
 
- app.post("/api/profile", function(req, res) {
+ app.post("/api/user", function(req, res) {
+   var newUser = req.body;
+   db.collection(USERS_COLLECTION).insertOne(newUser, function(err, doc) {
+     if (err) {
+       handleError(res, err.message, "Failed to create new user.");
+     } else {
+       res.status(201).json(doc.ops[0]);
+     }
+   });
+ });
+
+ app.put("/api/user", function(req, res) {
   res.status(200).json(docs);
  });
 
- app.put("/api/profile", function(req, res) {
-  res.status(200).json(docs);
- });
-
- app.delete("/api/delete", function(req, res) {
+ app.delete("/api/user", function(req, res) {
   res.status(200).json(docs);
  });
 
