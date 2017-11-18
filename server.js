@@ -45,13 +45,13 @@ function handleError(res, reason, message, code) {
 
 
 /*  "/api/profile"
- *    GET: gets a user profile info from an id
+ *    GET: gets a user profile info by an id
  *    POST: creates a new profile
- *    PUT: updates a users profile from an id
- *    DELETE: delets a users profile from an id
+ *    PUT: updates a users profile by an id
+ *    DELETE: delets a users profile by an id
  */
 
- app.get("/api/profile", function(req, res) {
+ app.get("/api/profile/:id", function(req, res) {
   res.status(200).json(docs);
  });
 
@@ -66,11 +66,11 @@ function handleError(res, reason, message, code) {
    });
  });
 
- app.put("/api/user", function(req, res) {
+ app.put("/api/user/:id", function(req, res) {
   res.status(200).json(docs);
  });
 
- app.delete("/api/user", function(req, res) {
+ app.delete("/api/user/:id", function(req, res) {
   res.status(200).json(docs);
  });
 
