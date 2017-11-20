@@ -4,6 +4,7 @@ var mongodb = require("mongodb");
 var ObjectID = mongodb.ObjectID;
 
 var CONTACTS_COLLECTION = "contacts";
+var USERS_COLLECTION = "users";
 
 var app = express();
 app.use(bodyParser.json());
@@ -41,6 +42,62 @@ function handleError(res, reason, message, code) {
   res.status(code || 500).json({"error": message});
 }
 
+
+
+/*  "/api/profile"
+ *    GET: gets a user profile info by an id
+ *    POST: creates a new profile
+ *    PUT: updates a users profile by an id
+ *    DELETE: delets a users profile by an id
+ */
+
+ app.get("/api/profile/:id", function(req, res) {
+   db.collection(USERS_COLLECTION).findOne({ _id: new ObjectID(req.params.id) }, function(err, doc) {
+     if (err) {
+       handleError(res, err.message, "Failed to get user");
+     } else {
+       res.status(200).json(doc);
+     }
+   });
+ });
+
+ app.post("/api/user", function(req, res) {
+   var newUser = req.body;
+   db.collection(USERS_COLLECTION).insertOne(newUser, function(err, doc) {
+     if (err) {
+       handleError(res, err.message, "Failed to create new user.");
+     } else {
+       res.status(201).json(doc.ops[0]);
+     }
+   });
+ });
+
+ app.put("/api/user/:id", function(req, res) {
+   var updateDoc = req.body;
+   delete updateDoc._id;
+
+   db.collection(USERS_COLLECTION).updateOne({_id: new ObjectID(req.params.id)}, updateDoc, function(err, doc) {
+     if (err) {
+       handleError(res, err.message, "Failed to update user");
+     } else {
+       updateDoc._id = req.params.id;
+       res.status(200).json(updateDoc);
+     }
+   });
+ });
+
+ app.delete("/api/user/:id", function(req, res) {
+   db.collection(USERS_COLLECTION).deleteOne({_id: new ObjectID(req.params.id)}, function(err, result) {
+     if (err) {
+       handleError(res, err.message, "Failed to delete user");
+     } else {
+       res.status(200).json(req.params.id);
+     }
+   });
+ });
+
+
+
 /*  "/api/contacts"
  *    GET: finds all contacts
  *    POST: creates a new contact
@@ -72,6 +129,7 @@ app.post("/api/contacts", function(req, res) {
     }
   });
 });
+
 
 /*  "/api/contacts/:id"
  *    GET: find contact by id
