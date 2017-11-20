@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms/src/directives/ng_form';
-import { AuthService } from 'app/auth/auth.service';
-import { User } from 'app/user/user';
+import { UserService } from 'app/services/user.service';
+import { User } from 'app/models/user';
 import { print } from 'util';
 import { Router } from '@angular/router';
+
 
 @Component({
   selector: 'app-signin',
@@ -14,7 +15,7 @@ export class SigninComponent implements OnInit {
 
   private user: User;
 
-  constructor(private authService: AuthService, private router: Router) { }
+  constructor(private userService: UserService, private router: Router) { }
 
   ngOnInit() {
   }
@@ -40,7 +41,7 @@ export class SigninComponent implements OnInit {
     };
     console.log(this.user);
 
-    // this.authService.signinUser(this.user).then((user: User) => {
+    // this.userService.signinUser(this.user).then((user: User) => {
     //   this.user = user;
     //   this.router.navigate(['/profile']);
     // });
@@ -62,7 +63,7 @@ export class SigninComponent implements OnInit {
       password: password
     };
 
-    // this.authService.signupUser(this.user).then((user: User) => {
+    // this.userService.signupUser(this.user).then((user: User) => {
     //   this.user = user;
     //   this.router.navigate(['/profile']);
     // });

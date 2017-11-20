@@ -7,15 +7,14 @@ import { AppComponent } from './app.component';
 import { ContactDetailsComponent } from './contacts/contact-details/contact-details.component';
 import { ContactListComponent } from './contacts/contact-list/contact-list.component';
 import { SigninComponent } from './auth/signin/signin.component';
-import { AuthService } from 'app/auth/auth.service';
-import { UserComponent } from './user/user.component';
+import { UserService } from 'app/services/user.service';
+import { UserGuard } from 'app/services/user-guard.service';
 import { HomeComponent } from './home/home.component';
 import { HeaderComponent } from './header/header.component';
 import { FooterComponent } from './footer/footer.component';
 import { AppRoutingModule } from 'app/app-routing.module';
-import { EditProfileComponent } from './edit-profile/edit-profile.component';
-import { ReviewsComponent } from './reviews/reviews.component';
-import { ReviewComponent } from './review/review.component';
+import { ReviewsComponent } from './profile/reviews/reviews.component';
+import { ReviewComponent } from './profile/review/review.component';
 import { ProfileEditComponent } from './profile/profile-edit/profile-edit.component';
 import { ProfileDetailsComponent } from './profile/profile-details/profile-details.component';
 
@@ -27,9 +26,7 @@ import { ProfileDetailsComponent } from './profile/profile-details/profile-detai
     ContactDetailsComponent,
     ContactListComponent,
     SigninComponent,
-    UserComponent,
     HomeComponent,
-    EditProfileComponent,
     ReviewsComponent,
     ReviewComponent,
     HeaderComponent,
@@ -43,7 +40,7 @@ import { ProfileDetailsComponent } from './profile/profile-details/profile-detai
     HttpModule,
     AppRoutingModule
   ],
-  providers: [AuthService],
+  providers: [UserService, UserGuard],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

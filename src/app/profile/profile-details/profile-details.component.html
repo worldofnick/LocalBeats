@@ -29,7 +29,7 @@
           <div class="user-profile-titlebar">
             <div class="user-profile-avatar"><img src="../../assets/images/jimsmall.png" alt=""></div>
             <div class="user-profile-name">
-              <h2>{{ name }}</h2>
+              <h2>{{ getProfileName() }}</h2>
               <div class="star-rating" data-rating="5">
                 <div class="rating-counter"><a href="#listing-reviews">(60 reviews)</a></div>
               </div>
@@ -62,8 +62,8 @@
         <div class="boxed-widget margin-top-30 margin-bottom-50">
           <h3>Contact</h3>
           <ul class="listing-details-sidebar">
-            <li><i class="sl sl-icon-phone"></i> (123) 123-456</li>
-            <li><i class="fa fa-envelope-o"></i> <a href="#">tom@example.com</a></li>
+            <li><i class="sl sl-icon-phone"></i>{{ userService.user.phone }}</li>
+            <li><i class="fa fa-envelope-o"></i> <a href="#">{{ userService.user.email }}</a></li>
           </ul>
   
           <ul class="listing-details-sidebar social-profiles">
