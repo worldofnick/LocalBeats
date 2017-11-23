@@ -47,7 +47,6 @@ function handleError(res, reason, message, code) {
  *    PUT: updates a users profile by an id
  *    DELETE: delets a users profile by an id
  */
-
  app.get("/api/profile/:id", function(req, res) {
    db.collection(USERS_COLLECTION).findOne({ _id: new ObjectID(req.params.id) }, function(err, doc) {
      if (err) {
@@ -92,3 +91,23 @@ function handleError(res, reason, message, code) {
      }
    });
  });
+
+
+ /*  "/api/events"
+  *    GET: gets an event form an id
+  *    POST: creates a new event
+  *    PUT: updates an event by id
+  *    DELETE: delets an event by id
+  */
+
+  app.get("/api/events", function(req, res) {
+  });
+
+  app.post("/api/events", function(req, res) {
+  });
+
+  app.put("/api/events", function(req, res) {
+  });
+
+  app.delete("/api/events", function(req, res) {
+  });
