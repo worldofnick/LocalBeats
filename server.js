@@ -47,7 +47,7 @@ function handleError(res, reason, message, code) {
  *    PUT: updates a users profile by an id
  *    DELETE: delets a users profile by an id
  */
- app.get("/api/user/", function(req, res) {
+ app.get("/api/userInfo/", function(req, res) {
    db.collection(USERS_COLLECTION).findOne({ _id: new ObjectID(req.body.user.uid) }, function(err, doc) {
      if (err) {
        handleError(res, err.message, "Failed to get user");
@@ -59,18 +59,18 @@ function handleError(res, reason, message, code) {
 
  });
 
- app.post("/api/user", function(req, res) {
+ app.post("/api/user/", function(req, res) {
    var newUser = req.body;
    db.collection(USERS_COLLECTION).insertOne(newUser, function(err, doc) {
      if (err) {
        handleError(res, err.message, "Failed to create new user.");
      } else {
-       res.status(201).json(doc.ops[0]);
+       res.status(200).json(doc.ops[0]);
      }
    });
  });
 
- app.put("/api/user/", function(req, res) {
+ app.put("/api/updateUser/", function(req, res) {
    var updateDoc = req.body;
    delete updateDoc._id;
 
@@ -84,7 +84,7 @@ function handleError(res, reason, message, code) {
    });
  });
 
- app.delete("/api/user/", function(req, res) {
+ app.delete("/api/deleteUser/", function(req, res) {
    db.collection(USERS_COLLECTION).deleteOne({ uid: req.body.user.uid }, function(err, result) {
      if (err) {
        handleError(res, err.message, "Failed to delete user");
