@@ -4,6 +4,7 @@ var mongodb = require("mongodb");
 var ObjectID = mongodb.ObjectID;
 
 var USERS_COLLECTION = "users";
+var EVENT_COLLECTION = "events";
 
 var app = express();
 app.use(bodyParser.json());
@@ -47,8 +48,9 @@ function handleError(res, reason, message, code) {
  *    PUT: updates a users profile by an id
  *    DELETE: delets a users profile by an id
  */
- app.get("/api/profile/:id", function(req, res) {
-   db.collection(USERS_COLLECTION).findOne({ _id: new ObjectID(req.params.id) }, function(err, doc) {
+ app.get("/api/user/", function(req, res) {
+   res.status(200).json(req.body.user.uid)
+   db.collection(USERS_COLLECTION).findOne({ _id: new ObjectID(req.body.user.uid) }, function(err, doc) {
      if (err) {
        handleError(res, err.message, "Failed to get user");
      } else {
@@ -68,11 +70,11 @@ function handleError(res, reason, message, code) {
    });
  });
 
- app.put("/api/user/:id", function(req, res) {
+ app.put("/api/user/", function(req, res) {
    var updateDoc = req.body;
    delete updateDoc._id;
 
-   db.collection(USERS_COLLECTION).updateOne({_id: new ObjectID(req.params.id)}, updateDoc, function(err, doc) {
+   db.collection(USERS_COLLECTION).updateOne({_id: new ObjectID(req.body.user.uid)}, updateDoc, function(err, doc) {
      if (err) {
        handleError(res, err.message, "Failed to update user");
      } else {
@@ -82,8 +84,8 @@ function handleError(res, reason, message, code) {
    });
  });
 
- app.delete("/api/user/:id", function(req, res) {
-   db.collection(USERS_COLLECTION).deleteOne({_id: new ObjectID(req.params.id)}, function(err, result) {
+ app.delete("/api/user/", function(req, res) {
+   db.collection(USERS_COLLECTION).deleteOne({_id: new ObjectID(req.body.user.uid)}, function(err, result) {
      if (err) {
        handleError(res, err.message, "Failed to delete user");
      } else {
