@@ -152,11 +152,22 @@ function handleError(res, reason, message, code) {
   });
 
   app.get("/api/userEvents", function(req, res) {
-    db.collection(EVENT_COLLECTION).find({ uid: req.body.event.uid }, function(err, doc) {
+    db.collection(EVENT_COLLECTION).find({ uid: req.body.user.uid }, function(err, doc) {
       if (err) {
-        handleError(res, err.message, "Failed to get event");
+        handleError(res, err.message, "Failed to get user events");
       } else {
         res.status(200).json(doc);
+      }
+    });
+  });
+
+  app.delete("/api/userEvents", function(req, res) {
+    db.collection(EVENT_COLLECTION).delete({ uid: req.body.user.uid }, function(err, result) {
+      if (err) {
+        handleError(res, err.message, "Failed to delete user events");
+      } else {
+        // Delete all bookings for this event?
+        res.status(200).json(req.params.id);
       }
     });
   });
@@ -204,6 +215,26 @@ function handleError(res, reason, message, code) {
         handleError(res, err.message, "Failed to delete event");
       } else {
         // Delete all bookings for this event?
+        res.status(200).json(req.params.id);
+      }
+    });
+  });
+
+  app.get("/api/userBookings", function(req, res) {
+    db.collection(BOOKING_COLLECTION).find({ uid: req.body.user.uid }, function(err, doc) {
+      if (err) {
+        handleError(res, err.message, "Failed to get user bookings");
+      } else {
+        res.status(200).json(doc);
+      }
+    });
+  });
+
+  app.delete("/api/userBookings", function(req, res) {
+    db.collection(BOOKING_COLLECTION).delete({ uid: req.body.user.uid }, function(err, result) {
+      if (err) {
+        handleError(res, err.message, "Failed to delete user bookings");
+      } else {
         res.status(200).json(req.params.id);
       }
     });
