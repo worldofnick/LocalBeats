@@ -258,7 +258,7 @@ function handleError(res, reason, message, code) {
   });
 
   // BOOKINGS
-  app.get("/api/bookings", function(req, res) {
+  app.get("/api/booking", function(req, res) {
     db.collection(BOOKING_COLLECTION).findOne({ bid: req.body.booking.bid }, function(err, doc) {
       if (err) {
         handleError(res, err.message, "Failed to get event");
@@ -268,7 +268,7 @@ function handleError(res, reason, message, code) {
     });
   });
 
-  app.post("/api/bookings", function(req, res) {
+  app.post("/api/createBooking", function(req, res) {
     var newEvent = req.body;
     db.collection(BOOKING_COLLECTION).insertOne(newEvent, function(err, doc) {
       if (err) {
@@ -279,7 +279,7 @@ function handleError(res, reason, message, code) {
     });
   });
 
-  app.put("/api/bookings", function(req, res) {
+  app.put("/api/updateBooking", function(req, res) {
     var updateDoc = req.body;
     delete updateDoc._id;
 
@@ -293,7 +293,7 @@ function handleError(res, reason, message, code) {
     });
   });
 
-  app.delete("/api/bookings", function(req, res) {
+  app.delete("/api/deleteBooking", function(req, res) {
     db.collection(BOOKING_COLLECTION).deleteOne({ bid: req.body.booking.bid }, function(err, result) {
       if (err) {
         handleError(res, err.message, "Failed to delete event");
