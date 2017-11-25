@@ -89,6 +89,8 @@ function handleError(res, reason, message, code) {
      if (err) {
        handleError(res, err.message, "Failed to delete user");
      } else {
+       // Do we want to delete their events and bookings?
+       // I think we want to update all references to this users uid to 'null' to indicate the user no longer exists
        res.status(200).json(req.params.id);
      }
    });
@@ -105,7 +107,7 @@ function handleError(res, reason, message, code) {
   // Get all events in geo space
   // Get all events matching some filter
 
-  app.get("/api/events", function(req, res) {
+  app.get("/api/getEvent", function(req, res) {
     db.collection(EVENT_COLLECTION).findOne({ eid: req.body.event.eid }, function(err, doc) {
       if (err) {
         handleError(res, err.message, "Failed to get event");
@@ -115,7 +117,7 @@ function handleError(res, reason, message, code) {
     });
   });
 
-  app.post("/api/events", function(req, res) {
+  app.post("/api/createEvent", function(req, res) {
     var newEvent = req.body;
     db.collection(EVENT_COLLECTION).insertOne(newEvent, function(err, doc) {
       if (err) {
@@ -126,7 +128,7 @@ function handleError(res, reason, message, code) {
     });
   });
 
-  app.put("/api/events", function(req, res) {
+  app.put("/api/updateEvent", function(req, res) {
     var updateDoc = req.body;
     delete updateDoc._id;
 
@@ -140,7 +142,7 @@ function handleError(res, reason, message, code) {
     });
   });
 
-  app.delete("/api/events", function(req, res) {
+  app.delete("/api/deleteEvent", function(req, res) {
     db.collection(EVENT_COLLECTION).deleteOne({ eid: req.body.event.eid }, function(err, result) {
       if (err) {
         handleError(res, err.message, "Failed to delete event");
@@ -172,6 +174,88 @@ function handleError(res, reason, message, code) {
     });
   });
 
+
+  function buildSort(req) {
+    var sort = { date: -1 };
+    if (req.query.sort == 'date-asc') {
+      sort = { date: 1 };
+    } else if (req.query.sort == 'price-desc') {
+      sort = { fixed_price: -1 }
+    } else if (req.query.sort == 'price-asc') {
+      sort = { fixed_price: 1 }
+    } else if (req.query.sort == 'distance-desc' || req.query.sort == 'distance-asc') {
+      sort = {}
+    }
+
+    return sort;
+  }
+
+  // params
+  // event_type= (the event type)
+  // lat= and lon= and distance= (to filter by location and distance meters)
+  // start_date
+  // end_date
+  // min_budget
+  // max_budget
+  // sort (price-desc, price-asc, soonest, latest, closest, furtest) defaults to soonest
+  // booked (boolean)
+  // limit defaults to 15
+  // skip defaults to 0
+  app.get("/api/searchEvents", function(req, res) {
+    var skip = 0;
+    var limit = 15;
+    var sort = buildSort(req);
+
+    if(req.query.skip != null) {
+      skip = req.query.skip;
+    }
+
+    if(req.query.limit != null) {
+      limit = req.query.limit;
+    }
+
+    query = {}
+    if (req.query.event_type != null) {
+      query[event_type] = req.query.event_type
+    }
+
+    if (req.query.start_date != null && req.query.end_date != null) {
+      query[date] = {
+        $gte: ISODate(req.query.start_date),
+        $lte: ISODate(req.query.end_date)
+      }
+    }
+
+    if (req.query.min_budget != null && req.query.max_budget != null) {
+      query[fixed_price] = {
+        $gte: req.query.min_budget,
+        $lte: req.query.max_budget
+      }
+    }
+
+    if (req.query.booked != null) {
+      query[booked] = req.query.bookedl
+    }
+
+    if (req.query.lat != null && req.query.lon != null && req.query.distance) {
+      query[location] =   { $near :
+          {
+            $geometry: { type: "Point",  coordinates: [ req.query.lat, req.query.long] },
+            $minDistance: 0,
+            $maxDistance: req.query.distance
+          }
+       }
+    }
+
+    db.collection(EVENT_COLLECTION).find(query, null, {sort: sort, limit: limit, skip: skip}, function(err, docs) {
+      if (err) {
+       res.status(500).send();
+      } else {
+       res.send(docs);
+      }
+    });
+
+  });
 
   // BOOKINGS
   app.get("/api/bookings", function(req, res) {
