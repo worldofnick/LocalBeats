@@ -48,14 +48,16 @@ function handleError(res, reason, message, code) {
  *    DELETE: delets a users profile by an id
  */
  app.get("/api/user/", function(req, res) {
-   db.collection(USERS_COLLECTION).findOne({ uid: req.body.user.uid }, function(err, doc) {
-     if (err) {
-       handleError(res, err.message, "Failed to get user");
-     } else {
-       db.collection(EVENT_COLLECTION).deleteMany({ uid : req.body.user.uid }) // Also delete all events owned by this user
-       res.status(200).json(doc);
-     }
-   });
+
+   res.status(200).json({"user id": req.body.user._id})
+  //  db.collection(USERS_COLLECTION).findOne({ _id: new ObjectID(req.body.user.uid) }, function(err, doc) {
+  //    if (err) {
+  //      handleError(res, err.message, "Failed to get user");
+  //    } else {
+  //      //db.collection(EVENT_COLLECTION).deleteMany({ uid : req.body.user.uid }) // Also delete all events owned by this user
+  //      res.status(200).json(doc);
+  //    }
+  //  });
 
  });
 
