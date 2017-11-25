@@ -48,7 +48,8 @@ function handleError(res, reason, message, code) {
  *    DELETE: delets a users profile by an id
  */
  app.get("/api/userInfo/", function(req, res) {
-   db.collection(USERS_COLLECTION).findOne({ _id: new ObjectID(req.body.user.uid) }, function(err, doc) {
+
+   db.collection(USERS_COLLECTION).findOne({ uid: req.body.user.uid }, function(err, doc) {
      if (err) {
        handleError(res, err.message, "Failed to get user");
      } else {
