@@ -38,7 +38,7 @@ mongodb.MongoClient.connect(process.env.MONGODB_URI, function (err, database) {
 // Generic error handler used by all endpoints.
 function handleError(res, reason, message, code) {
   console.log("ERROR: " + reason);
-  res.status(code || 500).json({"error": message});
+  res.status(code || 500).json({"error": message, "error_1": reason});
 }
 
 /*  "/api/profile"
