@@ -88,7 +88,7 @@ function handleError(res, reason, message, code) {
  });
 
  app.delete("/api/user/", function(req, res) {
-   db.collection(USERS_COLLECTION).deleteOne({ _id: new ObjectID(req.body.user._id)}, function(err, result) {
+   db.collection(USERS_COLLECTION).deleteOne({ _id: new ObjectID(req.query.id)}, function(err, result) {
      if (err) {
        handleError(res, err.message, "Failed to delete user");
      } else {
@@ -110,8 +110,8 @@ function handleError(res, reason, message, code) {
   // Get all events in geo space
   // Get all events matching some filter
 
-  app.get("/api/getEvent", function(req, res) {
-    db.collection(EVENT_COLLECTION).findOne({ eid: req.body.event.eid }, function(err, doc) {
+  app.get("/api/events", function(req, res) {
+    db.collection(EVENT_COLLECTION).findOne({ _id: new ObjectID(req.query.id) }, function(err, doc) {
       if (err) {
         handleError(res, err.message, "Failed to get event");
       } else {
@@ -120,22 +120,22 @@ function handleError(res, reason, message, code) {
     });
   });
 
-  app.post("/api/createEvent", function(req, res) {
+  app.post("/api/events", function(req, res) {
     var newEvent = req.body;
     db.collection(EVENT_COLLECTION).insertOne(newEvent, function(err, doc) {
       if (err) {
         handleError(res, err.message, "Failed to create new event.");
       } else {
-        res.status(201).json(doc.ops[0]);
+        res.status(200).json(doc.ops[0]);
       }
     });
   });
 
-  app.put("/api/updateEvent", function(req, res) {
+  app.put("/api/events", function(req, res) {
     var updateDoc = req.body;
     delete updateDoc._id;
 
-    db.collection(EVENT_COLLECTION).updateOne({eid: req.body.event.eid}, updateDoc, function(err, doc) {
+    db.collection(EVENT_COLLECTION).updateOne({_id: new ObjectID(req.body.event._id)}, updateDoc, function(err, doc) {
       if (err) {
         handleError(res, err.message, "Failed to update event");
       } else {
@@ -145,8 +145,8 @@ function handleError(res, reason, message, code) {
     });
   });
 
-  app.delete("/api/deleteEvent", function(req, res) {
-    db.collection(EVENT_COLLECTION).deleteOne({ eid: req.body.event.eid }, function(err, result) {
+  app.delete("/api/event", function(req, res) {
+    db.collection(EVENT_COLLECTION).deleteOne({ _id: new ObjectID(req.body.event._id) }, function(err, result) {
       if (err) {
         handleError(res, err.message, "Failed to delete event");
       } else {
@@ -157,7 +157,7 @@ function handleError(res, reason, message, code) {
   });
 
   app.get("/api/userEvents", function(req, res) {
-    db.collection(EVENT_COLLECTION).find({ uid: req.body.user.uid }, function(err, doc) {
+    db.collection(EVENT_COLLECTION).find({ _id: new ObjectID(req.body.user._id) }, function(err, doc) {
       if (err) {
         handleError(res, err.message, "Failed to get user events");
       } else {
@@ -167,7 +167,7 @@ function handleError(res, reason, message, code) {
   });
 
   app.delete("/api/userEvents", function(req, res) {
-    db.collection(EVENT_COLLECTION).delete({ uid: req.body.user.uid }, function(err, result) {
+    db.collection(EVENT_COLLECTION).delete({ _id: new ObjectID(req.body.user.uid) }, function(err, result) {
       if (err) {
         handleError(res, err.message, "Failed to delete user events");
       } else {
