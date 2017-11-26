@@ -47,8 +47,10 @@ app.use(morgan('dev'));
 // API Routes
 // =================================================================
 
-var routes = require('./src/app/routes/userRoutes.js');
-routes(app);
+var userRoutes = require('./src/app/routes/userRoutes.js');
+var authenticationRoutes = require('./src/app/routes/authenticationRoutes.js');
+userRoutes(app);
+authenticationRoutes(app);
 
 // basic route (http://localhost:8080)
 app.get('/', function(req, res) {
