@@ -73,7 +73,7 @@ function handleError(res, reason, message, code) {
  app.put("/api/user/", function(req, res) {
    var updateDoc = req.body;
    res.status(200).json(req.body);
-  //  delete updateDoc._id;
+   delete updateDoc._id;
 
   //  db.collection(USERS_COLLECTION).updateOne({ _id: new ObjectID(req.body.user._id)}, updateDoc, function(err, doc) {
   //    if (err) {
@@ -85,7 +85,7 @@ function handleError(res, reason, message, code) {
   //  });
  });
 
- app.delete("/api/deleteUser/", function(req, res) {
+ app.delete("/api/user/", function(req, res) {
    db.collection(USERS_COLLECTION).deleteOne({ _id: new ObjectID(req.body.user._id)}, function(err, result) {
      if (err) {
        handleError(res, err.message, "Failed to delete user");
