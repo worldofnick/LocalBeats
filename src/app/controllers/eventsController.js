@@ -33,14 +33,28 @@ exports.createEvent = function (req, res) {
     });
 };    
 
-// app.put("/api/events/:eid", 
-
 exports.updateEventByID = function (req, res) {
     Events.findByIdAndUpdate(req.params.eid, req.body, { new: true }, function (err, event) {
         if (err) { 
             return res.status(500).send("There was a problem updating the event.");
         }
         return res.status(200).send(event);
+    });
+};
+
+// app.delete("/api/events", 
+exports.deleteEventByID = function (req, res) {
+
+    Events.findByIdAndRemove(req.params.eid, function (err, event) {
+        if (err) {
+            return res.status(500).send("There was a problem deleting the event.");
+        } else {
+            if (event == null) {
+                return res.status(200).send("Event was already deleted.");
+            } else {
+                return res.status(200).send("Event " + event.eventName + " is removed");
+            }
+        }
     });
 };
 
