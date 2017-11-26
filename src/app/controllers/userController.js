@@ -28,7 +28,7 @@ exports.getUserByID = function (req, res) {
 exports.updateUserByID = function (req, res) {
   User.findByIdAndUpdate(req.params.uid, req.body, { new: true }, function (err, user) {
     if (err) return res.status(500).send("There was a problem updating the user.");
-    
+
     user.hash_password = undefined;
     return res.status(200).send(user);
   });
@@ -40,11 +40,11 @@ exports.deleteUserByID = function (req, res) {
     if (err) {
       return res.status(500).send("There was a problem deleting the user.");
     } else {
-      if(user == null) {
+      if (user == null) {
         return res.status(200).send("User was already deleted.");
-      }else {
+      } else {
         return res.status(200).send("User " + user.name + " is removed");
-      } 
+      }
     }
   });
 };
