@@ -10,14 +10,15 @@ var EventsSchema = new Schema({
     hostEmail: {type: String, unique: true, lowercase: true, required: true},
     performerEmail: {type: String, unique: true, lowercase: true, required: true},
     address: {type: String},
-    fromDate: {type: Date, defauly: Date.now},
+    fromDate: {type: Date, default: Date.now},
     toDate: {type: Date},
     description:{type: String},
     fixedPrice: {type: Number},
     hourlyRate: {type: Number},
     deposit: {type: Number},
 }, {strict: true});
-
+// latitude: {type: mongoose.Schema.Types.Long},
+// longitude: {type: mongoose.SchemaTypes.longitude},
 /**
  * Compares the passed password to the hashed password in the 
  * DB and return the result
