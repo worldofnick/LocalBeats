@@ -11,12 +11,9 @@ module.exports = function(app) {
 
 	app.route('/api/events/:eid')
         .get(eventHandlers.getEventByID)
-        .put(eventHandlers.updateEventByID);
-		// .put(userHandlers.updateUserByID)
-        // .delete(userHandlers.deleteUserByID);
+        .put(eventHandlers.updateEventByID)
+        .delete(eventHandlers.deleteEventByID);
     
     app.route('/api/events/create')
         .post(eventHandlers.createEvent);
-        
-    app.route('/api/userEvents/:uid');
 };
