@@ -48,14 +48,14 @@ function handleError(res, reason, message, code) {
  *    DELETE: delets a users profile by an id
  */
  app.get("/api/user/", function(req, res) {
-   db.collection(USERS_COLLECTION).findOne({ _id: new ObjectID(req.params.id) }, function(err, doc) {
-     if (err) {
-       handleError(res, err.message, "Failed to get user");
-     } else {
-       //db.collection(EVENT_COLLECTION).deleteMany({ uid : req.body.user.uid }) // Also delete all events owned by this user
-       res.status(200).json(doc);
-     }
-   });
+  //  db.collection(USERS_COLLECTION).findOne({ _id: new ObjectID(req.params.id) }, function(err, doc) {
+  //    if (err) {
+  //      handleError(res, err.message, "Failed to get user");
+  //    } else {
+  //      //db.collection(EVENT_COLLECTION).deleteMany({ uid : req.body.user.uid }) // Also delete all events owned by this user
+  //      res.status(200).json(doc);
+  //    }
+  //  });
 
  });
 
@@ -70,7 +70,7 @@ function handleError(res, reason, message, code) {
    });
  });
 
- app.put("/api/updateUser/", function(req, res) {
+ app.put("/api/user/", function(req, res) {
    var updateDoc = req.body;
    delete updateDoc._id;
 
