@@ -156,14 +156,29 @@ function handleError(res, reason, message, code) {
     });
   });
 
+  // params
+  // user id
+  // limit
+  // skip
   app.get("/api/userEvents", function(req, res) {
+    var limit = 10;
+    var skip = 0;
+
+    if (req.query.limit != null) {
+      limit = req.query.limit;
+    }
+
+    if (req.query.skip != null) {
+      skip = req.query.skip;
+    }
+
     db.collection(EVENT_COLLECTION).find({ _id: new ObjectID(req.query.id) }, function(err, doc) {
       if (err) {
         handleError(res, err.message, "Failed to get user events");
       } else {
         res.status(200).json(doc);
       }
-    });
+    }).limit(limit).skip(skip);
   });
 
   app.delete("/api/userEvents", function(req, res) {
@@ -307,22 +322,37 @@ function handleError(res, reason, message, code) {
     });
   });
 
-  // app.get("/api/userBookings", function(req, res) {
-  //   db.collection(BOOKING_COLLECTION).find({ uid: new ObjectID(req.body.user._id) }, function(err, doc) {
-  //     if (err) {
-  //       handleError(res, err.message, "Failed to get user bookings");
-  //     } else {
-  //       res.status(200).json(doc);
-  //     }
-  //   });
-  // });
-  //
-  // app.delete("/api/userBookings", function(req, res) {
-  //   db.collection(BOOKING_COLLECTION).delete({ uid: req.body.user.uid }, function(err, result) {
-  //     if (err) {
-  //       handleError(res, err.message, "Failed to delete user bookings");
-  //     } else {
-  //       res.status(200).json(req.params.id);
-  //     }
-  //   });
-  // });
+  // params
+  // user id
+  // limit
+  // skip
+  app.get("/api/userBookings", function(req, res) {
+    var limit = 10;
+    var skip = 0;
+
+    if (req.query.limit != null) {
+      limit = req.query.limit;
+    }
+
+    if (req.query.skip != null) {
+      skip = req.query.skip;
+    }
+
+    db.collection(BOOKING_COLLECTION).find( { _id: new ObjectID(req.body.user._id) }, function(err, doc) {
+      if (err) {
+        handleError(res, err.message, "Failed to get user bookings");
+      } else {
+        res.status(200).json(doc);
+      }
+    }).limit(limit).skip(skip);
+  });
+
+  app.delete("/api/userBookings", function(req, res) {
+    db.collection(BOOKING_COLLECTION).delete({ _id: req.query.id }, function(err, result) {
+      if (err) {
+        handleError(res, err.message, "Failed to delete user bookings");
+      } else {
+        res.status(200).json(req.params.id);
+      }
+    });
+  });
