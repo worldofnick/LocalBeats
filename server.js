@@ -49,8 +49,12 @@ function handleError(res, reason, message, code) {
  */
  app.get("/api/user/", function(req, res) {
 
-   res.status(200).json( {"user id": req.body} );
-  //  db.collection(USERS_COLLECTION).findOne({ _id: new ObjectID(req.body.user.uid) }, function(err, doc) {
+   res.setEncoding('utf8');
+   res.on('data', function(chunk){
+       res.status(200).json({"chunk": chunk});
+   });
+
+  //  db.collection(USERS_COLLECTION).findOne({ _id: new ObjectID(req.params.id) }, function(err, doc) {
   //    if (err) {
   //      handleError(res, err.message, "Failed to get user");
   //    } else {
