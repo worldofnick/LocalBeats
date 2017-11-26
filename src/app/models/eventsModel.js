@@ -6,17 +6,17 @@ var Schema = mongoose.Schema;
  * Events Schema
  */
 var EventsSchema = new Schema({
-    eventName: {type: String, required: true},
-    hostUID: {type: String, required: true},
-    hostEmail: {type: String, lowercase: true, required: true},
-    performerEmail: {type: String, lowercase: true, required: true},
-    address: {type: String},
-    fromDate: {type: Date, default: Date.now},
-    toDate: {type: Date},
-    description:{type: String},
-    fixedPrice: {type: Number},
-    hourlyRate: {type: Number},
-    deposit: {type: Number},
+    eventName       : {type: String, required: true},
+    hostUID         : {type: String, required: true},
+    hostEmail       : {type: String, lowercase: true, required: true},
+    performerEmail  : {type: String, lowercase: true, required: true},
+    address         : {type: String},
+    fromDate        : {type: Date, default: Date.now},
+    toDate          : {type: Date},
+    description     : {type: String},
+    fixedPrice      : {type: Number},
+    hourlyRate      : {type: Number},
+    deposit         : {type: Number}
 }, {strict: true});
 // latitude: {type: mongoose.Schema.Types.Long},
 // longitude: {type: mongoose.SchemaTypes.longitude},
