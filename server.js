@@ -72,8 +72,9 @@ function handleError(res, reason, message, code) {
 
  app.put("/api/user/", function(req, res) {
    var updateDoc = req.body;
-   res.status(200).json(req.body);
    delete updateDoc._id;
+   res.status(200).json(req.body);
+   var user_id = new ObjectID(req.body.user._id)
 
   //  db.collection(USERS_COLLECTION).updateOne({ _id: new ObjectID(req.body.user._id)}, updateDoc, function(err, doc) {
   //    if (err) {
