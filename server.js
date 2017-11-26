@@ -80,7 +80,7 @@ function handleError(res, reason, message, code) {
      if (err) {
        handleError(res, err.message, "Failed to update user");
      } else {
-       updateDoc._id = req.params.id;
+       updateDoc._id = req.body.user._id
        res.status(200).json(updateDoc);
      }
    });
