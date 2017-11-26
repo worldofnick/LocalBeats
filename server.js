@@ -145,7 +145,7 @@ function handleError(res, reason, message, code) {
     });
   });
 
-  app.delete("/api/event", function(req, res) {
+  app.delete("/api/events", function(req, res) {
     db.collection(EVENT_COLLECTION).deleteOne({ _id: new ObjectID(req.body.event._id) }, function(err, result) {
       if (err) {
         handleError(res, err.message, "Failed to delete event");
