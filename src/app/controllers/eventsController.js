@@ -70,26 +70,30 @@ exports.deleteEventByID = function (req, res) {
  * Parameters: hostUID, limit, skip
  */
 // app.get("/api/userEvents", 
+//TODO: limit, find now working
 exports.getUserEventsByUID = function (req, res) {
     console.log(req.body);
+    console.log("HOST UID = " + req.query.hostUID);
+    console.log("Limit = " + req.query.limit);
     var limit = 10;
     var skip = 0;
 
-    if (req.query.limit != null) {
+    if (req.params.limit != null) {
         limit = req.query.limit;
+        
     }
 
-    if (req.query.skip != null) {
+    if (req.params.skip != null) {
         skip = req.query.skip;
     }
 
-    Events.find(req.query.hostUID , function (err, doc) {
+    Events.find({hostUID: req.query.hostUID}).limit(limit).skip(skip).exec(function (err, doc) {
         if (err) {
             return res.status(500).send("Failed to get user events");
         } else {
             return res.status(200).send(doc);
         }
-    }).limit(limit).skip(skip);
+    });
 };
 
 
