@@ -5,8 +5,8 @@ module.exports = function(app) {
 	// var tokenVerificationHandler = require('../controllers/tokenVerificationController.js');
 
 	// Users routes
-	app.route('/api/events');
-		// .get(userHandlers.listAllUsers);
+	app.route('/api/events')
+		.get(eventHandlers.listAllEvents);
 		// .post(userHandlers.loginRequired, events.hostEvent);   // TODO: Host event will go here
 
 	app.route('/api/events/:eid')

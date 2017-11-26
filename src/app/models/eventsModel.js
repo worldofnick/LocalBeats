@@ -24,8 +24,8 @@ var EventsSchema = new Schema({
  * Compares the passed password to the hashed password in the 
  * DB and return the result
  */ 
-UserSchema.methods.comparePassword = function(password) {
-    return bcrypt.compareSync(password, this.hash_password);
-};
+// UserSchema.methods.comparePassword = function(password) {
+//     return bcrypt.compareSync(password, this.hash_password);
+// };
 
 mongoose.model('Events', EventsSchema);
