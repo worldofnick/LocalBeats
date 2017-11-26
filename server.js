@@ -261,34 +261,34 @@ function handleError(res, reason, message, code) {
   });
 
   // BOOKINGS
-  app.get("/api/booking", function(req, res) {
+  app.get("/api/bookings", function(req, res) {
     db.collection(BOOKING_COLLECTION).findOne({ _id: new ObjectID(req.query.id) }, function(err, doc) {
       if (err) {
-        handleError(res, err.message, "Failed to get event");
+        handleError(res, err.message, "Failed to get booking");
       } else {
         res.status(200).json(doc);
       }
     });
   });
 
-  app.post("/api/booking", function(req, res) {
+  app.post("/api/bookings", function(req, res) {
     var newEvent = req.body;
     db.collection(BOOKING_COLLECTION).insertOne(newEvent, function(err, doc) {
       if (err) {
-        handleError(res, err.message, "Failed to create new event.");
+        handleError(res, err.message, "Failed to create new booking.");
       } else {
         res.status(200).json(doc.ops[0]);
       }
     });
   });
 
-  app.put("/api/booking", function(req, res) {
+  app.put("/api/bookings", function(req, res) {
     var updateDoc = req.body;
     delete updateDoc._id;
 
     db.collection(BOOKING_COLLECTION).updateOne({ _id: new ObjectID(req.body.booking._id) }, updateDoc, function(err, doc) {
       if (err) {
-        handleError(res, err.message, "Failed to update event");
+        handleError(res, err.message, "Failed to update booking");
       } else {
         updateDoc._id = req.params.id;
         res.status(200).json(updateDoc);
@@ -296,10 +296,10 @@ function handleError(res, reason, message, code) {
     });
   });
 
-  app.delete("/api/booking", function(req, res) {
+  app.delete("/api/bookings", function(req, res) {
     db.collection(BOOKING_COLLECTION).deleteOne({ _id: new ObjectID(req.body.booking._id) }, function(err, result) {
       if (err) {
-        handleError(res, err.message, "Failed to delete event");
+        handleError(res, err.message, "Failed to delete booking");
       } else {
         // Delete all bookings for this event?
         res.status(200).json(req.params.id);
