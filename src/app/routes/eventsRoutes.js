@@ -16,4 +16,7 @@ module.exports = function(app) {
     
     app.route('/api/events/create')
         .post(eventHandlers.createEvent);
+
+    app.route('/api/userEvents')
+        .get(eventHandlers.getUserEventsByUID);
 };

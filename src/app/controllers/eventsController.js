@@ -42,7 +42,6 @@ exports.updateEventByID = function (req, res) {
     });
 };
 
-// app.delete("/api/events", 
 exports.deleteEventByID = function (req, res) {
 
     Events.findByIdAndRemove(req.params.eid, function (err, event) {
@@ -56,6 +55,31 @@ exports.deleteEventByID = function (req, res) {
             }
         }
     });
+};
+
+/**
+ * Parameters: hostUID, limit, skip
+ */
+// app.get("/api/userEvents", 
+exports.getUserEventsByUID = function (req, res) {
+    var limit = 10;
+    var skip = 0;
+
+    if (req.query.limit != null) {
+        limit = req.query.limit;
+    }
+
+    if (req.query.skip != null) {
+        skip = req.query.skip;
+    }
+
+    Events.find({ _id: new ObjectID(req.query.hostUID) }, function (err, doc) {
+        if (err) {
+            return res.status(500).send("Failed to get user events");
+        } else {
+            return res.status(200).send(doc);
+        }
+    }).limit(limit).skip(skip);
 };
 
 
