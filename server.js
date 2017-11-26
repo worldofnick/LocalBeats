@@ -74,7 +74,7 @@ function handleError(res, reason, message, code) {
    var updateDoc = req.body;
    delete updateDoc._id;
 
-   db.collection(USERS_COLLECTION).updateOne({uid: new ObjectID(req.params._id), updateDoc, function(err, doc) {
+   db.collection(USERS_COLLECTION).updateOne({ _id: new ObjectID(req.body.user._id)}, updateDoc, function(err, doc) {
      if (err) {
        handleError(res, err.message, "Failed to update user");
      } else {
@@ -85,7 +85,7 @@ function handleError(res, reason, message, code) {
  });
 
  app.delete("/api/deleteUser/", function(req, res) {
-   db.collection(USERS_COLLECTION).deleteOne({ uid: req.body.user.uid }, function(err, result) {
+   db.collection(USERS_COLLECTION).deleteOne({ _id: new ObjectID(req.body.user._id)}, function(err, result) {
      if (err) {
        handleError(res, err.message, "Failed to delete user");
      } else {
