@@ -76,14 +76,14 @@ function handleError(res, reason, message, code) {
    res.status(200).json(req.body);
    var user_id = new ObjectID(req.body.user._id)
 
-  //  db.collection(USERS_COLLECTION).updateOne({ _id: new ObjectID(req.body.user._id)}, updateDoc, function(err, doc) {
-  //    if (err) {
-  //      handleError(res, err.message, "Failed to update user");
-  //    } else {
-  //      updateDoc._id = req.params.id;
-  //      res.status(200).json(updateDoc);
-  //    }
-  //  });
+   db.collection(USERS_COLLECTION).updateOne({ _id: user_id}, updateDoc, function(err, doc) {
+     if (err) {
+       handleError(res, err.message, "Failed to update user");
+     } else {
+       updateDoc._id = req.params.id;
+       res.status(200).json(updateDoc);
+     }
+   });
  });
 
  app.delete("/api/user/", function(req, res) {
