@@ -7,7 +7,7 @@ var User        = mongoose.model('User');
 var config      = require('../../../config.js');
 
 exports.register = function (req, res) {
-    var newUser = new User(req.body); //TODO: change it to User.create({}) to avoid adding extraneous payload?
+    var newUser = new User(req.body);
     newUser.hash_password = bcrypt.hashSync(req.body.password, 10);   // save a hashed password to DB
     console.log(req.body);
     newUser.save(function (err, user) {  // callback function with err and success value
@@ -52,8 +52,9 @@ exports.register = function (req, res) {
     });
   };
   
-  // The signIn handler handles the user authentication.
-  //TODO: form validation if needed?
+  /**
+   * The handler handles the user authentication.
+   */ 
   exports.signIn = function (req, res) {
     User.findOne({ email: req.body.email }, function (err, user) {
       if (err) return res.status(500).send('Error on the sign-in server.');
@@ -67,7 +68,11 @@ exports.register = function (req, res) {
     });
   };
   
-  // This loginRequired handler checks if the user is signed in
+  /**
+   * This handler checks if the user is signed in. If it is, 
+   * passes the control to the next in line. Else, breaks the 
+   * control.
+   */ 
   exports.loginRequired = function (req, res, next) {
     if (req.user) {
       next();
@@ -76,6 +81,11 @@ exports.register = function (req, res) {
     }
   };
   
+  /**
+   * Dummy handler that sets the JWT token to null
+   * @param {*} req 
+   * @param {*} res 
+   */
   exports.logout = function (req, res) {
     res.status(200).send({ auth: false, token: null });
   };
