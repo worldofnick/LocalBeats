@@ -71,6 +71,7 @@ exports.deleteEventByID = function (req, res) {
  */
 // app.get("/api/userEvents", 
 exports.getUserEventsByUID = function (req, res) {
+    console.log(req.body);
     var limit = 10;
     var skip = 0;
 
@@ -82,7 +83,7 @@ exports.getUserEventsByUID = function (req, res) {
         skip = req.query.skip;
     }
 
-    Events.find({ _id: new ObjectID(req.query.hostUID) }, function (err, doc) {
+    Events.find(req.query.hostUID , function (err, doc) {
         if (err) {
             return res.status(500).send("Failed to get user events");
         } else {
