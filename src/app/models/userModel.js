@@ -2,7 +2,6 @@ var mongoose = require('mongoose');
 var bcrypt = require('bcrypt');
 var Schema = mongoose.Schema;
 
-
 /**
  * User Schema
  */
@@ -12,7 +11,7 @@ var UserSchema = new Schema({
     lastName: {type: String, required: true},
     email: {type: String, unique: true, lowercase: true, required: true},
     hashPassword: {type: String, required: true},
-    borthday: {type: Date, required: true},
+    birthday: {type: Date, required: true},
     joinDate: {type: Date, default: Date.now},
     profilePicID: {type: Number},
     soundcloudID: {type: String},
