@@ -46,7 +46,7 @@ exports.register = function (req, res) {
   exports.whoAmI = function (req, res) {
     User.findById(req.uid, { hash_password: 0 }, function (err, user) {
       if (err) return res.status(500).send("There was a problem finding the user.");
-      if (!user) return res.status(404).send("User not found).");
+      if (!user) return res.status(404).send("User not found (try logging in first).");
   
       return res.status(200).send(user);
     });
