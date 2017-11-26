@@ -49,7 +49,7 @@ function handleError(res, reason, message, code) {
  */
  app.get("/api/user/", function(req, res) {
 
-   res.status(200).json( {"user id": req.body} )
+   res.status(200).json( {"user id": req.body} );
   //  db.collection(USERS_COLLECTION).findOne({ _id: new ObjectID(req.body.user.uid) }, function(err, doc) {
   //    if (err) {
   //      handleError(res, err.message, "Failed to get user");
