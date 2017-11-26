@@ -1,10 +1,10 @@
 'use strict';
 
-var mongoose = require('mongoose');
-var jwt = require('jsonwebtoken');
-var bcrypt = require('bcrypt');
-var User = mongoose.model('User');
-var config = require('../../../config.js');
+var mongoose  = require('mongoose');
+var jwt       = require('jsonwebtoken');
+var bcrypt    = require('bcrypt');
+var User      = mongoose.model('User');
+var config    = require('../../../config.js');
 
 // ====== USER ROUTES ======
 
