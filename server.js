@@ -11,6 +11,7 @@ var jwt    = require('jsonwebtoken');                // used to create, sign, an
 var config = require('./config');                    // get our config file
 var User   = require('./src/app/models/userModel');  // get our mongoose model
 var Events = require('./src/app/models/eventsModel');  // get our mongoose model
+var Bookings = require('./src/app/models/bookingsModel');
 
 var distDir = __dirname + "/dist/";
 app.use(express.static(distDir));           // Create link to Angular build directory
@@ -51,9 +52,11 @@ app.use(morgan('dev'));
 var userRoutes = require('./src/app/routes/userRoutes.js');
 var authenticationRoutes = require('./src/app/routes/authenticationRoutes.js');
 var eventsRoutes = require('./src/app/routes/eventsRoutes.js');
+var bookingsRoutes = require('./src/app/routes/bookingsRoutes.js');
 userRoutes(app);
 authenticationRoutes(app);
 eventsRoutes(app);
+bookingsRoutes(app);
 
 // basic route (http://localhost:8080)
 app.get('/', function(req, res) {

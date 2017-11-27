@@ -13,13 +13,18 @@ var EventsSchema = new Schema({
     address         : {type: String},
     fromDate        : {type: Date, default: Date.now},
     toDate          : {type: Date},
+    title           : {type: String},
     description     : {type: String},
     fixedPrice      : {type: Number},
     hourlyRate      : {type: Number},
-    deposit         : {type: Number}
+    deposit         : {type: Number},
+    isBooked        : {type: Boolean},
+    location: {
+      type: [Number],  // [<longitude>, <latitude>]
+      index: '2d'      // create the geospatial index
+    }
 }, {strict: true});
-// latitude: {type: mongoose.Schema.Types.Long},
-// longitude: {type: mongoose.SchemaTypes.longitude},
+
 /**
  * Compares the passed password to the hashed password in the 
  * DB and return the result
