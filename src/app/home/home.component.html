@@ -1,8 +1,3 @@
-<!-- Wrapper -->
-<div id="wrapper">
-	
-	<app-header></app-header>
-	
 	<!-- Banner
 	================================================== -->
 	<div class="main-search-container" data-background-image="./assets/images/main-search-background-01.jpg">
@@ -14,40 +9,7 @@
 						<h2>Find Nearby Musicians and Events</h2>
 						<h4>Explore top-rated artists and featured events in your area</h4>
 	
-						<div class="main-search-input">
-	
-							<div class="main-search-input-item">
-								<input type="text" placeholder="Looking for?" value=""/>
-							</div>
-	
-							<div class="main-search-input-item location">
-								<input type="text" placeholder="Location" value=""/>
-								<a href="#"><i class="fa fa-dot-circle-o"></i></a>
-							</div>
-	
-							<div class="main-search-input-item">
-								<select data-placeholder="All Categories" class="chosen-select" >
-									<option>Music Genre</option>	
-									<option>Rock</option>
-									<option>Country</option>
-									<option>Jazz</option>
-									<option>Blues</option>
-									<option>Hip Hop</option>
-								</select>
-							</div>
-
-							<div class="main-search-input-item">
-								<select data-placeholder="All Categories" class="chosen-select" >
-									<option>Event Type</option>	
-									<option>Wedding</option>
-									<option>Birthday</option>
-									<option>Business</option>
-								</select>
-							</div>
-	
-							<button class="button" onclick="window.location.href='listings-half-screen-map-list.html'">Search</button>
-	
-						</div>
+						<app-search-bar></app-search-bar>
 					</div>
 				</div>
 			</div>
@@ -295,13 +257,4 @@
 	
 	</section>
 	<!-- Fullwidth Section / End -->
-
-	<app-footer></app-footer>
-	
-	<!-- Back To Top Button -->
-	<div id="backtotop"><a href="#"></a></div>
-	
-	
-	</div>
-	<!-- Wrapper / End -->
 	

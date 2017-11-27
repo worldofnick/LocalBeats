@@ -32,12 +32,14 @@ export class SigninComponent implements OnInit {
     console.log(password);
     console.log(remember);
     this.user = {
-      token: null,
-      first_name: first_name,
-      last_name: last_name,
-      phone: phone,
-      email: email,
-      password: password
+      uid: null,
+      userName: null,
+      firstName: null,
+      lastName: null,
+      email: null,
+      password: null,
+      phone: null,
+      userStatus: null,
     };
     console.log(this.user);
 
@@ -48,19 +50,21 @@ export class SigninComponent implements OnInit {
   }
 
   onSignup(form: NgForm) {
-    const first_name = null
-    const last_name = null
+    const firstName = null
+    const lastName = null
     const phone = null
     const email: string = form.value.email;
     const password: string = form.value.password;
 
     this.user = {
-      token: null,
-      first_name: first_name,
-      last_name: last_name,
-      phone: phone,
-      email: email,
-      password: password
+      uid: null,
+      userName: null,
+      firstName: null,
+      lastName: null,
+      email: null,
+      password: null,
+      phone: null,
+      userStatus: null,
     };
 
     // this.userService.signupUser(this.user).then((user: User) => {
