@@ -181,7 +181,7 @@ exports.searchEvents = function(req, res) {
   //    }
   // }
 
-  Events.find({hostUID: req.query.hostUID}).limit(limit).skip(skip).exec(function (err, doc) {
+  Events.find(query).limit(limit).skip(skip).exec(function (err, doc) {
       if (err) {
           return res.status(500).send("Failed to get user events");
       } else {
