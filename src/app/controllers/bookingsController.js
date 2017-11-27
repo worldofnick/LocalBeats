@@ -63,3 +63,38 @@ exports.deleteBookingByID = function (req, res) {
         }
     });
 };
+
+exports.getUserBookingsByUID = function (req, res) {
+  // console.log(req.body);
+  // console.log("HOST UID = " + req.query.hostUID);
+  // console.log("Limit = " + req.query.limit);
+  var limit = 10;
+  var skip = 0;
+
+  if (req.params.limit != null) {
+      limit = req.query.limit;
+
+  }
+
+  if (req.params.skip != null) {
+      skip = req.query.skip;
+  }
+
+  Bookings.find({hostUID: req.query.hostUID}).limit(limit).skip(skip).exec(function (err, doc) {
+      if (err) {
+          return res.status(500).send("Failed to get user bookings");
+      } else {
+          return res.status(200).send(doc);
+      }
+  });
+};
+
+exports.deleteUserBookingsByUID = function (req, res) {
+  Bookings.remove({hostUID: req.query.hostUID}).exec(function (err, doc) {
+      if (err) {
+          return res.status(500).send("Failed to delete user bookings");
+      } else {
+          return res.status(200).send(doc);
+      }
+  });
+};

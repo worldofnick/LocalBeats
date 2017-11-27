@@ -15,12 +15,12 @@ module.exports = function(app) {
 
     app.route('/api/bookings/create')
         .post(bookingsHandlers.createBooking);
-    //
-    // app.route('/api/userEvents')
-    //     .get(eventHandlers.getUserEventsByUID);
-    //
-		// app.route('/api/userEvents')
-		// 		.delete(eventHandlers.deleteUserEventsByUID);
+
+    app.route('/api/userBookings')
+        .get(eventHandlers.getUserBookingsByUID);
+
+		app.route('/api/userBooking')
+				.delete(eventHandlers.deleteUserBookingsByUID);
 
 
 };
