@@ -117,107 +117,106 @@ exports.getUserEventsByUID = function (req, res) {
 
 
 exports.deleteUserEventsByUID = function(req, res) {
-    Events.delete({ hostUID: req.query.hostUID }.exec(function(err, result) {
+  Events.delete({hostUID: req.query.hostUID}).exec(function (err, doc) {
       if (err) {
-        return res.status(500).send("Failed to delete user events");
-      } else {
-        // Delete all bookings for this event?
-        return res.status(200).json(req.query.hostUID);
-      }
-    });
-  });
-
-
-// // Generic error handler used by all endpoints.
-function handleError(res, reason, message, code) {
-    console.log("ERROR: " + reason);
-    res.status(code || 500).json({"error": message, "error_1": reason});
-  }
-
-  function buildSort(req) {
-    var sort = { date: -1 };
-    if (req.query.sort == 'date-asc') {
-      sort = { date: 1 };
-    } else if (req.query.sort == 'price-desc') {
-      sort = { fixed_price: -1 }
-    } else if (req.query.sort == 'price-asc') {
-      sort = { fixed_price: 1 }
-    } else if (req.query.sort == 'distance-desc' || req.query.sort == 'distance-asc') {
-      sort = {}
-    }
-
-    return sort;
-  }
-
-//   // params
-//   // event_type= (the event type)
-//   // lat= and lon= and distance= (to filter by location and distance meters)
-//   // start_date
-//   // end_date
-//   // min_budget
-//   // max_budget
-//   // sort (price-desc, price-asc, soonest, latest, closest, furtest) defaults to soonest
-//   // booked (boolean)
-//   // limit defaults to 15
-//   // skip defaults to 0
-exports.searchEvents = function(req, res) {
-  var skip = 0;
-  var limit = 15;
-  var sort = buildSort(req);
-
-  if(req.query.skip != null) {
-    skip = req.query.skip;
-  }
-
-  if(req.query.limit != null) {
-    limit = req.query.limit;
-  }
-
-  query = {}
-  // if (req.query.event_type != null) {
-  //   query[event_type] = req.query.event_type
-  // }
-
-  if (req.query.from_date != null && req.query.to_date != null) {
-    query[fromDate] = {
-      $gte: ISODate(req.query.from_date)
-    }
-
-    query[toDate] = {
-      $lte: ISODate(req.query.to_date)
-    }
-  }
-
-  if (req.query.min_budget != null && req.query.max_budget != null) {
-    query[fixed_price] = {
-      $gte: req.query.min_budget,
-      $lte: req.query.max_budget
-    }
-  }
-
-  if (req.query.booked != null) {
-    query[isBooked] = req.query.booked;
-  }
-
-  // if (req.query.lat != null && req.query.lon != null && req.query.distance) {
-  //   query[location] =   { $near :
-  //       {
-  //         $geometry: { type: "Point",  coordinates: [ req.query.lat, req.query.long] },
-  //         $minDistance: 0,
-  //         $maxDistance: req.query.distance
-  //       }
-  //    }
-  // }
-
-  Events.find(query).limit(limit).skip(skip).exec(function (err, doc) {
-      if (err) {
-          return res.status(500).send("Failed to get search events");
+          return res.status(500).send("Failed to delete user events");
       } else {
           return res.status(200).send(doc);
       }
   });
-
 });
+
+
+// // // Generic error handler used by all endpoints.
+// function handleError(res, reason, message, code) {
+//     console.log("ERROR: " + reason);
+//     res.status(code || 500).json({"error": message, "error_1": reason});
+//   }
+//
+//   function buildSort(req) {
+//     var sort = { date: -1 };
+//     if (req.query.sort == 'date-asc') {
+//       sort = { date: 1 };
+//     } else if (req.query.sort == 'price-desc') {
+//       sort = { fixed_price: -1 }
+//     } else if (req.query.sort == 'price-asc') {
+//       sort = { fixed_price: 1 }
+//     } else if (req.query.sort == 'distance-desc' || req.query.sort == 'distance-asc') {
+//       sort = {}
+//     }
+//
+//     return sort;
+//   }
+//
+// //   // params
+// //   // event_type= (the event type)
+// //   // lat= and lon= and distance= (to filter by location and distance meters)
+// //   // start_date
+// //   // end_date
+// //   // min_budget
+// //   // max_budget
+// //   // sort (price-desc, price-asc, soonest, latest, closest, furtest) defaults to soonest
+// //   // booked (boolean)
+// //   // limit defaults to 15
+// //   // skip defaults to 0
+// exports.searchEvents = function(req, res) {
+//   var skip = 0;
+//   var limit = 15;
+//   var sort = buildSort(req);
+//
+//   if(req.query.skip != null) {
+//     skip = req.query.skip;
+//   }
+//
+//   if(req.query.limit != null) {
+//     limit = req.query.limit;
+//   }
+//
+//   query = {}
+//   // if (req.query.event_type != null) {
+//   //   query[event_type] = req.query.event_type
+//   // }
+//
+//   if (req.query.from_date != null && req.query.to_date != null) {
+//     query[fromDate] = {
+//       $gte: ISODate(req.query.from_date)
+//     }
+//
+//     query[toDate] = {
+//       $lte: ISODate(req.query.to_date)
+//     }
+//   }
+//
+//   if (req.query.min_budget != null && req.query.max_budget != null) {
+//     query[fixed_price] = {
+//       $gte: req.query.min_budget,
+//       $lte: req.query.max_budget
+//     }
+//   }
+//
+//   if (req.query.booked != null) {
+//     query[isBooked] = req.query.booked;
+//   }
+//
+//   // if (req.query.lat != null && req.query.lon != null && req.query.distance) {
+//   //   query[location] =   { $near :
+//   //       {
+//   //         $geometry: { type: "Point",  coordinates: [ req.query.lat, req.query.long] },
+//   //         $minDistance: 0,
+//   //         $maxDistance: req.query.distance
+//   //       }
+//   //    }
+//   // }
+//
+//   Events.find(query).limit(limit).skip(skip).exec(function (err, doc) {
+//       if (err) {
+//           return res.status(500).send("Failed to get search events");
+//       } else {
+//           return res.status(200).send(doc);
+//       }
+//   });
+//
+// });
 
 //   // BOOKINGS
 //   app.get("/api/bookings", function(req, res) {
