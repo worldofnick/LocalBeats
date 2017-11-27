@@ -138,11 +138,11 @@ exports.searchEvents = function(req, res) {
   // var sort = buildSort(req);
   //
   if(req.query.skip != null) {
-    skip = req.query.skip;
+    skip = parseInt(req.query.skip);
   }
-  //
+
   if(req.query.limit != null) {
-    limit = req.query.limit;
+    limit = parseInt(req.query.limit);
   }
   //
   var query = {};
