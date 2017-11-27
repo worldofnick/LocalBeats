@@ -72,12 +72,12 @@ exports.getUserBookingsByUID = function (req, res) {
   var skip = 0;
 
   if (req.params.limit != null) {
-      limit = req.query.limit;
+      limit = parseInt(req.query.limit);
 
   }
 
   if (req.params.skip != null) {
-      skip = req.query.skip;
+      skip = parseInt(req.query.skip);
   }
 
   Bookings.find({hostUID: req.query.hostUID}).limit(limit).skip(skip).exec(function (err, doc) {
