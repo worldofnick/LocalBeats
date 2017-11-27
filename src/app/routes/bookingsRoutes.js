@@ -17,10 +17,10 @@ module.exports = function(app) {
         .post(bookingsHandlers.createBooking);
 
     app.route('/api/userBookings')
-        .get(eventHandlers.getUserBookingsByUID);
+        .get(bookingsHandlers.getUserBookingsByUID);
 
 		app.route('/api/userBooking')
-				.delete(eventHandlers.deleteUserBookingsByUID);
+				.delete(bookingsHandlers.deleteUserBookingsByUID);
 
 
 };
