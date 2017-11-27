@@ -14,17 +14,19 @@ export class ProfileDetailsComponent implements OnInit {
   // profile: Profile;
   constructor(private userService: UserService, private router: Router) { 
     this.userService.user = {
-      token: null,
-      first_name: 'Adam',
-      last_name: 'Rosenberg',
+      uid: null,
+      userName: null,
+      firstName: 'Adam',
+      lastName: 'Rosenberg',
       email: 'adam@adam.com',
       phone: '3305555555',
-      password: 'brandon'
+      password: 'brandon',
+      userStatus: null
     }
   }
 
   getProfileName(){
-    return this.userService.user.first_name + ' ' + this.userService.user.last_name;
+    return this.userService.user.firstName + ' ' + this.userService.user.lastName;
   }
 
   ngOnInit() {

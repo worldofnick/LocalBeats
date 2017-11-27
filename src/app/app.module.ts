@@ -17,6 +17,8 @@ import { ReviewsComponent } from './profile/reviews/reviews.component';
 import { ReviewComponent } from './profile/review/review.component';
 import { ProfileEditComponent } from './profile/profile-edit/profile-edit.component';
 import { ProfileDetailsComponent } from './profile/profile-details/profile-details.component';
+import { SearchResultComponent } from './search/search-result/search-result.component';
+import { SearchBarComponent } from './search/search-bar/search-bar.component';
 
 
 
@@ -32,7 +34,9 @@ import { ProfileDetailsComponent } from './profile/profile-details/profile-detai
     HeaderComponent,
     FooterComponent,
     ProfileEditComponent,
-    ProfileDetailsComponent
+    ProfileDetailsComponent,
+    SearchResultComponent,
+    SearchBarComponent
   ],
   imports: [
     BrowserModule,
