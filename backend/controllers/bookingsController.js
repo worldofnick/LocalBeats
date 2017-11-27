@@ -4,7 +4,7 @@ var mongoose    = require('mongoose');
 var jwt         = require('jsonwebtoken');
 var bcrypt      = require('bcrypt');
 var Bookings      = mongoose.model('Bookings');
-var config      = require('../../../config.js');
+var config    = require('../../config.js');
 
 // ====== Bookings ROUTES ======
 

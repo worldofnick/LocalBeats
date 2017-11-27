@@ -4,7 +4,7 @@ var mongoose    = require('mongoose');
 var jwt         = require('jsonwebtoken');
 var bcrypt      = require('bcrypt');
 var User        = mongoose.model('User');
-var config      = require('../../../config.js');
+var config    = require('../../config.js');
 
 exports.register = function (req, res) {
     var newUser = new User(req.body);

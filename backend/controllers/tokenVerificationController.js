@@ -4,7 +4,7 @@ var mongoose    = require('mongoose');
 var jwt         = require('jsonwebtoken');
 var bcrypt      = require('bcrypt');
 var User        = mongoose.model('User');
-var config      = require('../../../config.js');
+var config    = require('../../config.js');
 
 /**
  * Custom middleware to check if the token exists and if it is valid.

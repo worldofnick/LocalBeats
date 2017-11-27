@@ -9,9 +9,9 @@ var mongoose    = require('mongoose');
 
 var jwt    = require('jsonwebtoken');                // used to create, sign, and verify tokens
 var config = require('./config');                    // get our config file
-var User   = require('./src/app/models/userModel');  // get our mongoose model
-var Events = require('./src/app/models/eventsModel');  // get our mongoose model
-var Bookings = require('./src/app/models/bookingsModel');
+var User   = require('./backend/models/userModel');  // get our mongoose model
+var Events = require('./backend/models/eventsModel');  // get our mongoose model
+var Bookings = require('./backend/models/bookingsModel');
 
 var distDir = __dirname + "/dist/";
 app.use(express.static(distDir));           // Create link to Angular build directory
@@ -45,10 +45,10 @@ app.use(function(req, res, next) {
 // API Routes
 // =================================================================
 
-var userRoutes = require('./src/app/routes/userRoutes.js');
-var authenticationRoutes = require('./src/app/routes/authenticationRoutes.js');
-var eventsRoutes = require('./src/app/routes/eventsRoutes.js');
-var bookingsRoutes = require('./src/app/routes/bookingsRoutes.js');
+var userRoutes = require('./backend/routes/userRoutes.js');
+var authenticationRoutes = require('./backend/routes/authenticationRoutes.js');
+var eventsRoutes = require('./backend/routes/eventsRoutes.js');
+var bookingsRoutes = require('./backend/routes/bookingsRoutes.js');
 userRoutes(app);
 authenticationRoutes(app);
 eventsRoutes(app);
