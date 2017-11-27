@@ -26,9 +26,9 @@ var EventsSchema = new Schema({
 }, {strict: true});
 
 /**
- * Compares the passed password to the hashed password in the 
+ * Compares the passed password to the hashed password in the
  * DB and return the result
- */ 
+ */
 // UserSchema.methods.comparePassword = function(password) {
 //     return bcrypt.compareSync(password, this.hash_password);
 // };

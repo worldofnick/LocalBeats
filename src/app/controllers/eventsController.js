@@ -79,12 +79,12 @@ exports.getUserEventsByUID = function (req, res) {
     var skip = 0;
 
     if (req.params.limit != null) {
-        limit = req.query.limit;
-        
+        limit = parseInt(req.query.limit);
+
     }
 
     if (req.params.skip != null) {
-        skip = req.query.skip;
+        skip = parseInt(req.query.skip);
     }
 
     Events.find({hostUID: req.query.hostUID}).limit(limit).skip(skip).exec(function (err, doc) {
@@ -146,9 +146,9 @@ exports.searchEvents = function(req, res) {
   }
   //
   var query = {};
-  // // if (req.query.event_type != null) {
-  // //   query[event_type] = req.query.event_type
-  // // }
+  if (req.query.event_type != null) {
+    query[event_type] = req.query.event_type
+  }
   //
   // if (req.query.from_date != null && req.query.to_date != null) {
   //   query[fromDate] = {
@@ -181,6 +181,7 @@ exports.searchEvents = function(req, res) {
   //    }
   // }
 
+  console.log(query);
   Events.find(query).limit(limit).skip(skip).exec(function (err, doc) {
       if (err) {
           console.log('ERRROR');
