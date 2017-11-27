@@ -133,20 +133,20 @@ exports.deleteUserEventsByUID = function (req, res) {
 //     res.status(code || 500).json({"error": message, "error_1": reason});
 //   }
 //
-//   function buildSort(req) {
-//     var sort = { date: -1 };
-//     if (req.query.sort == 'date-asc') {
-//       sort = { date: 1 };
-//     } else if (req.query.sort == 'price-desc') {
-//       sort = { fixed_price: -1 }
-//     } else if (req.query.sort == 'price-asc') {
-//       sort = { fixed_price: 1 }
-//     } else if (req.query.sort == 'distance-desc' || req.query.sort == 'distance-asc') {
-//       sort = {}
-//     }
-//
-//     return sort;
-//   }
+  function buildSort(req) {
+    var sort = { date: -1 };
+    if (req.query.sort == 'date-asc') {
+      sort = { date: 1 };
+    } else if (req.query.sort == 'price-desc') {
+      sort = { fixed_price: -1 }
+    } else if (req.query.sort == 'price-asc') {
+      sort = { fixed_price: 1 }
+    } else if (req.query.sort == 'distance-desc' || req.query.sort == 'distance-asc') {
+      sort = {}
+    }
+
+    return sort;
+  }
 //
 // //   // params
 // //   // event_type= (the event type)
