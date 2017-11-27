@@ -24,8 +24,7 @@ var EventsSchema = new Schema({
       index: '2d'      // create the geospatial index
     }
 }, {strict: true});
-// latitude: {type: mongoose.Schema.Types.Long},
-// longitude: {type: mongoose.SchemaTypes.longitude},
+
 /**
  * Compares the passed password to the hashed password in the 
  * DB and return the result
