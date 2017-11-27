@@ -7,16 +7,16 @@ var Schema = mongoose.Schema;
  */
 //TODO: add match() validator to email
 var UserSchema = new Schema({
-    firstName    : {type: String, required: true},
-    lastName     : {type: String, required: true},
-    email        : {type: String, unique: true, lowercase: true, required: true},
-    hashPassword : {type: String, required: true},
-    birthday     : {type: Date},
-    joinDate     : {type: Date, default: Date.now},
-    profilePicID : {type: Number},
-    soundcloudID : {type: String},
-    spotifyID    : {type: String},
-    likesGenres  : {type: Array}
+    firstName     : {type: String, required: true},
+    lastName      : {type: String, required: true},
+    email         : {type: String, unique: true, lowercase: true, required: true},
+    hashPassword  : {type: String, required: true},
+    birthday      : {type: Date},
+    joinDate      : {type: Date, default: Date.now},
+    profilePicUrl : {type: Strin, default: 'https://www.vccircle.com/wp-content/uploads/2017/03/default-profile.png'},
+    soundcloudID  : {type: String},
+    spotifyID     : {type: String},
+    likesGenres   : {type: Array}
 }, {strict: true}, {versionKey: false});
 
 /**
