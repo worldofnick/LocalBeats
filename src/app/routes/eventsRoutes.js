@@ -26,5 +26,5 @@ module.exports = function(app) {
 				.delete(eventHandlers.deleteUserEventsByUID);
 
 		app.route('/api/searchEvents')
-				.get()
+				.get(eventHandlers.searchEvents);
 };
