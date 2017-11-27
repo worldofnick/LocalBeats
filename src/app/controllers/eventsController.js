@@ -117,7 +117,7 @@ exports.getUserEventsByUID = function (req, res) {
 
 
 exports.deleteUserEventsByUID = function (req, res) {
-  Events.delete({hostUID: req.query.hostUID}).exec(function (err, doc) {
+  Events.remove({hostUID: req.query.hostUID}).exec(function (err, doc) {
       if (err) {
           return res.status(500).send("Failed to delete user events");
       } else {
