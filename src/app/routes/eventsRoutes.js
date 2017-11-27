@@ -25,6 +25,6 @@ module.exports = function(app) {
 		app.route('/api/userEvents')
 				.delete(eventHandlers.deleteUserEventsByUID);
 
-		// app.route('/api/searchEvents')
-		// 		.get()
+		app.route('/api/searchEvents')
+				.get()
 };
