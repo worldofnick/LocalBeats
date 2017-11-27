@@ -16,7 +16,8 @@ var EventsSchema = new Schema({
     description     : {type: String},
     fixedPrice      : {type: Number},
     hourlyRate      : {type: Number},
-    deposit         : {type: Number}
+    deposit         : {type: Number},
+    isBooked          : {type: Boolean}
 }, {strict: true});
 // latitude: {type: mongoose.Schema.Types.Long},
 // longitude: {type: mongoose.SchemaTypes.longitude},

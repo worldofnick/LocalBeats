@@ -174,14 +174,17 @@ exports.searchEvents = function(req, res) {
   }
 
   query = {}
-  if (req.query.event_type != null) {
-    query[event_type] = req.query.event_type
-  }
+  // if (req.query.event_type != null) {
+  //   query[event_type] = req.query.event_type
+  // }
 
-  if (req.query.start_date != null && req.query.end_date != null) {
-    query[date] = {
-      $gte: ISODate(req.query.start_date),
-      $lte: ISODate(req.query.end_date)
+  if (req.query.from_date != null && req.query.to_date != null) {
+    query[fromDate] = {
+      $gte: ISODate(req.query.from_date)
+    }
+
+    query[toDate] = {
+      $lte: ISODate(req.query.to_date)
     }
   }
 
@@ -193,18 +196,18 @@ exports.searchEvents = function(req, res) {
   }
 
   if (req.query.booked != null) {
-    query[booked] = req.query.bookedl
+    query[isBooked] = req.query.booked;
   }
 
-  if (req.query.lat != null && req.query.lon != null && req.query.distance) {
-    query[location] =   { $near :
-        {
-          $geometry: { type: "Point",  coordinates: [ req.query.lat, req.query.long] },
-          $minDistance: 0,
-          $maxDistance: req.query.distance
-        }
-     }
-  }
+  // if (req.query.lat != null && req.query.lon != null && req.query.distance) {
+  //   query[location] =   { $near :
+  //       {
+  //         $geometry: { type: "Point",  coordinates: [ req.query.lat, req.query.long] },
+  //         $minDistance: 0,
+  //         $maxDistance: req.query.distance
+  //       }
+  //    }
+  // }
 
   Events.find(query).limit(limit).skip(skip).exec(function (err, doc) {
       if (err) {
