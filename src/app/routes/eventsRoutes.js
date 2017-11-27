@@ -5,7 +5,7 @@ module.exports = function(app) {
 	// var tokenVerificationHandler = require('../controllers/tokenVerificationController.js');
 
     // TODO: restrict access via user log in??
-    
+
 	// Event routes
 	app.route('/api/events')
 		.get(eventHandlers.listAllEvents);
@@ -15,10 +15,16 @@ module.exports = function(app) {
         .get(eventHandlers.getEventByID)
         .put(eventHandlers.updateEventByID)
         .delete(eventHandlers.deleteEventByID);
-    
+
     app.route('/api/events/create')
         .post(eventHandlers.createEvent);
 
     app.route('/api/userEvents')
         .get(eventHandlers.getUserEventsByUID);
+
+		app.route('/api/userEvents')
+				.delete(eventHandlers.deleteUserEventsByUID)
+
+		app.route('/api/searchEvents')
+				.get()
 };
