@@ -9,7 +9,6 @@ var config      = require('../../../config.js');
 exports.register = function (req, res) {
     var newUser = new User(req.body);
     newUser.hashPassword = bcrypt.hashSync(req.body.password, 10);   // save a hashed password to DB
-    console.log(req.body);
     newUser.save(function (err, user) {  // callback function with err and success value
       if (err) {
         return res.status(400).send({

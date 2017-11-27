@@ -28,9 +28,6 @@ export class SigninComponent implements OnInit {
     const password: string = form.value.password;
     const remember: boolean = form.value.check;
 
-    console.log(email);
-    console.log(password);
-    console.log(remember);
     this.user = {
       _id: null,
       firstName: null,
@@ -38,7 +35,6 @@ export class SigninComponent implements OnInit {
       email: email,
       password: password,
     };
-    console.log(this.user);
 
     this.userService.signinUser(this.user).then((user: User) => {
       this.user = user;
@@ -48,16 +44,15 @@ export class SigninComponent implements OnInit {
   }
 
   onSignup(form: NgForm) {
-    const firstName = null
-    const lastName = null
-    const phone = null
+    const firstName = form.value.firstname;
+    const lastName = form.value.lastname;
     const email: string = form.value.email;
-    const password: string = form.value.password;
+    const password: string = form.value.password1;
 
     this.user = {
       _id: null,
-      firstName: null,
-      lastName: null,
+      firstName: firstName,
+      lastName: lastName,
       email: email,
       password: password,
     };

@@ -15,11 +15,11 @@ export class UserService {
 
     // post("/api/user")
     public signupUser(newUser: User): Promise<User> {
-        this.connection += '/register'
-        return this.http.post(this.connection, newUser )
+        const current = this.connection + '/register';
+        return this.http.post(current, newUser, {headers: this.headers} )
             .toPromise()
             .then((response: Response) => {
-                const data = response.json()
+                const data = response.json();
                 this.accessToken = data.access_token;
                 sessionStorage.setItem('token', JSON.stringify({ accessToken: this.accessToken}))
                 this.user = data.user as User;
@@ -31,11 +31,11 @@ export class UserService {
     // post("/api/authenticate")
     public signinUser(returningUser: User): Promise<User> {
         // this.connection = 'http://localhost:8080/api/auth/authenticate';
-        this.connection += '/authenticate' ;
-        return this.http.post(this.connection, returningUser, {headers: this.headers})
+        const current = this.connection + '/authenticate';
+        return this.http.post(current, returningUser, {headers: this.headers})
             .toPromise()
             .then((response: Response) => {
-                const data = response.json()
+                const data = response.json();
                 this.accessToken = data.access_token;
                 sessionStorage.setItem('token', JSON.stringify({ accessToken: this.accessToken}))
                 this.user = data.user as User;
