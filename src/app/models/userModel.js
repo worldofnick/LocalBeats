@@ -16,7 +16,7 @@ var UserSchema = new Schema({
     profilePicID : {type: Number},
     soundcloudID : {type: String},
     spotifyID    : {type: String},
-    likesGenres  : {tyep: Array}
+    likesGenres  : {type: Array}
 }, {strict: true});
 
 /**
