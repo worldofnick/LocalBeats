@@ -9,23 +9,21 @@ import { SearchTerms } from 'app/models/search';
   styleUrls: ['./search-bar.component.css']
 })
 export class SearchBarComponent implements OnInit {
-  musicGenres = ['Rock', 'Country', 'Jazz', 'Blues', 'Hip Hop']
-  eventTypes = ['Wedding', 'Birthday', 'Business']
-  searchTerms: SearchTerms = {
-    text: null,
-    location: null,
-    genre: null,
-    type: null
-  }
+  genres = ['Rock', 'Country', 'Jazz', 'Blues', 'Hip Hop'];
+  types = ['Wedding', 'Birthday', 'Business']
+
+  model = new SearchTerms('', '', this.genres[0], this.types[0]);
+
+  submitted = false;
 
   constructor(private router: Router) { }
-
+  
   ngOnInit() {
+
   }
 
-  onSearch(form: NgForm) {
-    console.log(this.searchTerms);
+  onSubmit() { 
+    console.log(this.model)
     this.router.navigate(['/search-result']);
   }
-
 }

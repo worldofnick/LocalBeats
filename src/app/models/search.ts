@@ -1,6 +1,9 @@
 export class SearchTerms {
-    text: string;
-    location: string;
-    genre: string;
-    type: string;
-  }
+    
+      constructor(
+        public text: string,
+        public location: string,
+        public genre: string,
+        public type: string
+      ) {  }
+    }

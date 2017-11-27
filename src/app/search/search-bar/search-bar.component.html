@@ -1,24 +1,24 @@
-  <form (ngSubmit)="onSearch(search)" #search="ngForm" method="post" class="main-search-input">
-    <div class="main-search-input-item">
-      <input ngModel type="text" placeholder="Looking for?" value="" name="searchText"/>
-    </div>
+<form (ngSubmit)="onSubmit()" #heroForm="ngForm" method="post" class="main-search-input">
+  <div class="main-search-input-item">
+    <input [(ngModel)]="model.text" name="text" #text="ngModel" type="text" placeholder="Looking for?"/>
+  </div>
 
-    <div class="main-search-input-item location">
-      <input ngModel type="text" placeholder="Location" value="" name="location"/>
-      <a href="#"><i class="fa fa-dot-circle-o"></i></a>
-    </div>
+  <div class="main-search-input-item location">
+    <input [(ngModel)]="model.location" name="location" type="text" placeholder="Location"/>
+    <a href="#"><i class="fa fa-dot-circle-o"></i></a>
+  </div>
 
-    <div class="main-search-input-item">
-      <select [(ngModel)]="searchTerms.genre" #genre="ngModel" data-placeholder="Music Genre" class="chosen-select" name="genre">
-        <option *ngFor="let genre of musicGenres" [value]="genre">{{genre}}</option>
+  <div class="main-search-input-item">
+    <select [(ngModel)]="model.genre" name="power" #genre="ngModel" placeholder="Music Genre">
+      <option *ngFor="let genre of genres" [value]="genre">{{genre}}</option>
+    </select>
+  </div>
+
+  <div class="main-search-input-item">
+      <select [(ngModel)]="model.type" name="type" #type="ngModel">
+        <option *ngFor="let type of types" [value]="type">{{type}}</option>
       </select>
     </div>
 
-    <div class="main-search-input-item">
-      <select [(ngModel)]="searchTerms.type" #type="ngModel" data-placeholder="Event Type" class="chosen-select" name="type">
-        <option *ngFor="let type of eventTypes" [value]="type">{{type}}</option>
-      </select>
-    </div>
-
-    <button type="button" class="button" (click)="onSearch()">Search</button>
-  </form>
+  <button type="submit" class="button">Search</button>
+</form>
