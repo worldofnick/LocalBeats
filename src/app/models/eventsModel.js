@@ -7,6 +7,7 @@ var Schema = mongoose.Schema;
  */
 var EventsSchema = new Schema({
     eventName       : {type: String, required: true},
+    eventType       : {type: String, required: true},
     hostUID         : {type: String, required: true},
     hostEmail       : {type: String, lowercase: true, required: true},
     performerEmail  : {type: String, lowercase: true, required: true},
@@ -17,7 +18,7 @@ var EventsSchema = new Schema({
     fixedPrice      : {type: Number},
     hourlyRate      : {type: Number},
     deposit         : {type: Number},
-    isBooked        : {type: Boolean},
+    isBooked        : {type: Boolean, default: false},
     location: {
       type: [Number],  // [<longitude>, <latitude>]
       index: '2d'      // create the geospatial index
