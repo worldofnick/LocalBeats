@@ -107,13 +107,13 @@ exports.deleteUserEventsByUID = function (req, res) {
 };
 
   function buildSort(req) {
-    var sort = { date: -1 };
+    var sort = { fromDate: -1 };
     if (req.query.sort == 'date-asc') {
-      sort = { date: 1 };
+      sort = { fromDate: 1 };
     } else if (req.query.sort == 'price-desc') {
-      sort = { fixed_price: -1 }
+      sort = { fixedPrice: -1 }
     } else if (req.query.sort == 'price-asc') {
-      sort = { fixed_price: 1 }
+      sort = { fixedPrice: 1 }
     } else if (req.query.sort == 'distance-desc' || req.query.sort == 'distance-asc') {
       sort = {}
     }
@@ -132,11 +132,12 @@ exports.deleteUserEventsByUID = function (req, res) {
 // //   // booked (boolean)
 // //   // limit defaults to 15
 // //   // skip defaults to 0
+// genre
 exports.searchEvents = function(req, res) {
   var skip = 0;
   var limit = 15;
-  // var sort = buildSort(req);
-  //
+  var sort = buildSort(req);
+
   if(req.query.skip != null) {
     skip = parseInt(req.query.skip);
   }
@@ -144,44 +145,47 @@ exports.searchEvents = function(req, res) {
   if(req.query.limit != null) {
     limit = parseInt(req.query.limit);
   }
-  //
+
   var query = {};
   if (req.query.event_type != null) {
     query.eventType = req.query.event_type;
   }
-  //
-  // if (req.query.from_date != null && req.query.to_date != null) {
-  //   query[fromDate] = {
-  //     $gte: ISODate(req.query.from_date)
-  //   }
-  //
-  //   query[toDate] = {
-  //     $lte: ISODate(req.query.to_date)
-  //   }
-  // }
-  //
-  // if (req.query.min_budget != null && req.query.max_budget != null) {
-  //   query[fixed_price] = {
-  //     $gte: req.query.min_budget,
-  //     $lte: req.query.max_budget
-  //   }
-  // }
-  //
-  // if (req.query.booked != null) {
-  //   query[isBooked] = req.query.booked;
-  // }
 
-  // if (req.query.lat != null && req.query.lon != null && req.query.distance) {
-  //   query[location] =   { $near :
-  //       {
-  //         $geometry: { type: "Point",  coordinates: [ req.query.lat, req.query.long] },
-  //         $minDistance: 0,
-  //         $maxDistance: req.query.distance
-  //       }
-  //    }
-  // }
+  if (req.query.event_genre != null) {
+    query.eventGenre = req.query.event_genre;
+  }
 
-  console.log(query);
+  if (req.query.from_date != null && req.query.to_date != null) {
+    query.fromDate = {
+      $gte: ISODate(req.query.from_date)
+    }
+
+    query.toDate = {
+      $lte: ISODate(req.query.to_date)
+    }
+  }
+
+  if (req.query.min_budget != null && req.query.max_budget != null) {
+    query.fixedPrice = {
+      $gte: parseInt(req.query.min_budget),
+      $lte: parseInt(req.query.max_budget)
+    }
+  }
+
+  if (req.query.booked != null) {
+    query.isBooked = req.query.booked;
+  }
+
+  if (req.query.lat != null && req.query.lon != null && req.query.distance) {
+    query.location =   { $near :
+        {
+          $geometry: { type: "Point",  coordinates: [ req.query.lat, req.query.long] },
+          $minDistance: 0,
+          $maxDistance: parseInt(req.query.distance)
+        }
+     }
+  }
+
   Events.find(query).limit(limit).skip(skip).exec(function (err, doc) {
       if (err) {
           return res.status(500).send("Failed to get user events");

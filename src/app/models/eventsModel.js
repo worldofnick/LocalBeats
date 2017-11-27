@@ -8,6 +8,7 @@ var Schema = mongoose.Schema;
 var EventsSchema = new Schema({
     eventName       : {type: String, required: true},
     eventType       : {type: String, required: true},
+    eventGenre      : {type: String, required: true},
     hostUID         : {type: String, required: true},
     hostEmail       : {type: String, lowercase: true, required: true},
     performerEmail  : {type: String, lowercase: true, required: true},
