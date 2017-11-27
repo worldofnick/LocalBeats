@@ -8,7 +8,9 @@ var Schema = mongoose.Schema;
 
 // TODO
 var BookingsSchema = new Schema({
-    hostUID         : {type: String, required: true}
+    hostUID         : {type: String, required: true},
+    performerUID    : {type: String, required: true},
+    eventEID        : {type: String, required: true}
 }, {strict: true});
 
 mongoose.model('Bookings', BookingsSchema);
