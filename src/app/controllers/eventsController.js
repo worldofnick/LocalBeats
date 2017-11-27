@@ -137,13 +137,13 @@ exports.searchEvents = function(req, res) {
   var limit = 15;
   // var sort = buildSort(req);
   //
-  // if(req.query.skip != null) {
-  //   skip = req.query.skip;
-  // }
+  if(req.query.skip != null) {
+    skip = req.query.skip;
+  }
   //
-  // if(req.query.limit != null) {
-  //   limit = req.query.limit;
-  // }
+  if(req.query.limit != null) {
+    limit = req.query.limit;
+  }
   //
   var query = {};
   // // if (req.query.event_type != null) {
