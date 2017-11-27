@@ -147,7 +147,7 @@ exports.searchEvents = function(req, res) {
   //
   var query = {};
   if (req.query.event_type != null) {
-    query = { eventType: req.query.event_type}
+    query += { eventType: req.query.event_type }
   }
   //
   // if (req.query.from_date != null && req.query.to_date != null) {
