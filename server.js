@@ -1,94 +1,77 @@
-var express = require("express");
-var bodyParser = require("body-parser");
-var mongodb = require("mongodb");
-var ObjectID = mongodb.ObjectID;
+// =================================================================
+// Get the packages we need
+// =================================================================
+var express 	  = require('express');
+var app         = express();
+var bodyParser  = require('body-parser');
+var morgan      = require('morgan');
+var mongoose    = require('mongoose');
 
-var USERS_COLLECTION = "users";
+var jwt    = require('jsonwebtoken');                // used to create, sign, and verify tokens
+var config = require('./config');                    // get our config file
+var User   = require('./src/app/models/userModel');  // get our mongoose model
+var Events = require('./src/app/models/eventsModel');  // get our mongoose model
 
-var app = express();
+var distDir = __dirname + "/dist/";
+app.use(express.static(distDir));           // Create link to Angular build directory
+
+// =================================================================
+// Configuration
+// =================================================================
+var port = process.env.PORT || 8080;        // used to create, sign, and verify tokens
+mongoose.Promise = global.Promise;
+mongoose.connect(config.database);          // connect to database
+app.set('superSecret', config.secret);      // secret variable
+
+// use body parser so we can get info from POST and/or URL parameters
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-// Create link to Angular build directory
-var distDir = __dirname + "/dist/";
-app.use(express.static(distDir));
+// use morgan to log requests to the console
+app.use(morgan('dev'));
 
-// Create a database variable outside of the database connection callback to reuse the connection pool in your app.
-var db;
+// MIDDLEWARE
+// app.use(function(req, res, next) {
+//   if (req.headers && req.headers.authorization && req.headers.authorization.split(' ')[0] === 'JWT') {
+//     jsonwebtoken.verify(req.headers.authorization.split(' ')[1], 'RESTFULAPIs', function(err, decode) {
+//       if (err) req.user = undefined;
+//       req.user = decode;
+//       next();
+//     });
+//   } else {
+//     req.user = undefined;
+//     next();
+//   }
+// });
 
-// Connect to the database before starting the application server.
-mongodb.MongoClient.connect(process.env.MONGODB_URI, function (err, database) {
-  if (err) {
-    console.log(err);
-    process.exit(1);
-  }
+// =================================================================
+// API Routes
+// =================================================================
 
-  // Save database object from the callback for reuse.
-  db = database;
-  console.log("Database connection ready");
+var userRoutes = require('./src/app/routes/userRoutes.js');
+var authenticationRoutes = require('./src/app/routes/authenticationRoutes.js');
+var eventsRoutes = require('./src/app/routes/eventsRoutes.js');
+userRoutes(app);
+authenticationRoutes(app);
+eventsRoutes(app);
 
-  // Initialize the app.
-  var server = app.listen(process.env.PORT || 8080, function () {
-    var port = server.address().port;
-    console.log("App now running on port", port);
-  });
+// basic route (http://localhost:8080)
+app.get('/', function(req, res) {
+  res.send('Welcome the EXPRESS Server! This API is at http://localhost:' + port + '/api');
 });
 
-// Generic error handler used by all endpoints.
-function handleError(res, reason, message, code) {
-  console.log("ERROR: " + reason);
-  res.status(code || 500).json({"error": message});
-}
+// =======================
+// Start the Server ======
+// =======================
+// app.listen(port);
+// console.log('Magic happens at http://localhost:' + port);
 
+app.use(function(req, res) {
+  res.status(404).send({ url: req.originalUrl + ' not found' })
+});
 
+app.listen(port);
 
-/*  "/api/profile"
- *    GET: gets a user profile info by an id
- *    POST: creates a new profile
- *    PUT: updates a users profile by an id
- *    DELETE: delets a users profile by an id
- */
+console.log('Magic happens at http://localhost:' + port);
 
- app.get("/api/profile/:id", function(req, res) {
-   db.collection(USERS_COLLECTION).findOne({ _id: new ObjectID(req.params.id) }, function(err, doc) {
-     if (err) {
-       handleError(res, err.message, "Failed to get user");
-     } else {
-       res.status(200).json(doc);
-     }
-   });
- });
-
- app.post("/api/user", function(req, res) {
-   var newUser = req.body;
-   db.collection(USERS_COLLECTION).insertOne(newUser, function(err, doc) {
-     if (err) {
-       handleError(res, err.message, "Failed to create new user.");
-     } else {
-       res.status(201).json(doc.ops[0]);
-     }
-   });
- });
-
- app.put("/api/user/:id", function(req, res) {
-   var updateDoc = req.body;
-   delete updateDoc._id;
-
-   db.collection(USERS_COLLECTION).updateOne({_id: new ObjectID(req.params.id)}, updateDoc, function(err, doc) {
-     if (err) {
-       handleError(res, err.message, "Failed to update user");
-     } else {
-       updateDoc._id = req.params.id;
-       res.status(200).json(updateDoc);
-     }
-   });
- });
-
- app.delete("/api/user/:id", function(req, res) {
-   db.collection(USERS_COLLECTION).deleteOne({_id: new ObjectID(req.params.id)}, function(err, result) {
-     if (err) {
-       handleError(res, err.message, "Failed to delete user");
-     } else {
-       res.status(200).json(req.params.id);
-     }
-   });
- });
+module.exports = app;
