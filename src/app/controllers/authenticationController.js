@@ -8,7 +8,7 @@ var config      = require('../../../config.js');
 
 exports.register = function (req, res) {
     var newUser = new User(req.body);
-    newUser.hash_password = bcrypt.hashSync(req.body.password, 10);   // save a hashed password to DB
+    newUser.hashPassword = bcrypt.hashSync(req.body.password, 10);   // save a hashed password to DB
     console.log(req.body);
     newUser.save(function (err, user) {  // callback function with err and success value
       if (err) {
@@ -16,14 +16,16 @@ exports.register = function (req, res) {
           message: err
         });
       } else {
-        user.hash_password = undefined;
+        user.hashPassword = undefined;
+        user.__v = undefined;
         // create a token
         var token = jwt.sign({
           user: {
             uid: user._id,
-            name: user.name,
+            firstName: user.firstName,
+            lastName: user.lastName,
             email: user.email,
-            created: user.created
+            joinDate: user.joinDate
           }
         },
           config.secret, {
@@ -44,7 +46,7 @@ exports.register = function (req, res) {
    * @param {*} res - Contains the result of the request
    */
   exports.whoAmI = function (req, res) {
-    User.findById(req.uid, { hash_password: 0 }, function (err, user) {
+    User.findById(req.uid, { hashPassword: 0 }, function (err, user) {
       if (err) return res.status(500).send("There was a problem finding the user.");
       if (!user) return res.status(404).send("User not found (try logging in first).");
   
@@ -63,7 +65,7 @@ exports.register = function (req, res) {
       var token = jwt.sign({ id: user._id }, config.secret, {
         expiresIn: 86400 // expires in 24 hours
       });
-      user.hash_password = undefined;
+      user.hashPassword = undefined;
       res.status(200).send({ auth: true, token: token, user: user });
     });
   };

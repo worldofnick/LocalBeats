@@ -11,20 +11,20 @@ var UserSchema = new Schema({
     lastName     : {type: String, required: true},
     email        : {type: String, unique: true, lowercase: true, required: true},
     hashPassword : {type: String, required: true},
-    birthday     : {type: Date, required: true},
+    birthday     : {type: Date},
     joinDate     : {type: Date, default: Date.now},
     profilePicID : {type: Number},
     soundcloudID : {type: String},
     spotifyID    : {type: String},
     likesGenres  : {type: Array}
-}, {strict: true});
+}, {strict: true}, {versionKey: false});
 
 /**
  * Compares the passed password to the hashed password in the 
  * DB and return the result
  */ 
 UserSchema.methods.comparePassword = function(password) {
-    return bcrypt.compareSync(password, this.hash_password);
+    return bcrypt.compareSync(password, this.hashPassword);
 };
 
 mongoose.model('User', UserSchema);
