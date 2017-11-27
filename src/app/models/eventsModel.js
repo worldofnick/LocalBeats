@@ -13,7 +13,6 @@ var EventsSchema = new Schema({
     address         : {type: String},
     fromDate        : {type: Date, default: Date.now},
     toDate          : {type: Date},
-    title           : {type: String},
     description     : {type: String},
     fixedPrice      : {type: Number},
     hourlyRate      : {type: Number},
