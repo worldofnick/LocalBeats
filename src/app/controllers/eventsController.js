@@ -29,7 +29,7 @@ exports.getEventByID = function (req, res) {
 };
 
 exports.createEvent = function (req, res) {
-    var newEvent = new Events(req.body);
+    var newEvent = new Events(req.body.event);
     newEvent.save(function (err, event) {  // callback function with err and success value
         if (err) {
             return res.status(400).send({
@@ -43,8 +43,8 @@ exports.createEvent = function (req, res) {
 };    
 
 exports.updateEventByID = function (req, res) {
-    Events.findByIdAndUpdate(req.params.eid, req.body, { new: true }, function (err, event) {
-        if (err) { 
+    Events.findByIdAndUpdate(req.params.eid, req.body.event, { new: true }, function (err, event) {
+        if (err) {
             return res.status(500).send("There was a problem updating the event.");
         }
         return res.status(200).send(event);
