@@ -58,6 +58,7 @@ exports.register = function (req, res) {
    * The handler handles the user authentication.
    */ 
   exports.signIn = function (req, res) {
+    console.log(req.body);
     User.findOne({ email: req.body.email }, function (err, user) {
       if (err) return res.status(500).send('Error on the sign-in server.');
       if (!user) return res.status(404).send('No such user (' + req.body.email + ') in the database...');

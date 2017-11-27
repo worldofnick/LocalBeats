@@ -14,14 +14,11 @@ export class ProfileDetailsComponent implements OnInit {
   // profile: Profile;
   constructor(private userService: UserService, private router: Router) { 
     this.userService.user = {
-      uid: null,
-      userName: null,
+      _id: null,
       firstName: 'Adam',
       lastName: 'Rosenberg',
       email: 'adam@adam.com',
-      phone: '3305555555',
       password: 'brandon',
-      userStatus: null
     }
   }
 

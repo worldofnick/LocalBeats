@@ -5,7 +5,7 @@ import { User } from 'app/models/user';
 
 @Injectable()
 export class UserService {
-    public connection: string = '/api/user/';
+    public connection: string = 'http://localhost:8080/api/auth';
     public accessToken: string = null;
     public user: User = null;
 
@@ -15,6 +15,7 @@ export class UserService {
 
     // post("/api/user")
     public signupUser(newUser: User): Promise<User> {
+        this.connection += '/register'
         return this.http.post(this.connection, newUser, { headers: this.headers } )
             .toPromise()
             .then((response: Response) => {

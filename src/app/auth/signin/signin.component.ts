@@ -32,21 +32,19 @@ export class SigninComponent implements OnInit {
     console.log(password);
     console.log(remember);
     this.user = {
-      uid: null,
-      userName: null,
+      _id: null,
       firstName: null,
       lastName: null,
-      email: null,
-      password: null,
-      phone: null,
-      userStatus: null,
+      email: email,
+      password: password,
     };
     console.log(this.user);
 
-    // this.userService.signinUser(this.user).then((user: User) => {
-    //   this.user = user;
-    //   this.router.navigate(['/profile']);
-    // });
+    this.userService.signinUser(this.user).then((user: User) => {
+      this.user = user;
+      console.log(this.user)
+      this.router.navigate(['/profile']);
+    });
   }
 
   onSignup(form: NgForm) {
@@ -57,20 +55,18 @@ export class SigninComponent implements OnInit {
     const password: string = form.value.password;
 
     this.user = {
-      uid: null,
-      userName: null,
+      _id: null,
       firstName: null,
       lastName: null,
-      email: null,
-      password: null,
-      phone: null,
-      userStatus: null,
+      email: email,
+      password: password,
     };
 
-    // this.userService.signupUser(this.user).then((user: User) => {
-    //   this.user = user;
-    //   this.router.navigate(['/profile']);
-    // });
+    this.userService.signupUser(this.user).then((user: User) => {
+      this.user = user;
+      console.log(this.user)
+      this.router.navigate(['/profile']);
+    });
   }
 
 }
