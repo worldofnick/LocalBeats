@@ -9,11 +9,11 @@ var config      = require('../../../config.js');
 // ====== Bookings ROUTES ======
 
 exports.listAllBookings = function (req, res) {
-    Bookings.find({}, function (err, event) {
+    Bookings.find({}, function (err, booking) {
       if (err)
         return res.send(err);
 
-      return res.status(200).send(event);
+      return res.status(200).send(booking);
     });
 };
 
