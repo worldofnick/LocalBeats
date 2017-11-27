@@ -145,7 +145,7 @@ exports.searchEvents = function(req, res) {
   //   limit = req.query.limit;
   // }
   //
-  // query = {}
+  query = {}
   // // if (req.query.event_type != null) {
   // //   query[event_type] = req.query.event_type
   // // }
