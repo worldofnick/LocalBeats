@@ -17,12 +17,9 @@ module.exports = function(app) {
         .post(reviewsHandlers.createReview);
 
     app.route('/api/userReviewsTo')
-        .get(reviewsHandlers.getUserReviewsByUID);
+        .get(reviewsHandlers.getUserReviewsByUIDTo);
 
     app.route('/api/userReviewsFrom')
-        .get(reviewsHandlers.getUserReviewsByUID);
-
-	app.route('/api/userReview')
-		.delete(reviewsHandlers.deleteUserReviewByUID);
+        .get(reviewsHandlers.getUserReviewsByUIDFrom);
 
 };
