@@ -19,7 +19,7 @@ exports.getBookingByID = function (req, res) {
 };
 
 exports.createBooking = function (req, res) {
-    var newBooking = new Bookings(req.body);
+    var newBooking = new Bookings(req.body.booking);
     newBooking.save(function (err, booking) {
         if (err) {
             return res.status(400).send({
