@@ -183,6 +183,7 @@ exports.searchEvents = function(req, res) {
 
   Events.find(query).limit(limit).skip(skip).exec(function (err, doc) {
       if (err) {
+          console.log(err);
           return res.status(500).send("Failed to get user events");
       } else {
           return res.status(200).send(doc);
