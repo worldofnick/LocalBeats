@@ -8,6 +8,15 @@ var config      = require('../../../config.js');
 
 // ====== Bookings ROUTES ======
 
+exports.listAllBookings = function (req, res) {
+    Bookings.find({}, function (err, event) {
+      if (err)
+        return res.send(err);
+
+      return res.status(200).send(event);
+    });
+};
+
 exports.getBookingByID = function (req, res) {
   Bookings.findById(req.params.bid, function (err, booking) {
       if (err) {

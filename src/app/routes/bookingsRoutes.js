@@ -5,10 +5,13 @@ module.exports = function(app) {
 
     // TODO: restrict access via user log in??
 
-	// app.route('/api/bookings/:bid')
-  //       .get(bookingsHandlers.getBookingByID)
-  //       .put(bookingsHandlers.updateBookingByID)
-  //       .delete(bookingsHandlers.deleteBookingByID);
+    app.route('/api/bookings')
+  		.get(bookingsHandlers.listAllBookings);
+
+	app.route('/api/bookings/:bid')
+        .get(bookingsHandlers.getBookingByID)
+        .put(bookingsHandlers.updateBookingByID)
+        .delete(bookingsHandlers.deleteBookingByID);
 
     app.route('/api/bookings/create')
         .post(bookingsHandlers.createBooking);
