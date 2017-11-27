@@ -147,7 +147,7 @@ exports.searchEvents = function(req, res) {
   //
   var query = {};
   if (req.query.event_type != null) {
-    query = {event_type: "wedding"}
+    query = { eventType: req.query.event_type}
   }
   //
   // if (req.query.from_date != null && req.query.to_date != null) {
@@ -184,8 +184,6 @@ exports.searchEvents = function(req, res) {
   console.log(query);
   Events.find(query).limit(limit).skip(skip).exec(function (err, doc) {
       if (err) {
-          console.log('ERRROR');
-          console.log(err);
           return res.status(500).send("Failed to get user events");
       } else {
           return res.status(200).send(doc);
