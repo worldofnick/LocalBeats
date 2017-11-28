@@ -50,7 +50,6 @@ exports.deleteUserByID = function (req, res) {
 };
 
 exports.searchUsersByName = function (req, res) {
-  console.log('searchUsersByName');
   var match = new RegExp(req.query.search);
   User.find({firstName: match} , function (err, users) {
     if (err)
