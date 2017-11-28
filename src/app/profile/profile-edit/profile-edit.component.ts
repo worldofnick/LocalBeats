@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { NgForm } from '@angular/forms/src/directives/ng_form';
 import { UserService } from 'app/services/user.service';
 import { print } from 'util';
+import { Injectable } from '@angular/core';
 
 
 @Component({
@@ -16,8 +17,13 @@ import { print } from 'util';
 export class ProfileEditComponent implements OnInit {
   submitted = false;
   private user: User;
+  
+  model:any;
 
-  constructor(private userService: UserService, private router: Router) { }
+  constructor(private userService: UserService, private router: Router) { 
+    this.user = userService.user;
+    this.model = new User(this.user._id, this.user.firstName, this.user.lastName, this.user.email, this.user.password);
+  }
 
   ngOnInit() {
 
@@ -41,6 +47,7 @@ export class ProfileEditComponent implements OnInit {
     this.userService.onEditProfile(this.user).then((user: User) => {
       this.user = user;
       console.log(this.user)
+      this.userService.user = this.user; 
       this.router.navigate(['/profile']);
     });
   }

@@ -57,21 +57,26 @@
                 <p class="form-row form-row-wide">
                   <label for="username2">First Name:
                     <i class="im im-icon-Male"></i>
-                    <input ngModel type="text" class="input-text" name="firstname" id="firstname" value="" />
+                    <!-- <input ngModel type="text" class="input-text" name="firstname" id="firstname" value=" {{ this.user.firstName }}" /> -->
+                    <input [(ngModel)]="model.firstName" name="lastname" type="text" placeholder="First name"/>
                   </label>
                 </p>
 
                 <p class="form-row form-row-wide">
                   <label for="username2">Last Name:
                     <i class="im im-icon-Female"></i>
-                    <input ngModel type="text" class="input-text" name="lastname" id="lastname" value="" />
+                    <!-- <input ngModel type="text" class="input-text" name="lastname" id="lastname" value="" /> -->
+                    <input [(ngModel)]="model.lastName" name="lastname" type="text" placeholder="Last name"/>
                   </label>
                 </p>
+
+                
 
                 <p class="form-row form-row-wide">
                     <label for="email">Email:
                       <i class="im im-icon-Mail"></i>
-                      <input ngModel type="email" class="input-text" name="email" id="email1" value="Email" />
+                      <!-- <input ngModel type="email" class="input-text" name="email" id="email1" value="Email" /> -->
+                      <input [(ngModel)]="model.email" name="email" id="email1" type="text" placeholder="Email"/>
                     </label>
                 </p>
                 <!-- <div class="form-group">
@@ -85,36 +90,6 @@
               </form>
               <!-- </div> -->
               <!-- end hidden -->
-
-              <!-- Register -->
-              <!-- <div class="tab-content" id="tab2" style="display: none;">
-                <form (ngSubmit)="onSignup(r)" #r="ngForm" method="post" class="register">
-
-                  <p class="form-row form-row-wide">
-                    <label for="email2">Email Address:
-                      <i class="im im-icon-Mail"></i>
-                      <input ngModel type="text" class="input-text" name="email" id="email2" value="" />
-                    </label>
-                  </p>
-
-                  <p class="form-row form-row-wide">
-                    <label for="username2">First Name:
-                      <i class="im im-icon-Male"></i>
-                      <input ngModel type="text" class="input-text" name="firstname" id="firstname" value="" />
-                    </label>
-                  </p>
-
-                  <p class="form-row form-row-wide">
-                    <label for="username2">Last Name:
-                      <i class="im im-icon-Male"></i>
-                      <input ngModel type="text" class="input-text" name="lastname" id="lastname" value="" />
-                    </label>
-                  </p>
-
-                  <input type="submit" class="button border fw margin-top-10" name="register" value="Register" />
-
-                </form>
-              </div> -->
             </div>
 
           </div>
