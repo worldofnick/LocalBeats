@@ -51,7 +51,13 @@ exports.deleteUserByID = function (req, res) {
 
 exports.searchUsersByName = function (req, res) {
   var match = new RegExp(req.query.search);
-  User.find({firstName: match} , function (err, users) {
+
+  var artist = true;
+  if (req.query.isArtist != null) {
+    artist = req.query.isArtist;
+  }
+
+  User.find({firstName: match, isArtist: artist} , function (err, users) {
     if (err)
       return res.send(err);
 
