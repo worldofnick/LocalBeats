@@ -13,22 +13,17 @@ export class ProfileDetailsComponent implements OnInit {
  
   // profile: Profile;
   constructor(private userService: UserService, private router: Router) { 
-    this.userService.user = {
-      _id: null,
-      firstName: 'Adam',
-      lastName: 'Rosenberg',
-      email: 'adam@adam.com',
-      password: 'brandon',
-    }
+
   }
 
-  getProfileName(){
-    return this.userService.user.firstName + ' ' + this.userService.user.lastName;
-  }
+  // getProfileName(){
+  //   return this.userService.user.firstName + ' ' + this.userService.user.lastName;
+  // }
 
   ngOnInit() {
   }
 
+  
   onSubmit(){
   this.router.navigate(['/profile-edit']);
   }
