@@ -49,17 +49,13 @@ exports.deleteUserByID = function (req, res) {
   });
 };
 
-// exports.searchUsersByName = function (req, res) {
-//
-//   var query = {};
-//   if (req.query.name != null) {
-//
-//   }
-//
-//   User.find(query, { hashPassword: 0 }, function (err, user) {
-//     if (err)
-//       return res.send(err);
-//     user.hashPassword = undefined;
-//     return res.status(200).send(user);
-//   });
-// };
+exports.searchUsersByName = function (req, res) {
+  console.log('searchUsersByName');
+  var match = new RegExp(req.query.search);
+  User.find({firstName: match} , function (err, users) {
+    if (err)
+      return res.send(err);
+
+    return res.status(200).send(users);
+  });
+};
