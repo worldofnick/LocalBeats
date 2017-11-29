@@ -13,7 +13,7 @@ var UserSchema = new Schema({
     hashPassword  : {type: String, required: true},
     birthday      : {type: Date},
     joinDate      : {type: Date, default: Date.now},
-    profilePicUrl : {type: Strin, default: 'https://www.vccircle.com/wp-content/uploads/2017/03/default-profile.png'},
+    profilePicUrl : {type: String, default: 'https://www.vccircle.com/wp-content/uploads/2017/03/default-profile.png'},
     soundcloudID  : {type: String},
     spotifyID     : {type: String},
     likesGenres   : {type: Array}
