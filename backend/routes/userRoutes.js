@@ -13,4 +13,7 @@ module.exports = function(app) {
 		.get(userHandlers.getUserByID)
 		.put(userHandlers.updateUserByID)
 		.delete(userHandlers.deleteUserByID);
+
+	app.route('/api/searchUsers')
+		.get(userHandlers.searchUsersByName);
 };
