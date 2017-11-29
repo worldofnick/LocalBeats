@@ -65,9 +65,6 @@ exports.deleteBookingByID = function (req, res) {
 };
 
 exports.getUserBookingsByUID = function (req, res) {
-  // console.log(req.body);
-  // console.log("HOST UID = " + req.query.hostUID);
-  // console.log("Limit = " + req.query.limit);
   var limit = 10;
   var skip = 0;
 
