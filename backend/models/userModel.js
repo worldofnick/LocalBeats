@@ -16,7 +16,11 @@ var UserSchema = new Schema({
     profilePicUrl : {type: String, default: 'https://www.vccircle.com/wp-content/uploads/2017/03/default-profile.png'},
     soundcloudID  : {type: String},
     spotifyID     : {type: String},
-    likesGenres   : {type: Array}
+    likesGenres   : {type: Array},
+    soundcloudID  : {type: String},
+    spotifyID     : {type: String},
+    likesGenres   : {type: Array},
+    isArtist      : {type: Boolean, default: false}
 }, {strict: true}, {versionKey: false});
 
 /**
