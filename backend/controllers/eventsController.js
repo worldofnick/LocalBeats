@@ -184,7 +184,7 @@ exports.searchEvents = function(req, res) {
           $maxDistance: parseInt(req.query.distance)
         }
      }
-
+   }
 
   if (req.query.name != null) {
     var match = new RegExp(req.query.search);
