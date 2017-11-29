@@ -16,13 +16,14 @@ import { Injectable } from '@angular/core';
 
 export class ProfileEditComponent implements OnInit {
   submitted = false;
-  private user: User;
+  // private user: User;
   
-  model:any;
+  model:User;
 
   constructor(private userService: UserService, private router: Router) { 
-    this.user = userService.user;
-    this.model = new User(this.user._id, this.user.firstName, this.user.lastName, this.user.email, this.user.password);
+    // this.user = userService.user;
+    // this.model = new User(this.user._id, this.user.firstName, this.user.lastName, this.user.email, this.user.password);
+    this.model = userService.user;
   }
 
   ngOnInit() {
@@ -35,19 +36,10 @@ export class ProfileEditComponent implements OnInit {
     const email: string = form.value.email;
     const password: string = form.value.password1;
 
-
-    this.user = {
-      _id: null,
-      firstName: firstName,
-      lastName: lastName,
-      email: email,
-      password: password,
-    };
-
-    this.userService.onEditProfile(this.user).then((user: User) => {
-      this.user = user;
-      console.log(this.user)
-      this.userService.user = this.user; 
+    this.userService.onEditProfile(this.model).then((user: User) => {
+      this.model = user;
+      console.log(this.model)
+      this.userService.user = this.model; 
       this.router.navigate(['/profile']);
     });
   }

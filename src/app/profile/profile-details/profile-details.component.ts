@@ -16,10 +16,6 @@ export class ProfileDetailsComponent implements OnInit {
 
   }
 
-  // getProfileName(){
-  //   return this.userService.user.firstName + ' ' + this.userService.user.lastName;
-  // }
-
   ngOnInit() {
   }
 

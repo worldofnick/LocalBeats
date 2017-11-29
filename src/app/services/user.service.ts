@@ -6,6 +6,7 @@ import { User } from 'app/models/user';
 @Injectable()
 export class UserService {
     public connection: string = 'http://localhost:8080/api/auth';
+    public userConnection: string = 'htpp://localhost:8080/users';
     public accessToken: string = null;
     public user: User = null;
 
@@ -30,13 +31,12 @@ export class UserService {
 
     // post("/api/profile-edit")
     public onEditProfile(newUser: User): Promise<User> {
-        const current = this.connection + '/profile-edit';
-        return this.http.post(current, newUser, {headers: this.headers} )
+        const current = this.userConnection + '/' + newUser._id;
+        console.log(current);
+        return this.http.put(current, newUser, {headers: this.headers} )
             .toPromise()
             .then((response: Response) => {
                 const data = response.json();
-                this.accessToken = data.access_token;
-                sessionStorage.setItem('token', JSON.stringify({ accessToken: this.accessToken}))
                 this.user = data.user as User;
                 return this.user
             })
