@@ -121,18 +121,17 @@ exports.deleteUserEventsByUID = function (req, res) {
     return sort;
   }
 
-// //   // params
-// //   // event_type= (the event type)
-// //   // lat= and lon= and distance= (to filter by location and distance meters)
-// //   // start_date
-// //   // end_date
-// //   // min_budget
-// //   // max_budget
-// //   // sort (price-desc, price-asc, soonest, latest, closest, furtest) defaults to soonest
-// //   // booked (boolean)
-// //   // limit defaults to 15
-// //   // skip defaults to 0
-// genre
+// Search through events
+// params
+// skip (int) how many records to skip
+// limit (int) how many records to return
+// event_type (string) ("wedding", "birthday")
+// event_genre (string) ("rock", etc)
+// from_date & to_date (string) ISODate
+// min_budget & max_budget (int)
+// booked (boolean) defaults ot false. If true returns events that are currently booked
+// lat (string) & lon (string) & distance (int, metres)
+// name (string) fuzzy match search by event names
 exports.searchEvents = function(req, res) {
   var skip = 0;
   var limit = 15;
@@ -174,10 +173,12 @@ exports.searchEvents = function(req, res) {
 
   if (req.query.booked != null) {
     query.isBooked = req.query.booked;
+  } else {
+    query.isBooked = false;
   }
 
   if (req.query.lat != null && req.query.lon != null && req.query.distance) {
-    query.location =   { $near :
+    query.location = { $near :
         {
           $geometry: { type: "Point",  coordinates: [ req.query.lat, req.query.long] },
           $minDistance: 0,
