@@ -7,11 +7,6 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
-<!-- CSS
-================================================== -->
-<!-- <link rel="stylesheet" href="css/style.css">
-<link rel="stylesheet" href="css/colors/main.css" id="colors"> -->
-
 </head>
 
 <body>
@@ -50,7 +45,7 @@
 					<nav id="breadcrumbs">
 						<ul>
 							<li><a href="#">Home</a></li>
-							<li><a href="#">Dashboard</a></li>
+							<li><a href="#/profile">Dashboard</a></li>
 							<li>My Profile</li>
 						</ul>
 					</nav>
@@ -77,7 +72,8 @@
 							</div>
 						</div>
 	
-						<!-- Details -->
+            <!-- Details -->
+            <form (ngSubmit)="onEditProfile(r)" #r="ngForm" method="post" class="editProfile">
 						<div class="my-profile">
 
               <label>First Name</label>
@@ -89,21 +85,11 @@
 							<label>Email</label>
               <input [(ngModel)]="model.email" name="email" type="text" placeholder="Email"/>
 
-
-							<!-- <label>Notes</label>
-							<textarea name="notes" id="notes" cols="30" rows="10">Maecenas quis consequat libero, a feugiat eros. Nunc ut lacinia tortor morbi ultricies laoreet ullamcorper phasellus semper</textarea> -->
-
-							<!-- <label><i class="fa fa-twitter"></i> Twitter</label>
-							<input placeholder="https://www.twitter.com/" type="text">
-
-							<label><i class="fa fa-facebook-square"></i> Facebook</label>
-							<input placeholder="https://www.facebook.com/" type="text">
-
-							<label><i class="fa fa-google-plus"></i> Google+</label>
-							<input placeholder="https://www.google.com/" type="text"> -->
 						</div>
 	
-						<button class="button margin-top-15">Save Changes</button>
+            <!-- <button class="button margin-top-15">Save Changes</button> -->
+            <input type="submit" class="button border fw margin-top-10" name="editProfile" value="Submit" />            
+            </form>
 
 					</div>
 				</div>
@@ -131,7 +117,7 @@
 
 					</div>
 				</div>
-			</div>
+      </div>
 
 
 			<!-- Copyrights -->
