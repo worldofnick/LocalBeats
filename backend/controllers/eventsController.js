@@ -130,7 +130,7 @@ exports.deleteUserEventsByUID = function (req, res) {
 // from_date & to_date (string) ISODate
 // min_budget & max_budget (int)
 // booked (boolean) defaults ot false. If true returns events that are currently booked
-// lat (string) & lon (string) & distance (int, metres)
+// lat (string) & lon (string)
 // name (string) fuzzy match search by event names
 exports.searchEvents = function(req, res) {
   var skip = 0;
@@ -177,12 +177,12 @@ exports.searchEvents = function(req, res) {
     query.isBooked = false;
   }
 
-  if (req.query.lat != null && req.query.lon != null && req.query.distance) {
+  if (req.query.lat != null && req.query.lon != null) {
     query.location = { $near :
         {
           $geometry: { type: "Point",  coordinates: [ req.query.lat, req.query.long] },
           $minDistance: 0,
-          $maxDistance: parseInt(req.query.distance)
+          $maxDistance: 16090 // 10 miles ish
         }
      }
    }
@@ -192,7 +192,7 @@ exports.searchEvents = function(req, res) {
     query.eventName = {match}
   }
 
-  Events.find(query).limit(limit).skip(skip).exec(function (err, doc) {
+  Events.find(query).limit(limit).skip(skip).sort(sort).exec(function (err, doc) {
       if (err) {
           return res.status(500).send("Failed to get user events");
       } else {
