@@ -39,15 +39,49 @@
 								<select style="width: 500px;" class="chosen-select-no-single" >
 									<option label="blank">Select Category</option>	
 									<option>Wedding</option>
-									<option>Live Music</option>
+                  <option>Live Music</option>
+                  <option>Birthday</option>
+                  <option>Business</option>
 								</select>
 							</div>
 
 						</div>
-						<!-- Row / End -->
+            <!-- Row / End -->
+            
+            <!-- Row -->
+						<div class="row with-forms">
+              <!-- Status -->
+              <div class="col-md-6">
+                <h5>Music Genre</h5>
+                <select style="width: 500px;" class="chosen-select-no-single" >
+                  <option label="blank">Select Category</option>	
+                  <option>Electronic</option>
+                  <option>Rock</option>
+                </select>
+              </div>
+
+            </div>
+            <!-- Row / End -->
 
 					</div>
 					<!-- Section / End -->
+
+          					<!-- Section -->
+					<div class="add-listing-section margin-top-45">
+            
+              <!-- Headline -->
+              <div class="add-listing-headline">
+                <h3><i class="sl sl-icon-docs"></i> Details</h3>
+              </div>
+  
+              <!-- Description -->
+              <div class="form">
+                <h5>Description</h5>
+                <textarea class="WYSIWYG" name="summary" cols="40" rows="3" id="summary" spellcheck="true"></textarea>
+              </div>
+  
+            </div>
+            <!-- Section / End -->
 
 					<!-- Section -->
 					<div class="add-listing-section margin-top-45">
@@ -68,7 +102,11 @@
 									<select class="chosen-select-no-single" >
 										<option label="blank">Select City</option>	
 										<option>Salt Lake City</option>
-									</select>
+                  </select>
+                  
+
+                  <h5>Zip-Code</h5>
+                  <input type="text">
 								</div>
 
 								<!-- Address -->
@@ -84,126 +122,24 @@
 								</div>
 
 								<!-- Zip-Code -->
-								<div class="col-md-6">
+								<!-- <div class="col-md-6">
 									<h5>Zip-Code</h5>
-									<input type="text">
-								</div>
+                  <input type="text">
+								</div>  -->
 
 							</div>
 							<!-- Row / End -->
 
 						</div>
 					</div>
-					<!-- Section / End -->
-
-
-					
-
-					<!-- Section -->
-					<div class="add-listing-section margin-top-45">
-
-						<!-- Headline -->
-						<div class="add-listing-headline">
-							<h3><i class="sl sl-icon-docs"></i> Details</h3>
-						</div>
-
-						<!-- Description -->
-						<div class="form">
-							<h5>Description</h5>
-							<textarea class="WYSIWYG" name="summary" cols="40" rows="3" id="summary" spellcheck="true"></textarea>
-						</div>
-
-						<!-- Row -->
-						<div class="row with-forms">
-
-							<!-- Phone -->
-							<div class="col-md-4">
-								<h5>Phone <span>(optional)</span></h5>
-								<input type="text">
-							</div>
-
-							<!-- Website -->
-							<div class="col-md-4">
-								<h5>Website <span>(optional)</span></h5>
-								<input type="text">
-							</div>
-
-							<!-- Email Address -->
-							<div class="col-md-4">
-								<h5>E-mail <span>(optional)</span></h5>
-								<input type="text">
-							</div>
-
-						</div>
-						<!-- Row / End -->
-
-
-						<!-- Row -->
-						<div class="row with-forms">
-
-							<!-- Phone -->
-							<div class="col-md-4">
-								<h5 class="fb-input"><i class="fa fa-facebook-square"></i> Facebook <span>(optional)</span></h5>
-								<input type="text" placeholder="https://www.facebook.com/">
-							</div>
-
-							<!-- Website -->
-							<div class="col-md-4">
-								<h5 class="twitter-input"><i class="fa fa-twitter"></i> Twitter <span>(optional)</span></h5>
-								<input type="text" placeholder="https://www.twitter.com/">
-							</div>
-
-							<!-- Email Address -->
-							<div class="col-md-4">
-								<h5 class="gplus-input"><i class="fa fa-google-plus"></i> Google Plus <span>(optional)</span></h5>
-								<input type="text" placeholder="https://plus.google.com">
-							</div>
-
-						</div>
-						<!-- Row / End -->
-
-
-						<!-- Checkboxes -->
-						<h5 class="margin-top-30 margin-bottom-10">Amenities <span>(optional)</span></h5>
-						<div class="checkboxes in-row margin-bottom-20">
-					
-							<input id="check-a" type="checkbox" name="check">
-							<label for="check-a">Elevator in building</label>
-
-							<input id="check-b" type="checkbox" name="check">
-							<label for="check-b">Friendly workspace</label>
-
-							<input id="check-c" type="checkbox" name="check">
-							<label for="check-c">Instant Book</label>
-
-							<input id="check-d" type="checkbox" name="check">
-							<label for="check-d">Wireless Internet</label>
-
-							<input id="check-e" type="checkbox" name="check" >
-							<label for="check-e">Free parking on premises</label>
-
-							<input id="check-f" type="checkbox" name="check" >
-							<label for="check-f">Free parking on street</label>
-
-							<input id="check-g" type="checkbox" name="check">
-							<label for="check-g">Smoking allowed</label>	
-
-							<input id="check-h" type="checkbox" name="check">
-							<label for="check-h">Events</label>
-					
-						</div>
-						<!-- Checkboxes / End -->
-
-					</div>
-					<!-- Section / End -->
-
-
+          <!-- Section / End -->
+          
 					<!-- Section -->
 					<div class="add-listing-section margin-top-45">
 						
 						<!-- Headline -->
 						<div class="add-listing-headline">
-							<h3><i class="sl sl-icon-clock"></i> Opening Hours</h3>
+							<h3><i class="sl sl-icon-clock"></i>Time</h3>
 							<!-- Switcher -->
 							<label class="switch"><input type="checkbox" checked><span class="slider round"></span></label>
 						</div>
@@ -213,10 +149,10 @@
 
 							<!-- Day -->
 							<div class="row opening-day">
-								<div class="col-md-2"><h5>Monday</h5></div>
+								<div class="col-md-2"><h5>Event times:</h5></div>
 								<div class="col-md-5">
-									<select class="chosen-select" data-placeholder="Opening Time">
-										<option label="Opening Time"></option>
+									<select class="chosen-select" data-placeholder="Start Time">
+										<option label="Start Time"></option>
 										<option>Closed</option>
 										<option>1 AM</option>
 										<option>2 AM</option>
@@ -245,8 +181,8 @@
 									</select>
 								</div>
 								<div class="col-md-5">
-									<select class="chosen-select" data-placeholder="Closing Time">
-										<option label="Closing Time"></option>
+									<select class="chosen-select" data-placeholder="End Time">
+										<option label="End Time"></option>
 										<option>Closed</option>
 										<option>1 AM</option>
 										<option>2 AM</option>
@@ -277,101 +213,7 @@
 							</div>
 							<!-- Day / End -->
 
-							<!-- Day -->
-							<div class="row opening-day js-demo-hours">
-								<div class="col-md-2"><h5>Tuesday</h5></div>
-								<div class="col-md-5">
-									<select class="chosen-select" data-placeholder="Opening Time">
-										<!-- Hours added via JS (this is only for demo purpose) -->
-									</select>
-								</div>
-								<div class="col-md-5">
-									<select class="chosen-select" data-placeholder="Closing Time">
-										<!-- Hours added via JS (this is only for demo purpose) -->
-									</select>
-								</div>
-							</div>
-							<!-- Day / End -->
-
-							<!-- Day -->
-							<div class="row opening-day js-demo-hours">
-								<div class="col-md-2"><h5>Wednesday</h5></div>
-								<div class="col-md-5">
-									<select class="chosen-select" data-placeholder="Opening Time">
-										<!-- Hours added via JS (this is only for demo purpose) -->
-									</select>
-								</div>
-								<div class="col-md-5">
-									<select class="chosen-select" data-placeholder="Closing Time">
-										<!-- Hours added via JS (this is only for demo purpose) -->
-									</select>
-								</div>
-							</div>
-							<!-- Day / End -->
-
-							<!-- Day -->
-							<div class="row opening-day js-demo-hours">
-								<div class="col-md-2"><h5>Thursday</h5></div>
-								<div class="col-md-5">
-									<select class="chosen-select" data-placeholder="Opening Time">
-										<!-- Hours added via JS (this is only for demo purpose) -->
-									</select>
-								</div>
-								<div class="col-md-5">
-									<select class="chosen-select" data-placeholder="Closing Time">
-										<!-- Hours added via JS (this is only for demo purpose) -->
-									</select>
-								</div>
-							</div>
-							<!-- Day / End -->
-
-							<!-- Day -->
-							<div class="row opening-day js-demo-hours">
-								<div class="col-md-2"><h5>Friday</h5></div>
-								<div class="col-md-5">
-									<select class="chosen-select" data-placeholder="Opening Time">
-										<!-- Hours added via JS (this is only for demo purpose) -->
-									</select>
-								</div>
-								<div class="col-md-5">
-									<select class="chosen-select" data-placeholder="Closing Time">
-										<!-- Hours added via JS (this is only for demo purpose) -->
-									</select>
-								</div>
-							</div>
-							<!-- Day / End -->
-
-							<!-- Day -->
-							<div class="row opening-day js-demo-hours">
-								<div class="col-md-2"><h5>Saturday</h5></div>
-								<div class="col-md-5">
-									<select class="chosen-select" data-placeholder="Opening Time">
-										<!-- Hours added via JS (this is only for demo purpose) -->
-									</select>
-								</div>
-								<div class="col-md-5">
-									<select class="chosen-select" data-placeholder="Closing Time">
-										<!-- Hours added via JS (this is only for demo purpose) -->
-									</select>
-								</div>
-							</div>
-							<!-- Day / End -->
-
-							<!-- Day -->
-							<div class="row opening-day js-demo-hours">
-								<div class="col-md-2"><h5>Sunday</h5></div>
-								<div class="col-md-5">
-									<select class="chosen-select" data-placeholder="Opening Time">
-										<!-- Hours added via JS (this is only for demo purpose) -->
-									</select>
-								</div>
-								<div class="col-md-5">
-									<select class="chosen-select" data-placeholder="Closing Time">
-										<!-- Hours added via JS (this is only for demo purpose) -->
-									</select>
-								</div>
-							</div>
-							<!-- Day / End -->
+						
 
 						</div>
 						<!-- Switcher ON-OFF Content / End -->
@@ -398,16 +240,16 @@
 									<table id="pricing-list-container">
 										<tr class="pricing-list-item pattern">
 											<td>
-												<div class="fm-move"><i class="sl sl-icon-cursor-move"></i></div>
-												<div class="fm-input pricing-name"><input type="text" placeholder="Title" /></div>
-												<div class="fm-input pricing-ingredients"><input type="text" placeholder="Description" /></div>
+												<!-- <div class="fm-move"><i class="sl sl-icon-cursor-move"></i></div> -->
+												<!-- <div class="fm-input pricing-name"><input type="text" placeholder="Title" /></div> -->
+												<!-- <div class="fm-input pricing-ingredients"><input type="text" placeholder="Description" /></div> -->
 												<div class="fm-input pricing-price"><input type="text" placeholder="Price" data-unit="USD" /></div>
-												<div class="fm-close"><a class="delete" href="#"><i class="fa fa-remove"></i></a></div>
+												<!-- <div class="fm-close"><a class="delete" href="#"><i class="fa fa-remove"></i></a></div> -->
 											</td>
 										</tr>
 									</table>
-									<a href="#" class="button add-pricing-list-item">Add Item</a>
-									<a href="#" class="button add-pricing-submenu">Add Category</a>
+									<!-- <a href="#" class="button add-pricing-list-item">Add Item</a>
+									<a href="#" class="button add-pricing-submenu">Add Category</a> -->
 								</div>
 							</div>
 
@@ -418,7 +260,7 @@
 					<!-- Section / End -->
 
 
-					<a href="#" class="button preview">Preview <i class="fa fa-arrow-circle-right"></i></a>
+					<!-- <a href="#" class="button preview">Preview <i class="fa fa-arrow-circle-right"></i></a> -->
 
 				</div>
 			</div>
