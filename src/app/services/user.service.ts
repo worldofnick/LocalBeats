@@ -6,10 +6,10 @@ import { User } from 'app/models/user';
 
 @Injectable()
 export class UserService {
-    // public connection: string = 'http://localhost:8080/api/auth';
-    // public userConnection: string = 'http://localhost:8080/api/users';
-    public connection: string = 'https://localbeats.herokuapp.com/api/auth';
-    public userConnection: string = 'https://localbeats.herokuapp.com/api/users';
+    public connection: string = 'http://localhost:8080/api/auth';
+    public userConnection: string = 'http://localhost:8080/api/users';
+    // public connection: string = 'https://localbeats.herokuapp.com/api/auth';
+    // public userConnection: string = 'https://localbeats.herokuapp.com/api/users';
     public accessToken: string = null;
     public user: User = null;
 
