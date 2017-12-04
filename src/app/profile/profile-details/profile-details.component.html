@@ -8,7 +8,7 @@
         <div class="user-profile-titlebar">
           <div class="user-profile-avatar"><img src="../../assets/images/jimsmall.png" alt=""></div>
           <div class="user-profile-name">
-            <h2>{{ getProfileName() }}</h2>
+            <h2>{{ this.userService.user.firstName }} {{ this.userService.user.lastName }} </h2>
             <div class="star-rating" data-rating="5">
               <div class="rating-counter"><a href="#listing-reviews">(60 reviews)</a></div>
             </div>
@@ -41,8 +41,8 @@
       <div class="boxed-widget margin-top-30 margin-bottom-50">
         <h3>Contact</h3>
         <ul class="listing-details-sidebar">
-          <li><i class="sl sl-icon-phone"></i>{{ userService.user.phone }}</li>
-          <li><i class="fa fa-envelope-o"></i> <a href="#">{{ userService.user.email }}</a></li>
+          <!-- <li><i class="sl sl-icon-phone"></i>{{ userService.user.phone }}</li> -->
+          <li><i class="fa fa-envelope-o"></i> <a href="#">{{ this.userService.user.email }}</a></li>
         </ul>
 
         <ul class="listing-details-sidebar social-profiles">
@@ -51,19 +51,10 @@
           <!-- <li><a href="#" class="gplus-profile"><i class="fa fa-google-plus"></i> Google Plus</a></li> -->
         </ul>
 
-        <!-- Reply to review popup -->
-        <div id="small-dialog" class="zoom-anim-dialog mfp-hide">
-          <div class="small-dialog-header">
-            <h3>Send Message</h3>
-          </div>
-          <div class="message-reply margin-top-0">
-            <textarea cols="40" rows="3" placeholder="Your message to Tom"></textarea>
-            <button class="button">Send Message</button>
-          </div>
-        </div>
+        
 
-        <a href="#small-dialog" class="send-message-to-owner button popup-with-zoom-anim"><i class="sl sl-icon-envelope-open"></i> Send Message</a>
-        <br />
+        <!-- <a href="#" (click) = "onSubmit()"><i class="sl sl-icon-envelope-open"></i>Edit Profile</a> -->
+
         <button class="button"
         (click) = "onSubmit()">
         Edit profile</button>
