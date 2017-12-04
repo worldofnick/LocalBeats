@@ -9,11 +9,11 @@ var config    = require('../../config.js');
 // ====== Bookings ROUTES ======
 
 exports.listAllBookings = function (req, res) {
-    Bookings.find({}, function (err, booking) {
+    Bookings.find({}, function (err, bookings) {
       if (err)
         return res.send(err);
 
-      return res.status(200).send(booking);
+      return res.status(200).send(bookings);
     });
 };
 
@@ -22,7 +22,7 @@ exports.getBookingByID = function (req, res) {
       if (err) {
           return res.status(500).send("Failed to get booking");
       } else {
-          return res.status(200).send(booking);
+          return res.status(200).send({ "booking": booking });
       }
   });
 };
@@ -36,7 +36,7 @@ exports.createBooking = function (req, res) {
                 description: "Failed to create a booking"
             });
         } else {
-            return res.status(200).send(booking);
+            return res.status(200).send({ "booking": booking });
         }
     });
 };
@@ -46,7 +46,7 @@ exports.updateBookingByID = function (req, res) {
         if (err) {
             return res.status(500).send("There was a problem updating the booking.");
         }
-        return res.status(200).send(booking);
+        return res.status(200).send({ "booking": booking });
     });
 };
 

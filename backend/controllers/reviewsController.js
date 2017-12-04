@@ -22,7 +22,7 @@ exports.getReviewByID = function (req, res) {
       if (err) {
           return res.status(500).send("Failed to get review");
       } else {
-          return res.status(200).send(review);
+          return res.status(200).send({ "review": review });
       }
   });
 };
@@ -36,7 +36,7 @@ exports.createReview = function (req, res) {
                 description: "Failed to create a review"
             });
         } else {
-            return res.status(200).send(review);
+            return res.status(200).send({ "review": review });
         }
     });
 };
@@ -46,7 +46,7 @@ exports.updateReviewByID = function (req, res) {
         if (err) {
             return res.status(500).send("There was a problem updating the review.");
         }
-        return res.status(200).send(review);
+        return res.status(200).send({ "review": review });
     });
 };
 

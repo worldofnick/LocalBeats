@@ -12,8 +12,8 @@ exports.listAllEvents = function (req, res) {
     Events.find({}, function (err, event) {
       if (err)
         return res.send(err);
-      
-      return res.status(200).send(event);
+
+      return res.status(200).send({ "event": event });
     });
   };
 
@@ -23,7 +23,7 @@ exports.getEventByID = function (req, res) {
         if (err) {
             return res.status(500).send("Failed to get event");
         } else {
-            return res.status(200).send(event);
+            return res.status(200).send({ "event": event });
         }
     });
 };
@@ -37,7 +37,7 @@ exports.createEvent = function (req, res) {
                 description: "Failed to create an event"
             });
         } else {
-            return res.status(200).send(event);
+            return res.status(200).send({ "event": event });
         }
     });
 };    
@@ -47,7 +47,7 @@ exports.updateEventByID = function (req, res) {
         if (err) {
             return res.status(500).send("There was a problem updating the event.");
         }
-        return res.status(200).send(event);
+        return res.status(200).send({ "event": event });
     });
 };
 
