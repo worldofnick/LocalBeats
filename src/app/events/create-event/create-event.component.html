@@ -4,57 +4,59 @@
 <!-- Dashboard -->
 <!-- <div id="dashboard"> -->
 
-	<!-- Content
+<!-- Content
 	================================================== -->
-	<div class="dashboard-content">
+<div class="dashboard-content">
+  <div class="row">
+    <div class="col-lg-12">
+      <form (ngSubmit)="onCreateEvent(r)" #r="ngForm" method="post" class="createEvent">
+        <div id="add-listing">
+          <!-- Section -->
+          <div class="add-listing-section">
 
+            <!-- Headline -->
+            <div class="add-listing-headline">
+              <h3>
+                <i class="sl sl-icon-doc"></i> Event Information</h3>
+            </div>
 
-		<div class="row">
-			<div class="col-lg-12">
+            <!-- Title -->
+            <div class="row with-forms">
+              <div class="col-md-12">
+                <h5>Event Title
+                  <i class="tip" data-tip-content="Name of your event"></i>
+                </h5>
+                <!-- <input class="search-field" type="text" value="" style="width: 500px;"/> -->
+                <!-- [(ngModel)]="model.eventName" -->
+                <input class="search-field" name="eventName" type="text" placeholder="Event Title" />
+              </div>
+            </div>
 
-				<div id="add-listing">
+            <!-- Row -->
+            <div class="row with-forms">
 
-					<!-- Section -->
-					<div class="add-listing-section">
-
-						<!-- Headline -->
-						<div class="add-listing-headline">
-							<h3><i class="sl sl-icon-doc"></i> Event Information</h3>
-						</div>
-
-						<!-- Title -->
-						<div class="row with-forms">
-							<div class="col-md-12">
-								<h5>Event Title<i class="tip" data-tip-content="Name of your event"></i></h5>
-								<input class="search-field" type="text" value="" style="width: 500px;"/>
-							</div>
-						</div>
-
-						<!-- Row -->
-						<div class="row with-forms">
-
-							<!-- Status -->
-							<div class="col-md-6">
-								<h5>Event Type</h5>
-								<select style="width: 500px;" class="chosen-select-no-single" >
-									<option label="blank">Select Category</option>	
-									<option>Wedding</option>
+              <!-- Status -->
+              <div class="col-md-6">
+                <h5>Event Type</h5>
+                <select style="width: 500px;" class="chosen-select-no-single">
+                  <option label="blank">Select Category</option>
+                  <option>Wedding</option>
                   <option>Live Music</option>
                   <option>Birthday</option>
                   <option>Business</option>
-								</select>
-							</div>
+                </select>
+              </div>
 
-						</div>
+            </div>
             <!-- Row / End -->
-            
+
             <!-- Row -->
-						<div class="row with-forms">
+            <div class="row with-forms">
               <!-- Status -->
               <div class="col-md-6">
                 <h5>Music Genre</h5>
-                <select style="width: 500px;" class="chosen-select-no-single" >
-                  <option label="blank">Select Category</option>	
+                <select style="width: 500px;" class="chosen-select-no-single">
+                  <option label="blank">Select Category</option>
                   <option>Electronic</option>
                   <option>Rock</option>
                 </select>
@@ -63,220 +65,213 @@
             </div>
             <!-- Row / End -->
 
-					</div>
-					<!-- Section / End -->
+          </div>
+          <!-- Section / End -->
 
-          					<!-- Section -->
-					<div class="add-listing-section margin-top-45">
-            
-              <!-- Headline -->
-              <div class="add-listing-headline">
-                <h3><i class="sl sl-icon-docs"></i> Details</h3>
+          <!-- Section -->
+          <div class="add-listing-section margin-top-45">
+
+            <!-- Headline -->
+            <div class="add-listing-headline">
+              <h3>
+                <i class="sl sl-icon-docs"></i> Details</h3>
+            </div>
+
+            <!-- Description -->
+            <div class="form">
+              <h5>Description</h5>
+              <textarea class="WYSIWYG" name="summary" cols="40" rows="3" id="summary" spellcheck="true"></textarea>
+            </div>
+
+          </div>
+          <!-- Section / End -->
+
+          <!-- Section -->
+          <div class="add-listing-section margin-top-45">
+
+            <!-- Headline -->
+            <div class="add-listing-headline">
+              <h3>
+                <i class="sl sl-icon-location"></i> Location</h3>
+            </div>
+
+            <div class="submit-section">
+
+              <!-- Row -->
+              <div class="row with-forms">
+
+                <!-- City -->
+                <div class="col-md-6">
+                  <h5>City</h5>
+                  <select class="chosen-select-no-single">
+                    <option label="blank">Select City</option>
+                    <option>Salt Lake City</option>
+                  </select>
+
+                  <div class="col-md-6">
+                    <h5>Zip-Code</h5>
+                    <input type="text">
+                  </div>
+
+                  <!-- Address -->
+                  <div class="col-md-6">
+                    <h5>Address</h5>
+                    <input type="text" placeholder="e.g. 123 Recrusion St">
+                  </div>
+
+                  <!-- City -->
+                  <div class="col-md-6">
+                    <h5>State</h5>
+                    <input type="text">
+                  </div>
+                </div>
+                <!-- Row / End -->
+
               </div>
-  
-              <!-- Description -->
-              <div class="form">
-                <h5>Description</h5>
-                <textarea class="WYSIWYG" name="summary" cols="40" rows="3" id="summary" spellcheck="true"></textarea>
-              </div>
-  
             </div>
             <!-- Section / End -->
 
-					<!-- Section -->
-					<div class="add-listing-section margin-top-45">
+            <!-- Section -->
+            <div class="add-listing-section margin-top-45">
 
-						<!-- Headline -->
-						<div class="add-listing-headline">
-							<h3><i class="sl sl-icon-location"></i> Location</h3>
-						</div>
+              <!-- Headline -->
+              <div class="add-listing-headline">
+                <h3>
+                  <i class="sl sl-icon-clock"></i>Time</h3>
+                <!-- Switcher -->
+                <label class="switch">
+                  <input type="checkbox" checked>
+                  <span class="slider round"></span>
+                </label>
+              </div>
 
-						<div class="submit-section">
+              <!-- Switcher ON-OFF Content -->
+              <div class="switcher-content">
 
-							<!-- Row -->
-							<div class="row with-forms">
-
-								<!-- City -->
-								<div class="col-md-6">
-									<h5>City</h5>
-									<select class="chosen-select-no-single" >
-										<option label="blank">Select City</option>	
-										<option>Salt Lake City</option>
-                  </select>
-                  
-
-                  <h5>Zip-Code</h5>
-                  <input type="text">
-								</div>
-
-								<!-- Address -->
-								<div class="col-md-6">
-									<h5>Address</h5>
-									<input type="text" placeholder="e.g. 123 Recrusion St">
-								</div>
-
-								<!-- City -->
-								<div class="col-md-6">
-									<h5>State</h5>
-									<input type="text">
-								</div>
-
-								<!-- Zip-Code -->
-								<!-- <div class="col-md-6">
-									<h5>Zip-Code</h5>
-                  <input type="text">
-								</div>  -->
-
-							</div>
-							<!-- Row / End -->
-
-						</div>
-					</div>
-          <!-- Section / End -->
-          
-					<!-- Section -->
-					<div class="add-listing-section margin-top-45">
-						
-						<!-- Headline -->
-						<div class="add-listing-headline">
-							<h3><i class="sl sl-icon-clock"></i>Time</h3>
-							<!-- Switcher -->
-							<label class="switch"><input type="checkbox" checked><span class="slider round"></span></label>
-						</div>
-						
-						<!-- Switcher ON-OFF Content -->
-						<div class="switcher-content">
-
-							<!-- Day -->
-							<div class="row opening-day">
-								<div class="col-md-2"><h5>Event times:</h5></div>
-								<div class="col-md-5">
-									<select class="chosen-select" data-placeholder="Start Time">
-										<option label="Start Time"></option>
-										<option>Closed</option>
-										<option>1 AM</option>
-										<option>2 AM</option>
-										<option>3 AM</option>
-										<option>4 AM</option>
-										<option>5 AM</option>
-										<option>6 AM</option>
-										<option>7 AM</option>
-										<option>8 AM</option>
-										<option>9 AM</option>
-										<option>10 AM</option>
-										<option>11 AM</option>
-										<option>12 AM</option>	
-										<option>1 PM</option>
-										<option>2 PM</option>
-										<option>3 PM</option>
-										<option>4 PM</option>
-										<option>5 PM</option>
-										<option>6 PM</option>
-										<option>7 PM</option>
-										<option>8 PM</option>
-										<option>9 PM</option>
-										<option>10 PM</option>
-										<option>11 PM</option>
-										<option>12 PM</option>
-									</select>
-								</div>
-								<div class="col-md-5">
-									<select class="chosen-select" data-placeholder="End Time">
-										<option label="End Time"></option>
-										<option>Closed</option>
-										<option>1 AM</option>
-										<option>2 AM</option>
-										<option>3 AM</option>
-										<option>4 AM</option>
-										<option>5 AM</option>
-										<option>6 AM</option>
-										<option>7 AM</option>
-										<option>8 AM</option>
-										<option>9 AM</option>
-										<option>10 AM</option>
-										<option>11 AM</option>
-										<option>12 AM</option>	
-										<option>1 PM</option>
-										<option>2 PM</option>
-										<option>3 PM</option>
-										<option>4 PM</option>
-										<option>5 PM</option>
-										<option>6 PM</option>
-										<option>7 PM</option>
-										<option>8 PM</option>
-										<option>9 PM</option>
-										<option>10 PM</option>
-										<option>11 PM</option>
-										<option>12 PM</option>
-									</select>
-								</div>
-							</div>
-							<!-- Day / End -->
-
-						
-
-						</div>
-						<!-- Switcher ON-OFF Content / End -->
-
-					</div>
-					<!-- Section / End -->
+                <!-- Day -->
+                <div class="row opening-day">
+                  <div class="col-md-2">
+                    <h5>Event times:</h5>
+                  </div>
+                  <div class="col-md-5">
+                    <select class="chosen-select" data-placeholder="Start Time">
+                      <option label="Start Time"></option>
+                      <option>Closed</option>
+                      <option>1 AM</option>
+                      <option>2 AM</option>
+                      <option>3 AM</option>
+                      <option>4 AM</option>
+                      <option>5 AM</option>
+                      <option>6 AM</option>
+                      <option>7 AM</option>
+                      <option>8 AM</option>
+                      <option>9 AM</option>
+                      <option>10 AM</option>
+                      <option>11 AM</option>
+                      <option>12 AM</option>
+                      <option>1 PM</option>
+                      <option>2 PM</option>
+                      <option>3 PM</option>
+                      <option>4 PM</option>
+                      <option>5 PM</option>
+                      <option>6 PM</option>
+                      <option>7 PM</option>
+                      <option>8 PM</option>
+                      <option>9 PM</option>
+                      <option>10 PM</option>
+                      <option>11 PM</option>
+                      <option>12 PM</option>
+                    </select>
+                  </div>
+                  <div class="col-md-5">
+                    <select class="chosen-select" data-placeholder="End Time">
+                      <option label="End Time"></option>
+                      <option>Closed</option>
+                      <option>1 AM</option>
+                      <option>2 AM</option>
+                      <option>3 AM</option>
+                      <option>4 AM</option>
+                      <option>5 AM</option>
+                      <option>6 AM</option>
+                      <option>7 AM</option>
+                      <option>8 AM</option>
+                      <option>9 AM</option>
+                      <option>10 AM</option>
+                      <option>11 AM</option>
+                      <option>12 AM</option>
+                      <option>1 PM</option>
+                      <option>2 PM</option>
+                      <option>3 PM</option>
+                      <option>4 PM</option>
+                      <option>5 PM</option>
+                      <option>6 PM</option>
+                      <option>7 PM</option>
+                      <option>8 PM</option>
+                      <option>9 PM</option>
+                      <option>10 PM</option>
+                      <option>11 PM</option>
+                      <option>12 PM</option>
+                    </select>
+                  </div>
+                </div>
+                <!-- Day / End -->
 
 
-					<!-- Section -->
-					<div class="add-listing-section margin-top-45">
-						
-						<!-- Headline -->
-						<div class="add-listing-headline">
-							<h3><i class="sl sl-icon-book-open"></i> Pricing</h3>
-							<!-- Switcher -->
-							<label class="switch"><input type="checkbox" checked><span class="slider round"></span></label>
-						</div>
 
-						<!-- Switcher ON-OFF Content -->
-						<div class="switcher-content">
+              </div>
+              <!-- Switcher ON-OFF Content / End -->
 
-							<div class="row">
-								<div class="col-md-12">
-									<table id="pricing-list-container">
-										<tr class="pricing-list-item pattern">
-											<td>
-												<!-- <div class="fm-move"><i class="sl sl-icon-cursor-move"></i></div> -->
-												<!-- <div class="fm-input pricing-name"><input type="text" placeholder="Title" /></div> -->
-												<!-- <div class="fm-input pricing-ingredients"><input type="text" placeholder="Description" /></div> -->
-												<div class="fm-input pricing-price"><input type="text" placeholder="Price" data-unit="USD" /></div>
-												<!-- <div class="fm-close"><a class="delete" href="#"><i class="fa fa-remove"></i></a></div> -->
-											</td>
-										</tr>
-									</table>
-									<!-- <a href="#" class="button add-pricing-list-item">Add Item</a>
-									<a href="#" class="button add-pricing-submenu">Add Category</a> -->
-								</div>
-							</div>
-
-						</div>
-						<!-- Switcher ON-OFF Content / End -->
-
-					</div>
-					<!-- Section / End -->
+            </div>
+            <!-- Section / End -->
 
 
-					<!-- <a href="#" class="button preview">Preview <i class="fa fa-arrow-circle-right"></i></a> -->
+            <!-- Section -->
+            <div class="add-listing-section margin-top-45">
 
-				</div>
-			</div>
+              <!-- Headline -->
+              <div class="add-listing-headline">
+                <h3>
+                  <i class="sl sl-icon-book-open"></i> Pricing</h3>
+                <!-- Switcher -->
+                <label class="switch">
+                  <input type="checkbox" checked>
+                  <span class="slider round"></span>
+                </label>
+              </div>
 
-		</div>
+              <!-- Switcher ON-OFF Content -->
+              <div class="switcher-content">
 
-	</div>
-	<!-- Content / End -->
+                <div class="row">
+                  <div class="col-md-12">
+                    <table id="pricing-list-container">
+                      <tr class="pricing-list-item pattern">
+                        <td>
+                          <div class="fm-input pricing-price">
+                            <input type="text" placeholder="Price" data-unit="USD" />
+                          </div>
+                        </td>
+                      </tr>
+                    </table>
+                  </div>
+                </div>
+              </div>
+              <!-- Switcher ON-OFF Content / End -->
 
-
-<!-- </div> -->
+            </div>
+            <input type="submit" class="button border fw margin-top-10" name="createEvent" value="Create Event" />
+            <!-- Section / End -->
+          </div>
+          <!-- end section -->
+        </div>
+        <!-- add listing end -->
+      </form>
+    </div>
+  </div>
+  <!-- Content / End -->
+</div>
 <!-- Dashboard / End -->
 
 
 <!-- </div> -->
 <!-- Wrapper / End -->
-
-
-

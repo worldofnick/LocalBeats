@@ -21,6 +21,7 @@ import { SearchResultComponent } from './search/search-result/search-result.comp
 import { SearchBarComponent } from './search/search-bar/search-bar.component';
 import { EventsComponent } from './events/events.component';
 import { CreateEventComponent } from './events/create-event/create-event.component';
+import { EventService } from 'app/services/event.service';
 // import { UserSearchResultComponent } from './search/user-search-result/user-search-result.component';
 // import { EventSearchResultComponent } from './search/event-search-result/event-search-result.component';
 
@@ -52,7 +53,7 @@ import { CreateEventComponent } from './events/create-event/create-event.compone
     HttpModule,
     AppRoutingModule
   ],
-  providers: [UserService, UserGuard],
+  providers: [UserService, UserGuard, EventService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
