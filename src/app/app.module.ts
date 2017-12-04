@@ -19,8 +19,8 @@ import { ProfileEditComponent } from './profile/profile-edit/profile-edit.compon
 import { ProfileDetailsComponent } from './profile/profile-details/profile-details.component';
 import { SearchResultComponent } from './search/search-result/search-result.component';
 import { SearchBarComponent } from './search/search-bar/search-bar.component';
-import { UserSearchResultComponent } from './search/user-search-result/user-search-result.component';
-import { EventSearchResultComponent } from './search/event-search-result/event-search-result.component';
+// import { UserSearchResultComponent } from './search/user-search-result/user-search-result.component';
+// import { EventSearchResultComponent } from './search/event-search-result/event-search-result.component';
 
 
 
@@ -39,8 +39,8 @@ import { EventSearchResultComponent } from './search/event-search-result/event-s
     ProfileDetailsComponent,
     SearchResultComponent,
     SearchBarComponent,
-    UserSearchResultComponent,
-    EventSearchResultComponent
+    // UserSearchResultComponent,
+    // EventSearchResultComponent
   ],
   imports: [
     BrowserModule,
