@@ -16,15 +16,18 @@ import { Event } from 'app/models/event';
 export class CreateEventComponent implements OnInit {
 
   model:Event;
+  user:User;
 
   constructor(private eventService: EventService, private userSerivce: UserService, private router: Router) { }
   
   ngOnInit() {
+    this.user = this.userSerivce.user;
+    console.log(this.user._id);
   }
 
  onCreateEvent(form: NgForm) {
     console.log("printing host id");
-    console.log(this.userSerivce.user._id);
+    // console.log(this.user._id);
     
     
     // const lastName = form.value.lastname;
