@@ -1,3 +1,4 @@
+// 'use strict';
 import { Injectable } from '@angular/core';
 import { Http, Headers, RequestOptions, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
@@ -6,7 +7,7 @@ import { User } from 'app/models/user';
 @Injectable()
 export class UserService {
     public connection: string = 'http://localhost:8080/api/auth';
-    public userConnection: string = 'htpp://localhost:8080/users';
+    public userConnection: string = 'http://localhost:8080/api/users';
     public accessToken: string = null;
     public user: User = null;
 
@@ -32,12 +33,15 @@ export class UserService {
     // post("/api/profile-edit")
     public onEditProfile(newUser: User): Promise<User> {
         const current = this.userConnection + '/' + newUser._id;
-        console.log(current);
-        return this.http.put(current, newUser, {headers: this.headers} )
+        console.log("sending user : ");
+        console.log(newUser);
+        return this.http.put(current, {user : newUser}, {headers: this.headers} )
             .toPromise()
             .then((response: Response) => {
                 const data = response.json();
                 this.user = data.user as User;
+                console.log("user response obj");
+                console.log(this.user);
                 return this.user
             })
             .catch(this.handleError);

@@ -23,22 +23,30 @@ export class ProfileEditComponent implements OnInit {
   constructor(private userService: UserService, private router: Router) { 
     // this.user = userService.user;
     // this.model = new User(this.user._id, this.user.firstName, this.user.lastName, this.user.email, this.user.password);
-    this.model = userService.user;
+    
   }
 
   ngOnInit() {
-
+    this.model = this.userService.user;
   }
 
   onEditProfile(form: NgForm) {
     const firstName = form.value.firstname;
     const lastName = form.value.lastname;
     const email: string = form.value.email;
-    const password: string = form.value.password1;
+
+    //TODO: only save the edited parts of the profile
+    this.model.firstName = firstName,
+    this.model.lastName = lastName,
+    this.model.email = email,
+    // this.modelpassword: password,
+
+
+    console.log("sending \n" );
+    console.log(this.model);
 
     this.userService.onEditProfile(this.model).then((user: User) => {
-      this.model = user;
-      console.log(this.model)
+      this.model = user;      
       this.userService.user = this.model; 
       this.router.navigate(['/profile']);
     });
