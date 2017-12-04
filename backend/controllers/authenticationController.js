@@ -42,14 +42,14 @@ exports.register = function (req, res) {
    * @param {*} res : The user object
    */
   exports.changePassword = function (req, res) {
-    var oldUser = new User(req.body.user);
-    console.log("OLD USER: \n");
-    console.log(oldUser);
+    // var oldUser = new User(req.body.user);
+    // console.log("OLD USER: \n");
+    // console.log(oldUser);
 
-    var newUser = new User(req.body.user);
-    newUser.hashPassword = bcrypt.hashSync(req.body.newPassword, 10);
+    // var newUser = new User(req.body.user);
+    var newHashPassword = bcrypt.hashSync(req.body.newPassword, 10);
     
-    User.findByIdAndUpdate(req.params.uid, newUser, { new: true }, function (err, user) {
+    User.findByIdAndUpdate(req.params.uid, { hashPassword: newHashPassword}, { new: true }, function (err, user) {
       if (err) return res.status(500).send("There was a problem updating the password.");
       user.hashPassword = undefined;
       console.log(user);
