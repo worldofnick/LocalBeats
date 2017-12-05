@@ -12,8 +12,13 @@ exports.listAllEvents = function (req, res) {
     Events.find({}, function (err, event) {
       if (err)
         return res.send(err);
-
-      return res.status(200).send({ "event": event });
+    
+        var events = [];
+        event.forEach(function(event) {
+            events.push({"event": event});
+        });
+        
+      return res.status(200).send(events);
     });
   };
 
@@ -200,7 +205,12 @@ exports.searchEvents = function(req, res) {
       if (err) {
           return res.status(500).send(err);
       } else {
-          return res.status(200).send(doc);
+            var events = [];
+            doc.forEach(function(event) {
+                events.push({"event": event});
+            });
+            
+            return res.status(200).send(events);
       }
   });
 };
