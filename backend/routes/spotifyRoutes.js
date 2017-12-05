@@ -11,6 +11,7 @@ module.exports = function(app) {
     
     spotifyHandler.grantClientCredentials();
 
+    // Routes using the SPOTIFY_USERNAME
 	app.route('/api/users/spotify/:username/playlists/')
         .get(spotifyHandler.getAllPlaylists);
         
@@ -20,6 +21,7 @@ module.exports = function(app) {
     app.route('/api/users/spotify/:username/playlist/:playlist_id')
         .get(spotifyHandler.getPlaylistByID);
         
+    // Routes using the normal UID
     app.route('/api/users/spotify/users/:uid/playlists/')
         .get(spotifyHandler.getAllPlaylistsByUID);
 
