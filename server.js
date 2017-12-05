@@ -1,17 +1,19 @@
 // =================================================================
 // Get the packages we need
 // =================================================================
-var express 	  = require('express');
-var app         = express();
-var bodyParser  = require('body-parser');
-var morgan      = require('morgan');
-var mongoose    = require('mongoose');
+var express 		= require('express');
+var app         	= express();
+var bodyParser  	= require('body-parser');
+var morgan      	= require('morgan');
+var mongoose    	= require('mongoose');
 
 var jwt    = require('jsonwebtoken');                // used to create, sign, and verify tokens
 var config = require('./config');                    // get our config file
 var User   = require('./backend/models/userModel');  // get our mongoose model
 var Events = require('./backend/models/eventsModel');  // get our mongoose model
 var Bookings = require('./backend/models/bookingsModel');
+
+
 
 var distDir = __dirname + "/dist/";
 app.use(express.static(distDir));           // Create link to Angular build directory
@@ -46,14 +48,16 @@ app.use(function(req, res, next) {
 // API Routes
 // =================================================================
 
-var userRoutes = require('./backend/routes/userRoutes.js');
-var authenticationRoutes = require('./backend/routes/authenticationRoutes.js');
-var eventsRoutes = require('./backend/routes/eventsRoutes.js');
-var bookingsRoutes = require('./backend/routes/bookingsRoutes.js');
+var userRoutes            = require('./backend/routes/userRoutes.js');
+var authenticationRoutes  = require('./backend/routes/authenticationRoutes.js');
+var eventsRoutes          = require('./backend/routes/eventsRoutes.js');
+var bookingsRoutes        = require('./backend/routes/bookingsRoutes.js');
+var spotifyRoutes 		    = require('./backend/routes/spotifyRoutes.js');
 userRoutes(app);
 authenticationRoutes(app);
 eventsRoutes(app);
 bookingsRoutes(app);
+spotifyRoutes(app);
 
 
 // basic route (http://localhost:8080)

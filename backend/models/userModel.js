@@ -14,8 +14,6 @@ var UserSchema = new Schema({
     birthday      : {type: Date},
     joinDate      : {type: Date, default: Date.now},
     profilePicUrl : {type: String, default: 'https://www.vccircle.com/wp-content/uploads/2017/03/default-profile.png'},
-    soundcloudID  : {type: String},
-    spotifyID     : {type: String},
     likesGenres   : {type: Array},
     soundcloudID  : {type: String},
     spotifyID     : {type: String},
