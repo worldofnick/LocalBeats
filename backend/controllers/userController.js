@@ -9,11 +9,16 @@ var config    = require('../../config.js');
 // ====== USER ROUTES ======
 
 exports.listAllUsers = function (req, res) {
-  User.find({}, { hashPassword: 0 }, function (err, user) {
+  User.find({}, { hashPassword: 0 }, function (err, users) {
     if (err)
       return res.send(err);
     user.hashPassword = undefined;
-    return res.status(200).send(user);
+    var usrs = [];
+    users.forEach(function(user) {
+        usrs.push({"user": user});
+    });
+      
+    return res.status(200).send(usrs);
   });
 };
 
@@ -70,6 +75,11 @@ exports.searchUsersByName = function (req, res) {
     if (err)
       return res.send(err);
 
-    return res.status(200).send(users);
+    var usrs = [];
+    users.forEach(function(user) {
+        usrs.push({"user": user});
+    });
+      
+    return res.status(200).send(usrs);
   });
 };
