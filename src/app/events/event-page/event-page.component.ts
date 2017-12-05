@@ -17,12 +17,12 @@ export class EventPageComponent implements OnInit {
   model:Event;
   user:User;
 
-  constructor(private eventService: EventService, private userService: UserService, private router: Router) { }
+  constructor(private eventService: EventService, private userSerivce: UserService, private router: Router) { }
 
   ngOnInit() {
     
     this.model = this.eventService.event;
-    this.user = this.userService.user;
+    this.user = this.userSerivce.user;
     console.log("in ngonit in event page..printing data " );
     console.log(this.model._id);
     

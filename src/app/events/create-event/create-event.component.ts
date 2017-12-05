@@ -7,13 +7,6 @@ import { EventService } from 'app/services/event.service';
 import { print } from 'util';
 import { Injectable } from '@angular/core';
 import { Event } from 'app/models/event';
-import {ChangeDetectionStrategy} from '@angular/core';
-import {FormControl} from '@angular/forms';
-// import '~@angular/material/core/theming/prebuilt/deeppurple-amber';
-// import { MaterialModule } from '../../material.module';
-
-// import { MaterialModule } from '@angular/material/material';
-// import { DatePickerModule } from 'angular-material-datepicker';
 
 @Component({
   selector: 'app-create-event',
@@ -43,10 +36,7 @@ export class CreateEventComponent implements OnInit {
     const eventGenre = form.value.eventGenre;
     // const hostEmail = form.value.hostemail;
     const address = form.value.address;
-    const city = form.value.city;
-    const zip = form.value.zip;
     const fromDate = form.value.fromDate;
-    const state = form.value.state;
     const toDate = form.value.toDate;
     const description = form.value.description;
     const fixedPrice = form.value.fixedPrice;
@@ -58,12 +48,9 @@ export class CreateEventComponent implements OnInit {
     this.model.eventType = eventType;
     this.model.eventGenre = eventGenre;
     this.model.address = address;
-    this.model.city = city;
-    this.model.state = state;
-    this.model.zip = zip;
     // this.model.fromDate = fromDate;
     // this.model.toDate = toDate;
-    this.model.description = "FILLERFILLERFILLERFILLERFILLER";
+    this.model.description = description;
 
     console.log("printing event dscription");
     console.log(this.model.description);
