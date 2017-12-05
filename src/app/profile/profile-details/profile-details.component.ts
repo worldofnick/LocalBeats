@@ -13,13 +13,6 @@ export class ProfileDetailsComponent implements OnInit {
  
   // profile: Profile;
   constructor(private userService: UserService, private router: Router) { 
-    this.userService.user = {
-      _id: null,
-      firstName: 'Adam',
-      lastName: 'Rosenberg',
-      email: 'adam@adam.com',
-      password: 'brandon',
-    }
   }
 
   getProfileName(){
