@@ -13,7 +13,7 @@ var EventsSchema = new Schema({
     hostEmail       : {type: String, lowercase: true, required: true},
     performerEmail  : {type: String, lowercase: true, required: true},
     address         : {type: String},
-    fromDate        : {type: Date, default: Date.now},
+    fromDate        : {type: Date},
     toDate          : {type: Date},
     description     : {type: String},
     fixedPrice      : {type: Number},

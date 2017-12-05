@@ -11,6 +11,7 @@ var ReviewSchema = new Schema({
     title           : {type: String, required: true},
     text            : {type: String, required: true},
     rating          : {type: Number, required: true},
+    date            : {type: Date, default: Date.now},
     flagCount       : {type: Number, default: 0}
 }, {strict: true}, {versionKey: false});
 
