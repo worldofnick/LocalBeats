@@ -2,6 +2,8 @@
 
 var config = require('../../config');
 var spotifyWebApi = require('spotify-web-api-node');
+var mongoose  = require('mongoose');
+var User      = mongoose.model('User');
 
 /**
  * Set the credentials given on Spotify's My Applications page.
@@ -48,6 +50,7 @@ exports.getAllPlaylists = function (req, res) {
       console.log('IS JSON EMPYT?: ', isResultEmpty(data.body));
       return res.status(200).send({ playlists: data.body });
     }, function (err) {
+      return res.status(404).send({ message: "Something went wrong...", error: err});
       console.log('Something went wrong!', err);
     });
 };
@@ -76,6 +79,7 @@ exports.getFirstPlaylist = function (req, res) {
       }
       
     }, function (err) {
+      return res.status(404).send({ message: "Something went wrong...", error: err});
       console.log('Something went wrong!', err);
     });
 };
@@ -92,6 +96,33 @@ exports.getPlaylistByID = function (req, res) {
     console.log('\n-------------\nPlaylist: \n-------------\n', data.body);
     return res.status(200).send({ uri: data.body.uri });
   }, function(err) {
+    return res.status(404).send({ message: "Something went wrong...", error: err});
     console.log('Something went wrong!', err);
+  });
+};
+
+/**
+ * Get all the playlists of a user by uid
+ * @param {*} req - Contains uid
+ * @param {*} res - Contains the URI for the Spotify Playlist Widget
+ */
+exports.getAllPlaylistsByUID = function (req, res) {
+
+  var theUser;
+  User.findById(req.params.uid, function (err, user) {
+    if (err) {
+      return res.status(404).send({ message: "Something went wrong...", error: err});
+    }
+    theUser = new User(user);
+    console.log("USER: ");
+    console.log(theUser);
+    spotifyApi.getUserPlaylists(req.params.spotifyID)
+      .then(function (data) {
+        console.log('IS JSON EMPYT?: ', isResultEmpty(data.body));
+        return res.status(200).send({ playlists: data.body });
+      }, function (err) {
+        return res.status(404).send({ message: "Something went wrong...", error: err});
+        console.log('Something went wrong!', err);
+      });
   });
 };
