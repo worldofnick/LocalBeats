@@ -126,3 +126,37 @@ exports.getAllPlaylistsByUID = function (req, res) {
       });
   });
 };
+
+/**
+ * Get the first playlist OWNED by this user. If the user 
+ * has playlists but does not OWN any of those, then 404 is returned.
+ * @param {*} req - Contains uid
+ * @param {*} res - Contains the URI for the Spotify Playlist Widget
+ */
+exports.getFirstPlaylistByUID = function (req, res) {
+  User.findById(req.params.uid, function (err, user) {
+    if (err) {
+      return res.status(404).send({ message: "Something went wrong...", error: err});
+    }
+  spotifyApi.getUserPlaylists(user.spotifyID)
+    .then(function (data) {
+      console.log('IS JSON EMPYT?: ', isResultEmpty(data.body));
+      if(!isResultEmpty(data.body)) {
+        // console.log(data.body);
+        for(var playlist of data.body.items) {
+          if(playlist.owner.id == user.spotifyID) {
+            return res.status(200).send({ uri: playlist.uri });
+          }
+        }
+        return res.status(404).send({ message: "None of the playlists belong to "  + user.firstName });
+        
+      } else {
+        return res.status(404).send({ message: user.firstName + " has no playlists!" });
+      }
+      
+    }, function (err) {
+      return res.status(404).send({ message: "Something went wrong...", error: err});
+      console.log('Something went wrong!', err);
+    });
+  });
+};
