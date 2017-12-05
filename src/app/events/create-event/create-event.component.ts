@@ -67,5 +67,8 @@ export class CreateEventComponent implements OnInit {
       console.log(this.model._id); 
       this.router.navigate(['/event-page']); //this will go to the page about the event
     });
+
+
+    
   }
 }

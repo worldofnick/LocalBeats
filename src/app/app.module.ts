@@ -19,7 +19,6 @@ import { ProfileEditComponent } from './profile/profile-edit/profile-edit.compon
 import { ProfileDetailsComponent } from './profile/profile-details/profile-details.component';
 import { SearchResultComponent } from './search/search-result/search-result.component';
 import { SearchBarComponent } from './search/search-bar/search-bar.component';
-import { EventsComponent } from './events/events.component';
 import { CreateEventComponent } from './events/create-event/create-event.component';
 import { EventService } from 'app/services/event.service';
 import { EventPageComponent } from './events/event-page/event-page.component';
@@ -43,7 +42,6 @@ import { EventPageComponent } from './events/event-page/event-page.component';
     ProfileDetailsComponent,
     SearchResultComponent,
     SearchBarComponent,
-    EventsComponent,
     CreateEventComponent,
     EventPageComponent,
     // UserSearchResultComponent,

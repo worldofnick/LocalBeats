@@ -35,6 +35,25 @@ export class EventService {
     }
 
 
+        // post("/api/events/create")
+        public getEventByEID(eventGotten:Event): Promise<Event> {
+            const current = this.connection + eventGotten._id;
+            console.log(current);
+            return this.http.post(current, {event : eventGotten}, {headers: this.headers} )
+                .toPromise()
+                .then((response: Response) => {
+                    const data = response.json();
+                    this.accessToken = data.access_token;
+                    sessionStorage.setItem('token', JSON.stringify({ accessToken: this.accessToken}))
+                    this.event = data.event as Event;
+                    return this.event
+                })
+                .catch(this.handleError);
+        }
+
+
+
+
     public isAuthenticated() {
         return this.accessToken != null;
     }

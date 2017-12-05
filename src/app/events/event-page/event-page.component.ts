@@ -14,10 +14,24 @@ import { Event } from 'app/models/event';
   styleUrls: ['./event-page.component.css']
 })
 export class EventPageComponent implements OnInit {
+  model:Event;
+  user:User;
 
   constructor(private eventService: EventService, private userSerivce: UserService, private router: Router) { }
 
   ngOnInit() {
+    
+    this.model = this.eventService.event;
+    console.log("in ngonit in event page..printing data " );
+    console.log(this.model._id);
+    
+
+    // this.eventService.getEventByEID(this.model).then((event: Event) => {
+    //   this.model = event;      
+    //   this.eventService.event = this.model;
+    //   console.log("eid");
+    //   console.log(this.model._id); 
+    // });
   }
 
 }

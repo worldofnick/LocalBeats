@@ -1,3 +1,186 @@
-<p>
-  event-page works!
-</p>
+<!-- Wrapper -->
+<div id="wrapper">
+
+
+  <!-- Slider
+================================================== -->
+  <!-- <div class="listing-slider mfp-gallery-container margin-bottom-0"> -->
+  <!-- <a href="images/single-listing-01.jpg" data-background-image="images/single-listing-01.jpg" class="item mfp-gallery" title="Title 1"></a>
+	<a href="images/single-listing-02.jpg" data-background-image="images/single-listing-02.jpg" class="item mfp-gallery" title="Title 3"></a>
+	<a href="images/single-listing-03.jpg" data-background-image="images/single-listing-03.jpg" class="item mfp-gallery" title="Title 2"></a>
+	<a href="images/single-listing-04.jpg" data-background-image="images/single-listing-04.jpg" class="item mfp-gallery" title="Title 4"></a> -->
+  <!-- </div> -->
+
+
+  <!-- Content
+================================================== -->
+  <div class="container">
+    <div class="row sticky-wrapper">
+      <div class="col-lg-8 col-md-8 padding-right-30">
+
+        <!-- Titlebar -->
+        <div id="titlebar" class="listing-titlebar">
+          <div class="listing-titlebar-title">
+            <h2> {{ this.model.eventName }}
+              <span class="listing-tag">Eat & Drink</span>
+            </h2>
+            <span>
+              <a href="#listing-location" class="listing-address">
+                <i class="fa fa-map-marker"></i>
+                2726 Shinn Street, New York
+              </a>
+            </span>
+            <div class="star-rating" data-rating="5">
+              <div class="rating-counter">
+                <a href="#listing-reviews">(31 reviews)</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+        <!-- Overview -->
+        <div id="listing-overview" class="listing-section">
+
+          <!-- Description -->
+
+          <p>
+            {{ this.model.description }}
+          </p>
+
+
+        </div>
+
+        <!-- Location -->
+        <div id="listing-location" class="listing-section">
+          <h3 class="listing-desc-headline margin-top-60 margin-bottom-30">Location</h3>
+
+          <div id="singleListingMap-container">
+            <div id="singleListingMap" data-latitude="40.70437865245596" data-longitude="-73.98674011230469" data-map-icon="im im-icon-Hamburger"></div>
+            <a href="#" id="streetView">Street View</a>
+          </div>
+        </div>
+
+
+
+
+      </div>
+
+
+      <!-- Sidebar
+		================================================== -->
+      <div class="col-lg-4 col-md-4 margin-top-75 sticky">
+
+
+        <!-- Verified Badge -->
+        <div class="verified-badge with-tip" data-tip-content="Listing has been verified and belongs the business owner or manager.">
+          <i class="sl sl-icon-check"></i> Verified Listing
+        </div>
+
+        <!-- Book Now -->
+        <div class="boxed-widget booking-widget margin-top-35">
+          <h3>
+            <i class="fa fa-calendar-check-o "></i> Book a Table</h3>
+          <div class="row with-forms  margin-top-0">
+
+            <!-- Date Picker - docs: http://www.vasterad.com/docs/listeo/#!/date_picker -->
+            <div class="col-lg-6 col-md-12">
+              <input type="text" id="booking-date" data-lang="en" data-large-mode="true" data-large-default="true" data-min-year="2017"
+                data-max-year="2020" data-disabled-days="08/17/2017,08/18/2017">
+            </div>
+
+            <!-- Time Picker - docs: http://www.vasterad.com/docs/listeo/#!/time_picker -->
+            <div class="col-lg-6 col-md-12">
+              <input type="text" id="booking-time" value="9:00 am">
+            </div>
+
+            <!-- Panel Dropdown -->
+            <!-- <div class="col-lg-12">
+              <div class="panel-dropdown">
+                <a href="#">Guests
+                  <span class="qtyTotal" name="qtyTotal">1</span>
+                </a>
+                <div class="panel-dropdown-content"> -->
+
+                  <!-- Quantity Buttons -->
+                  <!-- <div class="qtyButtons">
+                    <div class="qtyTitle">Adults</div>
+                    <input type="text" name="qtyInput" value="1">
+                  </div>
+
+                  <div class="qtyButtons">
+                    <div class="qtyTitle">Childrens</div>
+                    <input type="text" name="qtyInput" value="0">
+                  </div>
+
+                </div>
+              </div>
+            </div> -->
+            <!-- Panel Dropdown / End -->
+
+          </div>
+
+          <!-- progress button animation handled via custom.js -->
+          <!-- <a href="pages-booking.html" class="button book-now fullwidth margin-top-5">Book Now</a> -->
+        </div>
+        <!-- Book Now / End -->
+
+
+        <!-- Opening Hours -->
+        <div class="boxed-widget opening-hours margin-top-35">
+          <div class="listing-badge now-open">Now Open</div>
+          <h3>
+            <i class="sl sl-icon-clock"></i> Opening Hours</h3>
+          <ul>
+            <li>Monday
+              <span>9 AM - 5 PM</span>
+            </li>
+            <li>Tuesday
+              <span>9 AM - 5 PM</span>
+            </li>
+            <li>Wednesday
+              <span>9 AM - 5 PM</span>
+            </li>
+            <li>Thursday
+              <span>9 AM - 5 PM</span>
+            </li>
+            <li>Friday
+              <span>9 AM - 5 PM</span>
+            </li>
+            <li>Saturday
+              <span>9 AM - 3 PM</span>
+            </li>
+            <li>Sunday
+              <span>Closed</span>
+            </li>
+          </ul>
+        </div>
+        <!-- Opening Hours / End -->
+
+
+        <!-- Contact -->
+        <!-- <div class="boxed-widget margin-top-35"> -->
+        <!-- <div class="hosted-by-title"> -->
+        <!-- <h4><span>Hosted by</span> <a href="pages-user-profile.html"> </a></h4> -->
+        <!-- <a href="pages-user-profile.html" class="hosted-by-avatar"><img src="images/dashboard-avatar.jpg" alt=""></a> -->
+        <!-- </div> -->
+        <!-- </div> -->
+        <!-- Contact / End-->
+
+      </div>
+      <!-- Sidebar / End -->
+
+    </div>
+  </div>
+
+  <!-- Back To Top Button -->
+  <!-- <div id="backtotop"><a href="#"></a></div> -->
+
+
+</div>
+<!-- Wrapper / End -->
+
+
+
+<!-- </div> -->
+<!-- Style Switcher / End -->
