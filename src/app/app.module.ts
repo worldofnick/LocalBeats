@@ -62,11 +62,7 @@ import { EventSearchResultComponent } from './search/event-search-result/event-s
     AppRoutingModule,
     HttpClientModule
   ],
-<<<<<<< HEAD
-  providers: [UserService, UserGuard, SearchService],
-=======
-  providers: [UserService, UserGuard, EventService],
->>>>>>> b495ba4f73d5598800ec1dae80f5756881dd34be
+  providers: [UserService, UserGuard, EventService, SearchService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
