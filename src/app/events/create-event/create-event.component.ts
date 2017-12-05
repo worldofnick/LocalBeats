@@ -51,6 +51,9 @@ export class CreateEventComponent implements OnInit {
     // this.model.fromDate = fromDate;
     // this.model.toDate = toDate;
     this.model.description = description;
+
+    console.log("printing event dscription");
+    console.log(this.model.description);
     this.model.fixedPrice = fixedPrice;
 
     this.model.hostUID = this.user._id;

@@ -22,6 +22,7 @@ export class EventPageComponent implements OnInit {
   ngOnInit() {
     
     this.model = this.eventService.event;
+    this.user = this.userSerivce.user;
     console.log("in ngonit in event page..printing data " );
     console.log(this.model._id);
     

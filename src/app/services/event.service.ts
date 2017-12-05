@@ -22,6 +22,8 @@ export class EventService {
     public createEvent(newEvent:Event): Promise<Event> {
         const current = this.connection + '/create';
         console.log(current);
+        console.log("event being created: ");
+        console.log(newEvent);
         return this.http.post(current, {event : newEvent}, {headers: this.headers} )
             .toPromise()
             .then((response: Response) => {
@@ -29,6 +31,8 @@ export class EventService {
                 this.accessToken = data.access_token;
                 sessionStorage.setItem('token', JSON.stringify({ accessToken: this.accessToken}))
                 this.event = data.event as Event;
+                console.log("printing event returned after creation");
+                console.log(this.event);
                 return this.event
             })
             .catch(this.handleError);
