@@ -42,7 +42,7 @@ exports.createBooking = function (req, res) {
 };
 
 exports.updateBookingByID = function (req, res) {
-    Bookings.findByIdAndUpdate(req.params.bid, req.body, { new: true }, function (err, booking) {
+    Bookings.findByIdAndUpdate(req.params.bid, req.body.booking, { new: true }, function (err, booking) {
         if (err) {
             return res.status(500).send("There was a problem updating the booking.");
         }
@@ -67,10 +67,9 @@ exports.deleteBookingByID = function (req, res) {
 // Params 
 // uid (string) user id in question --requied
 // user_type (string) in {"arist", "host"} --required
-// status (string) in {"approved", "pending"} --optional - defaults to all
+// status (string) in {"approved", "pending", "completed"} --optional - defaults to all
 // booking_type (string) in {"arist-apply", "host-request"} --optional defaults to all
 // eid (string) event ID in question --optional
-
 // skip (int) how many records to skip --optional - defaults to 0
 // limit (int) how many records to return --optional - defaults to 10
 
@@ -80,42 +79,51 @@ exports.deleteBookingByID = function (req, res) {
 // Get a list of all approved events for an artist
 
 exports.getUserBookingsByUID = function (req, res) {
+  
+  if (req.query.uid == null) {
+      return res.status(403).send({"error": "Must provided uid"});
+  }
+
   var limit = 10;
   var skip = 0;
   var query = {};
 
-  if (req.params.limit != null) {
+  if (req.query.limit != null) {
       limit = parseInt(req.query.limit);
   }
 
-  if (req.params.skip != null) {
+  if (req.query.skip != null) {
       skip = parseInt(req.query.skip);
   }
 
-  if (req.params.user_type == null) {
-    return res.status(200).send({"error": "Must send user_type"});
+  if (req.query.user_type == null) {
+    return res.status(403).send({"error": "Must send user_type"});
   } else {
-      if (req.params.user_type == "artist") {
-        query.performerUID = req.params.uid;
-      } else if (req.params.user_type == "host") {
-        query.hostUID = req.params.uid;
+      if (req.query.user_type == "artist") {
+        query.performerUID = req.query.uid;
+        // TODO Send notification to host about application to event in POST
+      } else if (req.query.user_type == "host") {
+        // TODO Send notification to artist about request in POST
+        query.hostUID = req.query.uid;
       }
   }
 
-  if (req.params.status != null) {
-    if (req.params.status == "approved") {
+  if (req.query.status != null) {
+    if (req.query.status == "approved") {
         query.approved = true;
-    } else if (req.params.status == "pending") {
+    } else if (req.query.status == "pending") {
         query.approved = false;
+    } else if (req.query.status == "completed") {
+        query.completed = true;
     }
   }
 
-  if (req.params.booking_type != null) {
-      query.bookingType = req.params.booking_type;
+  if (req.query.booking_type != null) {
+      query.bookingType = req.query.booking_type;
   }
 
-  if (req.params.eid != null) {
-      query.eventEID = req.params.eid;
+  if (req.query.eid != null) {
+      query.eventEID = req.query.eid;
   }
 
   Bookings.find(query).limit(limit).skip(skip).sort({ fromDate: -1 }).exec(function (err, doc) {
@@ -135,4 +143,28 @@ exports.deleteUserBookingsByUID = function (req, res) {
           return res.status(200).send(doc);
       }
   });
+};
+
+exports.acceptBooking = function(req, res) {
+    // Notify both parties
+    Bookings.update({_id: req.params.bid}, {
+        approved: true
+    }, function(err, numberAffected, rawResponse) {
+        return res.status(200).send("Accepted booking.");
+    })
+};
+
+exports.declineBooking = function(req, res) {
+    // Notifiy both parties
+    Bookings.findByIdAndRemove(req.params.bid, function (err, user) {
+        if (err) {
+          return res.status(500).send("There was a problem declining the booking");
+        } else {
+          if (user == null) {
+            return res.status(200).send("Booking does not exist");
+          } else {
+            return res.status(200).send("Booking declined");
+          }
+        }
+      });
 };
