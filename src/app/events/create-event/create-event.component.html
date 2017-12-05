@@ -33,7 +33,7 @@
 
               <div class="col-md-4">
                 <h5>Event Type</h5>
-                <select style="width: 500px;" class="chosen-select-no-single">
+                <select [(ngModel)]="model.eventType" name="eventType" style="width: 500px;" class="chosen-select-no-single">
                   <!-- <option label="Select Category">Select Category</option> -->
                   <option>Wedding</option>
                   <option>Live Music</option>
@@ -44,7 +44,7 @@
 
               <div class="col-md-3">
                 <h5>Music Genre</h5>
-                <select style="width: 500px;" class="chosen-select-no-single">
+                <select [(ngModel)]="model.eventGenre" name="eventGenre" style="width: 500px;" class="chosen-select-no-single">
                   <option label="blank">Select Category</option>
                   <option>Electronic</option>
                   <option>Rock</option>
@@ -58,7 +58,7 @@
               <div class="col-md-12">
                 <div class="form">
                   <h5>Description</h5>
-                  <textarea class="WYSIWYG" name="summary" cols="40" rows="3" id="summary" spellcheck="true"></textarea>
+                  <textarea [(ngModel)]="model.description" name="description" class="WYSIWYG" name="summary" cols="40" rows="3" id="summary" spellcheck="true"></textarea>
                 </div>
               </div>
             </div>
@@ -71,7 +71,7 @@
             </div>
             <div class="row with-forms">
               <div class="col-md-4">
-                <select class="chosen-select" data-placeholder="Start Time">
+                <select [(ngModel)]="model.fromDate" name="fromDate" class="chosen-select" data-placeholder="Start Time">
                   <option label="Start Time"></option>
                   <option>Closed</option>
                   <option>1 AM</option>
@@ -102,7 +102,7 @@
               </div>
 
               <div class="col-md-4">
-                <select class="chosen-select" data-placeholder="End Time">
+                <select [(ngModel)]="model.toDate" name="toDate" class="chosen-select" data-placeholder="End Time">
                   <option label="End Time"></option>
                   <option>Closed</option>
                   <option>1 AM</option>
@@ -135,7 +135,7 @@
               <div class="col-md-4">
 
                 <div class="fm-input pricing-price">
-                  <input type="text" placeholder="Price" data-unit="USD" />
+                  <input [(ngModel)]="model.fixedPrice" name="fixedPrice" type="text" placeholder="Price" data-unit="USD" />
                 </div>
               </div>
 
@@ -182,7 +182,6 @@
 
               <!-- Row / End -->
 
-              <!-- </div> -->
             </div>
             <!-- Section / End -->
           </div>
@@ -196,4 +195,4 @@
     </div>
   </div>
 </div>
-  <!-- Content / End -->
+<!-- Content / End -->

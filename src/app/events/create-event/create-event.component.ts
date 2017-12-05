@@ -22,25 +22,22 @@ export class CreateEventComponent implements OnInit {
   
   ngOnInit() {
     this.user = this.userSerivce.user;
+    this.model = new Event;
   }
 
  onCreateEvent(form: NgForm) {
-    console.log("printing host id");
+    // console.log("printing host id");
     // console.log(this.user._id);
     
     
     // const lastName = form.value.lastname;
-
     const eventName = form.value.eventName;
     const eventType = form.value.eventType;
     const eventGenre = form.value.eventGenre;
-    const hostUID = form.value.hostUID;
-    const hostEmail = form.value.hostemail;
-    const performerUID = form.value.performerUID;
-    const performerEmail = form.value.performerEmail;
+    // const hostEmail = form.value.hostemail;
     const address = form.value.address;
-    // const fromDate = form.value.fromDate;
-    // const toDate = form.value.toDate;
+    const fromDate = form.value.fromDate;
+    const toDate = form.value.toDate;
     const description = form.value.description;
     const fixedPrice = form.value.fixedPrice;
     // const hourlyRate: string
@@ -48,6 +45,17 @@ export class CreateEventComponent implements OnInit {
     // const isBooked: string
 
     this.model.eventName = eventName;
+    this.model.eventType = eventType;
+    this.model.eventGenre = eventGenre;
+    this.model.address = address;
+    this.model.fromDate = fromDate;
+    this.model.toDate = toDate;
+    this.model.description = description;
+    this.model.fixedPrice = fixedPrice;
+
+    this.model.hostUID = this.user._id;
+    this.model.hostEmail = this.user.email;
+
 
     console.log("creating event: \n" );
     console.log(this.model);
@@ -55,7 +63,7 @@ export class CreateEventComponent implements OnInit {
     this.eventService.createEvent(this.model).then((event: Event) => {
       this.model = event;      
       this.eventService.event = this.model; 
-      // this.router.navigate(['/profile']);
+      // this.router.navigate(['/profile']); //this will go to the page about the event
     });
   }
 }
