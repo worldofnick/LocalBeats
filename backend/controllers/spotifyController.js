@@ -115,14 +115,14 @@ exports.getAllPlaylistsByUID = function (req, res) {
     }
     theUser = new User(user);
     console.log("USER: ");
-    console.log(theUser);
-    spotifyApi.getUserPlaylists(req.params.spotifyID)
+    console.log(theUser.spotifyID);
+    spotifyApi.getUserPlaylists(theUser.spotifyID)
       .then(function (data) {
         console.log('IS JSON EMPYT?: ', isResultEmpty(data.body));
         return res.status(200).send({ playlists: data.body });
       }, function (err) {
-        return res.status(404).send({ message: "Something went wrong...", error: err});
         console.log('Something went wrong!', err);
+        return res.status(404).send({ message: "Something went wrong...", error: err});
       });
   });
 };

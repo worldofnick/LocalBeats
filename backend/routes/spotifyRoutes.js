@@ -7,6 +7,8 @@ module.exports = function(app) {
      */
     var tokenVerificationHandler = require('../controllers/tokenVerificationController.js');
     var spotifyHandler = require('../controllers/spotifyController.js');
+
+    
     spotifyHandler.grantClientCredentials();
 
 	app.route('/api/users/spotify/:username/playlists/')
@@ -16,5 +18,8 @@ module.exports = function(app) {
         .get(spotifyHandler.getFirstPlaylist);
         
     app.route('/api/users/spotify/:username/playlist/:playlist_id')
-		.get(spotifyHandler.getPlaylistByID);
+        .get(spotifyHandler.getPlaylistByID);
+        
+    app.route('/api/users/spotify/users/:uid/playlists/')
+        .get(spotifyHandler.getAllPlaylistsByUID);
 };
