@@ -19,8 +19,13 @@ module.exports = function(app) {
     app.route('/api/userBookings')
         .get(bookingsHandlers.getUserBookingsByUID);
 
-	app.route('/api/userBooking')
-		.delete(bookingsHandlers.deleteUserBookingsByUID);
+	app.route('/api/userBookings')
+        .delete(bookingsHandlers.deleteUserBookingsByUID);
+        
+    app.route('/api/acceptBooking/:bid')
+        .put(bookingsHandlers.acceptBooking)
 
+    app.route('/api/declineBooking/:bid')
+        .put(bookingsHandlers.declineBooking)
 
 };

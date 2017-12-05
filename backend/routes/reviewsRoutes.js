@@ -21,5 +21,8 @@ module.exports = function(app) {
 
     app.route('/api/userReviewsFrom')
         .get(reviewsHandlers.getUserReviewsByUIDFrom);
+    
+    app.route('/api/flagReview/:rid')
+    .get(reviewsHandlers.flagReviewByID);
 
 };

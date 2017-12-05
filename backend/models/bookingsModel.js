@@ -8,11 +8,13 @@ var Schema = mongoose.Schema;
 
 // TODO
 var BookingsSchema = new Schema({
+    bookingType     : {type: String, required: true}, // in {"arist-apply", "host-request"}
     hostUID         : {type: String, required: true},
     performerUID    : {type: String, required: true},
     eventEID        : {type: String, required: true},
-    fromDate        : {type: Date, default: Date.now},
+    fromDate        : {type: Date},
     toDate          : {type: Date},
+    approved        : {type: Boolean, default: false},
     completed       : {type: Boolean, default: false} // Has the event had the 2 factor auth go through?
 }, {strict: true});
 

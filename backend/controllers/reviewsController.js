@@ -42,7 +42,7 @@ exports.createReview = function (req, res) {
 };
 
 exports.updateReviewByID = function (req, res) {
-    Reviews.findByIdAndUpdate(req.params.rid, req.body, { new: true }, function (err, review) {
+    Reviews.findByIdAndUpdate(req.params.rid, req.body.review, { new: true }, function (err, review) {
         if (err) {
             return res.status(500).send("There was a problem updating the review.");
         }
@@ -106,4 +106,11 @@ exports.getUserReviewsByUIDFrom = function (req, res) {
           return res.status(200).send(doc);
       }
   });
+};
+
+exports.flagReviewByID = function(req, res) {
+    var update = { $inc: { flagCount: 1 }};
+    Reviews.update({ _id: req.params.rid }, update, function(err, numberAffected, rawResponse) {
+        return res.status(200).send("Flagged review.");
+    })
 };
