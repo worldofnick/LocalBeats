@@ -190,6 +190,8 @@ exports.searchEvents = function(req, res) {
   }
 
   console.log(query);
+  console.log(parseFloat(req.query.lon));
+  console.log(parseFloat(req.query.lat));
   Events.find(query).limit(limit).skip(skip).sort(sort).exec(function (err, doc) {
       if (err) {
           return res.status(500).send(err);
