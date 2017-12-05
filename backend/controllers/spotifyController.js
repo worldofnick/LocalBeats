@@ -86,9 +86,9 @@ exports.getFirstPlaylist = function (req, res) {
 
 
 /**
- * Get the first playlist OWNED by this user. If the user 
- * has playlists but does not OWN any of those, then 404 is returned.
- * @param {*} req - Contains uid
+ * Middleware that returns the first playlist OWNED by this user 
+ * after a porfile update.
+ * @param {*} req - Contains the uid
  * @param {*} res - Contains the URI for the Spotify Playlist Widget
  */
 exports.getFirstPlaylistByUIDAfterProfileUpdate = function (req, res) {
