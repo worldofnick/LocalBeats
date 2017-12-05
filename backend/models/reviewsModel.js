@@ -10,7 +10,7 @@ var ReviewSchema = new Schema({
     fromUID         : {type: String, required: true},
     title           : {type: String, required: true},
     text            : {type: String, required: true},
-    rating          : {type: Number}
+    rating          : {type: Number, required: true}
 }, {strict: true}, {versionKey: false});
 
 mongoose.model('Review', ReviewSchema);
