@@ -25,4 +25,7 @@ module.exports = function(app) {
 
     app.route('/api/users/spotify/users/:uid/playlist/first')
         .get(spotifyHandler.getFirstPlaylistByUID);
+
+    app.route('/api/users/spotify/users/:uid/playlist/:playlist_id')
+        .get(spotifyHandler.getPlaylistByUIDandPID);
 };

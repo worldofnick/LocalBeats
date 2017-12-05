@@ -160,3 +160,27 @@ exports.getFirstPlaylistByUID = function (req, res) {
     });
   });
 };
+
+/**
+ * Get the playlist OWNED by this user via its PID and UID. 
+ * The username must be the OWNER of the playlist's ID.
+ * @param {*} req - Contains UID of the owner, id of the playlist
+ * @param {*} res - Contains the URI for the Spotify Playlist Widget
+ */
+exports.getPlaylistByUIDandPID = function (req, res) {
+  User.findById(req.params.uid, function (err, user) {
+    if (err) {
+      return res.status(404).send({ message: "Something went wrong...", error: err});
+    }
+    console.log("USER: ");
+    console.log(user.spotifyID);
+  spotifyApi.getPlaylist(user.spotifyID, req.params.playlist_id)
+  .then(function(data) {
+    console.log('\n-------------\nPlaylist: \n-------------\n', data.body);
+    return res.status(200).send({ uri: data.body.uri });
+  }, function(err) {
+    return res.status(404).send({ message: "Something went wrong...", error: err});
+    console.log('Something went wrong!', err);
+  });
+});
+};
