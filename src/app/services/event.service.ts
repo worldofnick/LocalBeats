@@ -7,8 +7,8 @@ import { Event } from 'app/models/event';
 
 @Injectable()
 export class EventService {
-    public connection: string = 'http://localhost:8080/api/events';
-    // public connection: string = 'https://localbeats.herokuapp.com/api/auth';
+    // public connection: string = 'http://localhost:8080/api/events';
+    public connection: string = 'https://localbeats.herokuapp.com/api/events';
     // public userConnection: string = 'https://localbeats.herokuapp.com/api/users';
     public accessToken: string = null;
     public user: User = null;
