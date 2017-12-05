@@ -19,6 +19,11 @@ import { ProfileEditComponent } from './profile/profile-edit/profile-edit.compon
 import { ProfileDetailsComponent } from './profile/profile-details/profile-details.component';
 import { SearchResultComponent } from './search/search-result/search-result.component';
 import { SearchBarComponent } from './search/search-bar/search-bar.component';
+import { CreateEventComponent } from './events/create-event/create-event.component';
+import { EventService } from 'app/services/event.service';
+import { EventPageComponent } from './events/event-page/event-page.component';
+// import { UserSearchResultComponent } from './search/user-search-result/user-search-result.component';
+// import { EventSearchResultComponent } from './search/event-search-result/event-search-result.component';
 
 
 
@@ -36,7 +41,11 @@ import { SearchBarComponent } from './search/search-bar/search-bar.component';
     ProfileEditComponent,
     ProfileDetailsComponent,
     SearchResultComponent,
-    SearchBarComponent
+    SearchBarComponent,
+    CreateEventComponent,
+    EventPageComponent,
+    // UserSearchResultComponent,
+    // EventSearchResultComponent
   ],
   imports: [
     BrowserModule,
@@ -44,7 +53,7 @@ import { SearchBarComponent } from './search/search-bar/search-bar.component';
     HttpModule,
     AppRoutingModule
   ],
-  providers: [UserService, UserGuard],
+  providers: [UserService, UserGuard, EventService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
