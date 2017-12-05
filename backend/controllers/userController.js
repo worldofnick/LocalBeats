@@ -21,17 +21,25 @@ exports.getUserByID = function (req, res) {
   User.findById(req.params.uid, { hashPassword: 0 }, function (err, user) {
     if (err)
       return res.send(err);
-    return res.json(user);
+    return res.json({ user: user });
   });
 };
 
-exports.updateUserByID = function (req, res) {
-  console.log(req.body);
+exports.updateUserByID = function (req, res, next) {
   User.findByIdAndUpdate(req.params.uid, req.body.user, { new: true }, function (err, user) {
-    if (err) return res.status(500).send("There was a problem updating the user.");
+    if (err) { 
+      return res.status(500).send("There was a problem updating the user.");
+    }
 
     user.hashPassword = undefined;
-    return res.status(200).send(user);
+    if(req.body.user.spotifyID != undefined) {
+      console.log("Spotify ID: " + req.body.user.spotifyID);
+      next();
+    }else {
+      return res.status(200).send({ user: user });
+    }
+    
+    
   });
 };
 

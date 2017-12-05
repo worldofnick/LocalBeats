@@ -12,8 +12,8 @@ exports.listAllEvents = function (req, res) {
     Events.find({}, function (err, event) {
       if (err)
         return res.send(err);
-      
-      return res.status(200).send(event);
+
+      return res.status(200).send({ "event": event });
     });
   };
 
@@ -23,7 +23,7 @@ exports.getEventByID = function (req, res) {
         if (err) {
             return res.status(500).send("Failed to get event");
         } else {
-            return res.status(200).send(event);
+            return res.status(200).send({ "event": event });
         }
     });
 };
@@ -37,7 +37,7 @@ exports.createEvent = function (req, res) {
                 description: "Failed to create an event"
             });
         } else {
-            return res.status(200).send(event);
+            return res.status(200).send({ "event": event });
         }
     });
 };    
@@ -47,7 +47,7 @@ exports.updateEventByID = function (req, res) {
         if (err) {
             return res.status(500).send("There was a problem updating the event.");
         }
-        return res.status(200).send(event);
+        return res.status(200).send({ "event": event });
     });
 };
 
@@ -72,9 +72,6 @@ exports.deleteEventByID = function (req, res) {
 // app.get("/api/userEvents", 
 //TODO: limit, find now working
 exports.getUserEventsByUID = function (req, res) {
-    console.log(req.body);
-    console.log("HOST UID = " + req.query.hostUID);
-    console.log("Limit = " + req.query.limit);
     var limit = 10;
     var skip = 0;
 
@@ -130,7 +127,7 @@ exports.deleteUserEventsByUID = function (req, res) {
 // from_date & to_date (string) ISODate
 // min_budget & max_budget (int)
 // booked (boolean) defaults ot false. If true returns events that are currently booked
-// lat (string) & lon (string) & distance (int, metres)
+// lat (string) & lon (string)
 // name (string) fuzzy match search by event names
 exports.searchEvents = function(req, res) {
   var skip = 0;
@@ -177,24 +174,26 @@ exports.searchEvents = function(req, res) {
     query.isBooked = false;
   }
 
-  if (req.query.lat != null && req.query.lon != null && req.query.distance) {
-    query.location = { $near :
-        {
-          $geometry: { type: "Point",  coordinates: [ req.query.lat, req.query.long] },
-          $minDistance: 0,
-          $maxDistance: parseInt(req.query.distance)
-        }
-     }
+  if (req.query.lat != null && req.query.lon != null) {
+    query.location = {
+        "$near": [
+            parseFloat(req.query.lat),
+            parseFloat(req.query.lon)
+        ]
+    }
    }
 
   if (req.query.name != null) {
-    var match = new RegExp(req.query.search);
-    query.eventName = {match}
+    var match = new RegExp(req.query.name);
+    query.eventName = match;
   }
 
-  Events.find(query).limit(limit).skip(skip).exec(function (err, doc) {
+  console.log(query);
+  console.log(parseFloat(req.query.lon));
+  console.log(parseFloat(req.query.lat));
+  Events.find(query).limit(limit).skip(skip).sort(sort).exec(function (err, doc) {
       if (err) {
-          return res.status(500).send("Failed to get user events");
+          return res.status(500).send(err);
       } else {
           return res.status(200).send(doc);
       }

@@ -14,6 +14,9 @@ module.exports = function(app) {
 	app.route('/api/auth/authenticate')
 		.post(autheticationHandler.signIn);
 
+	app.route('/api/auth/passwordChange/:uid')
+		.put(tokenVerificationHandler.verifyToken, autheticationHandler.changePassword);
+
 	app.route('/api/auth/logout')
 		.get(autheticationHandler.logout);
 

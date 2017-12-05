@@ -1,0 +1,198 @@
+<!-- Wrapper -->
+<!-- <div id="wrapper"> -->
+
+<!-- Dashboard -->
+<!-- <div id="dashboard"> -->
+
+<!-- Content
+	================================================== -->
+<div class="dashboard-content">
+  <div class="row">
+    <div class="col-lg-10">
+      <form (ngSubmit)="onCreateEvent(r)" #r="ngForm" method="post" class="createEvent">
+        <div id="add-listing">
+          <!-- Section -->
+          <div class="add-listing-section">
+
+            <!-- Headline -->
+            <div class="add-listing-headline">
+              <h3>
+                <i class="sl sl-icon-doc"></i> Event Information</h3>
+            </div>
+
+            <!-- Title -->
+            <div class="row with-forms">
+              <div class="col-md-5">
+                <h5>Event Title
+                  <!-- <i class="tip" data-tip-content="Name of your event"></i> -->
+                </h5>
+                <!-- <input class="search-field" type="text" value="" style="width: 500px;"/> -->
+                <!-- [(ngModel)]="model.eventName" -->
+                <input [(ngModel)]="model.eventName" class="search-field" name="eventName" type="text" placeholder="Event Title" />
+              </div>
+
+              <div class="col-md-4">
+                <h5>Event Type</h5>
+                <select [(ngModel)]="model.eventType" name="eventType" style="width: 500px;" class="chosen-select-no-single">
+                  <!-- <option label="Select Category">Select Category</option> -->
+                  <option>Wedding</option>
+                  <option>Live Music</option>
+                  <option>Birthday</option>
+                  <option>Business</option>
+                </select>
+              </div>
+
+              <div class="col-md-3">
+                <h5>Music Genre</h5>
+                <select [(ngModel)]="model.eventGenre" name="eventGenre" style="width: 500px;" class="chosen-select-no-single">
+                  <option label="blank">Select Category</option>
+                  <option>Electronic</option>
+                  <option>Rock</option>
+                </select>
+              </div>
+            </div>
+            <!-- Row / End -->
+
+            <!-- Row  -->
+            <div class="row with-forms">
+              <div class="col-md-12">
+                <div class="form">
+                  <h5>Description</h5>
+                  <textarea [(ngModel)]="model.description" name="description" class="WYSIWYG" name="summary" cols="40" rows="3" id="summary" spellcheck="true"></textarea>
+                </div>
+              </div>
+            </div>
+            <!-- Row / End -->
+
+            <div class="row with-forms">
+              <div class="col-md-2">
+                <h5>Event times and price:</h5>
+              </div>
+            </div>
+            <div class="row with-forms">
+              <div class="col-md-4">
+                <select [(ngModel)]="model.fromDate" name="fromDate" class="chosen-select" data-placeholder="Start Time">
+                  <option label="Start Time"></option>
+                  <option>Closed</option>
+                  <option>1 AM</option>
+                  <option>2 AM</option>
+                  <option>3 AM</option>
+                  <option>4 AM</option>
+                  <option>5 AM</option>
+                  <option>6 AM</option>
+                  <option>7 AM</option>
+                  <option>8 AM</option>
+                  <option>9 AM</option>
+                  <option>10 AM</option>
+                  <option>11 AM</option>
+                  <option>12 AM</option>
+                  <option>1 PM</option>
+                  <option>2 PM</option>
+                  <option>3 PM</option>
+                  <option>4 PM</option>
+                  <option>5 PM</option>
+                  <option>6 PM</option>
+                  <option>7 PM</option>
+                  <option>8 PM</option>
+                  <option>9 PM</option>
+                  <option>10 PM</option>
+                  <option>11 PM</option>
+                  <option>12 PM</option>
+                </select>
+              </div>
+
+              <div class="col-md-4">
+                <select [(ngModel)]="model.toDate" name="toDate" class="chosen-select" data-placeholder="End Time">
+                  <option label="End Time"></option>
+                  <option>Closed</option>
+                  <option>1 AM</option>
+                  <option>2 AM</option>
+                  <option>3 AM</option>
+                  <option>4 AM</option>
+                  <option>5 AM</option>
+                  <option>6 AM</option>
+                  <option>7 AM</option>
+                  <option>8 AM</option>
+                  <option>9 AM</option>
+                  <option>10 AM</option>
+                  <option>11 AM</option>
+                  <option>12 AM</option>
+                  <option>1 PM</option>
+                  <option>2 PM</option>
+                  <option>3 PM</option>
+                  <option>4 PM</option>
+                  <option>5 PM</option>
+                  <option>6 PM</option>
+                  <option>7 PM</option>
+                  <option>8 PM</option>
+                  <option>9 PM</option>
+                  <option>10 PM</option>
+                  <option>11 PM</option>
+                  <option>12 PM</option>
+                </select>
+              </div>
+
+              <div class="col-md-4">
+
+                <div class="fm-input pricing-price">
+                  <input [(ngModel)]="model.fixedPrice" name="fixedPrice" type="text" placeholder="Price" data-unit="USD" />
+                </div>
+              </div>
+
+            </div>
+            <!-- end row  -->
+          </div>
+          <!-- Section / End -->
+
+          <!-- Section -->
+          <div class="add-listing-section margin-top-45">
+
+            <!-- Headline -->
+            <div class="add-listing-headline">
+              <h3>
+                <i class="sl sl-icon-location"></i> Location</h3>
+            </div>
+
+            <!-- <div class="submit-section"> -->
+
+            <!-- Row -->
+            <div class="row with-forms">
+
+              <!-- Address -->
+              <div class="col-md-4">
+                <h5>Address</h5>
+                <input [(ngModel)]="model.address" name="address" type="text" placeholder="e.g. 123 Recrusion St">
+              </div>
+              <!-- City -->
+              <div class="col-md-4">
+                <h5>City</h5>
+                <input type="text" placeholder="e.g. Salt Lake City">
+              </div>
+
+              <!-- State -->
+              <div class="col-md-2">
+                <h5>State</h5>
+                <input type="text" placeholder="e.g. Utah">
+              </div>
+
+              <div class="col-md-2">
+                <h5>Zip-Code</h5>
+                <input type="text" placeholder="e.g. 12345">
+              </div>
+
+              <!-- Row / End -->
+
+            </div>
+            <!-- Section / End -->
+          </div>
+          <!-- <div class="col-md-6"> -->
+          <input type="submit" class="button border fw margin-top-40" name="createEvent" value="Create Event" />
+          <!-- </div> -->
+          <!-- end section -->
+        </div>
+        <!-- add listing end -->
+      </form>
+    </div>
+  </div>
+</div>
+<!-- Content / End -->
