@@ -34,7 +34,7 @@
               <div class="col-md-4">
                 <h5>Event Type</h5>
                 <select [(ngModel)]="model.eventType" name="eventType" style="width: 500px;" class="chosen-select-no-single">
-                  <!-- <option label="Select Category">Select Category</option> -->
+                  <option label="Select Category">Select Category</option>
                   <option>Wedding</option>
                   <option>Live Music</option>
                   <option>Birthday</option>
@@ -58,15 +58,24 @@
               <div class="col-md-12">
                 <div class="form">
                   <h5>Description</h5>
-                  <textarea [(ngModel)]="model.description" name="description" class="WYSIWYG" name="summary" cols="40" rows="3" id="summary" spellcheck="true"></textarea>
+                  <textarea [(ngModel)]="model.description" name="description" class="WYSIWYG" name="summary" cols="40" rows="3" id="summary"
+                    spellcheck="true"></textarea>
                 </div>
               </div>
             </div>
             <!-- Row / End -->
 
             <div class="row with-forms">
+                <!-- <div date-range start="start" end="end"></div> -->
+                <!-- <mat-form-field>
+                    <input matInput [matDatepicker]="myDatepicker">
+                    <mat-datepicker-toggle matSuffix [for]="myDatepicker"></mat-datepicker-toggle>
+                    <mat-datepicker #myDatepicker></mat-datepicker>
+                </mat-form-field> -->
+
+
               <div class="col-md-2">
-                <h5>Event times and price:</h5>
+                <h5>Event date and time:</h5>
               </div>
             </div>
             <div class="row with-forms">
@@ -132,17 +141,26 @@
                 </select>
               </div>
 
-              <div class="col-md-4">
-
-                <div class="fm-input pricing-price">
-                  <input [(ngModel)]="model.fixedPrice" name="fixedPrice" type="text" placeholder="Price" data-unit="USD" />
-                </div>
-              </div>
-
             </div>
             <!-- end row  -->
+            <div class="row with-forms">
+                <div class="col-md-1">
+                  <h5>Price:</h5>
+                </div>
+                </div>
+                <div class="row with-forms">
+              <div class="col-md-4">
+                <div class="fm-input pricing-price">
+                  <input [(ngModel)]="model.fixedPrice" name="fixedPrice" type="text" placeholder="" data-unit="USD"placeholder="e.g. 400" />
+                </div>
+              </div>
+            </div>
+
           </div>
           <!-- Section / End -->
+
+
+
 
           <!-- Section -->
           <div class="add-listing-section margin-top-45">
@@ -166,18 +184,18 @@
               <!-- City -->
               <div class="col-md-4">
                 <h5>City</h5>
-                <input type="text" placeholder="e.g. Salt Lake City">
+                <input [(ngModel)]="model.city" name="city" type="text" placeholder="e.g. Salt Lake City">
               </div>
 
               <!-- State -->
               <div class="col-md-2">
                 <h5>State</h5>
-                <input type="text" placeholder="e.g. Utah">
+                <input [(ngModel)]="model.state" name="state" type="text" placeholder="e.g. Utah">
               </div>
 
               <div class="col-md-2">
                 <h5>Zip-Code</h5>
-                <input type="text" placeholder="e.g. 12345">
+                <input [(ngModel)]="model.zip" name="zip" type="text" placeholder="e.g. 12345">
               </div>
 
               <!-- Row / End -->
