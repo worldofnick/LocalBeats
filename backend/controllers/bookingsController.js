@@ -13,7 +13,12 @@ exports.listAllBookings = function (req, res) {
       if (err)
         return res.send(err);
 
-      return res.status(200).send(bookings);
+        var bkkins = [];
+        bookings.forEach(function(booking) {
+            bkkins.push({"booking": booking});
+        });
+            
+        return res.status(200).send(bkkins);
     });
 };
 
@@ -130,7 +135,12 @@ exports.getUserBookingsByUID = function (req, res) {
       if (err) {
           return res.status(500).send("Failed to get user bookings");
       } else {
-          return res.status(200).send(doc);
+            var bkkins = [];
+            doc.forEach(function(booking) {
+                bkkins.push({"booking": booking});
+            });
+                
+            return res.status(200).send(bkkins);
       }
   });
 };

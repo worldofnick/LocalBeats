@@ -12,8 +12,13 @@ exports.listAllEvents = function (req, res) {
     Events.find({}, function (err, event) {
       if (err)
         return res.send(err);
-
-      return res.status(200).send({ "event": event });
+    
+        var events = [];
+        event.forEach(function(event) {
+            events.push({"event": event});
+        });
+        
+      return res.status(200).send(events);
     });
   };
 
@@ -189,18 +194,20 @@ exports.searchEvents = function(req, res) {
    }
 
   if (req.query.name != null) {
-    var match = new RegExp(req.query.name);
-    query.eventName = match;
+    console.log(req.query.name);
+    query.eventName = new RegExp(req.query.name);
   }
 
-  console.log(query);
-  console.log(parseFloat(req.query.lon));
-  console.log(parseFloat(req.query.lat));
   Events.find(query).limit(limit).skip(skip).sort(sort).exec(function (err, doc) {
       if (err) {
           return res.status(500).send(err);
       } else {
-          return res.status(200).send(doc);
+            var events = [];
+            doc.forEach(function(event) {
+                events.push({"event": event});
+            });
+            
+            return res.status(200).send(events);
       }
   });
 };
