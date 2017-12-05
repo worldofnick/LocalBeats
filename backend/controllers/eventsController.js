@@ -194,13 +194,10 @@ exports.searchEvents = function(req, res) {
    }
 
   if (req.query.name != null) {
-    var match = new RegExp(req.query.name);
-    query.eventName = match;
+    console.log(req.query.name);
+    query.eventName = new RegExp(req.query.name);
   }
 
-  console.log(query);
-  console.log(parseFloat(req.query.lon));
-  console.log(parseFloat(req.query.lat));
   Events.find(query).limit(limit).skip(skip).sort(sort).exec(function (err, doc) {
       if (err) {
           return res.status(500).send(err);
