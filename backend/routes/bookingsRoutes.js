@@ -20,7 +20,12 @@ module.exports = function(app) {
         .get(bookingsHandlers.getUserBookingsByUID);
 
 	app.route('/api/userBooking')
-		.delete(bookingsHandlers.deleteUserBookingsByUID);
+        .delete(bookingsHandlers.deleteUserBookingsByUID);
+        
+    app.route('/api/acceptBooking/:bid')
+        .put(bookingsHandlers.acceptBooking)
 
+    app.route('/api/declineBooking/:bid')
+        .put(bookingsHandlers.declineBooking)
 
 };
