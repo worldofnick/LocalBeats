@@ -88,7 +88,12 @@ exports.getUserEventsByUID = function (req, res) {
         if (err) {
             return res.status(500).send("Failed to get user events");
         } else {
-            return res.status(200).send(doc);
+            var events = []
+            doc.forEach(function(event) {
+                events.push({"event": event});
+            });
+            
+            return res.status(200).send(events);
         }
     });
 };
