@@ -15,7 +15,7 @@ var EventsSchema = new Schema({
     street          : {type: String},
     city            : {type: String},
     state           : {type: String},
-    zip             : {type: Number},
+    zip             : {type: String},
     fromDate        : {type: Date, default: Date.now},
     toDate          : {type: Date},
     description     : {type: String},
