@@ -1,4 +1,5 @@
 export class Event {
+    public _id: string
     public eventName:string
     public eventType:string
     public eventGenre: string

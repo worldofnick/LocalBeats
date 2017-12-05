@@ -6,11 +6,13 @@ import { ProfileEditComponent } from "./profile/profile-edit/profile-edit.compon
 import { SearchResultComponent } from "./search/search-result/search-result.component"
 import { EventsComponent } from "./events/events.component"
 import { CreateEventComponent } from "./events/create-event/create-event.component"
+import { EventPageComponent } from "app/events/event-page/event-page.component";
 
 const appRoutes: Routes = [
     { path: '', redirectTo: '/home', pathMatch: 'full'},
     { path: 'home', component: HomeComponent },
     { path: 'events', component: EventsComponent },
+    { path: 'event-page', component: EventsComponent },
     { path: 'create-event', component: CreateEventComponent },
     { path: 'profile', component: ProfileDetailsComponent },
     { path: 'profile-edit', component: ProfileEditComponent },

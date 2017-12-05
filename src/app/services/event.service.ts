@@ -18,11 +18,11 @@ export class EventService {
 
     constructor (private http: Http) {}
 
-    // post("/api/user")
+    // post("/api/events/create")
     public createEvent(newEvent:Event): Promise<Event> {
         const current = this.connection + '/create';
         console.log(current);
-        return this.http.post(current, newEvent, {headers: this.headers} )
+        return this.http.post(current, {event : newEvent}, {headers: this.headers} )
             .toPromise()
             .then((response: Response) => {
                 const data = response.json();

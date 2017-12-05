@@ -48,8 +48,8 @@ export class CreateEventComponent implements OnInit {
     this.model.eventType = eventType;
     this.model.eventGenre = eventGenre;
     this.model.address = address;
-    this.model.fromDate = fromDate;
-    this.model.toDate = toDate;
+    // this.model.fromDate = fromDate;
+    // this.model.toDate = toDate;
     this.model.description = description;
     this.model.fixedPrice = fixedPrice;
 
@@ -62,8 +62,10 @@ export class CreateEventComponent implements OnInit {
 
     this.eventService.createEvent(this.model).then((event: Event) => {
       this.model = event;      
-      this.eventService.event = this.model; 
-      // this.router.navigate(['/profile']); //this will go to the page about the event
+      this.eventService.event = this.model;
+      console.log("eid");
+      console.log(this.model._id); 
+      this.router.navigate(['/event-page']); //this will go to the page about the event
     });
   }
 }
