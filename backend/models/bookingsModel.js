@@ -9,7 +9,7 @@ var Schema = mongoose.Schema;
 // TODO
 var BookingsSchema = new Schema({
     bookingType     : {type: String, required: true}, // in {"arist-apply", "host-request"}
-    hostUID         : {type: String, required: false},
+    hostUID         : {type: String, required: true},
     performerUID    : {type: String, required: false},
     eventEID        : {type: String, required: true},
     fromDate        : {type: Date, default: Date.now},
