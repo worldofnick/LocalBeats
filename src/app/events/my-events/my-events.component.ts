@@ -9,30 +9,25 @@ import { Injectable } from '@angular/core';
 import { Event } from 'app/models/event';
 
 @Component({
-  selector: 'app-event-page',
-  templateUrl: './event-page.component.html',
-  styleUrls: ['./event-page.component.css']
+  selector: 'app-my-events',
+  templateUrl: './my-events.component.html',
+  styleUrls: ['./my-events.component.css']
 })
-export class EventPageComponent implements OnInit {
-  model:Event;
+export class MyEventsComponent implements OnInit {
+
   user:User;
+  events:Event[];
 
   constructor(private eventService: EventService, private userService: UserService, private router: Router) { }
-
+  
   ngOnInit() {
-    
-    this.model = this.eventService.event;
     this.user = this.userService.user;
-    console.log("in ngonit in event page..printing data " );
-    console.log(this.model._id);
     
-
-    // this.eventService.getEventByEID(this.model).then((event: Event) => {
-    //   this.model = event;      
-    //   this.eventService.event = this.model;
-    //   console.log("eid");
-    //   console.log(this.model._id); 
-    // });
+    this.eventService.getEventsByUID(this.user).then((events: Event[]) => {
+      this.events = events;      
+      console.log("in nginit");
+      console.log(this.events); 
+    });
   }
 
 }

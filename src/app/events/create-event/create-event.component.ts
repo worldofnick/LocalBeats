@@ -7,6 +7,13 @@ import { EventService } from 'app/services/event.service';
 import { print } from 'util';
 import { Injectable } from '@angular/core';
 import { Event } from 'app/models/event';
+import {ChangeDetectionStrategy} from '@angular/core';
+import {FormControl} from '@angular/forms';
+// import '~@angular/material/core/theming/prebuilt/deeppurple-amber';
+// import { MaterialModule } from '../../material.module';
+
+// import { MaterialModule } from '@angular/material/material';
+// import { DatePickerModule } from 'angular-material-datepicker';
 
 @Component({
   selector: 'app-create-event',
