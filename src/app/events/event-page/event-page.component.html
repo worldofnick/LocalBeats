@@ -1,0 +1,107 @@
+<!-- Wrapper -->
+<div id="wrapper">
+
+
+  <!-- Slider
+================================================== -->
+  <!-- <div class="listing-slider mfp-gallery-container margin-bottom-0"> -->
+  <!-- <a href="images/single-listing-01.jpg" data-background-image="images/single-listing-01.jpg" class="item mfp-gallery" title="Title 1"></a>
+	<a href="images/single-listing-02.jpg" data-background-image="images/single-listing-02.jpg" class="item mfp-gallery" title="Title 3"></a>
+	<a href="images/single-listing-03.jpg" data-background-image="images/single-listing-03.jpg" class="item mfp-gallery" title="Title 2"></a>
+	<a href="images/single-listing-04.jpg" data-background-image="images/single-listing-04.jpg" class="item mfp-gallery" title="Title 4"></a> -->
+  <!-- </div> -->
+
+
+  <!-- Content
+================================================== -->
+  <div class="container">
+    <div class="row sticky-wrapper">
+      <div class="col-lg-8 col-md-8 padding-right-30">
+
+        <!-- Titlebar -->
+        <div id="titlebar" class="listing-titlebar">
+          <div class="listing-titlebar-title">
+            <h2> {{ this.model.eventName }}
+              <span class="listing-tag">{{this.model.eventType}}</span>
+            </h2>
+            <span>
+              <a href="#listing-location" class="listing-address">
+                <i class="fa fa-map-marker"></i>
+                {{ this.model.address}}
+              </a>
+            </span>
+          </div>
+        </div>
+
+
+        <!-- Overview -->
+        <div id="listing-overview" class="listing-section">
+
+          <!-- Description -->
+          <h3>Description:</h3>
+          <p>
+            {{ this.model.description }}
+          </p>
+
+
+        </div>
+
+
+
+
+      </div>
+
+
+      <!-- Sidebar
+		================================================== -->
+      <div class="col-lg-4 col-md-4 margin-top-75 sticky">
+
+
+        <!-- Verified Badge -->
+        <div class="verified-badge with-tip" data-tip-content="Listing has been verified and belongs the business owner or manager.">
+          <i class="sl sl-icon-check"></i> Verified Listing
+        </div>
+
+        
+ 
+
+
+        <!-- Opening Hours -->
+        <div class="boxed-widget opening-hours margin-top-35">
+          <h3>
+            <i class="sl sl-icon-clock"></i> Event time:</h3>
+          <ul>
+            <li>Monday
+              <span>9 AM - 5 PM</span>
+            </li>
+          </ul>
+        </div>
+        <!-- Opening Hours / End -->
+
+
+        <!-- Contact --> 
+        <div class="boxed-widget margin-top-35">
+        <div class="hosted-by-title">
+        <h4>Hosted by {{this.user.firstName }} {{this.user.lastName}}</h4>
+        <!-- <a href="pages-user-profile.html" class="hosted-by-avatar"><img src="images/dashboard-avatar.jpg" alt=""></a> -->
+        </div>
+        </div>
+        <!-- Contact / End -->
+
+      </div>
+      <!-- Sidebar / End -->
+
+    </div>
+  </div>
+
+  <!-- Back To Top Button -->
+  <!-- <div id="backtotop"><a href="#"></a></div> -->
+
+
+</div>
+<!-- Wrapper / End -->
+
+
+
+<!-- </div> -->
+<!-- Style Switcher / End -->
