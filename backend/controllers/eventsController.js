@@ -72,9 +72,6 @@ exports.deleteEventByID = function (req, res) {
 // app.get("/api/userEvents", 
 //TODO: limit, find now working
 exports.getUserEventsByUID = function (req, res) {
-    console.log(req.body);
-    console.log("HOST UID = " + req.query.hostUID);
-    console.log("Limit = " + req.query.limit);
     var limit = 10;
     var skip = 0;
 
