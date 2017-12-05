@@ -185,7 +185,7 @@ exports.searchEvents = function(req, res) {
    }
 
   if (req.query.name != null) {
-    var match = new RegExp(req.query.search);
+    var match = new RegExp(req.query.name);
     query.eventName = {match}
   }
 
