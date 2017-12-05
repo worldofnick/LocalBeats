@@ -175,12 +175,7 @@ exports.searchEvents = function(req, res) {
   }
 
   if (req.query.lat != null && req.query.lon != null) {
-    query.location = { $near :
-        {
-          $geometry: { type: "Point",  coordinates: [ parseFloat(req.query.lon), parseFloat(req.query.lat)] },
-          $minDistance: 0,
-          $maxDistance: 16090 // 10 miles ish
-        }
+        query.location = { $nearSphere: { $geometry: { type: "Point", coordinates: [ parseFloat(req.query.lon) , parseFloat(req.query.lat) ] }, $maxDistance: 10690 } };
      }
    }
 
