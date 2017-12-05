@@ -66,22 +66,60 @@ exports.getFirstPlaylist = function (req, res) {
     .then(function (data) {
       console.log('IS JSON EMPYT?: ', isResultEmpty(data.body));
       if (!isResultEmpty(data.body)) {
-        // console.log(data.body);
+        console.log(data.body);
         for (var playlist of data.body.items) {
           if (playlist.owner.id == req.params.username) {
             return res.status(200).send({ uri: playlist.uri });
           }
         }
-        return res.status(404).send({ message: "None of the playlists belong to " + req.params.username });
+        return res.status(400).send({ message: "None of the playlists belong to " + req.params.username });
 
       } else {
-        return res.status(404).send({ message: req.params.username + " has no playlists!" });
+        return res.status(400).send({ message: req.params.username + " has no playlists!" });
       }
 
     }, function (err) {
       return res.status(404).send({ message: "Something went wrong...", error: err });
       console.log('Something went wrong!', err);
     });
+};
+
+
+/**
+ * Get the first playlist OWNED by this user. If the user 
+ * has playlists but does not OWN any of those, then 404 is returned.
+ * @param {*} req - Contains uid
+ * @param {*} res - Contains the URI for the Spotify Playlist Widget
+ */
+exports.getFirstPlaylistByUIDAfterProfileUpdate = function (req, res) {
+  User.findById(req.params.uid, function (err, user) {
+    if (err) {
+      return res.status(504).send({ message: "Something went wrong...", error: err });
+    }
+    spotifyApi.getUserPlaylists(user.spotifyID)
+      .then(function (data) {
+        console.log('IS JSON EMPYT?: ', isResultEmpty(data.body));
+        if (!isResultEmpty(data.body)) {
+          // console.log(data.body);
+          for (var playlist of data.body.items) {
+            if (playlist.owner.id == user.spotifyID) {
+              user.hashPassword = undefined;
+              return res.status(200).send({ user: user, uri: playlist.uri });
+            }
+          }
+          user.hashPassword = undefined;
+          return res.status(400).send({ user: user, message: "None of the playlists belong to " + user.firstName });
+
+        } else {
+          user.hashPassword = undefined;
+          return res.status(400).send({ user: user, message: user.firstName + " has no playlists!" });
+        }
+
+      }, function (err) {
+        return res.status(404).send({ message: "Something went wrong...", error: err });
+        console.log('Something went wrong!', err);
+      });
+  });
 };
 
 /**
@@ -111,7 +149,7 @@ exports.getAllPlaylistsByUID = function (req, res) {
   var theUser;
   User.findById(req.params.uid, function (err, user) {
     if (err) {
-      return res.status(404).send({ message: "Something went wrong...", error: err });
+      return res.status(504).send({ message: "Something went wrong...", error: err });
     }
     theUser = new User(user);
     console.log("USER: ");
@@ -136,7 +174,7 @@ exports.getAllPlaylistsByUID = function (req, res) {
 exports.getFirstPlaylistByUID = function (req, res) {
   User.findById(req.params.uid, function (err, user) {
     if (err) {
-      return res.status(404).send({ message: "Something went wrong...", error: err });
+      return res.status(504).send({ message: "Something went wrong...", error: err });
     }
     spotifyApi.getUserPlaylists(user.spotifyID)
       .then(function (data) {
@@ -148,10 +186,10 @@ exports.getFirstPlaylistByUID = function (req, res) {
               return res.status(200).send({ uri: playlist.uri });
             }
           }
-          return res.status(404).send({ message: "None of the playlists belong to " + user.firstName });
+          return res.status(400).send({ message: "None of the playlists belong to " + user.firstName });
 
         } else {
-          return res.status(404).send({ message: user.firstName + " has no playlists!" });
+          return res.status(400).send({ message: user.firstName + " has no playlists!" });
         }
 
       }, function (err) {
@@ -170,7 +208,7 @@ exports.getFirstPlaylistByUID = function (req, res) {
 exports.getPlaylistByUIDandPID = function (req, res) {
   User.findById(req.params.uid, function (err, user) {
     if (err) {
-      return res.status(404).send({ message: "Something went wrong...", error: err });
+      return res.status(504).send({ message: "Something went wrong...", error: err });
     }
     console.log("USER: ");
     console.log(user.spotifyID);

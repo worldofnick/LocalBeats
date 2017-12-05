@@ -7,8 +7,6 @@ module.exports = function(app) {
      */
     var tokenVerificationHandler = require('../controllers/tokenVerificationController.js');
     var spotifyHandler = require('../controllers/spotifyController.js');
-
-    
     spotifyHandler.grantClientCredentials();
 
     // Routes using the SPOTIFY_USERNAME
