@@ -7,14 +7,12 @@ import { Event } from 'app/models/event';
 
 @Injectable()
 export class EventService {
-    public connection: string = 'http://localhost:8080/api/events';
-    public listConnection:string = 'http://localhost:8080/api/userEvents';
-    // public connection: string = 'https://localbeats.herokuapp.com/api/events';
+    // public connection: string = 'http://localhost:8080/api/events';
+    public connection: string = 'https://localbeats.herokuapp.com/api/events';
     // public userConnection: string = 'https://localbeats.herokuapp.com/api/users';
     public accessToken: string = null;
     public user: User = null;
     public event: Event = null;
-    public events:Event[] = null;
 
     private headers: Headers = new Headers({ 'Content-Type': 'application/json' });
 
@@ -41,27 +39,7 @@ export class EventService {
     }
 
 
-      ///userEvents/?uid=asdf&limit=10&skip=10
-      //api/userEvents/?hostUID=5a1caf147f9c707f00ce1e36
-      public getEventsByUID(host:User): Promise<Event[]> {
-        const current = this.listConnection + '/?hostUID='+host._id;
-        console.log(current);
-        return this.http.get(current)
-            .toPromise()
-            .then((response: Response) => {
-                const data = response.json();
-                this.accessToken = data.access_token;
-                sessionStorage.setItem('token', JSON.stringify({ accessToken: this.accessToken}))
-                this.events = data.event as Event[];
-                console.log("printing events returned after getting");
-                console.log(response.json());
-                return this.events
-            })
-            .catch(this.handleError);
-    }
-
-
-        // post("/api/events/eid")
+        // post("/api/events/create")
         public getEventByEID(eventGotten:Event): Promise<Event> {
             const current = this.connection + eventGotten._id;
             console.log(current);

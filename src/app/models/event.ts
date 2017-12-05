@@ -8,9 +8,6 @@ export class Event {
     public performerUID: string
     public performerEmail: string
     public address: string
-    public city:string
-    public state:string
-    public zip:string
     public fromDate: string
     public toDate: string
     public description: string
