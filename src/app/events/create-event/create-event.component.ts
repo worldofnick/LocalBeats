@@ -22,7 +22,6 @@ export class CreateEventComponent implements OnInit {
   
   ngOnInit() {
     this.user = this.userSerivce.user;
-    console.log(this.user._id);
   }
 
  onCreateEvent(form: NgForm) {
@@ -31,15 +30,26 @@ export class CreateEventComponent implements OnInit {
     
     
     // const lastName = form.value.lastname;
-    const eventName = form.value.eventName;
 
-    //TODO: only save the edited parts of the profile
-    // this.model.email = email,
-    // this.modelpassword: password,
+    const eventName = form.value.eventName;
+    const eventType = form.value.eventType;
+    const eventGenre = form.value.eventGenre;
+    const hostUID = form.value.hostUID;
+    const hostEmail = form.value.hostemail;
+    const performerUID = form.value.performerUID;
+    const performerEmail = form.value.performerEmail;
+    const address = form.value.address;
+    // const fromDate = form.value.fromDate;
+    // const toDate = form.value.toDate;
+    const description = form.value.description;
+    const fixedPrice = form.value.fixedPrice;
+    // const hourlyRate: string
+    // const deposit: string
+    // const isBooked: string
 
     this.model.eventName = eventName;
 
-    console.log("sending \n" );
+    console.log("creating event: \n" );
     console.log(this.model);
 
     this.eventService.createEvent(this.model).then((event: Event) => {
