@@ -10,8 +10,6 @@
 	<a href="images/single-listing-03.jpg" data-background-image="images/single-listing-03.jpg" class="item mfp-gallery" title="Title 2"></a>
 	<a href="images/single-listing-04.jpg" data-background-image="images/single-listing-04.jpg" class="item mfp-gallery" title="Title 4"></a> -->
   <!-- </div> -->
-
-
   <!-- Content
 ================================================== -->
   <div class="container">
@@ -27,7 +25,7 @@
             <span>
               <a href="#listing-location" class="listing-address">
                 <i class="fa fa-map-marker"></i>
-                {{ this.model.address}}
+                {{ this.model.address}} , {{this.model.city}} , {{this.model.zip}}
               </a>
             </span>
           </div>
@@ -42,31 +40,25 @@
           <p>
             {{ this.model.description }}
           </p>
-
-
         </div>
-
-
-
-
       </div>
+      <!-- end overview -->
 
 
-      <!-- Sidebar
-		================================================== -->
+      <!-- Sidebar	================================================== -->
       <div class="col-lg-4 col-md-4 margin-top-75 sticky">
 
 
         <!-- Verified Badge -->
-        <div class="verified-badge with-tip" data-tip-content="Listing has been verified and belongs the business owner or manager.">
+        <!-- <div class="verified-badge with-tip" data-tip-content="Listing has been verified">
           <i class="sl sl-icon-check"></i> Verified Listing
+        </div> -->
+        
+        <div  class="verified-badge" >
+          Event pay: ${{this.model.fixedPrice}}
         </div>
 
-        
- 
-
-
-        <!-- Opening Hours -->
+        <!-- Event Times -->
         <div class="boxed-widget opening-hours margin-top-35">
           <h3>
             <i class="sl sl-icon-clock"></i> Event time:</h3>
@@ -76,15 +68,17 @@
             </li>
           </ul>
         </div>
-        <!-- Opening Hours / End -->
+        <!-- Event Times / End -->
 
 
-        <!-- Contact --> 
+        <!-- Contact -->
         <div class="boxed-widget margin-top-35">
-        <div class="hosted-by-title">
-        <h4>Hosted by {{this.user.firstName }} {{this.user.lastName}}</h4>
-        <!-- <a href="pages-user-profile.html" class="hosted-by-avatar"><img src="images/dashboard-avatar.jpg" alt=""></a> -->
-        </div>
+          <div class="hosted-by-title">
+            <h4>Hosted by: </h4>
+            <!-- <a href="pages-user-profile.html" class="hosted-by-avatar"><img src="images/dashboard-avatar.jpg" alt=""></a> -->
+          </div>
+          <!-- TODO: make this clickable and chane to user profile with user._id -->
+          <h4>{{this.user.firstName }} {{this.user.lastName}}</h4>
         </div>
         <!-- Contact / End -->
 
