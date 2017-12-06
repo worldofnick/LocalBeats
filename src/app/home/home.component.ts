@@ -27,6 +27,8 @@ export class HomeComponent implements OnInit {
   public longitude: number;
   public searchControl: FormControl;
   public zoom: number;
+
+  google: any;
   
   @ViewChild("search")
   public searchElementRef: ElementRef;
