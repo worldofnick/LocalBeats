@@ -92,7 +92,7 @@ exports.searchUsers = function (req, res) {
   }
 
   if (req.query.genre != null) {
-    query.genre = req.query.genre;
+    query.genres = req.query.genre;
   }
 
   if (req.query.lat != null && req.query.lon != null) {
