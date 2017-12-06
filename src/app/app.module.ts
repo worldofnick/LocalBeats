@@ -22,6 +22,7 @@ import { SearchBarComponent } from './search/search-bar/search-bar.component';
 import { CreateEventComponent } from './events/create-event/create-event.component';
 import { EventService } from 'app/services/event.service';
 import { EventPageComponent } from './events/event-page/event-page.component';
+import { MyEventsComponent } from './events/my-events/my-events.component';
 // import { UserSearchResultComponent } from './search/user-search-result/user-search-result.component';
 // import { EventSearchResultComponent } from './search/event-search-result/event-search-result.component';
 
@@ -44,6 +45,7 @@ import { EventPageComponent } from './events/event-page/event-page.component';
     SearchBarComponent,
     CreateEventComponent,
     EventPageComponent,
+    MyEventsComponent,
     // UserSearchResultComponent,
     // EventSearchResultComponent
   ],
