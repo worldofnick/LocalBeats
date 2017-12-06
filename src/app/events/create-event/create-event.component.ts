@@ -26,24 +26,24 @@ export class CreateEventComponent implements OnInit {
   }
 
  onCreateEvent(form: NgForm) {
-    // console.log("printing host id");
-    // console.log(this.user._id);
-    
-    
-    // const lastName = form.value.lastname;
+
     const eventName = form.value.eventName;
     const eventType = form.value.eventType;
     const eventGenre = form.value.eventGenre;
-    // const hostEmail = form.value.hostemail;
     const address = form.value.address;
     const fromDate = form.value.fromDate;
     const toDate = form.value.toDate;
     const description = form.value.description;
     const fixedPrice = form.value.fixedPrice;
+    const city = form.value.city;
+    const zip = form.value.zip;
+    const state = form.value.state;
     // const hourlyRate: string
     // const deposit: string
     // const isBooked: string
-
+    this.model.zip = zip;
+    this.model.state = state;
+    this.model.city = city;
     this.model.eventName = eventName;
     this.model.eventType = eventType;
     this.model.eventGenre = eventGenre;

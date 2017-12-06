@@ -17,6 +17,7 @@ export class MyEventsComponent implements OnInit {
 
   user:User;
   events:Event[];
+  deleteStatus:Number;
 
   constructor(private eventService: EventService, private userService: UserService, private router: Router) { }
   
@@ -24,10 +25,47 @@ export class MyEventsComponent implements OnInit {
     this.user = this.userService.user;
     
     this.eventService.getEventsByUID(this.user).then((events: Event[]) => {
-      this.events = events;      
-      console.log("in nginit...events received:");
-      console.log(this.events); 
+      this.events = events;   
+      // this.eventService.events = this.events;   
     });
+  }
+
+  onDeleteEvent(event:Event, index:Number){
+    this.eventService.deleteEventByEID(event).then((status:Number) => {
+      this.deleteStatus = status;
+      console.log(this.deleteStatus);
+      if(this.deleteStatus == 200){
+        //remove event from events[]
+        console.log("printing events before deletion:");
+        console.log(this.events);
+        
+        var newEvents:Event[] = [];
+
+        //go thru and push all events except the deleted one to the new event.
+        for(let i:number = 0; i < this.events.length; i++){
+          if(i != index){
+            newEvents.push(this.events[i]);
+          }
+        }
+
+        this.events = newEvents;
+        
+        console.log("printing events after deletion:");
+        console.log(this.events);
+
+      }
+    });
+
+  }
+
+  onEditEvent(event:Event){
+    
+  }
+
+  onPickEvent(event:Event){
+    // this.model = event;      
+    this.eventService.event = event;
+    this.router.navigate(['/event-page']); //this will go to the page about the event    
   }
 
 }

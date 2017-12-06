@@ -1,19 +1,7 @@
 <!-- Wrapper -->
 <div id="wrapper">
 
-
-  <!-- Slider
-================================================== -->
-  <!-- <div class="listing-slider mfp-gallery-container margin-bottom-0"> -->
-  <!-- <a href="images/single-listing-01.jpg" data-background-image="images/single-listing-01.jpg" class="item mfp-gallery" title="Title 1"></a>
-	<a href="images/single-listing-02.jpg" data-background-image="images/single-listing-02.jpg" class="item mfp-gallery" title="Title 3"></a>
-	<a href="images/single-listing-03.jpg" data-background-image="images/single-listing-03.jpg" class="item mfp-gallery" title="Title 2"></a>
-	<a href="images/single-listing-04.jpg" data-background-image="images/single-listing-04.jpg" class="item mfp-gallery" title="Title 4"></a> -->
-  <!-- </div> -->
-
-
-  <!-- Content
-================================================== -->
+  <!-- Content ================================================== -->
   <div class="container">
     <div class="row sticky-wrapper">
       <div class="col-lg-8 col-md-8 padding-right-30">
@@ -25,9 +13,9 @@
               <span class="listing-tag">{{this.model.eventType}}</span>
             </h2>
             <span>
-              <a href="#listing-location" class="listing-address">
+              <a class="listing-address">
                 <i class="fa fa-map-marker"></i>
-                {{ this.model.address}}
+                {{ this.model.address}}, {{ this.model.city }} , {{ this.model.state}}, {{ this.model.zip }}
               </a>
             </span>
           </div>
@@ -39,11 +27,8 @@
 
           <!-- Description -->
           <h3>Description:</h3>
-          <p>
-            {{ this.model.description }}
-          </p>
-
-
+          <div style="float:left; width:500px; max-width:500px; word-wrap:break-word;">
+            {{ this.model.description }}</div>
         </div>
 
 
@@ -52,21 +37,14 @@
       </div>
 
 
-      <!-- Sidebar
-		================================================== -->
+      <!-- Sidebar ================================================== -->
       <div class="col-lg-4 col-md-4 margin-top-75 sticky">
-
-
-        <!-- Verified Badge -->
-        <div class="verified-badge with-tip" data-tip-content="Listing has been verified and belongs the business owner or manager.">
-          <i class="sl sl-icon-check"></i> Verified Listing
+        <!-- Price listing box: -->
+        <div class="verified-badge with-tip" data-tip-content="The amount the event host is offering to pay to the artist who is accepted.">
+          <i class="im im-icon-Money-2"></i> {{this.model.fixedPrice}}
         </div>
 
-        
- 
-
-
-        <!-- Opening Hours -->
+        <!-- Event times -->
         <div class="boxed-widget opening-hours margin-top-35">
           <h3>
             <i class="sl sl-icon-clock"></i> Event time:</h3>
@@ -76,7 +54,7 @@
             </li>
           </ul>
         </div>
-        <!-- Opening Hours / End -->
+        <!-- Event Times End -->
 
 
         <!-- Contact --> 
@@ -85,9 +63,9 @@
         <h4>Hosted by {{this.user.firstName }} {{this.user.lastName}}</h4>
         <!-- <a href="pages-user-profile.html" class="hosted-by-avatar"><img src="images/dashboard-avatar.jpg" alt=""></a> -->
         </div>
+        <h4>Arists that have applied:</h4>
         </div>
         <!-- Contact / End -->
-
       </div>
       <!-- Sidebar / End -->
 

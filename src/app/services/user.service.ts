@@ -32,7 +32,7 @@ export class UserService {
             .catch(this.handleError);
     }
 
-    // post("/api/profile-edit")
+    // post("/api/users/uid")
     public onEditProfile(newUser: User): Promise<User> {
         const current = this.userConnection + '/' + newUser._id;
         console.log("sending user : ");
