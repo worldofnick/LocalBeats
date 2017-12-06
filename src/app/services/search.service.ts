@@ -13,18 +13,30 @@ export class SearchService {
 
     constructor (private http: Http) {}
 
-    // Search through events
-    // params
-    // skip (int) how many records to skip
-    // limit (int) how many records to return
-    // event_type (string) ("wedding", "birthday")
-    // event_genre (string) ("rock", etc)
-    // from_date & to_date (string) ISODate
-    // min_budget & max_budget (int)
-    // booked (boolean) defaults ot false. If true returns events that are currently booked
-    // lat (string) & lon (string) & distance (int, metres)
-    // name (string) fuzzy match search by event names
-    // get("/api/search")
+    public eventTypes(): Promise<Object> {
+        let current = (this.connection + 'eventTypes/')
+        return this.http.get(current, { headers: this.headers } )
+        .toPromise()
+        .then((response: Response) => {
+            const data = response.json();
+            const eventTypes = data.eventTypes as string[]
+            return eventTypes;
+        })
+        .catch(this.handleError);
+    }
+
+    public genres(): Promise<Object> {
+        let current = (this.connection + 'genres/')
+        return this.http.get(current, { headers: this.headers } )
+        .toPromise()
+        .then((response: Response) => {
+            const data = response.json();
+            const genres = data.genres as Array<String>;
+            return genres;
+        })
+        .catch(this.handleError);
+    }
+
     public eventSearch(searchTerms: SearchTerms): Promise<Object> {
         let current = (this.connection + 'searchEvents/')
         let params: URLSearchParams = new URLSearchParams();

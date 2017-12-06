@@ -8,6 +8,7 @@ import { } from 'googlemaps';
 import { MapsAPILoader } from '@agm/core';
 import { Event } from 'app/models/event';
 import { User } from 'app/models/user';
+import { getType } from '@angular/core/src/errors';
 
 @Component({
   selector: 'app-home',
@@ -15,9 +16,9 @@ import { User } from 'app/models/user';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
-  public musicGenres = ['Rock', 'Country', 'Jazz', 'Blues', 'Hip Hop'];
-  public eventTypes = ['Wedding', 'Birthday', 'Business'];
-  public searchTypes = ['Musician', 'Event'];
+  public musicGenres: any = ['Rock', 'Country', 'Jazz', 'Blues', 'Hip Hop'];
+  public eventTypes: any = ['Wedding', 'Birthday', 'Business'];
+  public searchTypes: any = ['Musician', 'Event'];
   public genres = this.musicGenres;
   public currentSearch: SearchTerms = new SearchTerms(this.searchTypes[0], '', null, this.musicGenres[0]);
   public results: any = null;
@@ -34,6 +35,15 @@ export class HomeComponent implements OnInit {
   constructor(private router: Router, private searchService: SearchService, private mapsAPILoader: MapsAPILoader, private ngZone: NgZone) { }
   
   ngOnInit() {
+
+    this.searchService.eventTypes().then((types: string[]) => {
+      this.eventTypes = types;
+    }).then(() => this.searchService.genres().then((types: string[]) => {
+      this.musicGenres = types;
+      this.genres = this.musicGenres;
+      this.currentSearch = new SearchTerms(this.searchTypes[0], '', null, this.musicGenres[0]);
+    }));
+    
     //set google maps defaults
     this.zoom = 4;
     this.latitude = 39.8282;
