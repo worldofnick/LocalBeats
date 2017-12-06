@@ -30,7 +30,7 @@ export class MyEventsComponent implements OnInit {
     });
   }
 
-  onDeleteEvent(event:Event, index:number){
+  onDeleteEvent(event:Event, index:Number){
     this.eventService.deleteEventByEID(event).then((status:Number) => {
       this.deleteStatus = status;
       console.log(this.deleteStatus);
@@ -39,11 +39,21 @@ export class MyEventsComponent implements OnInit {
         console.log("printing events before deletion:");
         console.log(this.events);
         
+        var newEvents:Event[] = [];
+
+        //go thru and push all events except the deleted one to the new event.
+        for(let i:number = 0; i < this.events.length; i++){
+          if(i != index){
+            console.log("=");
+            console.log(i);
+            console.log(index);
+            newEvents.push(this.events[i]);
+          }
+        }
+
+        this.events = newEvents;
         
-        this.events.splice(index, 1);
-
-
-        console.log("printing events afte deletion:");
+        console.log("printing events after deletion:");
         console.log(this.events);
 
       }
