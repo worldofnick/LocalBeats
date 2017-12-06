@@ -66,7 +66,7 @@ exports.deleteUserByID = function (req, res) {
 // name (string) name of the user
 // artist (boolean) true to return only artists, false to return all. Defaults to true
 // lat/lon..
-// genre (string) genre of the user ** cannot be used in junction with artist=false **
+// genre (string) genre of the user ** cannot be used in junction with artist=false ** Make sure to pass a capitalized string
 // skip (int)
 // limit (int)
 exports.searchUsers = function (req, res) {
