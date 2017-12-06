@@ -52,9 +52,9 @@ export class EventService {
                 const data = response.json();
                 this.accessToken = data.access_token;
                 sessionStorage.setItem('token', JSON.stringify({ accessToken: this.accessToken}))
-                this.events = data.event as Event[];
+                this.events = data.events as Event[];
                 console.log("printing events returned after getting");
-                console.log(response.json());
+                console.log(this.events);
                 return this.events
             })
             .catch(this.handleError);

@@ -42,6 +42,8 @@ export class UserService {
             .then((response: Response) => {
                 const data = response.json();
                 this.user = data.user as User;
+                this.accessToken = data.access_token;
+                sessionStorage.setItem('token', JSON.stringify({ accessToken: this.accessToken}))
                 console.log("user response obj");
                 console.log(this.user);
                 return this.user
