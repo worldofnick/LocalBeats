@@ -7,7 +7,6 @@ import { FormControl} from "@angular/forms";
 import { MapsAPILoader } from '@agm/core';
 import { Event } from 'app/models/event';
 import { User } from 'app/models/user';
-import {} from '@types/googlemaps';
 
 declare var google: any;
 
