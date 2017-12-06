@@ -18,7 +18,7 @@ exports.listAllEvents = function (req, res) {
             events.push({"event": event});
         });
         
-      return res.status(200).send(events);
+      return res.status(200).send({"events": events});
     });
   };
 
@@ -98,7 +98,7 @@ exports.getUserEventsByUID = function (req, res) {
                 events.push({"event": event});
             });
             
-            return res.status(200).send(events);
+            return res.status(200).send({"events": events});
         }
     });
 };
@@ -207,7 +207,7 @@ exports.searchEvents = function(req, res) {
                 events.push({"event": event});
             });
             
-            return res.status(200).send(events);
+            return res.status(200).send({"events": events});
       }
   });
 };
