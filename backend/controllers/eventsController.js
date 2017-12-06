@@ -57,7 +57,6 @@ exports.updateEventByID = function (req, res) {
 };
 
 exports.deleteEventByID = function (req, res) {
-
     Events.findByIdAndRemove(req.params.eid, function (err, event) {
         if (err) {
             return res.status(500).send("There was a problem deleting the event.");
@@ -74,8 +73,6 @@ exports.deleteEventByID = function (req, res) {
 /**
  * Parameters: hostUID, limit, skip
  */
-// app.get("/api/userEvents", 
-//TODO: limit, find now working
 exports.getUserEventsByUID = function (req, res) {
     var limit = 10;
     var skip = 0;
