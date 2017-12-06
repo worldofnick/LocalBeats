@@ -24,7 +24,8 @@ export class MyEventsComponent implements OnInit {
     this.user = this.userService.user;
     
     this.eventService.getEventsByUID(this.user).then((events: Event[]) => {
-      this.events = events;      
+      this.events = events;   
+      this.eventService.events = this.events;   
     });
   }
 

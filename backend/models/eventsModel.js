@@ -15,7 +15,7 @@ var EventsSchema = new Schema({
     performerEmail  : {type: String, lowercase: true},
     address         : {type: String},
     performerUID    : {type: String},
-    performerEmail  : {type: String, lowercase: true, required: true},
+    performerEmail  : {type: String},
     street          : {type: String},
     city            : {type: String},
     state           : {type: String},

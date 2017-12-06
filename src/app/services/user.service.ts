@@ -6,10 +6,10 @@ import { User } from 'app/models/user';
 
 @Injectable()
 export class UserService {
-    // public connection: string = 'http://localhost:8080/api/auth';
-    // public userConnection: string = 'http://localhost:8080/api/users';
-    public connection: string = 'https://localbeats.herokuapp.com/api/auth';
-    public userConnection: string = 'https://localbeats.herokuapp.com/api/users';
+    public connection: string = 'http://localhost:8080/api/auth';
+    public userConnection: string = 'http://localhost:8080/api/users';
+    // public connection: string = 'https://localbeats.herokuapp.com/api/auth';
+    // public userConnection: string = 'https://localbeats.herokuapp.com/api/users';
     public accessToken: string = null;
     public user: User = null;
 
@@ -32,7 +32,7 @@ export class UserService {
             .catch(this.handleError);
     }
 
-    // post("/api/profile-edit")
+    // post("/api/users/uid")
     public onEditProfile(newUser: User): Promise<User> {
         const current = this.userConnection + '/' + newUser._id;
         console.log("sending user : ");
@@ -42,8 +42,6 @@ export class UserService {
             .then((response: Response) => {
                 const data = response.json();
                 this.user = data.user as User;
-                this.accessToken = data.access_token;
-                sessionStorage.setItem('token', JSON.stringify({ accessToken: this.accessToken}))
                 console.log("user response obj");
                 console.log(this.user);
                 return this.user

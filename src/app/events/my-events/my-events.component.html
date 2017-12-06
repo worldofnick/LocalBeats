@@ -29,7 +29,7 @@
 					<h4>Active Listings</h4>
 					<ul>
 						<app-event *ngFor="let event of events; let i = index"
-									[event]="event"
+									[event]="event.event"
 									[index]="i"></app-event>
 					</ul>
 				</div>
@@ -38,8 +38,6 @@
 
 	</div>
 	<!-- Content / End -->
-
-
 </div>
 <!-- Dashboard / End -->
 
