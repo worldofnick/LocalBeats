@@ -15,31 +15,33 @@
           </div>
   
           <!-- Mobile Navigation -->
-          <div class="mmenu-trigger">
+          <!-- <div class="mmenu-trigger">
             <button class="hamburger hamburger--collapse" type="button">
               <span class="hamburger-box">
                 <span class="hamburger-inner"></span>
               </span>
             </button>
-          </div>
+          </div> -->
   
   
           <!-- Main Navigation -->
           <nav id="navigation" class="style-1">
             <ul id="responsive">
               <li><a routerLink="/home">localBeats</a></li>
-  
-              <li><a routerLink="/events">Events</a></li>
-  
-              <li><a href="#">Profile</a>
-                <ul>
-                  <li><a routerLink="/profile">Dashboard</a></li>
-                  <li><a routerLink="/">Messages</a></li>
-                  <li><a routerLink="/">Bookings</a></li>
-                  <li><a routerLink="/">My Events</a></li>
-                  <li><a routerLink="/">Reviews</a></li>
-                </ul>
-              </li>
+              
+              <ng-template [ngIf]="userService.isAuthenticated()">
+                  <li><a routerLink="/events">Events</a></li>
+                  <li><a href="#">Profile</a>
+                    <ul>
+                      <li><a routerLink="/profile">Dashboard</a></li>
+                      <li><a routerLink="/">Messages</a></li>
+                      <li><a routerLink="/">Bookings</a></li>
+                      <li><a routerLink="/">My Events</a></li>
+                      <li><a routerLink="/">Reviews</a></li>
+                    </ul>
+                  </li>
+              </ng-template>
+              
               
             </ul>
           </nav>
@@ -48,28 +50,8 @@
           
         </div>
         <!-- Left Side Content / End -->
-  
-  
-        <ng-template [ngIf]="!userService.isAuthenticated()">
-          <!-- Right Side Content / End -->
-          <div class="right-side">
-            <div class="header-widget">
-              <a href="#sign-in-dialog" class="sign-in popup-with-zoom-anim"><i class="sl sl-icon-login"></i> Sign In</a>
-              <a routerLink="create-event" class="button border with-icon">Host Event<i class="sl sl-icon-plus"></i></a>
-            </div>
-          </div>
-          <!-- Right Side Content / End -->
           <app-signin></app-signin>
-        </ng-template>
-        <ng-template [ngIf]="userService.isAuthenticated()">
-           <!-- Right Side Content / End -->
-           <div class="right-side">
-              <div class="header-widget">
-                <a class="sign-in popup-with-zoom-anim"><i class="sl sl-icon-login"></i> Sign Out</a>
-              </div>
-            </div>
-            <!-- Right Side Content / End -->
-        </ng-template>
+          <!-- Right Side Content / End -->
       </div>
     </div>
     <!-- Header / End -->

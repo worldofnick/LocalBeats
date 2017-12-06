@@ -270,6 +270,7 @@ img.footer-logo { max-height: 38px; width: auto; }
 	top: 10px;
 	display: inline-block;
 	vertical-align: top;
+	cursor: pointer;
 }
 
 .header-widget .sign-in i { padding-right: 4px; font-size: 15px; }
@@ -11351,8 +11352,6 @@ box-sizing: border-box; }
 	z-index: 2000;
 	overflow: hidden;
 	position: fixed;
-	background: #000;
-	opacity: 0.96;
 }
 
 .mfp-wrap {

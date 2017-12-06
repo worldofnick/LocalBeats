@@ -6,6 +6,10 @@ import { SearchTerms } from 'app/models/search';
 @Injectable()
 export class SearchService {
     public connection: string = 'http://localhost:8080/api/';
+    public musicGenres = ['Rock', 'Country', 'Jazz', 'Blues', 'Hip Hop'];
+    public eventTypes = ['Wedding', 'Birthday', 'Business']
+    public searchTypes = ['Musician', 'Event']
+    public currentSearch: SearchTerms = new SearchTerms(this.searchTypes[0], '', null, this.musicGenres[0]);
 
     private headers: Headers = new Headers({ 'Content-Type': 'application/json' });
 
@@ -26,7 +30,7 @@ export class SearchService {
     public eventSearch(searchTerms: SearchTerms): Promise<Object> {
         let current = (this.connection + 'searchEvents/')
         let params: URLSearchParams = new URLSearchParams();
-        params.set('event_type', searchTerms.genre)
+        params.set('event_type', searchTerms.genre.toLowerCase())
         params.set('lat', String(searchTerms.location.latitude))
         params.set('lon', String(searchTerms.location.longitude))
         params.set('limit', '5')
@@ -39,7 +43,7 @@ export class SearchService {
             .toPromise()
             .then((response: Response) => {
                 const data = response.json()
-                console.log('data')
+                console.log(data)
                 return data
             })
             .catch(this.handleError);
@@ -48,7 +52,7 @@ export class SearchService {
     public userSearch(searchTerms: SearchTerms): Promise<Object> {
         let current = (this.connection + 'searchUsers/')
         let params: URLSearchParams = new URLSearchParams();
-        params.set('event_type', searchTerms.genre)
+        params.set('genre', searchTerms.genre)
         params.set('lat', String(searchTerms.location.latitude))
         params.set('lon', String(searchTerms.location.longitude))
         params.set('limit', '5')

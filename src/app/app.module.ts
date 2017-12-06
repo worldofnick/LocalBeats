@@ -2,6 +2,7 @@ import { Component, ElementRef, NgModule, NgZone, OnInit, ViewChild } from '@ang
 import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import {HttpClientModule} from '@angular/common/http';
 import { BrowserModule } from "@angular/platform-browser";
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 import { AgmCoreModule, MapsAPILoader } from '@agm/core';
 import { HttpModule } from '@angular/http';
 
@@ -27,8 +28,6 @@ import { EventService } from 'app/services/event.service';
 import { EventPageComponent } from './events/event-page/event-page.component';
 import { UserSearchResultComponent } from './search/user-search-result/user-search-result.component';
 import { EventSearchResultComponent } from './search/event-search-result/event-search-result.component';
-
-
 
 @NgModule({
   declarations: [
@@ -56,6 +55,7 @@ import { EventSearchResultComponent } from './search/event-search-result/event-s
       libraries: ["places"]
     }),
     BrowserModule,
+    BrowserAnimationsModule,
     FormsModule,
     ReactiveFormsModule,
     HttpModule,
