@@ -57,7 +57,6 @@ exports.updateEventByID = function (req, res) {
 };
 
 exports.deleteEventByID = function (req, res) {
-
     Events.findByIdAndRemove(req.params.eid, function (err, event) {
         if (err) {
             return res.status(500).send("There was a problem deleting the event.");
@@ -74,8 +73,6 @@ exports.deleteEventByID = function (req, res) {
 /**
  * Parameters: hostUID, limit, skip
  */
-// app.get("/api/userEvents", 
-//TODO: limit, find now working
 exports.getUserEventsByUID = function (req, res) {
     var limit = 10;
     var skip = 0;
@@ -139,6 +136,7 @@ exports.deleteUserEventsByUID = function (req, res) {
 // booked (boolean) defaults ot false. If true returns events that are currently booked
 // lat (string) & lon (string)
 // name (string) fuzzy match search by event names
+// sort (string) in {"date-desc", "date-asc", "price-desc", "price-asc", "distance-desc", "distance-asc"} defaults to "date-desc" unless lat & lon are passed
 exports.searchEvents = function(req, res) {
   var skip = 0;
   var limit = 15;
@@ -211,3 +209,8 @@ exports.searchEvents = function(req, res) {
       }
   });
 };
+
+exports.getEventTypes = function (req, res) {
+    var eventTypes = ["Wedding", "Birthday", "Business", "Live Music", "Party", "Festival"];
+    return res.status(200).send( {"eventTypes": eventTypes} );
+  };

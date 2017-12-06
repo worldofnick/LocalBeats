@@ -62,22 +62,64 @@ exports.deleteUserByID = function (req, res) {
   });
 };
 
-exports.searchUsersByName = function (req, res) {
-  var match = new RegExp(req.query.search);
+// Params 
+// name (string) name of the user
+// artist (boolean) true to return only artists, false to return all. Defaults to true
+// lat/lon..
+// genre (string) genre of the user ** cannot be used in junction with artist=false ** Make sure to pass a capitalized string
+// skip (int)
+// limit (int)
+exports.searchUsers = function (req, res) {
+  var query = {}
+  var limit = 15;
+  var skip = 0;
 
-  var artist = true;
-  if (req.query.isArtist != null) {
-    artist = req.query.isArtist;
+  if (req.query.limit != null) {
+    limit = req.query.limit;
   }
 
-  User.find({firstName: match, isArtist: artist} , function (err, users) {
-    if (err)
-      return res.send(err);
-    
-    var usrs = [];
-    users.forEach(function(user) {
-      usrs.push({"user": user});
-    });
-    return res.status(200).send({"users": usrs});
+  if (req.query.skip != null) {
+    skip = req.query.skip;
+  }
+
+  if (req.query.name != null) {
+    query.firstName = new RegExp(req.query.name);
+  }
+
+  query.isArtist = true
+  if (req.query.artist != null) {
+    query.isArtist = req.query.artist;
+  }
+
+  if (req.query.genre != null) {
+    query.genres = req.query.genre;
+  }
+
+  if (req.query.lat != null && req.query.lon != null) {
+    query.location = {
+      "$near": [
+          parseFloat(req.query.lat),
+          parseFloat(req.query.lon)
+      ]
+    }
+  }
+
+  console.log(query);
+  User.find(query).limit(limit).skip(skip).exec(function (err, doc) {
+    if (err) {
+        return res.status(500).send(err);
+    } else {
+          var users = [];
+          doc.forEach(function(user) {
+              users.push({"user": user});
+          });
+          
+          return res.status(200).send({"users": users});
+    }
   });
+};
+
+exports.getGenres = function (req, res) {
+  var genres = ["Rock", "Classical", "Electronic", "Jazz", "Blues", "Hip-Hop", "Rap", "Alternative", "Country"];
+  return res.status(200).send( {"genres": genres} );
 };

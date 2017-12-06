@@ -22,9 +22,12 @@ module.exports = function(app) {
     app.route('/api/userEvents')
         .get(eventHandlers.getUserEventsByUID);
 
-		app.route('/api/userEvents')
-				.delete(eventHandlers.deleteUserEventsByUID);
+	app.route('/api/userEvents')
+			.delete(eventHandlers.deleteUserEventsByUID);
 
-		app.route('/api/searchEvents')
-				.get(eventHandlers.searchEvents);
+	app.route('/api/searchEvents')
+			.get(eventHandlers.searchEvents);
+
+	app.route('/api/eventTypes')
+		.get(eventHandlers.getEventTypes);
 };
