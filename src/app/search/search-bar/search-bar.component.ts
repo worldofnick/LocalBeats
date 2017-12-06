@@ -7,8 +7,6 @@ import { FormControl} from "@angular/forms";
 import { MapsAPILoader } from '@agm/core';
 import {} from '@types/googlemaps';
 
-declare var google: any;
-
 @Component({
   selector: 'app-search-bar',
   templateUrl: './search-bar.component.html',
