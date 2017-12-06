@@ -120,6 +120,6 @@ exports.searchUsers = function (req, res) {
 };
 
 exports.getGenres = function (req, res) {
-  var genres = ["Rock", "Classical", "Electronic", "Jazz", "Blues", "Hip-Hop", "Rap", "Alternative"];
+  var genres = ["Rock", "Classical", "Electronic", "Jazz", "Blues", "Hip-Hop", "Rap", "Alternative", "Country"];
   return res.status(200).send( {"genres": genres} );
 };
