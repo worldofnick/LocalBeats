@@ -62,13 +62,36 @@ exports.deleteUserByID = function (req, res) {
   });
 };
 
-exports.searchUsersByName = function (req, res) {
-  var match = new RegExp(req.query.search);
-
-  var artist = true;
-  if (req.query.isArtist != null) {
-    artist = req.query.isArtist;
+// Params 
+// name (string) name of the user
+// artist (boolean) true to return only artists, false to return all. Defaults to true
+// lat/lon..
+// genre (string) genre of the user ** cannot be used in junction with artist=false **
+exports.searchUsers = function (req, res) {
+  var query = {}
+  
+  if (req.query.name != null) {
+    query.firstName = new RegExp(req.query.name);
   }
+
+  query.isArtist = true
+  if (req.query.artist != null) {
+    query.isArtist = req.query.artist;
+  }
+
+  if (req.query.genre != null) {
+    query.genre = genre;
+  }
+
+  if (req.query.lat != null && req.query.lon != null) {
+    query.location = {
+      "$near": [
+          parseFloat(req.query.lat),
+          parseFloat(req.query.lon)
+      ]
+  }
+  }
+
 
   User.find({firstName: match, isArtist: artist} , function (err, users) {
     if (err)
