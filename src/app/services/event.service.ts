@@ -15,7 +15,7 @@ export class EventService {
     public accessToken: string = null;
     public user: User = null;
     public event: Event = null;
-    public events: Event[] = null;
+    // public events: Event[] = null;
     public statusNumber:Number = null;
 
     public serverResponse:Response = null;
@@ -61,10 +61,11 @@ export class EventService {
                 const data = response.json();
                 this.accessToken = data.access_token;
                 sessionStorage.setItem('token', JSON.stringify({ accessToken: this.accessToken }))
-                this.events = data.events as Event[];
+                let events:Event[];
+                events = data.events as Event[];
                 console.log("printing events returned after getting");
-                console.log(this.events);
-                return this.events
+                console.log(events);
+                return events
             })
             .catch(this.handleError);
     }

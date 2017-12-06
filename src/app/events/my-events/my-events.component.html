@@ -1,47 +1,60 @@
-
-
 <!-- Wrapper -->
 <div id="wrapper">
 
 
-<!-- Dashboard -->
-<div id="dashboard">
+	<!-- Dashboard -->
+	<div id="dashboard">
 
 
-	<!-- Content
-	================================================== -->
-	<div class="dashboard-content">
+		<!-- Content ================================================== -->
+		<div class="dashboard-content">
 
-		<!-- Titlebar -->
-		<div id="titlebar">
+			<!-- Titlebar -->
+			<div id="titlebar">
+				<div class="row">
+					<div class="col-md-12">
+						<h2>My Listings</h2>
+					</div>
+				</div>
+			</div>
+
 			<div class="row">
-				<div class="col-md-12">
-					<h2>My Listings</h2>
+
+				<!-- Listings -->
+				<div class="col-lg-12 col-md-12">
+					<div class="dashboard-list-box margin-top-0">
+						<h4>Your Events</h4>
+						<ul>
+							<li *ngFor="let event of this.events; let i = index">
+								<div class="list-box-listing">
+									<div class="list-box-listing-img">
+										<a href="#">
+											<img src="../../assets/images/jimsmall.png" alt="">
+										</a>
+									</div>
+									<div class="list-box-listing-content">
+										<div class="inner">
+											<h3>
+												<!-- this should technically be a router link -->
+												<a href="#">name:{{event.event.eventName}} {{ event.event._id }}</a>
+											</h3>
+											<span>address: {{ event.event.address }}</span>
+										</div>
+									</div>
+								</div>
+								<div class="buttons-to-right">
+									<a href="#" (click)="onEditEvent(this.index)" class="button gray">
+										<i class="sl sl-icon-note"></i> Edit</a>
+									<a (click)="onDeleteEvent(event.event, index)" class="button gray">
+										<i class="sl sl-icon-close"></i> Delete</a>
+								</div>
+							</li>
+						</ul>
+					</div>
 				</div>
 			</div>
+			<!-- Content / End -->
 		</div>
-
-		<div class="row">
-			
-			<!-- Listings -->
-			<div class="col-lg-12 col-md-12">
-				<div class="dashboard-list-box margin-top-0">
-					<h4>Active Listings</h4>
-					<ul>
-						<app-event *ngFor="let event of events; let i = index"
-									[event]="event.event"
-									[index]="i"></app-event>
-					</ul>
-				</div>
-			</div>
-
-
+		<!-- Dashboard / End -->
 	</div>
-	<!-- Content / End -->
-</div>
-<!-- Dashboard / End -->
-
-
-</div>
-<!-- Wrapper / End -->
-
+	<!-- Wrapper / End -->

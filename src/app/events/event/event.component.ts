@@ -35,12 +35,9 @@ export class EventComponent implements OnInit {
       this.deleteStatus = status;
       console.log(this.deleteStatus);
       if(this.deleteStatus == 200){
-        var index = this.eventService.events.indexOf(this.event, 0);
-        if (index > -1) {
-          this.eventService.events.splice(index, 1);
-        }
+        // this.eventService.events = this.eventService.events.filter(e => e !== this.event);
+        this.router.navigate(['/my-events']);
       }
-      this.router.navigate(['/my-events']);
     });
   }
 
