@@ -9,6 +9,8 @@ import { Event } from 'app/models/event';
 import { User } from 'app/models/user';
 import {} from '@types/googlemaps';
 
+declare var google: any;
+
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
