@@ -28,35 +28,19 @@
           <nav id="navigation" class="style-1">
             <ul id="responsive">
               <li><a routerLink="/home">localBeats</a></li>
-<<<<<<< HEAD
-              
               <ng-template [ngIf]="userService.isAuthenticated()">
-                  <li><a routerLink="/events">Events</a></li>
-                  <li><a href="#">Profile</a>
-                    <ul>
-                      <li><a routerLink="/profile">Dashboard</a></li>
-                      <li><a routerLink="/">Messages</a></li>
-                      <li><a routerLink="/">Bookings</a></li>
-                      <li><a routerLink="/">My Events</a></li>
-                      <li><a routerLink="/">Reviews</a></li>
-                    </ul>
-                  </li>
+                <li><a routerLink="/events">Events</a></li>
+    
+                <li><a href="#">Profile</a>
+                  <ul>
+                    <li><a routerLink="/profile">Dashboard</a></li>
+                    <li><a routerLink="/">Messages</a></li>
+                    <li><a routerLink="/">Bookings</a></li>
+                    <li><a routerLink="/my-events">My Events</a></li>
+                    <li><a routerLink="/">Reviews</a></li>
+                  </ul>
+                </li>
               </ng-template>
-              
-=======
-  
-              <li><a routerLink="/events">Events</a></li>
-  
-              <li><a href="#">Profile</a>
-                <ul>
-                  <li><a routerLink="/profile">Dashboard</a></li>
-                  <li><a routerLink="/">Messages</a></li>
-                  <li><a routerLink="/">Bookings</a></li>
-                  <li><a routerLink="/my-events">My Events</a></li>
-                  <li><a routerLink="/">Reviews</a></li>
-                </ul>
-              </li>
->>>>>>> 34cf72cc888957ea5defc20ed694bde6276b9dc2
               
             </ul>
           </nav>

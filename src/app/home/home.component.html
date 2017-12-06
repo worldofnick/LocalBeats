@@ -1,260 +1,465 @@
-	<!-- Banner
-	================================================== -->
-	<div class="main-search-container" data-background-image="./assets/images/main-search-background-01.jpg">
-		<div class="main-search-inner">
-	
-			<div class="container">
-				<div class="row">
-					<div class="col-md-12">
-						<h2>Find Nearby Musicians and Events</h2>
-						<h4>Explore top-rated artists and featured events in your area</h4>
-	
-						<app-search-bar></app-search-bar>
-					</div>
-				</div>
-			</div>
-	
-		</div>
-	</div>
-	
-	
-	<!-- Content
-	================================================== -->
-	<div class="container">
-		<div class="row">
-	
-			<div class="col-md-12">
-				<h3 class="headline centered margin-top-75">
-					Trending Musicians
-					<span>Browse <i>the most popular</i> artists</span>
-				</h3>
-			</div>
-	
-		</div>
-	</div>
-	
-	
-	<!-- Categories Carousel -->
-	<div class="fullwidth-carousel-container margin-top-25">
-		<div class="fullwidth-slick-carousel category-carousel">
-	
-			<!-- Item -->
-			<div class="fw-carousel-item">
-	
-				<!-- this (first) box will be hidden under 1680px resolution -->
-				<div class="category-box-container half">
-					<a href="listings-half-screen-map-grid-1.html" class="category-box" data-background-image="assets/images/category-box-01.jpg">
-						<div class="category-box-content">
-							<h3>Rock</h3>
-							<span>64 musicians</span>
-						</div>
-						<span class="category-box-btn">Browse</span>
-					</a>
-				</div>
-	
-				<div class="category-box-container half">
-					<a href="listings-half-screen-map-grid-1.html" class="category-box" data-background-image="assets/images/category-box-02.jpg">
-						<div class="category-box-content">
-							<h3>Jazz</h3>
-							<span>14 musicians</span>
-						</div>
-						<span class="category-box-btn">Browse</span>
-					</a>
-				</div>
-			</div>
-	
-			<!-- Item -->
-			<div class="fw-carousel-item">
-				<div class="category-box-container">
-					<a href="listings-half-screen-map-grid-1.html" class="category-box" data-background-image="assets/images/category-box-03.jpg">
-						<div class="category-box-content">
-							<h3>Country</h3>
-							<span>67 musicians</span>
-						</div>
-						<span class="category-box-btn">Browse</span>
-					</a>
-				</div>
-			</div>
-	
-			<!-- Item -->
-			<div class="fw-carousel-item">
-				<div class="category-box-container">
-					<a href="listings-half-screen-map-grid-1.html" class="category-box" data-background-image="assets/images/category-box-04.jpg">
-						<div class="category-box-content">
-							<h3>Blues</h3>
-							<span>27 musicians</span>
-						</div>
-						<span class="category-box-btn">Browse</span>
-					</a>
-				</div>
-			</div>
-	
-			<!-- Item -->
-			<div class="fw-carousel-item">
-				<div class="category-box-container">
-					<a href="listings-half-screen-map-list.html" class="category-box" data-background-image="assets/images/category-box-05.jpg">
-						<div class="category-box-content">
-							<h3>Hip Hop</h3>
-							<span>22 musicians</span>
-						</div>
-						<span class="category-box-btn">Browse</span>
-					</a>
-				</div>
-			</div>
-	
-			<!-- Item -->
-			<div class="fw-carousel-item">
-				<div class="category-box-container">
-					<a href="listings-half-screen-map-list.html" class="category-box" data-background-image="assets/images/category-box-06.jpg">
-						<div class="category-box-content">
-							<h3>Pop</h3>
-							<span>130 musicians</span>
-						</div>
-						<span class="category-box-btn">Browse</span>
-					</a>
-				</div>
-			</div>
-	
-		</div>
-	</div>
-	<!-- Categories Carousel / End -->
-	
-	
-	
-	<!-- Fullwidth Section -->
-	<section class="fullwidth margin-top-65 padding-top-75 padding-bottom-70" data-background-color="#f8f8f8">
-	
+<div *ngIf="!initialSearch">
+<!-- Banner
+================================================== -->
+<div class="main-search-container" data-background-image="./assets/images/main-search-background-01.jpg">
+	<div class="main-search-inner">
+
 		<div class="container">
 			<div class="row">
-	
 				<div class="col-md-12">
-					<h3 class="headline centered margin-bottom-45">
-						Featured Events
-						<span>Discover events that are looking for musicians like you</span>
-					</h3>
+					<h2>Find Nearby Musicians and Events</h2>
+					<h4>Explore top-rated artists and featured events in your area</h4>
+
+					<form (ngSubmit)="onSubmit()" #heroForm="ngForm" method="post" class="main-search-input">
+							
+								<div class="main-search-input-item">
+								<select (change)="onChange()" [(ngModel)]="currentSearch.searchType" name="searchType" #type="ngModel">
+									<option *ngFor="let searchType of searchTypes" [value]="searchType">{{searchType}}</option>
+								</select>
+								</div>
+							
+								<div class="main-search-input-item">
+								<input [(ngModel)]="currentSearch.text" name="text" #text="ngModel" type="text" placeholder="Name"/>
+								</div>
+							
+								<div class="main-search-input-item location">
+								<input placeholder="Location" autocorrect="off" autocapitalize="off" spellcheck="off" type="text" #search [formControl]="searchControl">
+								</div>
+							
+								<div class="main-search-input-item">
+								<select [(ngModel)]="currentSearch.genre" name="power" #genre="ngModel" placeholder="Genre">
+									<option *ngFor="let genre of genres" [value]="genre">{{genre}}</option>
+								</select>
+								</div>
+							
+								<button type="submit" class="button">Search</button>
+							</form>
 				</div>
-	
-				<div class="col-md-12">
-					<div class="simple-slick-carousel dots-nav">
-	
-					<!-- Listing Item -->
-					<div class="carousel-item">
-						<a href="listings-single-page.html" class="listing-item-container">
-							<div class="listing-item">
-								<img src="assets/images/listing-item-01.jpg" alt="">
-	
-								<div class="listing-badge now-open">Now Hiring</div>
-								
-								<div class="listing-item-content">
-									<span class="tag">Business</span>
-									<h3>Corporate Event</h3>
-									<span>964 School Street, New York</span>
-								</div>
-								<span class="like-icon"></span>
-							</div>
-							<div class="star-rating" data-rating="3.5">
-								<div class="rating-counter">(12 reviews)</div>
-							</div>
-						</a>
-					</div>
-					<!-- Listing Item / End -->
-	
-					<!-- Listing Item -->
-					<div class="carousel-item">
-						<a href="listings-single-page.html" class="listing-item-container">
-							<div class="listing-item">
-								<img src="assets/images/listing-item-02.jpg" alt="">
-								<div class="listing-item-details">
-									<ul>
-										<li>Friday, August 10</li>
-									</ul>
-								</div>
-								<div class="listing-item-content">
-									<span class="tag">Celebration</span>
-									<h3>Birthday Party</h3>
-									<span>Bishop Avenue, New York</span>
-								</div>
-								<span class="like-icon"></span>
-							</div>
-							<div class="star-rating" data-rating="5.0">
-								<div class="rating-counter">(23 reviews)</div>
-							</div>
-						</a>
-					</div>
-					<!-- Listing Item / End -->		
-	
-					<!-- Listing Item -->
-					<div class="carousel-item">
-						<a href="listings-single-page.html" class="listing-item-container">
-							<div class="listing-item">
-								<img src="assets/images/listing-item-03.jpg" alt="">
-								<div class="listing-item-details">
-									<ul>
-										<li>Starting from $59 per night</li>
-									</ul>
-								</div>
-								<div class="listing-item-content">
-									<span class="tag">Regular Work</span>
-									<h3>Club Performer</h3>
-									<span>778 Country Street, New York</span>
-								</div>
-								<span class="like-icon"></span>
-							</div>
-							<div class="star-rating" data-rating="2.0">
-								<div class="rating-counter">(17 reviews)</div>
-							</div>
-						</a>
-					</div>
-					<!-- Listing Item / End -->
-	
-					<!-- Listing Item -->
-					<div class="carousel-item">
-						<a href="listings-single-page.html" class="listing-item-container">
-							<div class="listing-item">
-								<img src="assets/images/listing-item-04.jpg" alt="">
-	
-								<div class="listing-badge now-open">Guitarists</div>
-	
-								<div class="listing-item-content">
-									<span class="tag">Regular Work</span>
-									<h3>Coffee House</h3>
-									<span>2726 Shinn Street, New York</span>
-								</div>
-								<span class="like-icon"></span>
-							</div>
-							<div class="star-rating" data-rating="5.0">
-								<div class="rating-counter">(31 reviews)</div>
-							</div>
-						</a>
-					</div>
-					<!-- Listing Item / End -->
-	
-					<!-- Listing Item -->
-					<div class="carousel-item">
-						<a href="listings-single-page.html" class="listing-item-container">
-							<div class="listing-item">
-								<img src="assets/images/listing-item-05.jpg" alt="">
-								<div class="listing-item-content">
-									<span class="tag">Celebration</span>
-									<h3>Wedding</h3>
-									<span>1512 Duncan Avenue, New York</span>
-								</div>
-								<span class="like-icon"></span>
-							</div>
-							<div class="star-rating" data-rating="3.5">
-								<div class="rating-counter">(46 reviews)</div>
-							</div>
-						</a>
-					</div>
-					<!-- Listing Item / End -->
-	
-					</div>
-					
-				</div>
-	
 			</div>
 		</div>
+
+	</div>
+</div>
+
+
+<!-- Content
+================================================== -->
+<div class="container">
+	<div class="row">
+
+		<div class="col-md-12">
+			<h3 class="headline centered margin-top-75">
+				Trending Musicians
+				<span>Browse <i>the most popular</i> artists</span>
+			</h3>
+		</div>
+
+	</div>
+</div>
+
+
+<!-- Categories Carousel -->
+<div class="fullwidth-carousel-container margin-top-25">
+	<div class="fullwidth-slick-carousel category-carousel">
+
+		<!-- Item -->
+		<div class="fw-carousel-item">
+
+			<!-- this (first) box will be hidden under 1680px resolution -->
+			<div class="category-box-container half">
+				<a href="listings-half-screen-map-grid-1.html" class="category-box" data-background-image="assets/images/category-box-01.jpg">
+					<div class="category-box-content">
+						<h3>Rock</h3>
+						<span>64 musicians</span>
+					</div>
+					<span class="category-box-btn">Browse</span>
+				</a>
+			</div>
+
+			<div class="category-box-container half">
+				<a href="listings-half-screen-map-grid-1.html" class="category-box" data-background-image="assets/images/category-box-02.jpg">
+					<div class="category-box-content">
+						<h3>Jazz</h3>
+						<span>14 musicians</span>
+					</div>
+					<span class="category-box-btn">Browse</span>
+				</a>
+			</div>
+		</div>
+
+		<!-- Item -->
+		<div class="fw-carousel-item">
+			<div class="category-box-container">
+				<a href="listings-half-screen-map-grid-1.html" class="category-box" data-background-image="assets/images/category-box-03.jpg">
+					<div class="category-box-content">
+						<h3>Country</h3>
+						<span>67 musicians</span>
+					</div>
+					<span class="category-box-btn">Browse</span>
+				</a>
+			</div>
+		</div>
+
+		<!-- Item -->
+		<div class="fw-carousel-item">
+			<div class="category-box-container">
+				<a href="listings-half-screen-map-grid-1.html" class="category-box" data-background-image="assets/images/category-box-04.jpg">
+					<div class="category-box-content">
+						<h3>Blues</h3>
+						<span>27 musicians</span>
+					</div>
+					<span class="category-box-btn">Browse</span>
+				</a>
+			</div>
+		</div>
+
+		<!-- Item -->
+		<div class="fw-carousel-item">
+			<div class="category-box-container">
+				<a href="listings-half-screen-map-list.html" class="category-box" data-background-image="assets/images/category-box-05.jpg">
+					<div class="category-box-content">
+						<h3>Hip Hop</h3>
+						<span>22 musicians</span>
+					</div>
+					<span class="category-box-btn">Browse</span>
+				</a>
+			</div>
+		</div>
+
+		<!-- Item -->
+		<div class="fw-carousel-item">
+			<div class="category-box-container">
+				<a href="listings-half-screen-map-list.html" class="category-box" data-background-image="assets/images/category-box-06.jpg">
+					<div class="category-box-content">
+						<h3>Pop</h3>
+						<span>130 musicians</span>
+					</div>
+					<span class="category-box-btn">Browse</span>
+				</a>
+			</div>
+		</div>
+
+	</div>
+</div>
+<!-- Categories Carousel / End -->
+
+
+
+<!-- Fullwidth Section -->
+<section class="fullwidth margin-top-65 padding-top-75 padding-bottom-70" data-background-color="#f8f8f8">
+
+	<div class="container">
+		<div class="row">
+
+			<div class="col-md-12">
+				<h3 class="headline centered margin-bottom-45">
+					Featured Events
+					<span>Discover events that are looking for musicians like you</span>
+				</h3>
+			</div>
+
+			<div class="col-md-12">
+				<div class="simple-slick-carousel dots-nav">
+
+				<!-- Listing Item -->
+				<div class="carousel-item">
+					<a href="listings-single-page.html" class="listing-item-container">
+						<div class="listing-item">
+							<img src="assets/images/listing-item-01.jpg" alt="">
+
+							<div class="listing-badge now-open">Now Hiring</div>
+							
+							<div class="listing-item-content">
+								<span class="tag">Business</span>
+								<h3>Corporate Event</h3>
+								<span>964 School Street, New York</span>
+							</div>
+							<span class="like-icon"></span>
+						</div>
+						<div class="star-rating" data-rating="3.5">
+							<div class="rating-counter">(12 reviews)</div>
+						</div>
+					</a>
+				</div>
+				<!-- Listing Item / End -->
+
+				<!-- Listing Item -->
+				<div class="carousel-item">
+					<a href="listings-single-page.html" class="listing-item-container">
+						<div class="listing-item">
+							<img src="assets/images/listing-item-02.jpg" alt="">
+							<div class="listing-item-details">
+								<ul>
+									<li>Friday, August 10</li>
+								</ul>
+							</div>
+							<div class="listing-item-content">
+								<span class="tag">Celebration</span>
+								<h3>Birthday Party</h3>
+								<span>Bishop Avenue, New York</span>
+							</div>
+							<span class="like-icon"></span>
+						</div>
+						<div class="star-rating" data-rating="5.0">
+							<div class="rating-counter">(23 reviews)</div>
+						</div>
+					</a>
+				</div>
+				<!-- Listing Item / End -->		
+
+				<!-- Listing Item -->
+				<div class="carousel-item">
+					<a href="listings-single-page.html" class="listing-item-container">
+						<div class="listing-item">
+							<img src="assets/images/listing-item-03.jpg" alt="">
+							<div class="listing-item-details">
+								<ul>
+									<li>Starting from $59 per night</li>
+								</ul>
+							</div>
+							<div class="listing-item-content">
+								<span class="tag">Regular Work</span>
+								<h3>Club Performer</h3>
+								<span>778 Country Street, New York</span>
+							</div>
+							<span class="like-icon"></span>
+						</div>
+						<div class="star-rating" data-rating="2.0">
+							<div class="rating-counter">(17 reviews)</div>
+						</div>
+					</a>
+				</div>
+				<!-- Listing Item / End -->
+
+				<!-- Listing Item -->
+				<div class="carousel-item">
+					<a href="listings-single-page.html" class="listing-item-container">
+						<div class="listing-item">
+							<img src="assets/images/listing-item-04.jpg" alt="">
+
+							<div class="listing-badge now-open">Guitarists</div>
+
+							<div class="listing-item-content">
+								<span class="tag">Regular Work</span>
+								<h3>Coffee House</h3>
+								<span>2726 Shinn Street, New York</span>
+							</div>
+							<span class="like-icon"></span>
+						</div>
+						<div class="star-rating" data-rating="5.0">
+							<div class="rating-counter">(31 reviews)</div>
+						</div>
+					</a>
+				</div>
+				<!-- Listing Item / End -->
+
+				<!-- Listing Item -->
+				<div class="carousel-item">
+					<a href="listings-single-page.html" class="listing-item-container">
+						<div class="listing-item">
+							<img src="assets/images/listing-item-05.jpg" alt="">
+							<div class="listing-item-content">
+								<span class="tag">Celebration</span>
+								<h3>Wedding</h3>
+								<span>1512 Duncan Avenue, New York</span>
+							</div>
+							<span class="like-icon"></span>
+						</div>
+						<div class="star-rating" data-rating="3.5">
+							<div class="rating-counter">(46 reviews)</div>
+						</div>
+					</a>
+				</div>
+				<!-- Listing Item / End -->
+
+				</div>
+				
+			</div>
+
+		</div>
+	</div>
+
+</section>
+<!-- Fullwidth Section / End -->
+</div>
+<div *ngIf="initialSearch">
+
+		<form (ngSubmit)="onSubmit()" #heroForm="ngForm" method="post" class="main-search-input">
+				
+					<div class="main-search-input-item">
+					<select (change)="onChange()" [(ngModel)]="currentSearch.searchType" name="searchType" #type="ngModel">
+						<option *ngFor="let searchType of searchTypes" [value]="searchType">{{searchType}}</option>
+					</select>
+					</div>
+				
+					<div class="main-search-input-item">
+					<input [(ngModel)]="currentSearch.text" name="text" #text="ngModel" type="text" placeholder="Name"/>
+					</div>
+				
+					<div class="main-search-input-item location">
+					<input placeholder="Location" autocorrect="off" autocapitalize="off" spellcheck="off" type="text" #search [formControl]="searchControl">
+					</div>
+				
+					<div class="main-search-input-item">
+					<select [(ngModel)]="currentSearch.genre" name="power" #genre="ngModel" placeholder="Genre">
+						<option *ngFor="let genre of genres" [value]="genre">{{genre}}</option>
+					</select>
+					</div>
+				
+					<button type="submit" class="button">Search</button>
+				</form>
+	<!-- Content
+================================================== -->
+<div class="container">
+		<div class="row">
+			<div class="col-md-12">
 	
-	</section>
-	<!-- Fullwidth Section / End -->
+				<!-- Sorting - Filtering Section -->
+				<div class="row margin-bottom-25 margin-top-30">
 	
+					<div class="col-md-6">
+	
+					</div>
+	
+					<div class="col-md-6">
+						<div class="fullwidth-filters">
+							
+							<!-- Panel Dropdown -->
+							<div class="panel-dropdown wide float-right">
+								<a href="#">More Filters</a>
+								<div class="panel-dropdown-content checkboxes">
+	
+									<!-- Checkboxes -->
+									<div class="row">
+										<div class="col-md-6">
+											<input id="check-a" type="checkbox" name="check">
+											<label for="check-a">Elevator in building</label>
+	
+											<input id="check-b" type="checkbox" name="check">
+											<label for="check-b">Friendly workspace</label>
+	
+											<input id="check-c" type="checkbox" name="check">
+											<label for="check-c">Instant Book</label>
+	
+											<input id="check-d" type="checkbox" name="check">
+											<label for="check-d">Wireless Internet</label>
+										</div>	
+	
+										<div class="col-md-6">
+											<input id="check-e" type="checkbox" name="check" >
+											<label for="check-e">Free parking on premises</label>
+	
+											<input id="check-f" type="checkbox" name="check" >
+											<label for="check-f">Free parking on street</label>
+	
+											<input id="check-g" type="checkbox" name="check">
+											<label for="check-g">Smoking allowed</label>	
+	
+											<input id="check-h" type="checkbox" name="check">
+											<label for="check-h">Events</label>
+										</div>
+									</div>
+									
+									<!-- Buttons -->
+									<div class="panel-buttons">
+										<button class="panel-cancel">Cancel</button>
+										<button class="panel-apply">Apply</button>
+									</div>
+	
+								</div>
+							</div>
+							<!-- Panel Dropdown / End -->
+	
+							<!-- Panel Dropdown-->
+							<div class="panel-dropdown float-right">
+								<a href="#">Distance Radius</a>
+								<div class="panel-dropdown-content">
+									<input class="distance-radius" type="range" min="1" max="100" step="1" value="50" data-title="Radius around selected destination">
+									<div class="panel-buttons">
+										<button class="panel-cancel">Disable</button>
+										<button class="panel-apply">Apply</button>
+									</div>
+								</div>
+							</div>
+							<!-- Panel Dropdown / End -->
+	
+							<!-- Sort by -->
+							<!-- <div class="sort-by">
+								<div class="sort-by-select">
+									<select data-placeholder="Default order" class="chosen-select-no-single">
+										<option>Default Order</option>	
+										<option>Highest Rated</option>
+										<option>Most Reviewed</option>
+										<option>Newest Listings</option>
+										<option>Oldest Listings</option>
+									</select>
+								</div>
+							</div> -->
+							<!-- Sort by / End -->
+	
+						</div>
+					</div>
+	
+				</div>
+				<!-- Sorting - Filtering Section / End -->
+	
+				<div class="row">
+	
+					<!-- Listing Item -->
+					<div class="col-lg-12 col-md-12" *ngFor="let result of results">
+							<div class="listing-item-container list-layout">
+								<a class="listing-item">
+									
+									<!-- Image -->
+									<div class="listing-item-image">
+										<img src="assets/images/listing-item-01.jpg" alt="">
+										<span class="tag" *ngIf="currentSearch.searchType == 'Event'">{{result.event.eventType}}</span>
+										<!-- <span class="tag" *ngIf="currentSearch.searchType == 'Musician'">{{result.user.genre}}</span> -->
+									</div>
+									
+									<!-- Content -->
+									<div class="listing-item-content">
+										<!-- <div class="listing-badge now-open">Now Open</div> -->
+		
+										<div class="listing-item-inner">
+											<h3 *ngIf="currentSearch.searchType == 'Event'">{{result.event.eventName}}</h3>
+											<span *ngIf="currentSearch.searchType == 'Event'">{{result.event.eventAddress}}</span>
+											<h3 *ngIf="currentSearch.searchType == 'Musician'">{{result.user.firstName}} {{result.user.lastName}}</h3>
+											<!-- <div class="star-rating" data-rating="3.5">
+												<div class="rating-counter">Hosted by: {{}}</div>
+											</div> -->
+										</div>
+		
+										<span class="like-icon"></span>
+									</div>
+								</a>
+							</div>
+						</div>
+						<!-- Listing Item / End -->
+	
+				</div>
+	
+				<!-- Pagination -->
+				<div class="clearfix"></div>
+				<!-- <div class="row">
+					<div class="col-md-12">
+						<div class="pagination-container margin-top-20 margin-bottom-40">
+							<nav class="pagination">
+								<ul>
+									<li><a href="#" class="current-page">1</a></li>
+									<li><a href="#">2</a></li>
+									<li><a href="#">3</a></li>
+									<li><a href="#"><i class="sl sl-icon-arrow-right"></i></a></li>
+								</ul>
+							</nav>
+						</div>
+					</div>
+				</div> -->
+				<!-- Pagination / End -->
+	
+			</div>
+	
+		</div>
+	</div>
+
+</div>

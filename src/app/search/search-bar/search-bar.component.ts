@@ -13,12 +13,6 @@ import {} from '@types/googlemaps';
   styleUrls: ['./search-bar.component.css']
 })
 export class SearchBarComponent implements OnInit {
-  musicGenres = this.searchService.musicGenres;
-  eventTypes = this.searchService.eventTypes;
-  searchTypes = this.searchService.searchTypes;
-  genres = this.searchService.musicGenres;
-
-  model = this.searchService.currentSearch;
 
   public latitude: number;
   public longitude: number;
@@ -31,11 +25,6 @@ export class SearchBarComponent implements OnInit {
   constructor(private router: Router, private searchService: SearchService, private mapsAPILoader: MapsAPILoader, private ngZone: NgZone) { }
   
   ngOnInit() {
-    if (this.model.searchType == 'Musician') {
-      this.genres = this.searchService.musicGenres;
-    } else {
-      this.genres = this.searchService.eventTypes;
-    }
     //set google maps defaults
     this.zoom = 4;
     this.latitude = 39.8282;
@@ -78,31 +67,6 @@ export class SearchBarComponent implements OnInit {
         this.longitude = position.coords.longitude;
         this.zoom = 12;
       });
-    }
-  }
-
-  onSubmit() { 
-    if (this.longitude != null) {
-      this.model.location = {
-        longitude: this.longitude,
-        latitude: this.latitude
-      }
-    }
-    this.searchService.currentSearch = this.model
-    if (this.model.searchType === 'Musician') {
-
-    } else {
-      this.searchService.eventSearch(this.model).then((event: [Event]) => {
-        this.router.navigate(['/search-result'])
-      });
-    }
-  }
-
-  onChange() {
-    if (this.genres == this.musicGenres) {
-      this.genres = this.eventTypes
-    } else {
-      this.genres = this.musicGenres
     }
   }
 }

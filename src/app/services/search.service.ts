@@ -2,14 +2,12 @@ import { Injectable } from '@angular/core';
 import { Http, Headers, RequestOptions, Response, URLSearchParams } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import { SearchTerms } from 'app/models/search';
+import { Event } from 'app/models/event';
+import { User } from 'app/models/user';
 
 @Injectable()
 export class SearchService {
     public connection: string = 'http://localhost:8080/api/';
-    public musicGenres = ['Rock', 'Country', 'Jazz', 'Blues', 'Hip Hop'];
-    public eventTypes = ['Wedding', 'Birthday', 'Business']
-    public searchTypes = ['Musician', 'Event']
-    public currentSearch: SearchTerms = new SearchTerms(this.searchTypes[0], '', null, this.musicGenres[0]);
 
     private headers: Headers = new Headers({ 'Content-Type': 'application/json' });
 
@@ -38,13 +36,14 @@ export class SearchService {
             params.set('name', searchTerms.text)
         }
 
+        console.log(searchTerms)
         
         return this.http.get(current, { headers: this.headers, search: params } )
             .toPromise()
             .then((response: Response) => {
-                const data = response.json()
-                console.log(data)
-                return data
+                const data = response.json();
+                const events = data.events as Array<Event>;
+                return events;
             })
             .catch(this.handleError);
     }
@@ -52,10 +51,11 @@ export class SearchService {
     public userSearch(searchTerms: SearchTerms): Promise<Object> {
         let current = (this.connection + 'searchUsers/')
         let params: URLSearchParams = new URLSearchParams();
-        params.set('genre', searchTerms.genre)
-        params.set('lat', String(searchTerms.location.latitude))
-        params.set('lon', String(searchTerms.location.longitude))
-        params.set('limit', '5')
+        params.set('artist', 'false')
+        params.set('genre', 'Rap')
+        params.set('name', 'Ni')
+        // params.set('lat', String(searchTerms.location.latitude))
+        // params.set('lon', String(searchTerms.location.longitude))
         if (searchTerms.text != null && searchTerms.text.length != 0) {
             params.set('name', searchTerms.text)
         }
@@ -63,9 +63,9 @@ export class SearchService {
         return this.http.get(current, { headers: this.headers, search: params } )
             .toPromise()
             .then((response: Response) => {
-                const data = response.json()
-                console.log('data')
-                return data
+                const data = response.json();
+                const users = data.users as Array<User>;
+                return users;
             })
             .catch(this.handleError);
     }
