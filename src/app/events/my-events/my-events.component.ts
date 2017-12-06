@@ -25,8 +25,6 @@ export class MyEventsComponent implements OnInit {
     
     this.eventService.getEventsByUID(this.user).then((events: Event[]) => {
       this.events = events;      
-      console.log("in nginit...events received:");
-      console.log(this.events); 
     });
   }
 
