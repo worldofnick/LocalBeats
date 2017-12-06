@@ -44,9 +44,6 @@ export class MyEventsComponent implements OnInit {
         //go thru and push all events except the deleted one to the new event.
         for(let i:number = 0; i < this.events.length; i++){
           if(i != index){
-            console.log("=");
-            console.log(i);
-            console.log(index);
             newEvents.push(this.events[i]);
           }
         }
@@ -59,6 +56,16 @@ export class MyEventsComponent implements OnInit {
       }
     });
 
+  }
+
+  onEditEvent(event:Event){
+    
+  }
+
+  onPickEvent(event:Event){
+    // this.model = event;      
+    this.eventService.event = event;
+    this.router.navigate(['/event-page']); //this will go to the page about the event    
   }
 
 }
