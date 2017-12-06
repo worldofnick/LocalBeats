@@ -4,6 +4,7 @@ var mongoose    = require('mongoose');
 var jwt         = require('jsonwebtoken');
 var bcrypt      = require('bcrypt');
 var Bookings      = mongoose.model('Bookings');
+var Events      = mongoose.model('Events');
 var config    = require('../../config.js');
 
 // ====== Bookings ROUTES ======
@@ -13,7 +14,12 @@ exports.listAllBookings = function (req, res) {
       if (err)
         return res.send(err);
 
-      return res.status(200).send(bookings);
+        var bkkins = [];
+        bookings.forEach(function(booking) {
+            bkkins.push({"booking": booking});
+        });
+            
+        return res.status(200).send({"bookings": bkkins});
     });
 };
 
@@ -130,7 +136,12 @@ exports.getUserBookingsByUID = function (req, res) {
       if (err) {
           return res.status(500).send("Failed to get user bookings");
       } else {
-          return res.status(200).send(doc);
+            var bkkins = [];
+            doc.forEach(function(booking) {
+                bkkins.push({"booking": booking});
+            });
+                
+            return res.status(200).send({"bookings": bkkins});
       }
   });
 };
@@ -150,7 +161,17 @@ exports.acceptBooking = function(req, res) {
     Bookings.update({_id: req.params.bid}, {
         approved: true
     }, function(err, numberAffected, rawResponse) {
-        return res.status(200).send("Accepted booking.");
+        if (err) {
+            return res.status(500).send("Failed to accept booking.");
+        }
+        Events.update({_id: rawResponse.eventEID}, {
+            isBooked: true
+        }, function(err, numberAffected, rawResponse) {
+            if (err) {
+                return res.status(500).send("Failed to accept booking.");
+            }
+            return res.status(200).send("Accepted booking.");
+        })
     })
 };
 

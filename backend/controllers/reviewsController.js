@@ -12,8 +12,13 @@ exports.listAllReviews = function (req, res) {
     Reviews.find({}, function (err, reviews) {
       if (err)
         return res.send(err);
-
-      return res.status(200).send(reviews);
+      
+        var revws = [];
+        reviews.forEach(function(review) {
+            revws.push({"review": review});
+        });
+            
+        return res.status(200).send({"reviews": revws});
     });
 };
 
@@ -81,7 +86,12 @@ exports.getUserReviewsByUIDTo = function (req, res) {
       if (err) {
           return res.status(500).send("Failed to get user reviews");
       } else {
-          return res.status(200).send(doc);
+            var revws = [];
+            doc.forEach(function(review) {
+                revws.push({"review": review});
+            });
+                
+            return res.status(200).send({"reviews": revws});
       }
   });
 };
@@ -103,7 +113,12 @@ exports.getUserReviewsByUIDFrom = function (req, res) {
       if (err) {
           return res.status(500).send("Failed to get user reviews");
       } else {
-          return res.status(200).send(doc);
+            var revws = [];
+            doc.forEach(function(review) {
+                revws.push({"review": review});
+            });
+                
+            return res.status(200).send({"reviews": revws});
       }
   });
 };

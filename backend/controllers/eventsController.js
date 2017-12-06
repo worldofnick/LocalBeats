@@ -12,8 +12,13 @@ exports.listAllEvents = function (req, res) {
     Events.find({}, function (err, event) {
       if (err)
         return res.send(err);
-
-      return res.status(200).send({ "event": event });
+    
+        var events = [];
+        event.forEach(function(event) {
+            events.push({"event": event});
+        });
+        
+      return res.status(200).send({"events": events});
     });
   };
 
@@ -88,7 +93,12 @@ exports.getUserEventsByUID = function (req, res) {
         if (err) {
             return res.status(500).send("Failed to get user events");
         } else {
-            return res.status(200).send(doc);
+            var events = [];
+            doc.forEach(function(event) {
+                events.push({"event": event});
+            });
+            
+            return res.status(200).send({"events": events});
         }
     });
 };
@@ -129,6 +139,7 @@ exports.deleteUserEventsByUID = function (req, res) {
 // booked (boolean) defaults ot false. If true returns events that are currently booked
 // lat (string) & lon (string)
 // name (string) fuzzy match search by event names
+// sort (string) in {"date-desc", "date-asc", "price-desc", "price-asc", "distance-desc", "distance-asc"} defaults to "date-desc" unless lat & lon are passed
 exports.searchEvents = function(req, res) {
   var skip = 0;
   var limit = 15;
@@ -184,18 +195,20 @@ exports.searchEvents = function(req, res) {
    }
 
   if (req.query.name != null) {
-    var match = new RegExp(req.query.name);
-    query.eventName = match;
+    console.log(req.query.name);
+    query.eventName = new RegExp(req.query.name);
   }
 
-  console.log(query);
-  console.log(parseFloat(req.query.lon));
-  console.log(parseFloat(req.query.lat));
   Events.find(query).limit(limit).skip(skip).sort(sort).exec(function (err, doc) {
       if (err) {
           return res.status(500).send(err);
       } else {
-          return res.status(200).send(doc);
+            var events = [];
+            doc.forEach(function(event) {
+                events.push({"event": event});
+            });
+            
+            return res.status(200).send({"events": events});
       }
   });
 };
