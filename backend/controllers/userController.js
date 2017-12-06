@@ -67,9 +67,21 @@ exports.deleteUserByID = function (req, res) {
 // artist (boolean) true to return only artists, false to return all. Defaults to true
 // lat/lon..
 // genre (string) genre of the user ** cannot be used in junction with artist=false **
+// skip (int)
+// limit (int)
 exports.searchUsers = function (req, res) {
   var query = {}
-  
+  var limit = 15;
+  var skip = 0;
+
+  if (req.query.limit != null) {
+    limit = req.query.limit;
+  }
+
+  if (req.query.skip != null) {
+    skip = req.query.skip;
+  }
+
   if (req.query.name != null) {
     query.firstName = new RegExp(req.query.name);
   }
@@ -92,15 +104,17 @@ exports.searchUsers = function (req, res) {
     }
   }
 
-  User.find({firstName: match, isArtist: artist} , function (err, users) {
-    if (err)
-      return res.send(err);
-    
-    var usrs = [];
-    users.forEach(function(user) {
-      usrs.push({"user": user});
-    });
-    return res.status(200).send(usrs);
+  Users.find(query).limit(limit).skip(skip).exec(function (err, doc) {
+    if (err) {
+        return res.status(500).send(err);
+    } else {
+          var users = [];
+          doc.forEach(function(user) {
+              users.push({"user": user});
+          });
+          
+          return res.status(200).send({"users": users});
+    }
   });
 };
 
