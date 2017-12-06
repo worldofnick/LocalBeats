@@ -1,6 +1,9 @@
-import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { Component, ElementRef, NgModule, NgZone, OnInit, ViewChild } from '@angular/core';
+import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
+import {HttpClientModule} from '@angular/common/http';
+import { BrowserModule } from "@angular/platform-browser";
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
+import { AgmCoreModule, MapsAPILoader } from '@agm/core';
 import { HttpModule } from '@angular/http';
 
 import { AppComponent } from './app.component';
@@ -8,6 +11,7 @@ import { ContactDetailsComponent } from './contacts/contact-details/contact-deta
 import { ContactListComponent } from './contacts/contact-list/contact-list.component';
 import { SigninComponent } from './auth/signin/signin.component';
 import { UserService } from 'app/services/user.service';
+import { SearchService } from 'app/services/search.service';
 import { UserGuard } from 'app/services/user-guard.service';
 import { HomeComponent } from './home/home.component';
 import { HeaderComponent } from './header/header.component';
@@ -23,8 +27,8 @@ import { CreateEventComponent } from './events/create-event/create-event.compone
 import { EventService } from 'app/services/event.service';
 import { EventPageComponent } from './events/event-page/event-page.component';
 import { MyEventsComponent } from './events/my-events/my-events.component';
-// import { UserSearchResultComponent } from './search/user-search-result/user-search-result.component';
-// import { EventSearchResultComponent } from './search/event-search-result/event-search-result.component';
+import { UserSearchResultComponent } from './search/user-search-result/user-search-result.component';
+import { EventSearchResultComponent } from './search/event-search-result/event-search-result.component';
 
 
 
@@ -46,16 +50,23 @@ import { MyEventsComponent } from './events/my-events/my-events.component';
     CreateEventComponent,
     EventPageComponent,
     MyEventsComponent,
-    // UserSearchResultComponent,
-    // EventSearchResultComponent
+    UserSearchResultComponent,
+    EventSearchResultComponent
   ],
   imports: [
+    AgmCoreModule.forRoot({
+      apiKey: "AIzaSyBCko4eEq6azFCzCXVXAF4_jylVNw4ZM7Q",
+      libraries: ["places"]
+    }),
     BrowserModule,
+    BrowserAnimationsModule,
     FormsModule,
+    ReactiveFormsModule,
     HttpModule,
-    AppRoutingModule
+    AppRoutingModule,
+    HttpClientModule
   ],
-  providers: [UserService, UserGuard, EventService],
+  providers: [UserService, UserGuard, EventService, SearchService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

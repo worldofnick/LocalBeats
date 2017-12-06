@@ -13,6 +13,7 @@ import { Router } from '@angular/router';
 })
 export class SigninComponent implements OnInit {
 
+  valid = false
   private user: User;
 
   constructor(private userService: UserService, private router: Router) { }
@@ -38,8 +39,7 @@ export class SigninComponent implements OnInit {
 
     this.userService.signinUser(this.user).then((user: User) => {
       this.user = user;
-      console.log(this.user)
-      this.router.navigate(['/profile']);
+      this.router.navigate(['/']);
     });
   }
 
@@ -59,9 +59,13 @@ export class SigninComponent implements OnInit {
 
     this.userService.signupUser(this.user).then((user: User) => {
       this.user = user;
-      console.log(this.user)
-      this.router.navigate(['/profile']);
+      this.router.navigate(['/']);
     });
+  }
+
+  logout() {
+    this.userService.logout();
+    this.router.navigate(['/']);
   }
 
 }

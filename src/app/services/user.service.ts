@@ -57,7 +57,8 @@ export class UserService {
             .toPromise()
             .then((response: Response) => {
                 const data = response.json();
-                this.accessToken = data.access_token;
+                this.accessToken = data.token;
+                console.log(this.accessToken)
                 sessionStorage.setItem('token', JSON.stringify({ accessToken: this.accessToken}))
                 this.user = data.user as User;
                 return this.user

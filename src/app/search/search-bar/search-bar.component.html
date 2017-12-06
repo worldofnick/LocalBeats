@@ -1,24 +1,24 @@
 <form (ngSubmit)="onSubmit()" #heroForm="ngForm" method="post" class="main-search-input">
-  <div class="main-search-input-item">
-    <input [(ngModel)]="model.text" name="text" #text="ngModel" type="text" placeholder="Looking for?"/>
-  </div>
-
-  <div class="main-search-input-item location">
-    <input [(ngModel)]="model.location" name="location" type="text" placeholder="Location"/>
-    <a href="#"><i class="fa fa-dot-circle-o"></i></a>
-  </div>
 
   <div class="main-search-input-item">
-    <select [(ngModel)]="model.genre" name="power" #genre="ngModel" placeholder="Music Genre">
-      <option *ngFor="let genre of genres" [value]="genre">{{genre}}</option>
+    <select (change)="onChange()" [(ngModel)]="model.searchType" name="searchType" #type="ngModel">
+      <option *ngFor="let searchType of searchTypes" [value]="searchType">{{searchType}}</option>
     </select>
   </div>
 
   <div class="main-search-input-item">
-      <select [(ngModel)]="model.type" name="type" #type="ngModel">
-        <option *ngFor="let type of types" [value]="type">{{type}}</option>
-      </select>
-    </div>
+    <input [(ngModel)]="model.text" name="text" #text="ngModel" type="text" placeholder="Name"/>
+  </div>
+
+  <div class="main-search-input-item location">
+    <input placeholder="Location" autocorrect="off" autocapitalize="off" spellcheck="off" type="text" #search [formControl]="searchControl">
+  </div>
+
+  <div class="main-search-input-item">
+    <select [(ngModel)]="model.genre" name="power" #genre="ngModel" placeholder="Genre">
+      <option *ngFor="let genre of genres" [value]="genre">{{genre}}</option>
+    </select>
+  </div>
 
   <button type="submit" class="button">Search</button>
 </form>
