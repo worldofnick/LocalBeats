@@ -104,7 +104,8 @@ exports.searchUsers = function (req, res) {
     }
   }
 
-  Users.find(query).limit(limit).skip(skip).exec(function (err, doc) {
+  console.log(query);
+  User.find(query).limit(limit).skip(skip).exec(function (err, doc) {
     if (err) {
         return res.status(500).send(err);
     } else {
