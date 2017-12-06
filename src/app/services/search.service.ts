@@ -35,13 +35,13 @@ export class SearchService {
         if (searchTerms.text != null && searchTerms.text.length != 0) {
             params.set('name', searchTerms.text)
         }
-
-        console.log(searchTerms)
         
         return this.http.get(current, { headers: this.headers, search: params } )
             .toPromise()
             .then((response: Response) => {
                 const data = response.json();
+                console.log(response)
+                console.log(data)
                 const events = data.events as Array<Event>;
                 return events;
             })

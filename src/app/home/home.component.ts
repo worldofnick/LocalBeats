@@ -104,8 +104,10 @@ export class HomeComponent implements OnInit {
   onChange() {
     if (this.genres == this.musicGenres) {
       this.genres = this.eventTypes
+      this.currentSearch.genre = this.eventTypes[0];
     } else {
       this.genres = this.musicGenres
+      this.currentSearch.genre = this.musicGenres[0];
     }
   }
 
