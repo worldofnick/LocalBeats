@@ -7,7 +7,6 @@ import { FormControl} from "@angular/forms";
 import { MapsAPILoader } from '@agm/core';
 import { Event } from 'app/models/event';
 import { User } from 'app/models/user';
-import {} from '@types/googlemaps';
 
 @Component({
   selector: 'app-home',
@@ -27,8 +26,6 @@ export class HomeComponent implements OnInit {
   public longitude: number;
   public searchControl: FormControl;
   public zoom: number;
-
-  google: any;
   
   @ViewChild("search")
   public searchElementRef: ElementRef;

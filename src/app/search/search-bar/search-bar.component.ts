@@ -5,7 +5,6 @@ import { SearchTerms, Location } from 'app/models/search';
 import { SearchService } from 'app/services/search.service';
 import { FormControl} from "@angular/forms";
 import { MapsAPILoader } from '@agm/core';
-import {} from '@types/googlemaps';
 
 @Component({
   selector: 'app-search-bar',
@@ -18,8 +17,6 @@ export class SearchBarComponent implements OnInit {
   public longitude: number;
   public searchControl: FormControl;
   public zoom: number;
-
-  google: any;
   
   @ViewChild("search")
   public searchElementRef: ElementRef;
