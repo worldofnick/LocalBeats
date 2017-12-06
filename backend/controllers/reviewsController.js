@@ -18,7 +18,7 @@ exports.listAllReviews = function (req, res) {
             revws.push({"review": review});
         });
             
-        return res.status(200).send(revws);
+        return res.status(200).send({"reviews": revws});
     });
 };
 
@@ -91,7 +91,7 @@ exports.getUserReviewsByUIDTo = function (req, res) {
                 revws.push({"review": review});
             });
                 
-            return res.status(200).send(revws);
+            return res.status(200).send({"reviews": revws});
       }
   });
 };
@@ -118,7 +118,7 @@ exports.getUserReviewsByUIDFrom = function (req, res) {
                 revws.push({"review": review});
             });
                 
-            return res.status(200).send(revws);
+            return res.status(200).send({"reviews": revws});
       }
   });
 };

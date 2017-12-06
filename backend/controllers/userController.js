@@ -17,7 +17,7 @@ exports.listAllUsers = function (req, res) {
     users.forEach(function(user) {
       usrs.push({"user": user});
     });
-    return res.status(200).send(usrs);
+    return res.status(200).send({"users": usrs});
   });
 };
 
@@ -78,6 +78,6 @@ exports.searchUsersByName = function (req, res) {
     users.forEach(function(user) {
       usrs.push({"user": user});
     });
-    return res.status(200).send(usrs);
+    return res.status(200).send({"users": usrs});
   });
 };
