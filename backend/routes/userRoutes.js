@@ -16,4 +16,7 @@ module.exports = function(app) {
 
 	app.route('/api/searchUsers')
 		.get(userHandlers.searchUsers);
+
+	app.route('/api/genres')
+		.get(userHandlers.getGenres);
 };

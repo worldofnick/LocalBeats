@@ -89,9 +89,8 @@ exports.searchUsers = function (req, res) {
           parseFloat(req.query.lat),
           parseFloat(req.query.lon)
       ]
+    }
   }
-  }
-
 
   User.find({firstName: match, isArtist: artist} , function (err, users) {
     if (err)
@@ -103,4 +102,9 @@ exports.searchUsers = function (req, res) {
     });
     return res.status(200).send(usrs);
   });
+};
+
+exports.getGenres = function (req, res) {
+  var genres = ["Rock", "Classical", "Electronic", "Jazz", "Blues", "Hip-Hop", "Rap", "Alternative"];
+  return res.status(200).send( {"genres": genres} );
 };
