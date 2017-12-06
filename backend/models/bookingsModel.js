@@ -5,8 +5,6 @@ var Schema = mongoose.Schema;
 /**
  * Bookings Schema
  */
-
-// TODO
 var BookingsSchema = new Schema({
     bookingType     : {type: String, required: true, lowercase: true}, // in {"arist-apply", "host-request"}
     hostUID         : {type: String, required: true},

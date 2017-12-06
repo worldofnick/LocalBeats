@@ -209,3 +209,8 @@ exports.searchEvents = function(req, res) {
       }
   });
 };
+
+exports.getEventTypes = function (req, res) {
+    var eventTypes = ["Wedding", "Birthday", "Business", "Live Music", "Party", "Festival"];
+    return res.status(200).send( {"event_types": eventTypes} );
+  };

@@ -27,4 +27,7 @@ module.exports = function(app) {
 
 	app.route('/api/searchEvents')
 			.get(eventHandlers.searchEvents);
+
+	app.route('/api/eventTypes')
+		.get(userHandlers.getEventTypes);
 };
