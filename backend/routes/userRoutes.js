@@ -15,5 +15,8 @@ module.exports = function(app) {
 		.delete(userHandlers.deleteUserByID);
 
 	app.route('/api/searchUsers')
-		.get(userHandlers.searchUsersByName);
+		.get(userHandlers.searchUsers);
+
+	app.route('/api/genres')
+		.get(userHandlers.getGenres);
 };

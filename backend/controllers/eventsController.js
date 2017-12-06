@@ -139,6 +139,7 @@ exports.deleteUserEventsByUID = function (req, res) {
 // booked (boolean) defaults ot false. If true returns events that are currently booked
 // lat (string) & lon (string)
 // name (string) fuzzy match search by event names
+// sort (string) in {"date-desc", "date-asc", "price-desc", "price-asc", "distance-desc", "distance-asc"} defaults to "date-desc" unless lat & lon are passed
 exports.searchEvents = function(req, res) {
   var skip = 0;
   var limit = 15;
