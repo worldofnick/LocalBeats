@@ -4,6 +4,7 @@ import { NgForm } from '@angular/forms';
 import { SearchTerms, Location } from 'app/models/search';
 import { SearchService } from 'app/services/search.service';
 import { FormControl} from "@angular/forms";
+//import { } from 'googlemaps';
 import { MapsAPILoader } from '@agm/core';
 import { Event } from 'app/models/event';
 import { User } from 'app/models/user';
