@@ -19,7 +19,7 @@ exports.listAllBookings = function (req, res) {
             bkkins.push({"booking": booking});
         });
             
-        return res.status(200).send(bkkins);
+        return res.status(200).send({"bookings": bkkins});
     });
 };
 
