@@ -16,6 +16,7 @@ import { Event } from 'app/models/event';
 export class EventPageComponent implements OnInit {
   model:Event;
   user:User;
+  isCurrentUser: boolean = false;
 
   EID:any;
 
@@ -36,6 +37,11 @@ export class EventPageComponent implements OnInit {
     }).then(() =>{
       this.userSerivce.getUserByID(this.model.hostUID).then((user:User) => {
         this.user = user;
+        if (this.user._id === this.userSerivce.user._id) {
+          this.isCurrentUser = true;
+        } else {
+          this.isCurrentUser = false;
+        }
       });
     });
   }

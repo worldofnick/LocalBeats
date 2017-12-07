@@ -54,6 +54,49 @@
           </ng-template>
         </div>
 
+        <!-- Book Now -->
+			<div *ngIf="!isCurrentUser" class="boxed-widget booking-widget margin-top-35">
+				<h3><i class="fa fa-calendar-check-o "></i> Apply to Event</h3>
+				<div class="row with-forms  margin-top-0">
+
+					<!-- Date Picker - docs: http://www.vasterad.com/docs/listeo/#!/date_picker -->
+					<!-- <div class="col-lg-6 col-md-12">
+						<input type="text" id="booking-date" data-lang="en" data-large-mode="true" data-large-default="true" data-min-year="2017" data-max-year="2020" data-disabled-days="08/17/2017,08/18/2017">
+					</div> -->
+
+					<!-- Time Picker - docs: http://www.vasterad.com/docs/listeo/#!/time_picker -->
+					<!-- <div class="col-lg-6 col-md-12">
+						<input type="text" id="booking-time" value="9:00 am">
+					</div> -->
+
+					<!-- Panel Dropdown -->
+					<!-- <div class="col-lg-12">
+						<div class="panel-dropdown">
+							<a href="#">Guests <span class="qtyTotal" name="qtyTotal">1</span></a>
+							<div class="panel-dropdown-content">
+
+								<div class="qtyButtons">
+									<div class="qtyTitle">Adults</div>
+									<input type="text" name="qtyInput" value="1">
+								</div>
+
+								<div class="qtyButtons">
+									<div class="qtyTitle">Childrens</div>
+									<input type="text" name="qtyInput" value="0">
+								</div>
+
+							</div>
+						</div>
+					</div> -->
+					<!-- Panel Dropdown / End -->
+
+				</div>
+				
+				<!-- progress button animation handled via custom.js -->
+				<a href="pages-booking.html" class="button book-now fullwidth margin-top-5">Book Now</a>
+			</div>
+			<!-- Book Now / End -->
+
         <!-- Event times -->
         <div class="boxed-widget opening-hours margin-top-35">
           <h3>
