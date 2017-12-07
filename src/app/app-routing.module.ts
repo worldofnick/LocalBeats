@@ -7,6 +7,7 @@ import { SearchResultComponent } from "./search/search-result/search-result.comp
 import { CreateEventComponent } from "./events/create-event/create-event.component"
 import { EventPageComponent } from "app/events/event-page/event-page.component";
 import { MyEventsComponent} from "app/events/my-events/my-events.component";
+import { ApplicantListComponent} from "app/events/applicant-list/applicant-list.component";
 
 const appRoutes: Routes = [
     { path: '', redirectTo: '/home', pathMatch: 'full'},
@@ -16,6 +17,7 @@ const appRoutes: Routes = [
     { path: 'my-events', component: MyEventsComponent},
     { path: 'profile/:id', component: ProfileDetailsComponent },
     { path: 'profile', component: ProfileDetailsComponent },
+    { path: 'applicant-list/:id', component: ApplicantListComponent},
     { path: 'profile-edit', component: ProfileEditComponent },
     { path: 'search-result', component: SearchResultComponent }
 ];

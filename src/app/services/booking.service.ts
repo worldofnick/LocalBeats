@@ -32,7 +32,7 @@ export class BookingService {
             .catch(this.handleError);
     }
 
-    public getBooking(event: Event): Promise<Booking[]> {
+    public getBooking(event: Event): Promise<any[]> {
         const current = this.eventBooking + '?eid=' +event._id;
 
         let params: URLSearchParams = new URLSearchParams();
@@ -43,7 +43,7 @@ export class BookingService {
             .then((response: Response) => {
                 console.log(response)
                 const data = response.json();
-                const bookings = data.bookings as Booking[];
+                const bookings = data.bookings as any[];
                 console.log(bookings)
                 return bookings
             })

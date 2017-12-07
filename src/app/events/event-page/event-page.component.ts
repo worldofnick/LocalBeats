@@ -20,7 +20,7 @@ export class EventPageComponent implements OnInit {
   public user:User;
   public isCurrentUser: boolean = null;
   public hasApplied: boolean = null;
-  public currentBookings: Booking[];
+  public currentBookings: any[];
   public approvedBookings: Booking[];
 
 
@@ -48,13 +48,17 @@ export class EventPageComponent implements OnInit {
       } else {
         this.isCurrentUser = false;
       }
-    }).then(() => this.bookingService.getBooking(this.model).then((bookings: Booking[]) => {
+    }).then(() => this.bookingService.getBooking(this.model).then((bookings: any[]) => {
       this.currentBookings = bookings;
-      console.log("printing bookings from event page");
-      console.log(this.currentBookings);
-      for (let booking of this.currentBookings) {
-        if (booking.approved) {
-          this.approvedBookings.push(booking)
+      for (let result of this.currentBookings) {
+        if (result.booking.approved) {
+          this.approvedBookings.push(result.booking)
+        }
+        // console.log("printing performer and user service user from event page");
+        // console.log(booking);
+        // console.log(this.userSerivce.user._id);
+        if (result.booking.performerUser._id === this.userSerivce.user._id){
+          this.hasApplied = true;
         }
       }
     }));
@@ -63,13 +67,12 @@ export class EventPageComponent implements OnInit {
   public applyToEvent(){
     const booking = new Booking('artist-apply', this.model.hostUser, this.userSerivce.user, this.model._id, false, false)
     this.bookingService.createBooking(booking).then((booking: Booking) => {
-      // add this booking to the bookings array?
-      console.log('success')
+      this.hasApplied = true;
     })
   }
 
   public viewApplicants() {
-    
+    this.router.navigate(['/applicant-list', this.model._id]);        
   }
 
 }
