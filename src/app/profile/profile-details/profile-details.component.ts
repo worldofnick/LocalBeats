@@ -39,10 +39,14 @@ export class ProfileDetailsComponent implements OnInit {
       //nothing in url.
       this.onOwnProfile = true;
     } else {
+      //on another perons profile.
       this.onOwnProfile = false;
-      this.userService.getUserByID(this.userID).then((gottenUser: User) => {
+      let ID = this.userID["id"];
+      this.userService.getUserByID(ID).then((gottenUser: User) => {
         this.user = gottenUser;
         });
+        console.log("other user who i am viewing:");
+        console.log(this.user);
     }
 
     // if(this.userID != null){
