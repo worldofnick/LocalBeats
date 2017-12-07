@@ -14,7 +14,7 @@ const appRoutes: Routes = [
     { path: 'event-page', component: EventPageComponent },
     { path: 'create-event', component: CreateEventComponent },
     { path: 'my-events', component: MyEventsComponent},
-    { path: 'profile', component: ProfileDetailsComponent },
+    { path: 'profile/:id', component: ProfileDetailsComponent },
     { path: 'profile-edit', component: ProfileEditComponent },
     { path: 'search-result', component: SearchResultComponent }
 ];

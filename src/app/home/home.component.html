@@ -421,7 +421,7 @@
 									<div class="listing-item-content">
 										<!-- <div class="listing-badge now-open">Now Open</div> -->
 		
-										<div class="listing-item-inner">
+										<div class="listing-item-inner" (click)="onClickResult(result)">
 											<h3 *ngIf="currentSearch.searchType == 'Event'">{{result.event.eventName}}</h3>
 											<span *ngIf="currentSearch.searchType == 'Event'">{{result.event.eventAddress}}</span>
 											<h3 *ngIf="currentSearch.searchType == 'Musician'">{{result.user.firstName}} {{result.user.lastName}}</h3>

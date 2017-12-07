@@ -121,4 +121,18 @@ export class HomeComponent implements OnInit {
     }
   }
 
+  onClickResult(result:any){
+    if(this.currentSearch.searchType == 'Event'){
+      result = result.event as Event;
+      // this.eventService.event = event;
+      this.router.navigate(['/event-page']); //this will go to the page about the event   
+    } else{
+      result = result.user as User;
+    }
+
+
+    // console.log(result);
+
+  }
+
 }
