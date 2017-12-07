@@ -32,7 +32,7 @@ exports.getUserByID = function (req, res) {
 exports.updateUserByID = function (req, res, next) {
   User.findByIdAndUpdate(req.params.uid, req.body.user, { new: true }, function (err, user) {
     if (err) { 
-      return res.status(404).send("There was a problem updating the user.");
+      return res.status(520).send({ message: "Error finding the user from this UID...", error: err });
     }
 
     user.hashPassword = undefined;
@@ -42,7 +42,6 @@ exports.updateUserByID = function (req, res, next) {
     }else {
       return res.status(200).send({ user: user });
     }
-    
     
   });
 };

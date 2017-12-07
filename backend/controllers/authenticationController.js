@@ -9,10 +9,18 @@ var config    = require('../../config.js');
 exports.register = function (req, res) {
     var newUser = new User(req.body);
     newUser.hashPassword = bcrypt.hashSync(req.body.password, 10);   // save a hashed password to DB
+    if(newUser._id == null) {
+      newUser._id = undefined;
+    }
+    if(newUser.spotifyID == null) {
+      newUser.spotifyID = undefined;
+    }
+    
     newUser.save(function (err, user) {  // callback function with err and success value
       if (err) {
         return res.status(400).send({
-          message: err
+          message: "Unable to save the user...",
+          error: err
         });
       } else {
         user.hashPassword = undefined;
