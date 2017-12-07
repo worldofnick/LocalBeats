@@ -9,7 +9,7 @@ var config    = require('../../config.js');
 // ====== EVENT ROUTES ======
 
 exports.listAllEvents = function (req, res) {
-    Events.find({}, function (err, event) {
+    Events.find({}).populate('hostUser').populate('performerUser').exec(function (err, event) {
       if (err)
         return res.send(err);
     
@@ -24,7 +24,7 @@ exports.listAllEvents = function (req, res) {
 
 // app.get("/api/events/:eid", 
 exports.getEventByID = function (req, res) {
-    Events.findById(req.params.eid, function (err, event) {
+    Events.findById(req.params.eid).populate('hostUser').populate('performerUser').exec(function (err, event) {
         if (err) {
             return res.status(500).send("Failed to get event");
         } else {
@@ -42,7 +42,13 @@ exports.createEvent = function (req, res) {
                 description: "Failed to create an event"
             });
         } else {
-            return res.status(200).send({ "event": event });
+            Events.findById(event._id).populate('hostUser').populate('performerUser').exec(function (err, event) {
+                if (err) {
+                    return res.status(500).send("Failed to create event");
+                } else {
+                    return res.status(200).send({ "event": event });
+                }
+            });
         }
     });
 };    
@@ -52,7 +58,13 @@ exports.updateEventByID = function (req, res) {
         if (err) {
             return res.status(500).send("There was a problem updating the event.");
         }
-        return res.status(200).send({ "event": event });
+        Events.findById(event._id).populate('hostUser').populate('performerUser').exec(function (err, event) {
+            if (err) {
+                return res.status(500).send("Failed to update event");
+            } else {
+                return res.status(200).send({ "event": event });
+            }
+        });
     });
 };
 
@@ -86,7 +98,7 @@ exports.getUserEventsByUID = function (req, res) {
         skip = parseInt(req.query.skip);
     }
 
-    Events.find({hostUser: req.query.hostUID}).limit(limit).skip(skip).exec(function (err, doc) {
+    Events.find({hostUser: req.query.hostUID}).limit(limit).skip(skip).populate('hostUser').populate('performerUser').exec(function (err, doc) {
         if (err) {
             return res.status(500).send("Failed to get user events");
         } else {
@@ -196,7 +208,7 @@ exports.searchEvents = function(req, res) {
     query.eventName = new RegExp(req.query.name);
   }
 
-  Events.find(query).limit(limit).skip(skip).sort(sort).exec(function (err, doc) {
+  Events.find(query).limit(limit).skip(skip).sort(sort).populate('hostUser').populate('performerUser').exec(function (err, doc) {
       if (err) {
           return res.status(500).send(err);
       } else {

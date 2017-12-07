@@ -44,7 +44,7 @@ exports.createBooking = function (req, res) {
         } else {
             Bookings.findById(booking._id).populate('hostUser').populate('performerUser').exec(function (err, booking) {
                 if (err) {
-                    return res.status(500).send("Failed to get booking");
+                    return res.status(500).send("Failed to create booking");
                 } else {
                     return res.status(200).send({ "booking": booking });
                 }
@@ -60,7 +60,7 @@ exports.updateBookingByID = function (req, res) {
         }
         Bookings.findById(booking._id).populate('hostUser').populate('performerUser').exec(function (err, booking) {
             if (err) {
-                return res.status(500).send("Failed to get booking");
+                return res.status(500).send("Failed to update booking");
             } else {
                 return res.status(200).send({ "booking": booking });
             }
