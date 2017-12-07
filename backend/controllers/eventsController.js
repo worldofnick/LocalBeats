@@ -4,6 +4,7 @@ var mongoose    = require('mongoose');
 var jwt         = require('jsonwebtoken');
 var bcrypt      = require('bcrypt');
 var Events      = mongoose.model('Events');
+var Bookings    = mongoose.model('Bookings');
 var config    = require('../../config.js');
 
 // ====== EVENT ROUTES ======
@@ -76,7 +77,9 @@ exports.deleteEventByID = function (req, res) {
             if (event == null) {
                 return res.status(200).send("Event was already deleted.");
             } else {
-                return res.status(200).send("Event " + event.eventName + " is removed");
+                Bookings.remove({eventEID: event._id}, function (err, bookings) {
+                    return res.status(200).send("Event " + event.eventName + " is removed");
+                });
             }
         }
     });
