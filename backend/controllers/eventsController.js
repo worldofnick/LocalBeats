@@ -86,7 +86,7 @@ exports.getUserEventsByUID = function (req, res) {
         skip = parseInt(req.query.skip);
     }
 
-    Events.find({hostUID: req.query.hostUID}).limit(limit).skip(skip).exec(function (err, doc) {
+    Events.find({hostUser: req.query.hostUID}).limit(limit).skip(skip).exec(function (err, doc) {
         if (err) {
             return res.status(500).send("Failed to get user events");
         } else {
@@ -101,7 +101,7 @@ exports.getUserEventsByUID = function (req, res) {
 };
 
 exports.deleteUserEventsByUID = function (req, res) {
-  Events.remove({hostUID: req.query.hostUID}).exec(function (err, doc) {
+  Events.remove({hostUser: req.query.hostUID}).exec(function (err, doc) {
       if (err) {
           return res.status(500).send("Failed to delete user events");
       } else {
