@@ -50,6 +50,8 @@ export class EventPageComponent implements OnInit {
       }
     }).then(() => this.bookingService.getBooking(this.model).then((bookings: Booking[]) => {
       this.currentBookings = bookings;
+      console.log("printing bookings from event page");
+      console.log(this.currentBookings);
       for (let booking of this.currentBookings) {
         if (booking.approved) {
           this.approvedBookings.push(booking)

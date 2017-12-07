@@ -9,7 +9,7 @@ import { Event } from 'app/models/event';
 @Injectable()
 export class BookingService {
     public connection: string = 'http://localhost:8080/api/bookings';
-    public eventBooking: string = 'http://localhost:8080/api/eventBooking'
+    public eventBooking: string = 'http://localhost:8080/api/eventBooking/'
     // public connection: string = 'https://localbeats.herokuapp.com/api/bookings';
 
     private headers: Headers = new Headers({ 'Content-Type': 'application/json' });
@@ -33,11 +33,12 @@ export class BookingService {
     }
 
     public getBooking(event: Event): Promise<Booking[]> {
-        const current = this.eventBooking
+        const current = this.eventBooking + '?eid=' +event._id;
+
         let params: URLSearchParams = new URLSearchParams();
         params.set('eid', event._id)
 
-        return this.http.get(current, { headers: this.headers, search: params })
+        return this.http.get(current)
             .toPromise()
             .then((response: Response) => {
                 console.log(response)
