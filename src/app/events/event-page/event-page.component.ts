@@ -37,20 +37,17 @@ export class EventPageComponent implements OnInit {
 
     this.eventService.getEventByEID(this.EID).then((event: Event) => {
       this.model = event;
-    }).then(() =>{
-      this.userSerivce.getUserByID(this.model.hostUser).then((user:User) => {
-        this.user = user;
-        if (this.user._id === this.userSerivce.user._id) {
-          this.isCurrentUser = true;
-        } else {
-          this.isCurrentUser = false;
-        }
-      });
+      this.user = event.hostUser;
+      if (this.user._id === this.userSerivce.user._id) {
+        this.isCurrentUser = true;
+      } else {
+        this.isCurrentUser = false;
+      }
     });
   }
 
   public applyToEvent(){
-    const booking = new Booking('artist-apply', this.model.hostUser, this.userSerivce.user._id, this.model._id, false, false)
+    const booking = new Booking('artist-apply', this.model.hostUser, this.userSerivce.user, this.model._id, false, false)
     this.bookingService.createBooking(booking).then((booking: Booking) => {
       console.log('success')
     })

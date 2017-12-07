@@ -56,7 +56,7 @@ export class CreateEventComponent implements OnInit {
     console.log(this.model.description);
     this.model.fixedPrice = fixedPrice;
 
-    this.model.hostUser = this.user._id;
+    this.model.hostUser = this.user;
     this.model.hostEmail = this.user.email;
 
 

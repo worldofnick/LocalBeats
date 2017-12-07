@@ -1,8 +1,10 @@
+import { User } from 'app/models/user';
+
 export class Booking { 
     constructor(
     public bookingType: string,
-    public hostUID: string,
-    public performerUID: string,
+    public hostUser: User,
+    public performerUser: User,
     public eventEID: string,
     public approved: boolean,
     public completed: boolean

@@ -1,11 +1,13 @@
+import { User } from 'app/models/user';
+
 export class Event {
     public _id: string
     public eventName:string
     public eventType:string
     public eventGenre: string
-    public hostUser: string
+    public hostUser: User
     public hostEmail: string
-    public performerUser: string
+    public performerUser: User
     public performerEmail: string
     public address: string
     public zip: string
