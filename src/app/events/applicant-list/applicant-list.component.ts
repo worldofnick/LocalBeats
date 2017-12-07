@@ -46,6 +46,7 @@ export class ApplicantListComponent implements OnInit {
   public getBookings(event: Event) {
     this.bookingService.getBooking(this.model).then((bookings: Booking[]) => {
       this.currentBookings = bookings;
+      console.log(this.currentBookings)
     })
   }
 
@@ -53,15 +54,11 @@ export class ApplicantListComponent implements OnInit {
    * both of these are passed result.booking
    */
   onDeclineArist(booking:Booking, index: number){
-    this.bookingService.declineBooking(booking).then((result: any) => {
-      this.currentBookings.splice(index,1);
-    });
+    this.bookingService.declineBooking(booking).then(() => this.getBookings(this.model));
   }
 
   onAcceptArtist(booking:Booking, index: number){
-    this.bookingService.acceptBooking(booking).then((newBooking: Booking) => {
-      this.currentBookings[index].approved = true;
-    });
+    this.bookingService.acceptBooking(booking).then((newBooking: Booking) => this.getBookings(this.model));
   }
 
   /**

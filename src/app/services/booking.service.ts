@@ -10,8 +10,8 @@ import { Event } from 'app/models/event';
 export class BookingService {
     public connection: string = 'http://localhost:8080/api/bookings';
     public eventBooking: string = 'http://localhost:8080/api/eventBooking/'
-    public acceptBookingConnection: string = 'http://localhost:8080/api/acceptBooking/'
-    public declineBookingConnection: string = 'http://localhost:8080/api/declineBooking/'
+    public acceptBookingConnection: string = 'http://localhost:8080/api/acceptBooking'
+    public declineBookingConnection: string = 'http://localhost:8080/api/declineBooking'
     // public connection: string = 'https://localbeats.herokuapp.com/api/bookings';
 
     private headers: Headers = new Headers({ 'Content-Type': 'application/json' });
@@ -45,21 +45,18 @@ export class BookingService {
             .catch(this.handleError);
     }
 
-    public declineBooking(booking: Booking): Promise<any> {
-        const current = this.declineBookingConnection + '/' + booking.bid
+    public declineBooking(booking: Booking) {
+        const current = this.declineBookingConnection + '/' + booking._id
 
-        return this.http.delete(current, { headers: this.headers })
+        return this.http.put(current, { headers: this.headers })
             .toPromise()
             .then((response: Response) => {
-                console.log(response)
-                const data = response.json();
-                return data
             })
             .catch(this.handleError);
     }
 
     public acceptBooking(booking: Booking): Promise<any> {
-        const current = this.acceptBookingConnection + '/' + booking.bid
+        const current = this.acceptBookingConnection + '/' + booking._id
         
         return this.http.put(current, { headers: this.headers })
             .toPromise()
