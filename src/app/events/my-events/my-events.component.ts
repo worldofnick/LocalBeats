@@ -65,7 +65,7 @@ export class MyEventsComponent implements OnInit {
   onPickEvent(event:Event){
     // this.model = event;      
     this.eventService.event = event;
-    this.router.navigate(['/event-page']); //this will go to the page about the event    
+    this.router.navigate(['/event-page', event._id]); //this will go to the page about the event    
   }
 
 }

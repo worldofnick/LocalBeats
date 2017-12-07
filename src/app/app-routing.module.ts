@@ -11,10 +11,11 @@ import { MyEventsComponent} from "app/events/my-events/my-events.component";
 const appRoutes: Routes = [
     { path: '', redirectTo: '/home', pathMatch: 'full'},
     { path: 'home', component: HomeComponent },
-    { path: 'event-page', component: EventPageComponent },
+    { path: 'event-page/:id', component: EventPageComponent },
     { path: 'create-event', component: CreateEventComponent },
     { path: 'my-events', component: MyEventsComponent},
     { path: 'profile/:id', component: ProfileDetailsComponent },
+    { path: 'profile', component: ProfileDetailsComponent },
     { path: 'profile-edit', component: ProfileEditComponent },
     { path: 'search-result', component: SearchResultComponent }
 ];

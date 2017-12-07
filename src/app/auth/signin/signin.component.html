@@ -107,7 +107,7 @@
     <div class="right-side">
         <div class="header-widget">
           <a (click)="logout()" href="" class="sign-in popup-with-zoom-anim"><i class="sl sl-icon-login"></i> Sign Out</a>
-          <a routerLink="create-event" class="button border with-icon">Host Event<i class="sl sl-icon-plus"></i></a>
+          <a [routerLink]="['/create-event']" class="button border with-icon">Host Event<i class="sl sl-icon-plus"></i></a>
         </div>
       </div>
  </ng-template>

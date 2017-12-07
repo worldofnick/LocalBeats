@@ -29,9 +29,9 @@
             <ul id="responsive">
               <li><a routerLink="/home">localBeats</a></li>
               <ng-template [ngIf]="userService.isAuthenticated()">
-                <li><a routerLink="/events">Events</a></li>
-    
-                <li><a href="#">Profile</a>
+                <li><a [routerLink]="['/my-events']">Events</a></li>
+                <li><a [routerLink]="['/profile']">Profile</a></li>
+                <!-- <li><a href="#">Profile</a>
                   <ul>
                     <li><a [routerLink]="['/profile', this.userService.user._id]">Dashboard</a></li>
                     <li><a routerLink="/">Messages</a></li>
@@ -39,7 +39,7 @@
                     <li><a routerLink="/my-events">My Events</a></li>
                     <li><a routerLink="/">Reviews</a></li>
                   </ul>
-                </li>
+                </li> -->
               </ng-template>
               
             </ul>

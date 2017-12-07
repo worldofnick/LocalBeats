@@ -6,14 +6,16 @@
       <div class="col-md-12">
 
         <div class="user-profile-titlebar">
-          <div class="user-profile-avatar"><img src="../../assets/images/jimsmall.png" alt=""></div>
+          <div class="user-profile-avatar">
+            <img src="../../assets/images/jimsmall.png" alt="">
+          </div>
           <div class="user-profile-name">
-              <ng-template [ngIf]="this.user">
+            <ng-template [ngIf]="user">
               <h2>{{ this.user.firstName }} {{ this.user.lastName }} </h2>
-              </ng-template>
-            <div class="star-rating" data-rating="5">
-              <div class="rating-counter"><a href="#listing-reviews">(60 reviews)</a></div>
-            </div>
+            </ng-template>
+            <!-- <div class="star-rating" data-rating="5"> -->
+            <!-- <div class="rating-counter"><a href="#listing-reviews">(60 reviews)</a></div> -->
+            <!-- </div> -->
           </div>
         </div>
 
@@ -33,7 +35,7 @@
     <!-- Sidebar
     ================================================== -->
     <div class="col-lg-4 col-md-4 margin-top-0">
-        
+
       <!-- Verified Badge -->
       <div class="verified-badge with-tip" data-tip-content="Account has been verified and belongs to the person or organization represented.">
         <i class="sl sl-icon-user-following"></i> Verified Account
@@ -48,18 +50,26 @@
         </ul>
 
         <ul class="listing-details-sidebar social-profiles">
-          <li><a href="#" class="facebook-profile"><i class="fa fa-facebook-square"></i> Facebook</a></li>
-          <li><a href="#" class="twitter-profile"><i class="fa fa-twitter"></i> Twitter</a></li>
+          <li>
+            <a href="#" class="facebook-profile">
+              <i class="fa fa-facebook-square"></i> Facebook</a>
+          </li>
+          <li>
+            <a href="#" class="twitter-profile">
+              <i class="fa fa-twitter"></i> Twitter</a>
+          </li>
           <!-- <li><a href="#" class="gplus-profile"><i class="fa fa-google-plus"></i> Google Plus</a></li> -->
         </ul>
 
-        
+
 
         <!-- <a href="#" (click) = "onSubmit()"><i class="sl sl-icon-envelope-open"></i>Edit Profile</a> -->
-
-        <button class="button"
-        (click) = "onSubmit()">
-        Edit profile</button>
+        <ng-template [ngIf]="this.user">
+          <ng-template [ngIf]="this.onOwnProfile == true">
+            <button class="button" (click)="onEditProfile()">
+              Edit profile</button>
+          </ng-template>
+        </ng-template>
       </div>
       <!-- Contact / End-->
 
@@ -79,13 +89,13 @@
         <div class="col-lg-12 col-md-12">
           <div class="listing-item-container list-layout">
             <a href="listings-single-page.html" class="listing-item">
-              
+
               <!-- Image -->
               <div class="listing-item-image">
                 <img src="../../assets/images/spotify.png" alt="spotify">
                 <span class="tag">Spotify</span>
               </div>
-              
+
               <!-- Content -->
               <div class="listing-item-content">
                 <div class="listing-badge now-open">Now Open</div>
@@ -109,19 +119,19 @@
         <div class="col-lg-12 col-md-12">
           <div class="listing-item-container list-layout">
             <a href="listings-single-page.html" class="listing-item">
-              
+
               <!-- Image -->
               <div class="listing-item-image">
                 <img src="../../assets/images/soundcloud.png" alt="sondc">
                 <span class="tag">Hotels</span>
               </div>
-              
+
               <!-- Content -->
               <div class="listing-item-content">
 
                 <div class="listing-item-inner">
-                <h3>Hotel Govendor</h3>
-                <span>778 Country Street, New York</span>
+                  <h3>Hotel Govendor</h3>
+                  <span>778 Country Street, New York</span>
                   <div class="star-rating" data-rating="2.0">
                     <div class="rating-counter">(17 reviews)</div>
                   </div>
@@ -136,18 +146,18 @@
         </div>
         <!-- Listing Item / End -->
 
-      
+
 
         <!-- <div class="col-md-12 browse-all-user-listings"> -->
-          <!-- <a href="#">Browse All Listings <i class="fa fa-angle-right"></i> </a> -->
+        <!-- <a href="#">Browse All Listings <i class="fa fa-angle-right"></i> </a> -->
         <!-- </div> -->
 
       </div>
       <!-- Listings Container / End -->
 
       <app-reviews></app-reviews>
-        
-      
+
+
 
 
     </div>
