@@ -19,6 +19,9 @@ module.exports = function(app) {
     app.route('/api/userBookings')
         .get(bookingsHandlers.getUserBookingsByUID);
 
+    app.route('/api/userHasBooked')
+        .get(bookingsHandlers.userHasBooked);
+
 	app.route('/api/userBookings')
         .delete(bookingsHandlers.deleteUserBookingsByUID);
         

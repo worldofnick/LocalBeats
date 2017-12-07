@@ -10,7 +10,7 @@ var config    = require('../../config.js');
 // ====== Bookings ROUTES ======
 
 exports.listAllBookings = function (req, res) {
-    Bookings.find({}, function (err, bookings) {
+    Bookings.find({}).populate('hostUser').populate('performerUser').exec(function (err, bookings) {
       if (err)
         return res.send(err);
 
@@ -24,7 +24,7 @@ exports.listAllBookings = function (req, res) {
 };
 
 exports.getBookingByID = function (req, res) {
-  Bookings.findById(req.params.bid, function (err, booking) {
+  Bookings.findById(req.params.bid).populate('hostUser').populate('performerUser').exec(function (err, booking) {
       if (err) {
           return res.status(500).send("Failed to get booking");
       } else {
@@ -42,17 +42,29 @@ exports.createBooking = function (req, res) {
                 description: "Failed to create a booking"
             });
         } else {
-            return res.status(200).send({ "booking": booking });
+            Bookings.findById(booking._id).populate('hostUser').populate('performerUser').exec(function (err, booking) {
+                if (err) {
+                    return res.status(500).send("Failed to create booking");
+                } else {
+                    return res.status(200).send({ "booking": booking });
+                }
+            });
         }
     });
 };
 
 exports.updateBookingByID = function (req, res) {
-    Bookings.findByIdAndUpdate(req.params.bid, req.body.booking, { new: true }, function (err, booking) {
+    Bookings.findByIdAndUpdate(req.params.bid, req.body.booking, { new: true }).populate('hostUser').populate('performerUser').exec(function (err, booking) {
         if (err) {
             return res.status(500).send("There was a problem updating the booking.");
         }
-        return res.status(200).send({ "booking": booking });
+        Bookings.findById(booking._id).populate('hostUser').populate('performerUser').exec(function (err, booking) {
+            if (err) {
+                return res.status(500).send("Failed to update booking");
+            } else {
+                return res.status(200).send({ "booking": booking });
+            }
+        });
     });
 };
 
@@ -105,11 +117,11 @@ exports.getUserBookingsByUID = function (req, res) {
     return res.status(403).send({"error": "Must send user_type"});
   } else {
       if (req.query.user_type == "artist") {
-        query.performerUID = req.query.uid;
+        query.performerUser = req.query.uid;
         // TODO Send notification to host about application to event in POST
       } else if (req.query.user_type == "host") {
         // TODO Send notification to artist about request in POST
-        query.hostUID = req.query.uid;
+        query.hostUser = req.query.uid;
       }
   }
 
@@ -131,7 +143,7 @@ exports.getUserBookingsByUID = function (req, res) {
       query.eventEID = req.query.eid;
   }
 
-  Bookings.find(query).limit(limit).skip(skip).sort({ fromDate: -1 }).exec(function (err, doc) {
+  Bookings.find(query).limit(limit).skip(skip).sort({ fromDate: -1 }).populate('hostUser').populate('performerUser').exec(function (err, doc) {
       if (err) {
           return res.status(500).send("Failed to get user bookings");
       } else {
@@ -145,8 +157,9 @@ exports.getUserBookingsByUID = function (req, res) {
   });
 };
 
+// Deletes all a hosts bookings via hostUID
 exports.deleteUserBookingsByUID = function (req, res) {
-  Bookings.remove({hostUID: req.query.hostUID}).exec(function (err, doc) {
+  Bookings.remove({hostUser: req.query.hostUID}).exec(function (err, doc) {
       if (err) {
           return res.status(500).send("Failed to delete user bookings");
       } else {
@@ -155,9 +168,9 @@ exports.deleteUserBookingsByUID = function (req, res) {
   });
 };
 
+// Take a bid
 exports.acceptBooking = function(req, res) {
     // Notify both parties
-
     Bookings.findById(req.params.bid, function (err, booking) {
         var eventEID = booking.eventEID;
         Bookings.update({_id: req.params.bid}, {
@@ -179,6 +192,7 @@ exports.acceptBooking = function(req, res) {
 
 };
 
+// Takes a bid
 exports.declineBooking = function(req, res) {
     // Notifiy both parties
     Bookings.findByIdAndRemove(req.params.bid, function (err, user) {
@@ -193,3 +207,16 @@ exports.declineBooking = function(req, res) {
         }
       });
 };
+
+// Takes eid and uid
+// Returns true if uid is associated with eid through a booking
+exports.userHasBooked = function(req, res) {
+    Bookings.find({$or: [ {hostUser: req.query.uid}, {performerUser: req.query.uid} ], eventEID: req.query.eid }, function (err, bookings) {
+        if (err) {
+            return res.status(500).send("There was a problem declining the booking");
+        } else {
+            return res.status(200).send({"result": bookings.length == 0});
+        } 
+    });
+};
+
