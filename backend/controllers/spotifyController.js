@@ -94,7 +94,7 @@ exports.getFirstPlaylist = function (req, res) {
 exports.getFirstPlaylistByUIDAfterProfileUpdate = function (req, res) {
   User.findById(req.params.uid, function (err, user) {
     if (err) {
-      return res.status(504).send({ message: "Something went wrong...", error: err });
+      return res.status(404).send({ message: "Something went wrong...", error: err });
     }
     spotifyApi.getUserPlaylists(user.spotifyID)
       .then(function (data) {
