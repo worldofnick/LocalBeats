@@ -36,15 +36,11 @@ export class UserService {
     // post("/api/users/uid")
     public onEditProfile(newUser: User): Promise<User> {
         const current = this.userConnection + '/' + newUser._id;
-        console.log("sending user : ");
-        console.log(newUser);
         return this.http.put(current, { user: newUser }, { headers: this.headers })
             .toPromise()
             .then((response: Response) => {
                 const data = response.json();
                 this.user = data.user as User;
-                console.log("user response obj");
-                console.log(this.user);
                 return this.user
             })
             .catch(this.handleError);
@@ -59,7 +55,6 @@ export class UserService {
             .then((response: Response) => {
                 const data = response.json();
                 this.accessToken = data.token;
-                console.log(this.accessToken)
                 sessionStorage.setItem('token', JSON.stringify({ accessToken: this.accessToken }))
                 this.user = data.user as User;
                 return this.user
@@ -79,17 +74,16 @@ export class UserService {
     public getUserByID(ID:String): Promise<User> {
         // const num = ID["id"];
         const current = this.userConnection + '/' + ID;
-        console.log("getting: ");
-        console.log(current);
+        //console.log("getting: ");
+        //console.log(current);
         return this.http.get(current)
             .toPromise()
             .then((response: Response) => {
                 const data = response.json();
                 // this.accessToken = data.token;
                 // console.log(this.accessToken)
-                // sessionStorage.setItem('token', JSON.stringify({ accessToken: this.accessToken }))
-                this.user = data.user as User;
-                return this.user
+                let temp = data.user as User;
+                return temp
             })
             .catch(this.handleError);
     }
