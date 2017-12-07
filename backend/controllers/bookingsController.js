@@ -164,6 +164,8 @@ exports.acceptBooking = function(req, res) {
         if (err) {
             return res.status(500).send("Failed to accept booking.");
         }
+        console.log("RAW response");
+        console.log(rawResponse);
         Events.update({_id: rawResponse.eventEID}, {
             isBooked: true
         }, function(err, numberAffected, rawResponse) {
