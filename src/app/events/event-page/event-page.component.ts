@@ -16,9 +16,10 @@ import { Booking } from 'app/models/booking';
   styleUrls: ['./event-page.component.css']
 })
 export class EventPageComponent implements OnInit {
-  model:Event;
-  user:User;
-  isCurrentUser: boolean = null;
+  public model:Event;
+  public user:User;
+  public isCurrentUser: boolean = null;
+  public hasApplied: boolean = null;
 
 
   EID:any;

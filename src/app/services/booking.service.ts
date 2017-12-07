@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Http, Headers, RequestOptions, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import { Booking } from 'app/models/booking';
+import { Event } from 'app/models/event';
 
 
 @Injectable()
@@ -19,6 +20,21 @@ export class BookingService {
         const current = this.connection + '/create';
 
         return this.http.post(current, { booking: newBooking }, { headers: this.headers })
+            .toPromise()
+            .then((response: Response) => {
+                const data = response.json();
+                const booking = data.booking as Booking;
+                console.log(data)
+                console.log(booking)
+                return booking
+            })
+            .catch(this.handleError);
+    }
+
+    public getBooking(event: Event): Promise<Booking> {
+        const current = this.connection + '/' + event._id
+
+        return this.http.get(current, { headers: this.headers })
             .toPromise()
             .then((response: Response) => {
                 const data = response.json();
