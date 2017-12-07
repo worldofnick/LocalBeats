@@ -43,7 +43,7 @@ export class EventPageComponent implements OnInit {
     this.eventService.getEventByEID(this.EID).then((event: Event) => {
       this.model = event;
       this.user = event.hostUser;
-      if (this.user._id === this.userSerivce.user._id) {
+      if (this.userSerivce.user != null && this.user._id === this.userSerivce.user._id) {
         this.isCurrentUser = true;
       } else {
         this.isCurrentUser = false;
@@ -57,7 +57,7 @@ export class EventPageComponent implements OnInit {
         // console.log("printing performer and user service user from event page");
         // console.log(booking);
         // console.log(this.userSerivce.user._id);
-        if (result.booking.performerUser._id === this.userSerivce.user._id){
+        if (this.userSerivce.user != null && result.booking.performerUser._id === this.userSerivce.user._id){
           this.hasApplied = true;
         }
       }

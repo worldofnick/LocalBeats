@@ -11598,7 +11598,7 @@ button.mfp-close {
 #small-dialog .mfp-close,
 #sign-in-dialog, .mfp-close,
 .mfp-close:hover {
-	color: #fff;
+	color: #e4e4e4;;
 }
 
 
@@ -11616,7 +11616,7 @@ button.mfp-close {
 
 #sign-in-dialog .mfp-close:hover,
 #small-dialog .mfp-close:hover {
-	color: #fff;
+	color: #e4e4e4;;
 	transform: rotate(0);
 	background-color: #66676b;
 }
@@ -11749,7 +11749,7 @@ button.mfp-close {
 /* Popup */
 #sign-in-dialog,
 #small-dialog {
-	background: #fff;
+	background: #e4e4e4;;
 	padding: 40px;
 	padding-top: 0;
 	text-align: left;
@@ -13446,7 +13446,7 @@ img.mfp-img {
 	}
 
 	#sign-in-dialog, #small-dialog {
-		background: #fff;
+		background: #e4e4e4;
 		padding: 30px;
 		padding-top: 0;
     }
