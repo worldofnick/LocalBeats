@@ -3,9 +3,9 @@ export class Event {
     public eventName:string
     public eventType:string
     public eventGenre: string
-    public hostUID: string
+    public hostUser: string
     public hostEmail: string
-    public performerUID: string
+    public performerUser: string
     public performerEmail: string
     public address: string
     public zip: string

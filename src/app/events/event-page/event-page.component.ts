@@ -19,7 +19,7 @@ export class EventPageComponent implements OnInit {
   model:Event;
   user:User;
   isCurrentUser: boolean = false;
-  
+
 
   EID:any;
 
@@ -38,7 +38,7 @@ export class EventPageComponent implements OnInit {
     this.eventService.getEventByEID(this.EID).then((event: Event) => {
       this.model = event;
     }).then(() =>{
-      this.userSerivce.getUserByID(this.model.hostUID).then((user:User) => {
+      this.userSerivce.getUserByID(this.model.hostUser).then((user:User) => {
         this.user = user;
         if (this.user._id === this.userSerivce.user._id) {
           this.isCurrentUser = true;
@@ -50,7 +50,7 @@ export class EventPageComponent implements OnInit {
   }
 
   public applyToEvent(){
-    const booking = new Booking('artist-apply', this.model.hostUID, this.userSerivce.user._id, this.model._id, false, false)
+    const booking = new Booking('artist-apply', this.model.hostUser, this.userSerivce.user._id, this.model._id, false, false)
     this.bookingService.createBooking(booking).then((booking: Booking) => {
       console.log('success')
     })

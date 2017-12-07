@@ -56,7 +56,7 @@ export class CreateEventComponent implements OnInit {
     console.log(this.model.description);
     this.model.fixedPrice = fixedPrice;
 
-    this.model.hostUID = this.user._id;
+    this.model.hostUser = this.user._id;
     this.model.hostEmail = this.user.email;
 
 
@@ -66,8 +66,6 @@ export class CreateEventComponent implements OnInit {
     this.eventService.createEvent(this.model).then((event: Event) => {
       this.model = event;      
       this.eventService.event = this.model;
-      console.log("eid");
-      console.log(this.model._id); 
       this.router.navigate(['/event-page', this.model._id]); //this will go to the page about the event
     });
 
