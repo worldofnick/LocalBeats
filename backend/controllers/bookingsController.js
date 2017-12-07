@@ -10,7 +10,7 @@ var config    = require('../../config.js');
 // ====== Bookings ROUTES ======
 
 exports.listAllBookings = function (req, res) {
-    Bookings.find({}, function (err, bookings) {
+    Bookings.find({}).populate('hostUID').populate('performerUID').exec(function (err, bookings) {
       if (err)
         return res.send(err);
 
