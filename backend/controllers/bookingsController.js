@@ -72,7 +72,7 @@ exports.deleteBookingByID = function (req, res) {
 
 // Params 
 // uid (string) user id in question --requied
-// user_type (string) in {"arist", "host"} --required
+// user_type (string) in {"arist", "host"} which is the user type of uid. Does the uid correspond to an artist or event host?--required
 // status (string) in {"approved", "pending", "completed"} --optional - defaults to all
 // booking_type (string) in {"arist-apply", "host-request"} --optional defaults to all
 // eid (string) event ID in question --optional
@@ -83,7 +83,6 @@ exports.deleteBookingByID = function (req, res) {
 // Get a list of hosts requested artists (for a given event)
 // Get a list of all bookings for a user
 // Get a list of all approved events for an artist
-
 exports.getUserBookingsByUID = function (req, res) {
   
   if (req.query.uid == null) {
