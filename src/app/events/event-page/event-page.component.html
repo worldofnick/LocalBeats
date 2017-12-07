@@ -55,7 +55,9 @@
         </div>
 
         <!-- Book Now -->
-			<div *ngIf="!isCurrentUser" class="boxed-widget booking-widget margin-top-35">
+        <ng-template [ngIf]="isCurrentUser == false">
+			<div class="boxed-widget booking-widget margin-top-35">
+        
 				<h3><i class="fa fa-calendar-check-o "></i> Apply to Event</h3>
 				<div class="row with-forms  margin-top-0">
 
@@ -92,9 +94,12 @@
 
 				</div>
 				
-				<!-- progress button animation handled via custom.js -->
-				<button (click)="applyToEvent()" class="button book-now fullwidth margin-top-5">Book Now</button>
-			</div>
+        <!-- progress button animation handled via custom.js -->
+        
+        <button (click)="applyToEvent()" class="button book-now fullwidth margin-top-5">Book Now</button>
+        
+      </div>
+    </ng-template>
 			<!-- Book Now / End -->
 
         <!-- Event times -->

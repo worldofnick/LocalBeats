@@ -64,7 +64,10 @@ export class HomeComponent implements OnInit {
         this.ngZone.run(() => {
           //get the place result
           let place: google.maps.places.PlaceResult = autocomplete.getPlace();
-  
+          console.log("addy:");
+          // place.address_components.
+          console.log(place.address_components);
+          console.log(place.formatted_address);
           //verify result
           if (place.geometry === undefined || place.geometry === null) {
             return;
@@ -124,6 +127,8 @@ export class HomeComponent implements OnInit {
   onClickResult(result:any){
     console.log("clicking search result");
     if(this.currentSearch.searchType == 'Event'){
+      console.log("result form click: ");
+      console.log(result.event);
       result = result.event as Event;
       // this.eventService.event = event;
       this.router.navigate(['/event-page', result._id]); //this will go to the page about the event   

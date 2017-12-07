@@ -18,15 +18,17 @@ import { Booking } from 'app/models/booking';
 export class EventPageComponent implements OnInit {
   model:Event;
   user:User;
-  isCurrentUser: boolean = false;
+  isCurrentUser: boolean = null;
 
 
   EID:any;
 
-  constructor(private bookingService: BookingService, private eventService: EventService, private userSerivce: UserService, private router: Router, private route: ActivatedRoute) { }
+  constructor(private bookingService: BookingService, private eventService: EventService, private userSerivce: UserService, private router: Router, private route: ActivatedRoute) {
+
+   }
 
   ngOnInit() {
-    
+    // this.isCurrentUser = false;
     // this.model = this.eventService.event;
     // this.user = this.userSerivce.user;
     // console.log("in ngonit in event page..printing data " );
