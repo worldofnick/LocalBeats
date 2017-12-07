@@ -166,14 +166,15 @@ exports.acceptBooking = function(req, res) {
         }
         console.log("RAW response");
         console.log(rawResponse);
-        Events.update({_id: rawResponse.eventEID}, {
-            isBooked: true
-        }, function(err, numberAffected, rawResponse) {
-            if (err) {
-                return res.status(500).send("Failed to accept booking.");
-            }
-            return res.status(200).send("Accepted booking.");
-        })
+        return res.status(200).send("Accepted booking.");
+        // Events.update({_id: rawResponse.eventEID}, {
+        //     isBooked: true
+        // }, function(err, numberAffected, rawResponse) {
+        //     if (err) {
+        //         return res.status(500).send("Failed to accept booking.");
+        //     }
+        //     return res.status(200).send("Accepted booking.");
+        // })
     })
 };
 
