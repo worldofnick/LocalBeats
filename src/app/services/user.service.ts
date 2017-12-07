@@ -21,11 +21,12 @@ export class UserService {
     // post("/api/user")
     public signupUser(newUser: User): Promise<User> {
         const current = this.connection + '/register';
+        console.log(newUser)
         return this.http.post(current, newUser, { headers: this.headers })
             .toPromise()
             .then((response: Response) => {
                 const data = response.json();
-                this.accessToken = data.access_token;
+                this.accessToken = data.token;
                 sessionStorage.setItem('token', JSON.stringify({ accessToken: this.accessToken }))
                 this.user = data.user as User;
                 return this.user
