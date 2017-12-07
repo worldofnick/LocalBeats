@@ -193,3 +193,15 @@ exports.declineBooking = function(req, res) {
         }
       });
 };
+
+// Takes eid and uid
+exports.isBooked = function(req, res) {
+    Bookings.find({$or: [ {hostUID: req.query.uid}, {performerUID: req.query.uid} ], eventEID: req.query.eid }, function (err, bookings) {
+        if (err) {
+            return res.status(500).send("There was a problem declining the booking");
+        } else {
+            return res.status(200).send({"result": bookings.length == 0});
+        } 
+    });
+};
+
