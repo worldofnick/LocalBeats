@@ -167,13 +167,16 @@
                 <input [(ngModel)]="model.address" name="address" type="text" placeholder="e.g. 123 Recrusion St">
               </div>
               <!-- City -->
+              <div class="main-search-input-item location">
+								
+								</div>
               <div class="col-md-4">
-                <h5>City</h5>
-                <input [(ngModel)]="model.city" name="city"  type="text" placeholder="e.g. Salt Lake City">
+                <h5>City and State</h5>
+                <input placeholder="Location" autocorrect="off" autocapitalize="off" spellcheck="off" type="text" #search [formControl]="searchControl">
               </div>
 
               <!-- State -->
-              <div class="col-md-2">
+              <!-- <div class="col-md-2">
                 <h5>State</h5>
                 <input [(ngModel)]="model.state" name="state"  type="text" placeholder="e.g. Utah">
               </div>
@@ -181,7 +184,7 @@
               <div class="col-md-2">
                 <h5>Zip-Code</h5>
                 <input [(ngModel)]="model.zip" name="zip"  type="text" placeholder="e.g. 12345">
-              </div>
+              </div> -->
 
               <!-- Row / End -->
 

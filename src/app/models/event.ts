@@ -20,6 +20,7 @@ export class Event {
     public hourlyRate: string
     public deposit: string
     public isBooked: string
+    public location: number[]
 }
 
 
