@@ -20,7 +20,7 @@ module.exports = function(app) {
         .get(bookingsHandlers.getUserBookingsByUID);
 
     app.route('/api/userHasBooked')
-        .get(bookingsHandlers.isBooked);
+        .get(bookingsHandlers.userHasBooked);
 
 	app.route('/api/userBookings')
         .delete(bookingsHandlers.deleteUserBookingsByUID);

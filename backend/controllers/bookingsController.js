@@ -157,6 +157,7 @@ exports.getUserBookingsByUID = function (req, res) {
   });
 };
 
+// Deletes all a hosts bookings via hostUID
 exports.deleteUserBookingsByUID = function (req, res) {
   Bookings.remove({hostUser: req.query.hostUID}).exec(function (err, doc) {
       if (err) {
@@ -167,9 +168,9 @@ exports.deleteUserBookingsByUID = function (req, res) {
   });
 };
 
+// Take a bid
 exports.acceptBooking = function(req, res) {
     // Notify both parties
-
     Bookings.findById(req.params.bid, function (err, booking) {
         var eventEID = booking.eventEID;
         Bookings.update({_id: req.params.bid}, {
@@ -191,6 +192,7 @@ exports.acceptBooking = function(req, res) {
 
 };
 
+// Takes a bid
 exports.declineBooking = function(req, res) {
     // Notifiy both parties
     Bookings.findByIdAndRemove(req.params.bid, function (err, user) {
@@ -207,7 +209,8 @@ exports.declineBooking = function(req, res) {
 };
 
 // Takes eid and uid
-exports.isBooked = function(req, res) {
+// Returns true if uid is associated with eid through a booking
+exports.userHasBooked = function(req, res) {
     Bookings.find({$or: [ {hostUser: req.query.uid}, {performerUser: req.query.uid} ], eventEID: req.query.eid }, function (err, bookings) {
         if (err) {
             return res.status(500).send("There was a problem declining the booking");
