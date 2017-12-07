@@ -12,7 +12,7 @@ exports.listAllUsers = function (req, res) {
   User.find({}, { hashPassword: 0 }, function (err, users) {
     if (err)
       return res.send(err);
-    user.hashPassword = undefined;
+    users.hashPassword = undefined;
     var usrs = [];
     users.forEach(function(user) {
       usrs.push({"user": user});
@@ -32,7 +32,7 @@ exports.getUserByID = function (req, res) {
 exports.updateUserByID = function (req, res, next) {
   User.findByIdAndUpdate(req.params.uid, req.body.user, { new: true }, function (err, user) {
     if (err) { 
-      return res.status(500).send("There was a problem updating the user.");
+      return res.status(404).send("There was a problem updating the user.");
     }
 
     user.hashPassword = undefined;

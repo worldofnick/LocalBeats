@@ -108,11 +108,11 @@ exports.getFirstPlaylistByUIDAfterProfileUpdate = function (req, res) {
             }
           }
           user.hashPassword = undefined;
-          return res.status(400).send({ user: user, message: "None of the playlists belong to " + user.firstName });
+          return res.status(200).send({ user: user, uri: "", message: "None of the playlists belong to " + user.firstName });
 
         } else {
           user.hashPassword = undefined;
-          return res.status(400).send({ user: user, message: user.firstName + " has no playlists!" });
+          return res.status(200).send({ user: user, uri: "", message: user.firstName + " has no playlists!" });
         }
 
       }, function (err) {
