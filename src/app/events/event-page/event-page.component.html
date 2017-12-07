@@ -9,13 +9,17 @@
         <!-- Titlebar -->
         <div id="titlebar" class="listing-titlebar">
           <div class="listing-titlebar-title">
+              <ng-template [ngIf]="model">
             <h2> {{ this.model.eventName }}
               <span class="listing-tag">{{this.model.eventType}}</span>
             </h2>
+            </ng-template>
             <span>
               <a class="listing-address">
                 <i class="fa fa-map-marker"></i>
+                <ng-template [ngIf]="model">
                 {{ this.model.address}}, {{ this.model.city }} , {{ this.model.state}}, {{ this.model.zip }}
+                </ng-template>
               </a>
             </span>
           </div>
@@ -28,7 +32,10 @@
           <!-- Description -->
           <h3>Description:</h3>
           <div style="float:left; width:500px; max-width:500px; word-wrap:break-word;">
-            {{ this.model.description }}</div>
+              <ng-template [ngIf]="model">
+            {{ this.model.description }}
+            </ng-template>
+          </div>
         </div>
 
 
@@ -41,7 +48,10 @@
       <div class="col-lg-4 col-md-4 margin-top-75 sticky">
         <!-- Price listing box: -->
         <div class="verified-badge with-tip" data-tip-content="The amount the event host is offering to pay to the artist who is accepted.">
-          <i class="im im-icon-Money-2"></i> {{this.model.fixedPrice}}
+          <i class="im im-icon-Money-2"></i> 
+          <ng-template [ngIf]="model">
+          {{this.model.fixedPrice}}
+          </ng-template>
         </div>
 
         <!-- Event times -->
@@ -60,7 +70,9 @@
         <!-- Contact --> 
         <div class="boxed-widget margin-top-35">
         <div class="hosted-by-title">
+            <ng-template [ngIf]="user">
         <h4>Hosted by {{this.user.firstName }} {{this.user.lastName}}</h4>
+        </ng-template>
         <!-- <a href="pages-user-profile.html" class="hosted-by-avatar"><img src="images/dashboard-avatar.jpg" alt=""></a> -->
         </div>
         <h4>Arists that have applied:</h4>

@@ -6,26 +6,27 @@ import { User } from 'app/models/user';
 
 @Injectable()
 export class UserService {
-    // public connection: string = 'http://localhost:8080/api/auth';
-    // public userConnection: string = 'http://localhost:8080/api/users';
-    public connection: string = 'https://localbeats.herokuapp.com/api/auth';
-    public userConnection: string = 'https://localbeats.herokuapp.com/api/users';
+    public connection: string = 'http://localhost:8080/api/auth';
+    public userConnection: string = 'http://localhost:8080/api/users';
+    // public connection: string = 'https://localbeats.herokuapp.com/api/auth';
+    // public userConnection: string = 'https://localbeats.herokuapp.com/api/users';
+    // public getUserConnection: string = 'https://localbeats.herokuapp.com/api/user';
     public accessToken: string = null;
     public user: User = null;
 
     private headers: Headers = new Headers({ 'Content-Type': 'application/json' });
 
-    constructor (private http: Http) {}
+    constructor(private http: Http) { }
 
     // post("/api/user")
     public signupUser(newUser: User): Promise<User> {
         const current = this.connection + '/register';
-        return this.http.post(current, newUser, {headers: this.headers} )
+        return this.http.post(current, newUser, { headers: this.headers })
             .toPromise()
             .then((response: Response) => {
                 const data = response.json();
                 this.accessToken = data.access_token;
-                sessionStorage.setItem('token', JSON.stringify({ accessToken: this.accessToken}))
+                sessionStorage.setItem('token', JSON.stringify({ accessToken: this.accessToken }))
                 this.user = data.user as User;
                 return this.user
             })
@@ -35,15 +36,11 @@ export class UserService {
     // post("/api/users/uid")
     public onEditProfile(newUser: User): Promise<User> {
         const current = this.userConnection + '/' + newUser._id;
-        console.log("sending user : ");
-        console.log(newUser);
-        return this.http.put(current, {user : newUser}, {headers: this.headers} )
+        return this.http.put(current, { user: newUser }, { headers: this.headers })
             .toPromise()
             .then((response: Response) => {
                 const data = response.json();
                 this.user = data.user as User;
-                console.log("user response obj");
-                console.log(this.user);
                 return this.user
             })
             .catch(this.handleError);
@@ -53,15 +50,40 @@ export class UserService {
     public signinUser(returningUser: User): Promise<User> {
         // this.connection = 'http://localhost:8080/api/auth/authenticate';
         const current = this.connection + '/authenticate';
-        return this.http.post(current, returningUser, {headers: this.headers})
+        return this.http.post(current, returningUser, { headers: this.headers })
             .toPromise()
             .then((response: Response) => {
                 const data = response.json();
                 this.accessToken = data.token;
-                console.log(this.accessToken)
-                sessionStorage.setItem('token', JSON.stringify({ accessToken: this.accessToken}))
+                sessionStorage.setItem('token', JSON.stringify({ accessToken: this.accessToken }))
                 this.user = data.user as User;
                 return this.user
+            })
+            .catch(this.handleError);
+    }
+
+
+    // get user
+    ///api/users/:uid
+    /**
+     * 
+     * @param userToGet 
+     * 
+     * 
+     */
+    public getUserByID(ID:String): Promise<User> {
+        // const num = ID["id"];
+        const current = this.userConnection + '/' + ID;
+        //console.log("getting: ");
+        //console.log(current);
+        return this.http.get(current)
+            .toPromise()
+            .then((response: Response) => {
+                const data = response.json();
+                // this.accessToken = data.token;
+                // console.log(this.accessToken)
+                let temp = data.user as User;
+                return temp
             })
             .catch(this.handleError);
     }
@@ -76,9 +98,9 @@ export class UserService {
         return this.accessToken != null;
     }
 
-    private handleError (error: any): Promise<any> {
+    private handleError(error: any): Promise<any> {
         let errMsg = (error.message) ? error.message :
-        error.status ? `${error.status} - ${error.statusText}` : 'Server error';
+            error.status ? `${error.status} - ${error.statusText}` : 'Server error';
         console.error(errMsg); // log to console
         return Promise.reject(errMsg);
     }

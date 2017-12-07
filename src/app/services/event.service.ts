@@ -8,10 +8,10 @@ import { Event } from 'app/models/event';
 
 @Injectable()
 export class EventService {
-    // public connection: string = 'http://localhost:8080/api/events';
-    // public listConnection:string = 'http://localhost:8080/api/userEvents';
-    public connection: string = 'https://localbeats.herokuapp.com/api/events';
-    public listConnection: string = 'https://localbeats.herokuapp.com/api/userEvents';
+    public connection: string = 'http://localhost:8080/api/events';
+    public listConnection:string = 'http://localhost:8080/api/userEvents';
+    // public connection: string = 'https://localbeats.herokuapp.com/api/events';
+    // public listConnection: string = 'https://localbeats.herokuapp.com/api/userEvents';
     public accessToken: string = null;
     public user: User = null;
     public event: Event = null;
@@ -52,15 +52,16 @@ export class EventService {
      */
     ///userEvents/?uid=asdf&limit=10&skip=10
     //api/userEvents/?hostUID=5a1caf147f9c707f00ce1e36
-    public getEventsByUID(host: User): Promise<Event[]> {
-        const current = this.listConnection + '/?hostUID=' + host._id;
+    public getEventsByUID(UID: String): Promise<Event[]> {
+        // const num = UID["id"];
+        const current = this.listConnection + '/?hostUID=' + UID;
         console.log(current);
         return this.http.get(current)
             .toPromise()
             .then((response: Response) => {
                 const data = response.json();
-                this.accessToken = data.access_token;
-                sessionStorage.setItem('token', JSON.stringify({ accessToken: this.accessToken }))
+                // this.accessToken = data.access_token;
+                // sessionStorage.setItem('token', JSON.stringify({ accessToken: this.accessToken }))
                 let events:Event[];
                 events = data.events as Event[];
                 console.log("printing events returned after getting");
@@ -73,20 +74,21 @@ export class EventService {
 
     /**
      * 
-     * @param eventGotten 
+     * @param EID 
      * 
      * GET EVENT BY EID
      */
     // post("/api/events/eid")
-    public getEventByEID(eventGotten: Event): Promise<Event> {
-        const current = this.connection + eventGotten._id;
+    public getEventByEID(EID: Object): Promise<Event> {
+        const num = EID["id"];
+        const current = this.connection + '/' + num;
         console.log(current);
-        return this.http.post(current, { event: eventGotten }, { headers: this.headers })
+        return this.http.get(current)
             .toPromise()
             .then((response: Response) => {
                 const data = response.json();
-                this.accessToken = data.access_token;
-                sessionStorage.setItem('token', JSON.stringify({ accessToken: this.accessToken }))
+                // this.accessToken = data.access_token;
+                // sessionStorage.setItem('token', JSON.stringify({ accessToken: this.accessToken }))
                 this.event = data.event as Event;
                 return this.event
             })

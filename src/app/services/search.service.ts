@@ -64,8 +64,7 @@ export class SearchService {
         let current = (this.connection + 'searchUsers/')
         let params: URLSearchParams = new URLSearchParams();
         params.set('artist', 'false')
-        params.set('genre', 'Rap')
-        params.set('name', 'Ni')
+        params.set('genre', searchTerms.genre)
         // params.set('lat', String(searchTerms.location.latitude))
         // params.set('lon', String(searchTerms.location.longitude))
         if (searchTerms.text != null && searchTerms.text.length != 0) {

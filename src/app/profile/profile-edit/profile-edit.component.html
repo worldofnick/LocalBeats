@@ -31,18 +31,21 @@
 
 							<!-- Details -->
 							<form (ngSubmit)="onEditProfile(r)" #r="ngForm" method="post" class="editProfile">
-								<div class="my-profile">
+								<ng-template [ngIf]="this.user">
 
-									<label>First Name</label>
-									<input [(ngModel)]="model.firstName" name="firstname" type="text" placeholder="First name" />
+									<div class="my-profile">
 
-									<label>Last Name</label>
-									<input [(ngModel)]="model.lastName" name="lastname" type="text" placeholder="Last name" />
+										<label>First Name</label>
+										<input [(ngModel)]="user.firstName" name="firstname" type="text" placeholder="First name" />
 
-									<label>Email</label>
-									<input [(ngModel)]="model.email" name="email" type="text" placeholder="Email" />
+										<label>Last Name</label>
+										<input [(ngModel)]="user.lastName" name="lastname" type="text" placeholder="Last name" />
 
-								</div>
+										<label>Email</label>
+										<input [(ngModel)]="user.email" name="email" type="text" placeholder="Email" />
+									</div>
+									</ng-template>
+								
 
 								<!-- <button class="button margin-top-15">Save Changes</button> -->
 								<input type="submit" class="button border fw margin-top-10" name="editProfile" value="Submit" />
