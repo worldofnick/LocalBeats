@@ -35,14 +35,20 @@ exports.getBookingByID = function (req, res) {
 
 exports.createBooking = function (req, res) {
     var newBooking = new Bookings(req.body.booking);
-    newBooking.populate('hostUser').populate('performerUser').save(function (err, booking) {
+    newBooking.save(function (err, booking) {
         if (err) {
             return res.status(400).send({
                 message: err,
                 description: "Failed to create a booking"
             });
         } else {
-            return res.status(200).send({ "booking": booking });
+            Bookings.findById(booking._id).populate('hostUser').populate('performerUser').exec(function (err, booking) {
+                if (err) {
+                    return res.status(500).send("Failed to get booking");
+                } else {
+                    return res.status(200).send({ "booking": booking });
+                }
+            });
         }
     });
 };
@@ -52,7 +58,13 @@ exports.updateBookingByID = function (req, res) {
         if (err) {
             return res.status(500).send("There was a problem updating the booking.");
         }
-        return res.status(200).send({ "booking": booking });
+        Bookings.findById(booking._id).populate('hostUser').populate('performerUser').exec(function (err, booking) {
+            if (err) {
+                return res.status(500).send("Failed to get booking");
+            } else {
+                return res.status(200).send({ "booking": booking });
+            }
+        });
     });
 };
 
