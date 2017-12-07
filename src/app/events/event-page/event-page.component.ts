@@ -19,6 +19,7 @@ export class EventPageComponent implements OnInit {
   model:Event;
   user:User;
   isCurrentUser: boolean = false;
+  
 
   EID:any;
 
