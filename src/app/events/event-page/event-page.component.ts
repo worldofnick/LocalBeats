@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { User } from 'app/models/user';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { NgForm } from '@angular/forms/src/directives/ng_form';
 import { UserService } from 'app/services/user.service';
 import { EventService } from 'app/services/event.service';
@@ -17,22 +17,27 @@ export class EventPageComponent implements OnInit {
   model:Event;
   user:User;
 
-  constructor(private eventService: EventService, private userSerivce: UserService, private router: Router) { }
+  EID:any;
+
+  constructor(private eventService: EventService, private userSerivce: UserService, private router: Router, private route: ActivatedRoute) { }
 
   ngOnInit() {
     
-    this.model = this.eventService.event;
-    this.user = this.userSerivce.user;
-    console.log("in ngonit in event page..printing data " );
-    console.log(this.model._id);
-    
+    // this.model = this.eventService.event;
+    // this.user = this.userSerivce.user;
+    // console.log("in ngonit in event page..printing data " );
+    // console.log(this.model._id);
+    this.EID = {
+      id: this.route.snapshot.params['id']
+    }
 
-    // this.eventService.getEventByEID(this.model).then((event: Event) => {
-    //   this.model = event;      
-    //   this.eventService.event = this.model;
-    //   console.log("eid");
-    //   console.log(this.model._id); 
-    // });
+    this.eventService.getEventByEID(this.EID).then((event: Event) => {
+      this.model = event;
+    }).then(() =>{
+      this.userSerivce.getUserByID(this.model.hostUID).then((user:User) => {
+        this.user = user;
+      });
+    });
   }
 
 }

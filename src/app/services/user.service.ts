@@ -76,10 +76,9 @@ export class UserService {
      * 
      * 
      */
-    public getUserByID(ID:Object): Promise<User> {
-        // const javaObject = JSON.stringify(ID);
-        const num = ID["id"];
-        const current = this.userConnection + '/' + num;
+    public getUserByID(ID:String): Promise<User> {
+        // const num = ID["id"];
+        const current = this.userConnection + '/' + ID;
         console.log("getting: ");
         console.log(current);
         return this.http.get(current)
