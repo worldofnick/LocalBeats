@@ -55,11 +55,10 @@
         </div>
 
         <!-- Book Now -->
-        <ng-template [ngIf]="!isCurrentUser && !hasApplied">
           <div class="boxed-widget booking-widget margin-top-35">
 
             <h3>
-              <i class="fa fa-calendar-check-o "></i> Apply to Event</h3>
+              <i class="fa fa-calendar-check-o "></i> Event Applications</h3>
             <div class="row with-forms  margin-top-0">
 
               <!-- Date Picker - docs: http://www.vasterad.com/docs/listeo/#!/date_picker -->
@@ -96,11 +95,10 @@
             </div>
 
             <!-- progress button animation handled via custom.js -->
-
-            <button (click)="applyToEvent()" class="button book-now fullwidth margin-top-5">Apply Now</button>
+            <button *ngIf="isCurrentUser" (click)="viewApplicants()" class="button book-now fullwidth margin-top-5">View Applicants</button>
+            <button *ngIf="!isCurrentUser && !hasApplied" (click)="applyToEvent()" class="button book-now fullwidth margin-top-5">Apply Now</button>
 
           </div>
-        </ng-template>
         <!-- Book Now / End -->
 
         <!-- Event times -->
@@ -129,7 +127,6 @@
               <i class="im im-icon-Music-Note"></i> {{booking.performerUser.firstName}} {{booking.performerUser.lastName}}
             </li>
           </ul>
-          <h4>Arists that have applied:</h4>
         </div>
         <!-- Contact / End -->
       </div>

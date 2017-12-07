@@ -68,4 +68,8 @@ export class EventPageComponent implements OnInit {
     })
   }
 
+  public viewApplicants() {
+    
+  }
+
 }
