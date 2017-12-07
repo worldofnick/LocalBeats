@@ -23,11 +23,9 @@ export class ProfileDetailsComponent implements OnInit {
 
 
   ngOnInit() {
+    console.log("profile detailis onINIT, userService.user:");
     console.log(this.userService.user)
 
-    this.user = this.userService.user;
-    console.log("this.user");
-    console.log(this.user);
     //snapshot params returns a javascript object. index into it with the property field to get a property.
     this.userID = {
       id: this.route.snapshot.params['id']
@@ -38,22 +36,24 @@ export class ProfileDetailsComponent implements OnInit {
     if (this.userID["id"] == null) {
       //nothing in url.
       this.onOwnProfile = true;
+      this.user = this.userService.user;
+      
     } else {
       //on another perons profile.
       this.onOwnProfile = false;
-      let ID = this.userID["id"];
+      let ID:String = this.userID["id"];
       this.userService.getUserByID(ID).then((gottenUser: User) => {
         this.user = gottenUser;
+        }).then(() => {
+          console.log("other user who i am viewing:");
+          console.log(this.user);
         });
-        console.log("other user who i am viewing:");
-        console.log(this.user);
     }
 
     // if(this.userID != null){
     //   this.onOwnProfile = false;
     //   this.userService.getUserByID(this.userID).then((gottenUser:User) => {
     //     this.user = gottenUser;   
-    //     // this.eventService.events = this.events;   
     //   });
     // }
     // if(this.user._id != this.userID["id"]){
