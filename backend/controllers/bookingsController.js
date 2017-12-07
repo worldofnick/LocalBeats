@@ -158,24 +158,26 @@ exports.deleteUserBookingsByUID = function (req, res) {
 
 exports.acceptBooking = function(req, res) {
     // Notify both parties
-    Bookings.update({_id: req.params.bid}, {
-        approved: true
-    }, function(err, numberAffected, rawResponse) {
-        if (err) {
-            return res.status(500).send("Failed to accept booking.");
-        }
-        console.log("RAW response");
-        console.log(rawResponse);
-        return res.status(200).send("Accepted booking.");
-        // Events.update({_id: rawResponse.eventEID}, {
-        //     isBooked: true
-        // }, function(err, numberAffected, rawResponse) {
-        //     if (err) {
-        //         return res.status(500).send("Failed to accept booking.");
-        //     }
-        //     return res.status(200).send("Accepted booking.");
-        // })
-    })
+
+    Bookings.findById(req.params.bid, function (err, booking) {
+        var eventEID = booking.eventEID;
+        Bookings.update({_id: req.params.bid}, {
+            approved: true
+        }, function(err, numberAffected, rawResponse) {
+            if (err) {
+                return res.status(500).send("Failed to accept booking.");
+            }
+            Events.update({_id: eventEID}, {
+                isBooked: true
+            }, function(err, numberAffected, rawResponse) {
+                if (err) {
+                    return res.status(500).send("Failed to accept booking.");
+                }
+                return res.status(200).send({"message": "Accepted booking."});
+            })
+        })
+    });
+
 };
 
 exports.declineBooking = function(req, res) {
