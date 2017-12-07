@@ -188,11 +188,11 @@ exports.searchEvents = function(req, res) {
     }
   }
 
-  if (req.query.booked != null) {
-    query.isBooked = req.query.booked;
-  } else {
-    query.isBooked = false;
-  }
+//   if (req.query.booked != null) {
+//     query.isBooked = req.query.booked;
+//   } else {
+//     query.isBooked = false;
+//   }
 
   if (req.query.lat != null && req.query.lon != null) {
     query.location = {
