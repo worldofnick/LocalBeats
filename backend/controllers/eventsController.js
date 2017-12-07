@@ -42,11 +42,11 @@ exports.createEvent = function (req, res) {
                 description: "Failed to create an event"
             });
         } else {
-            Events.findById(event._id).populate('hostUser').populate('performerUser').exec(function (err, event) {
+            Events.findById(event._id).populate('hostUser').populate('performerUser').exec(function (err, fetchedEvent) {
                 if (err) {
                     return res.status(500).send("Failed to create event");
                 } else {
-                    return res.status(200).send({ "event": event });
+                    return res.status(200).send({ "event": fetchedEvent });
                 }
             });
         }
