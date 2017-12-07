@@ -19,7 +19,7 @@ module.exports = function(app) {
     app.route('/api/userBookings')
         .get(bookingsHandlers.getUserBookingsByUID);
 
-    app.route('/api/isBooked')
+    app.route('/api/userHasBooked')
         .get(bookingsHandlers.isBooked);
 
 	app.route('/api/userBookings')
