@@ -35,7 +35,7 @@ exports.getBookingByID = function (req, res) {
 
 exports.createBooking = function (req, res) {
     var newBooking = new Bookings(req.body.booking);
-    newBooking.save.populate('hostUID').populate('performerUID').exec(function (err, booking) {
+    newBooking.populate('hostUID').populate('performerUID').save(function (err, booking) {
         if (err) {
             return res.status(400).send({
                 message: err,
