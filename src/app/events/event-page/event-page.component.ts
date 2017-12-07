@@ -20,6 +20,8 @@ export class EventPageComponent implements OnInit {
   public user:User;
   public isCurrentUser: boolean = null;
   public hasApplied: boolean = null;
+  public currentBookings: Booking[];
+  public approvedBookings: Booking[];
 
 
   EID:any;
@@ -46,12 +48,20 @@ export class EventPageComponent implements OnInit {
       } else {
         this.isCurrentUser = false;
       }
-    });
+    }).then(() => this.bookingService.getBooking(this.model).then((bookings: Booking[]) => {
+      this.currentBookings = bookings;
+      for (let booking of this.currentBookings) {
+        if (booking.approved) {
+          this.approvedBookings.push(booking)
+        }
+      }
+    }));
   }
 
   public applyToEvent(){
     const booking = new Booking('artist-apply', this.model.hostUser, this.userSerivce.user, this.model._id, false, false)
     this.bookingService.createBooking(booking).then((booking: Booking) => {
+      // add this booking to the bookings array?
       console.log('success')
     })
   }

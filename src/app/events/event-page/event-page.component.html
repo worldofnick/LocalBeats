@@ -9,16 +9,16 @@
         <!-- Titlebar -->
         <div id="titlebar" class="listing-titlebar">
           <div class="listing-titlebar-title">
-              <ng-template [ngIf]="model">
-            <h2> {{ this.model.eventName }}
-              <span class="listing-tag">{{this.model.eventType}}</span>
-            </h2>
+            <ng-template [ngIf]="model">
+              <h2> {{ this.model.eventName }}
+                <span class="listing-tag">{{this.model.eventType}}</span>
+              </h2>
             </ng-template>
             <span>
               <a class="listing-address">
                 <i class="fa fa-map-marker"></i>
                 <ng-template [ngIf]="model">
-                {{ this.model.address}}, {{ this.model.city }} , {{ this.model.state}}
+                  {{ this.model.address}}, {{ this.model.city }} , {{ this.model.state}}
                 </ng-template>
               </a>
             </span>
@@ -32,8 +32,8 @@
           <!-- Description -->
           <h3>Description:</h3>
           <div style="float:left; width:500px; max-width:500px; word-wrap:break-word;">
-              <ng-template [ngIf]="model">
-            {{ this.model.description }}
+            <ng-template [ngIf]="model">
+              {{ this.model.description }}
             </ng-template>
           </div>
         </div>
@@ -48,31 +48,32 @@
       <div class="col-lg-4 col-md-4 margin-top-75 sticky">
         <!-- Price listing box: -->
         <div class="verified-badge with-tip" data-tip-content="The amount the event host is offering to pay to the artist who is accepted.">
-          <i class="im im-icon-Money-2"></i> 
+          <i class="im im-icon-Money-2"></i>
           <ng-template [ngIf]="model">
-          {{this.model.fixedPrice}}
+            {{this.model.fixedPrice}}
           </ng-template>
         </div>
 
         <!-- Book Now -->
         <ng-template [ngIf]="!isCurrentUser && !hasApplied">
-			<div class="boxed-widget booking-widget margin-top-35">
-        
-				<h3><i class="fa fa-calendar-check-o "></i> Apply to Event</h3>
-				<div class="row with-forms  margin-top-0">
+          <div class="boxed-widget booking-widget margin-top-35">
 
-					<!-- Date Picker - docs: http://www.vasterad.com/docs/listeo/#!/date_picker -->
-					<!-- <div class="col-lg-6 col-md-12">
+            <h3>
+              <i class="fa fa-calendar-check-o "></i> Apply to Event</h3>
+            <div class="row with-forms  margin-top-0">
+
+              <!-- Date Picker - docs: http://www.vasterad.com/docs/listeo/#!/date_picker -->
+              <!-- <div class="col-lg-6 col-md-12">
 						<input type="text" id="booking-date" data-lang="en" data-large-mode="true" data-large-default="true" data-min-year="2017" data-max-year="2020" data-disabled-days="08/17/2017,08/18/2017">
 					</div> -->
 
-					<!-- Time Picker - docs: http://www.vasterad.com/docs/listeo/#!/time_picker -->
-					<!-- <div class="col-lg-6 col-md-12">
+              <!-- Time Picker - docs: http://www.vasterad.com/docs/listeo/#!/time_picker -->
+              <!-- <div class="col-lg-6 col-md-12">
 						<input type="text" id="booking-time" value="9:00 am">
 					</div> -->
 
-					<!-- Panel Dropdown -->
-					<!-- <div class="col-lg-12">
+              <!-- Panel Dropdown -->
+              <!-- <div class="col-lg-12">
 						<div class="panel-dropdown">
 							<a href="#">Guests <span class="qtyTotal" name="qtyTotal">1</span></a>
 							<div class="panel-dropdown-content">
@@ -90,17 +91,17 @@
 							</div>
 						</div>
 					</div> -->
-					<!-- Panel Dropdown / End -->
+              <!-- Panel Dropdown / End -->
 
-				</div>
-				
-        <!-- progress button animation handled via custom.js -->
-        
-        <button (click)="applyToEvent()" class="button book-now fullwidth margin-top-5">Apply Now</button>
-        
-      </div>
-    </ng-template>
-			<!-- Book Now / End -->
+            </div>
+
+            <!-- progress button animation handled via custom.js -->
+
+            <button (click)="applyToEvent()" class="button book-now fullwidth margin-top-5">Apply Now</button>
+
+          </div>
+        </ng-template>
+        <!-- Book Now / End -->
 
         <!-- Event times -->
         <div class="boxed-widget opening-hours margin-top-35">
@@ -115,15 +116,20 @@
         <!-- Event Times End -->
 
 
-        <!-- Contact --> 
+        <!-- Contact -->
         <div class="boxed-widget margin-top-35">
-        <div class="hosted-by-title">
+          <div class="hosted-by-title">
             <ng-template [ngIf]="user">
-        <h4>Hosted by {{this.user.firstName }} {{this.user.lastName}}</h4>
-        </ng-template>
-        <!-- <a href="pages-user-profile.html" class="hosted-by-avatar"><img src="images/dashboard-avatar.jpg" alt=""></a> -->
-        </div>
-        <h4>Arists that have applied:</h4>
+              <h4>Booked Artists</h4>
+            </ng-template>
+            <!-- <a href="pages-user-profile.html" class="hosted-by-avatar"><img src="images/dashboard-avatar.jpg" alt=""></a> -->
+          </div>
+          <ul class="listing-details-sidebar">
+            <li *ngFor="let booking of approvedBookings">
+              <i class="im im-icon-Music-Note"></i> {{booking.performerUser.firstName}} {{booking.performerUser.lastName}}
+            </li>
+          </ul>
+          <h4>Arists that have applied:</h4>
         </div>
         <!-- Contact / End -->
       </div>
