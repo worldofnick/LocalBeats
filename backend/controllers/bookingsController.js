@@ -105,11 +105,11 @@ exports.getUserBookingsByUID = function (req, res) {
     return res.status(403).send({"error": "Must send user_type"});
   } else {
       if (req.query.user_type == "artist") {
-        query.performerUID = req.query.uid;
+        query.performerUser = req.query.uid;
         // TODO Send notification to host about application to event in POST
       } else if (req.query.user_type == "host") {
         // TODO Send notification to artist about request in POST
-        query.hostUID = req.query.uid;
+        query.hostUser = req.query.uid;
       }
   }
 
@@ -146,7 +146,7 @@ exports.getUserBookingsByUID = function (req, res) {
 };
 
 exports.deleteUserBookingsByUID = function (req, res) {
-  Bookings.remove({hostUID: req.query.hostUID}).exec(function (err, doc) {
+  Bookings.remove({hostUser: req.query.hostUID}).exec(function (err, doc) {
       if (err) {
           return res.status(500).send("Failed to delete user bookings");
       } else {
@@ -196,7 +196,7 @@ exports.declineBooking = function(req, res) {
 
 // Takes eid and uid
 exports.isBooked = function(req, res) {
-    Bookings.find({$or: [ {hostUID: req.query.uid}, {performerUID: req.query.uid} ], eventEID: req.query.eid }, function (err, bookings) {
+    Bookings.find({$or: [ {hostUser: req.query.uid}, {performerUser: req.query.uid} ], eventEID: req.query.eid }, function (err, bookings) {
         if (err) {
             return res.status(500).send("There was a problem declining the booking");
         } else {
