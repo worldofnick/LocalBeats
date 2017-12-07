@@ -58,7 +58,7 @@ export class ProfileEditComponent implements OnInit {
     this.userService.onEditProfile(this.user).then((user: User) => {
       this.user = user;      
       this.userService.user = this.user; 
-      this.router.navigate(['/profile', this.user._id]);
+      this.router.navigate(['/profile']);
     });
   }
   
