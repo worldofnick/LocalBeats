@@ -2,6 +2,7 @@ import { User } from 'app/models/user';
 
 export class Booking { 
     constructor(
+    public bid: string,
     public bookingType: string,
     public hostUser: User,
     public performerUser: User,

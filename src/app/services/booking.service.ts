@@ -10,6 +10,8 @@ import { Event } from 'app/models/event';
 export class BookingService {
     public connection: string = 'http://localhost:8080/api/bookings';
     public eventBooking: string = 'http://localhost:8080/api/eventBooking/'
+    public acceptBookingConnection: string = 'http://localhost:8080/api/acceptBooking/'
+    public declineBookingConnection: string = 'http://localhost:8080/api/declineBooking/'
     // public connection: string = 'https://localbeats.herokuapp.com/api/bookings';
 
     private headers: Headers = new Headers({ 'Content-Type': 'application/json' });
@@ -35,17 +37,38 @@ export class BookingService {
     public getBooking(event: Event): Promise<any[]> {
         const current = this.eventBooking + '?eid=' +event._id;
 
-        let params: URLSearchParams = new URLSearchParams();
-        params.set('eid', event._id)
+        return this.http.get(current, { headers: this.headers })
+            .toPromise()
+            .then((response: Response) => {
+                const data = response.json();
+                const bookings = data.bookings as any[];
+                return bookings
+            })
+            .catch(this.handleError);
+    }
 
-        return this.http.get(current)
+    public deleteBooking(booking: Booking): Promise<any> {
+        const current = this.declineBookingConnection + '/' + booking.bid
+
+        return this.http.delete(current, { headers: this.headers })
             .toPromise()
             .then((response: Response) => {
                 console.log(response)
                 const data = response.json();
-                const bookings = data.bookings as any[];
-                console.log(bookings)
-                return bookings
+                return data
+            })
+            .catch(this.handleError);
+    }
+
+    public acceptBooking(booking: Booking): Promise<any> {
+        const current = this.acceptBookingConnection + '/' + booking.bid
+        
+        return this.http.put(current, { headers: this.headers })
+            .toPromise()
+            .then((response: Response) => {
+                console.log(response)
+                const data = response.json();
+                return data
             })
             .catch(this.handleError);
     }
