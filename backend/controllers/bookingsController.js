@@ -24,7 +24,7 @@ exports.listAllBookings = function (req, res) {
 };
 
 exports.getBookingByID = function (req, res) {
-  Bookings.findById(req.params.bid, function (err, booking) {
+  Bookings.findById(req.params.bid).populate('hostUID').populate('performerUID').exec(function (err, booking) {
       if (err) {
           return res.status(500).send("Failed to get booking");
       } else {
@@ -35,7 +35,7 @@ exports.getBookingByID = function (req, res) {
 
 exports.createBooking = function (req, res) {
     var newBooking = new Bookings(req.body.booking);
-    newBooking.save(function (err, booking) {
+    newBooking.save.populate('hostUID').populate('performerUID').exec(function (err, booking) {
         if (err) {
             return res.status(400).send({
                 message: err,
@@ -48,7 +48,7 @@ exports.createBooking = function (req, res) {
 };
 
 exports.updateBookingByID = function (req, res) {
-    Bookings.findByIdAndUpdate(req.params.bid, req.body.booking, { new: true }, function (err, booking) {
+    Bookings.findByIdAndUpdate(req.params.bid, req.body.booking, { new: true }).populate('hostUID').populate('performerUID').exec(function (err, booking) {
         if (err) {
             return res.status(500).send("There was a problem updating the booking.");
         }
@@ -131,7 +131,7 @@ exports.getUserBookingsByUID = function (req, res) {
       query.eventEID = req.query.eid;
   }
 
-  Bookings.find(query).limit(limit).skip(skip).sort({ fromDate: -1 }).exec(function (err, doc) {
+  Bookings.find(query).limit(limit).skip(skip).sort({ fromDate: -1 }).populate('hostUID').populate('performerUID').exec(function (err, doc) {
       if (err) {
           return res.status(500).send("Failed to get user bookings");
       } else {
