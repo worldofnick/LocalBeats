@@ -4,9 +4,11 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { NgForm } from '@angular/forms/src/directives/ng_form';
 import { UserService } from 'app/services/user.service';
 import { EventService } from 'app/services/event.service';
+import { BookingService } from 'app/services/booking.service';
 import { print } from 'util';
 import { Injectable } from '@angular/core';
 import { Event } from 'app/models/event';
+import { Booking } from 'app/models/booking';
 
 @Component({
   selector: 'app-event-page',
@@ -20,7 +22,7 @@ export class EventPageComponent implements OnInit {
 
   EID:any;
 
-  constructor(private eventService: EventService, private userSerivce: UserService, private router: Router, private route: ActivatedRoute) { }
+  constructor(private bookingService: BookingService, private eventService: EventService, private userSerivce: UserService, private router: Router, private route: ActivatedRoute) { }
 
   ngOnInit() {
     
@@ -44,6 +46,13 @@ export class EventPageComponent implements OnInit {
         }
       });
     });
+  }
+
+  public applyToEvent(){
+    const booking = new Booking('artist-apply', this.model.hostUID, this.userSerivce.user._id, this.model._id, false, false)
+    this.bookingService.createBooking(booking).then((booking: Booking) => {
+      console.log('success')
+    })
   }
 
 }

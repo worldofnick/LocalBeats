@@ -12,6 +12,7 @@ import { ContactListComponent } from './contacts/contact-list/contact-list.compo
 import { SigninComponent } from './auth/signin/signin.component';
 import { UserService } from 'app/services/user.service';
 import { SearchService } from 'app/services/search.service';
+import { BookingService } from 'app/services/booking.service';
 import { UserGuard } from 'app/services/user-guard.service';
 import { HomeComponent } from './home/home.component';
 import { HeaderComponent } from './header/header.component';
@@ -69,7 +70,7 @@ import { EventSearchResultComponent } from './search/event-search-result/event-s
     AppRoutingModule,
     HttpClientModule
   ],
-  providers: [UserService, UserGuard, EventService, SearchService],
+  providers: [UserService, UserGuard, EventService, SearchService, BookingService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
