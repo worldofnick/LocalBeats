@@ -12,6 +12,9 @@ module.exports = function(app) {
         .get(bookingsHandlers.getBookingByID)
         .put(bookingsHandlers.updateBookingByID)
         .delete(bookingsHandlers.deleteBookingByID);
+    
+    app.route('/api/eventBooking')
+    .get(bookingsHandlers.getBookingByEID)
 
     app.route('/api/bookings/create')
         .post(bookingsHandlers.createBooking);

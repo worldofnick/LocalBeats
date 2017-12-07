@@ -23,6 +23,21 @@ exports.listAllBookings = function (req, res) {
     });
 };
 
+// params eid
+exports.getBookingByEID = function (req, res) {
+    Bookings.find({eventEID: req.query.eid}).populate('hostUser').populate('performerUser').exec(function (err, bookings) {
+      if (err)
+        return res.send(err);
+
+        var bkkins = [];
+        bookings.forEach(function(booking) {
+            bkkins.push({"booking": booking});
+        });
+            
+        return res.status(200).send({"bookings": bkkins});
+    });
+};
+
 exports.getBookingByID = function (req, res) {
   Bookings.findById(req.params.bid).populate('hostUser').populate('performerUser').exec(function (err, booking) {
       if (err) {
