@@ -21,7 +21,6 @@ export class ApplicantListComponent implements OnInit {
   public model:Event;
   public user:User;
   public currentBookings: any[];
-  public approvedBookings: Booking[];
 
   EID:any;
 
@@ -39,29 +38,30 @@ export class ApplicantListComponent implements OnInit {
     this.eventService.getEventByEID(this.EID).then((event: Event) => {
       this.model = event;
       this.user = event.hostUser;
-    }).then(() => this.bookingService.getBooking(this.model).then((bookings: Booking[]) => {
+    }).then(() => this.getBookings(this.model));
+
+
+  }
+
+  public getBookings(event: Event) {
+    this.bookingService.getBooking(this.model).then((bookings: Booking[]) => {
       this.currentBookings = bookings;
-      console.log("printing bookings from appllicant list");
-      console.log(this.currentBookings);
-      for (let result of this.currentBookings) {
-        if (result.booking.approved) {
-          this.approvedBookings.push(result.booking)
-        }
-      }
-    }));
-
-
+    })
   }
 
   /**
    * both of these are passed result.booking
    */
-  onDeclineArist(booking:Booking){
-
+  onDeclineArist(booking:Booking, index: number){
+    this.bookingService.declineBooking(booking).then((result: any) => {
+      this.currentBookings.splice(index,1);
+    });
   }
 
-  onAcceptArtist(booking:Booking){
-
+  onAcceptArtist(booking:Booking, index: number){
+    this.bookingService.acceptBooking(booking).then((newBooking: Booking) => {
+      this.currentBookings[index].approved = true;
+    });
   }
 
   /**

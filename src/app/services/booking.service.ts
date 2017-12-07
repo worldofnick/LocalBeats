@@ -27,8 +27,6 @@ export class BookingService {
             .then((response: Response) => {
                 const data = response.json();
                 const booking = data.booking as Booking;
-                console.log(data)
-                console.log(booking)
                 return booking
             })
             .catch(this.handleError);
@@ -47,7 +45,7 @@ export class BookingService {
             .catch(this.handleError);
     }
 
-    public deleteBooking(booking: Booking): Promise<any> {
+    public declineBooking(booking: Booking): Promise<any> {
         const current = this.declineBookingConnection + '/' + booking.bid
 
         return this.http.delete(current, { headers: this.headers })
@@ -68,7 +66,8 @@ export class BookingService {
             .then((response: Response) => {
                 console.log(response)
                 const data = response.json();
-                return data
+                const booking = data.booking as Booking;
+                return booking
             })
             .catch(this.handleError);
     }
