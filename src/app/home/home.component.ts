@@ -115,6 +115,7 @@ export class HomeComponent implements OnInit {
   }
 
   onChange() {
+    this.results = null;
     if (this.genres == this.musicGenres) {
       this.genres = this.eventTypes
       this.currentSearch.genre = this.eventTypes[0];
