@@ -147,10 +147,14 @@
               </div>
 
               <div class="col-md-4">
-
-                <div class="fm-input pricing-price">
+                <mat-form-field>
+                  <input matInput [matDatepicker]="picker" placeholder="Choose a date">
+                  <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                  <mat-datepicker #picker></mat-datepicker>
+                  </mat-form-field>
+                <!-- <div class="fm-input pricing-price">
                   <input [(ngModel)]="model.fixedPrice" name="fixedPrice" type="text" placeholder="Price" data-unit="USD" />
-                </div>
+                </div> -->
               </div>
 
             </div>
