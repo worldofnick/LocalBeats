@@ -1,7 +1,7 @@
 import { User } from 'app/models/user';
 import { Event } from 'app/models/event';
 
-export class Booking { 
+export class Review { 
     constructor(
     public _id: string,
     public title: string,
