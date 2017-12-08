@@ -23,7 +23,8 @@ export class EventPageComponent implements OnInit {
   public hasApplied: boolean = null;
   public currentBookings: any[];
   public approvedBookings: Booking[];
-
+  public dateInBar:Number;
+  
 
   EID:any;
 
@@ -32,17 +33,20 @@ export class EventPageComponent implements OnInit {
    }
 
   ngOnInit() {
+    // this.eventService.event.fromDate.getDate
     // this.isCurrentUser = false;
     // this.model = this.eventService.event;
     // this.user = this.userSerivce.user;
     // console.log("in ngonit in event page..printing data " );
     // console.log(this.model._id);
+    
     this.EID = {
       id: this.route.snapshot.params['id']
     }
 
     this.eventService.getEventByEID(this.EID).then((event: Event) => {
       this.model = event;
+      this.dateInBar = this.model.fromDate.getDay;
       this.user = event.hostUser;
       if (this.userSerivce.user != null && this.user._id === this.userSerivce.user._id) {
         this.isCurrentUser = true;
@@ -62,6 +66,7 @@ export class EventPageComponent implements OnInit {
       }
     }));
   }
+  
 
   public applyToEvent(){
     const booking = new Booking(undefined, 'artist-apply', this.model.hostUser, this.userSerivce.user, this.model._id, false, false)

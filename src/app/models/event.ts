@@ -13,8 +13,8 @@ export class Event {
     public zip: string
     public city: string
     public state: string
-    public fromDate: string
-    public toDate: string
+    public fromDate: Date
+    public toDate: Date
     public description: string
     public fixedPrice: string
     public hourlyRate: string

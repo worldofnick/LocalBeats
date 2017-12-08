@@ -118,9 +118,9 @@ export class CreateEventComponent implements OnInit {
 
   onCreateEvent(form: NgForm) {
 
-    console.log("date");
-    console.log(this.selectedDate);
+
     // this.selectedDate.
+    this.model.toDate
     if (this.longitude != null) {
       this.model.location = [this.longitude, this.latitude]
     }
@@ -152,7 +152,7 @@ export class CreateEventComponent implements OnInit {
     this.model.eventType = eventType;
     this.model.eventGenre = eventGenre;
     this.model.address = address;
-    // this.model.fromDate = fromDate;
+    this.model.fromDate = this.selectedDate;
     // this.model.toDate = toDate;
     this.model.description = description;
     this.model.fixedPrice = fixedPrice;
