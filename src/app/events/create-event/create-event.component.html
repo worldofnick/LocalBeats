@@ -146,19 +146,28 @@
                 </select>
               </div>
 
-              <div class="col-md-4">
-                <mat-form-field>
-                  <input matInput [matDatepicker]="picker" placeholder="Choose a date">
-                  <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                  <mat-datepicker #picker></mat-datepicker>
-                  </mat-form-field>
-                <!-- <div class="fm-input pricing-price">
-                  <input [(ngModel)]="model.fixedPrice" name="fixedPrice" type="text" placeholder="Price" data-unit="USD" />
-                </div> -->
-              </div>
+             
 
             </div>
             <!-- end row  -->
+
+            <div class="row with-forms">
+            <div class="col-md-4">
+                <div class="col-md-5">
+                  <h5>Select date: (mm/dd/yy)</h5>
+                  </div>
+                <mat-form-field>
+                    <input  name="date" [(ngModel)]="selectedDate" matInput [matDatepicker]="dp2">
+                    <mat-datepicker-toggle matSuffix [for]="dp2" disabled></mat-datepicker-toggle>
+                    <mat-datepicker #dp2></mat-datepicker>
+                  </mat-form-field>
+                  <!-- <mat-form-field class="example-full-width">
+                      <input name="date" [(ngModel)]="selectedDate" matInput [matDatepicker]="picker">
+                      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                      <mat-datepicker touchUi="true" #picker></mat-datepicker>
+                    </mat-form-field> -->
+            </div>
+            </div>
           </div>
           <!-- Section / End -->
 
