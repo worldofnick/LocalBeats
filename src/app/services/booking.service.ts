@@ -28,6 +28,8 @@ export class BookingService {
             .toPromise()
             .then((response: Response) => {
                 const data = response.json();
+                console.log("response data")
+                console.log(data)
                 const booking = data.booking as Booking;
                 return booking
             })

@@ -97,11 +97,7 @@
             <!-- progress button animation handled via custom.js -->
             <button *ngIf="isCurrentUser" (click)="viewApplicants()" class="button book-now fullwidth margin-top-5">View Applicants</button>
             <button *ngIf="!isCurrentUser && !hasApplied && userSerivce.isAuthenticated()" (click)="applyToEvent()" class="button book-now fullwidth margin-top-5">Apply Now</button>
-            <ul *ngIf="!isCurrentUser && hasApplied" class="listing-details-sidebar">
-              <li>
-                <i class="im im-icon-Yes"></i> You've already applied!
-              </li>
-            </ul>
+            <button *ngIf="!isCurrentUser && hasApplied && userSerivce.isAuthenticated()" (click)="cancelApplication()" class="button book-now fullwidth margin-top-5">Cancel Application</button>
 
           </div>
         <!-- Book Now / End -->

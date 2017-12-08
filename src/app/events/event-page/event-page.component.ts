@@ -18,6 +18,7 @@ import { Booking } from 'app/models/booking';
 export class EventPageComponent implements OnInit {
   public model:Event;
   public user:User;
+  public userBooking: Booking;
   public isCurrentUser: boolean = null;
   public hasApplied: boolean = null;
   public currentBookings: any[];
@@ -56,6 +57,7 @@ export class EventPageComponent implements OnInit {
         }
         if (this.userSerivce.user != null && result.booking.performerUser._id === this.userSerivce.user._id){
           this.hasApplied = true;
+          this.userBooking = result.booking
         }
       }
     }));
@@ -65,6 +67,15 @@ export class EventPageComponent implements OnInit {
     const booking = new Booking(null, 'artist-apply', this.model.hostUser, this.userSerivce.user, this.model._id, false, false)
     this.bookingService.createBooking(booking).then((booking: Booking) => {
       this.hasApplied = true;
+      this.userBooking = booking;
+    })
+  }
+
+  public cancelApplication() {
+    console.log(this.userBooking)
+    this.bookingService.declineBooking(this.userBooking).then(() => {
+      this.hasApplied = false;
+      this.userBooking = null
     })
   }
 
