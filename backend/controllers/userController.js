@@ -90,7 +90,7 @@ exports.searchUsers = function (req, res) {
     query.isArtist = req.query.artist;
   }
 
-  if (req.query.genre != null && req.query.genre != "All Genres") {
+  if (req.query.genre != null && req.query.genre != "all genres") {
     query.genres = req.query.genre;
   }
 

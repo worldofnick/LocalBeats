@@ -166,11 +166,11 @@ exports.searchEvents = function(req, res) {
   }
 
   var query = {};
-  if (req.query.event_type != null && req.query.event_type != "All Events") {
+  if (req.query.event_type != null && req.query.event_type != "all events") {
     query.eventType = req.query.event_type;
   }
 
-  if (req.query.event_genre != null && req.query.event_genre != "All Genres") {
+  if (req.query.event_genre != null && req.query.event_genre != "all genres") {
     query.eventGenre = req.query.event_genre;
   }
 
