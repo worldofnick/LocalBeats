@@ -5,5 +5,6 @@ export class User {
     public email: string
     public spotifyID: string
     public password: string
+    public genres: string[]
   }
   

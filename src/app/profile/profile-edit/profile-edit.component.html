@@ -43,9 +43,26 @@
 
 										<label>Email</label>
 										<input [(ngModel)]="user.email" name="email" type="text" placeholder="Email" />
+
+
+										<h5>Music Genre</h5>
+										<select ng-model="dropDownGenre" [(ngModel)]="dropDownGenre" name="genre" style="width: 500px;" class="chosen-select-no-single">
+											<option value="choose genre here" selected disabled hidden>Choose Genre Here</option>
+											<option value="electronic">Electronic</option>
+											<option value="rock">Rock</option>
+											<option value="classical">Classical</option>
+											<option value="jazz">Jazz</option>
+											<option value="blues">Blues</option>
+											<option value="hip-hop">Hip-Hop</option>
+											<option value="rap">Rap</option>
+											<option value="alternative">Alternative</option>
+											<option value="coutnry">Country</option>
+
+										</select>
+
 									</div>
-									</ng-template>
-								
+								</ng-template>
+
 
 								<!-- <button class="button margin-top-15">Save Changes</button> -->
 								<input type="submit" class="button border fw margin-top-10" name="editProfile" value="Submit" />

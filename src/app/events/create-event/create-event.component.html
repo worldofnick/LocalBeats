@@ -33,22 +33,33 @@
 
               <div class="col-md-4">
                 <h5>Event Type</h5>
-                <select [(ngModel)]="model.eventType" name="eventType" style="width: 500px;" class="chosen-select-no-single">
-                  <option label="Select Category">Select Category</option>
-                  <option>Wedding</option>
-                  <option>Live Music</option>
-                  <option>Birthday</option>
-                  <option>Business</option>
+                <select ng-model="model.eventType" [(ngModel)]="model.eventType" 
+                  name="eventType" style="width: 500px;" class="chosen-select-no-single">
+                  <option value="Choose Event Type Here" selected disabled hidden>Choose Event here</option>
+                  <option value="Wedding">Wedding</option>
+                  <option value="Live Music">Live Music</option>
+                  <option value="Birthday">Birthday</option>
+                  <option value="Business">Business</option>
+                  <option value="Party">Party</option>
+                  <option value="Festival">Festival</option>
                 </select>
               </div>
 
               <div class="col-md-3">
                 <h5>Music Genre</h5>
-                <select [(ngModel)]="model.eventGenre" name="eventGenre" 
+                <select ng-model="model.eventGenre" [(ngModel)]="model.eventGenre" name="eventGenre" 
                   style="width: 500px;" class="chosen-select-no-single">
-                  <option label="Select Category">Select Category</option>
-                  <option>Electronic</option>
-                  <option>Rock</option>
+                  <option value="choose genre here" selected disabled hidden>Choose Genre Here</option>
+                  <option value="electronic">Electronic</option>
+                  <option value="rock">Rock</option>
+                  <option value="classical">Classical</option>
+                  <option value="jazz">Jazz</option>
+                  <option value="blues">Blues</option>
+                  <option value="hip-hop">Hip-Hop</option>
+                  <option value="rap">Rap</option>
+                  <option value="alternative">Alternative</option>                  
+                  <option value="coutnry">Country</option>
+                  
                 </select>
               </div>
             </div>
@@ -172,7 +183,8 @@
 								</div>
               <div class="col-md-4">
                 <h5>City and State</h5>
-                <input placeholder="Location" autocorrect="off" autocapitalize="off" spellcheck="off" type="text" #search [formControl]="searchControl">
+
+                <input  [(ngModel)]="model.city"  placeholder="Location" autocorrect="off" autocapitalize="off" spellcheck="off" type="text" #search [formControl]="searchControl">
               </div>
 
               <!-- State -->
@@ -192,7 +204,9 @@
             <!-- Section / End -->
           </div>
           <!-- <div class="col-md-6"> -->
-          <input type="submit" class="button border fw margin-top-40" name="createEvent" value="Create Event" />
+          <input *ngIf="!this.updating"type="submit" class="button border fw margin-top-40" name="createEvent" value="Create Event" />
+          <input *ngIf="this.updating"type="submit" class="button border fw margin-top-40" name="createEvent" value="Update Event" />
+          
           <!-- </div> -->
           <!-- end section -->
         </div>

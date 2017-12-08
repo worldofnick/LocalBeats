@@ -98,7 +98,8 @@
             <button *ngIf="isCurrentUser" (click)="viewApplicants()" class="button book-now fullwidth margin-top-5">View Applicants</button>
             <button *ngIf="!isCurrentUser && !hasApplied && userSerivce.isAuthenticated()" (click)="applyToEvent()" class="button book-now fullwidth margin-top-5">Apply Now</button>
             <button *ngIf="!isCurrentUser && hasApplied && userSerivce.isAuthenticated()" (click)="cancelApplication()" class="button book-now fullwidth margin-top-5">Cancel Application</button>
-
+            <button *ngIf="isCurrentUser && userSerivce.isAuthenticated()" (click)="onUpdateEvent()" class="button book-now fullwidth margin-top-5">Update Event</button>
+            
           </div>
         <!-- Book Now / End -->
 

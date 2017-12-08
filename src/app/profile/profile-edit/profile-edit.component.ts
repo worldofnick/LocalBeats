@@ -20,6 +20,7 @@ export class ProfileEditComponent implements OnInit {
   
   user:User;
   userID:any;
+  public dropDownGenre:String;
 
   constructor(private userService: UserService, private router: Router, private route: ActivatedRoute) { 
     // this.user = userService.user;
@@ -29,6 +30,11 @@ export class ProfileEditComponent implements OnInit {
 
   ngOnInit() {
     this.user = this.userService.user;
+    if(this.user.genres.length == 1){
+      this.dropDownGenre = this.user.genres[0];
+    }else{
+      this.dropDownGenre = "choose genre here";
+    }
     // this.userID = {
     //   id: this.route.snapshot.params['id']
     // }
@@ -44,10 +50,14 @@ export class ProfileEditComponent implements OnInit {
     const firstName = form.value.firstname;
     const lastName = form.value.lastname;
     const email: string = form.value.email;
+    const genre: string = form.value.genre;
+    this.dropDownGenre = genre;
 
     //TODO: only save the edited parts of the profile
-    this.user.firstName = firstName,
-    this.user.lastName = lastName,
+    this.user.firstName = firstName;
+    this.user.lastName = lastName;
+    this.user.genres.splice(0,this.user.genres.length)
+    this.user.genres.push(genre);
     this.user.email = email,
     // this.modelpassword: password,
 
