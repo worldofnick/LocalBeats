@@ -47,7 +47,6 @@ exports.updateUserByID = function (req, res, next) {
 };
 
 exports.deleteUserByID = function (req, res) {
-
   User.findByIdAndRemove(req.params.uid, function (err, user) {
     if (err) {
       return res.status(500).send("There was a problem deleting the user.");
@@ -55,6 +54,9 @@ exports.deleteUserByID = function (req, res) {
       if (user == null) {
         return res.status(200).send("User was already deleted.");
       } else {
+        // Remove all events
+        // Remove all bookings
+        // Remove all toReviews
         return res.status(200).send("User " + user.email + " is removed");
       }
     }
