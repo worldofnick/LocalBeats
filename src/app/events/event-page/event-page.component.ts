@@ -54,9 +54,6 @@ export class EventPageComponent implements OnInit {
         if (result.booking.approved) {
           this.approvedBookings.push(result.booking)
         }
-        // console.log("printing performer and user service user from event page");
-        // console.log(booking);
-        // console.log(this.userSerivce.user._id);
         if (this.userSerivce.user != null && result.booking.performerUser._id === this.userSerivce.user._id){
           this.hasApplied = true;
         }

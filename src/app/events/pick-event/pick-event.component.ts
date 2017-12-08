@@ -42,27 +42,34 @@ export class PickEventComponent implements OnInit {
     let ID:String = this.artistID["id"];
     this.userService.getUserByID(ID).then((gottenUser: User) => {
       this.artist = gottenUser;
-      console.log("other user")
-      console.log(this.user)
-      }).then(() => {
-        //console.log("other user who i am viewing:");
-        //console.log(this.user);
       });
 
   }
 
   onRequestEvent(event:Event){
     const booking = new Booking(null, 'host-request', event.hostUser, this.artist, event._id, false, false);
-    this.bookingService.createBooking(booking).then((booking: Booking) => {
-      console.log("SUCCCCCCESSSSSSS");
-    });
-
+    this.bookingService.createBooking(booking).then((booking: Booking) => this.getBookings(event));
   }
 
   public getBookings(event: Event) {
-    this.bookingService.getBooking(this.model).then((bookings: Booking[]) => {
-      this.currentBookings = bookings;
-      console.log(this.currentBookings)
+    this.bookingService.getBooking(event).then((bookings: Booking[]) => {
+      let temp = []
+      for (let booking of bookings) {
+        if (booking.eventEID == event._id && this.artist._id != booking.performerUser._id) {
+          temp.push(booking.eventEID)
+        }
+      }
+      console.log('Event IDs that are not the selected user')
+      console.log(temp)
+      let tempEvents: Event[] = []
+      for (let event of this.events) {
+        if (temp.includes(event._id)) {
+          tempEvents.push(event)
+        }
+      }
+      this.events = tempEvents
+      console.log('Events leftover')
+      console.log(this.events)
     })
   }
 
