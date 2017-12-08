@@ -83,7 +83,7 @@ export class ProfileDetailsComponent implements OnInit {
   }
 
   onRequestArtist(ID:string){
-    
+    this.router.navigate(['/pick-event', this.user._id]);
   }
 
 

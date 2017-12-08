@@ -63,7 +63,7 @@
 
 
         <!-- <a href="#" (click) = "onSubmit()"><i class="sl sl-icon-envelope-open"></i>Edit Profile</a> -->
-        <ng-template [ngIf]="this.user">
+        <ng-template [ngIf]="this.user && userService.isAuthenticated()">
           <ng-template [ngIf]="onOwnProfile == true">
             <button class="button book-now fullwidth margin-top-5" (click)="onEditProfile()">
               Edit profile</button>

@@ -41,8 +41,8 @@ export class SearchService {
         let current = (this.connection + 'searchEvents/')
         let params: URLSearchParams = new URLSearchParams();
         params.set('event_type', searchTerms.genre.toLowerCase())
-        params.set('lat', String(searchTerms.location.latitude))
-        params.set('lon', String(searchTerms.location.longitude))
+        //params.set('lat', String(searchTerms.location.latitude))
+        //params.set('lon', String(searchTerms.location.longitude))
         params.set('limit', '5')
         if (searchTerms.text != null && searchTerms.text.length != 0) {
             params.set('name', searchTerms.text)
@@ -64,7 +64,7 @@ export class SearchService {
         let current = (this.connection + 'searchUsers/')
         let params: URLSearchParams = new URLSearchParams();
         params.set('artist', 'false')
-        params.set('genre', searchTerms.genre)
+        params.set('genre', searchTerms.genre.toLowerCase())
         // params.set('lat', String(searchTerms.location.latitude))
         // params.set('lon', String(searchTerms.location.longitude))
         if (searchTerms.text != null && searchTerms.text.length != 0) {

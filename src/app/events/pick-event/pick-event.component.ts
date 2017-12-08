@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { User } from 'app/models/user';
+import { Booking } from 'app/models/booking';
 import { Router, ActivatedRoute } from '@angular/router';
 import { NgForm } from '@angular/forms/src/directives/ng_form';
 import { UserService } from 'app/services/user.service';
@@ -7,7 +8,7 @@ import { EventService } from 'app/services/event.service';
 import { print } from 'util';
 import { Injectable } from '@angular/core';
 import { Event } from 'app/models/event';
-
+import { BookingService } from 'app/services/booking.service';
 
 
 @Component({
@@ -18,11 +19,13 @@ import { Event } from 'app/models/event';
 export class PickEventComponent implements OnInit {
 
   user:User;
+  artist: User;
   events:Event[];
   deleteStatus:Number;
   artistID:any;
 
-  constructor(private eventService: EventService, private userService: UserService, private router: Router, private route: ActivatedRoute) { }
+  constructor(private eventService: EventService, private userService: UserService, private bookingService: BookingService,
+    private router: Router, private route: ActivatedRoute) { }
   
   ngOnInit() {
     this.user = this.userService.user;
@@ -35,6 +38,24 @@ export class PickEventComponent implements OnInit {
     this.artistID = {
       id: this.route.snapshot.params['id']
     }
+
+    let ID:String = this.artistID["id"];
+    this.userService.getUserByID(ID).then((gottenUser: User) => {
+      this.artist = gottenUser;
+      console.log("other user")
+      console.log(this.user)
+      }).then(() => {
+        //console.log("other user who i am viewing:");
+        //console.log(this.user);
+      });
+
+  }
+
+  onRequestEvent(event:Event){
+    const booking = new Booking(null, 'host-request', event.hostUser, this.artist, event._id, false, false);
+    this.bookingService.createBooking(booking).then((booking: Booking) => {
+      console.log("SUCCCCCCESSSSSSS");
+    });
 
   }
 
