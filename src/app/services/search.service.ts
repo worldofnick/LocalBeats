@@ -40,7 +40,7 @@ export class SearchService {
     public eventSearch(searchTerms: SearchTerms): Promise<Object> {
         let current = (this.connection + 'searchEvents/')
         let params: URLSearchParams = new URLSearchParams();
-        params.set('event_type', searchTerms.genre.toLowerCase())
+        params.set('event_type', searchTerms.genre)
         //params.set('lat', String(searchTerms.location.latitude))
         //params.set('lon', String(searchTerms.location.longitude))
         params.set('limit', '5')
@@ -63,8 +63,8 @@ export class SearchService {
     public userSearch(searchTerms: SearchTerms): Promise<Object> {
         let current = (this.connection + 'searchUsers/')
         let params: URLSearchParams = new URLSearchParams();
-        params.set('artist', 'false')
-        params.set('genre', searchTerms.genre.toLowerCase())
+        params.set('artist', 'true')
+        params.set('genre', searchTerms.genre)
         //params.set('lat', String(searchTerms.location.latitude))
         //params.set('lon', String(searchTerms.location.longitude))
         if (searchTerms.text != null && searchTerms.text.length != 0) {

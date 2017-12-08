@@ -6,5 +6,6 @@ export class User {
     public spotifyID: string
     public password: string
     public genres: string[]
+    public isArtist: boolean 
   }
   
