@@ -30,8 +30,7 @@
 							</div>
 
 							<!-- Details -->
-							<form (ngSubmit)="onEditProfile(r)" #r="ngForm" method="post" class="editProfile">
-								<ng-template [ngIf]="this.user">
+							<form (ngSubmit)="onSubmit()" #r="ngForm" method="post" class="editProfile">
 
 									<div class="my-profile">
 
@@ -61,7 +60,6 @@
 										</select>
 
 									</div>
-								</ng-template>
 
 
 								<!-- <button class="button margin-top-15">Save Changes</button> -->

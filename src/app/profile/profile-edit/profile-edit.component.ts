@@ -21,7 +21,7 @@ export class ProfileEditComponent implements OnInit {
   public passwordsDontMatch:boolean = null;
   user:User;
   userID:any;
-  public dropDownGenre:String;
+  public dropDownGenre:string;
   public passwordsUpdated : boolean = false;
 
   constructor(private userService: UserService, private router: Router, private route: ActivatedRoute) { 
@@ -48,8 +48,24 @@ export class ProfileEditComponent implements OnInit {
     // });
   }
 
+  onSubmit() {
+    console.log(this.user)
+    this.user.genres = []
+    this.user.genres.push(this.dropDownGenre)
+    this.userService.onEditProfile(this.user).then((user: User) => {
+      this.user = user;      
+      this.userService.user = this.user; 
+      this.router.navigate(['/profile']);
+    });
+
+  }
   onEditProfile(form: NgForm) {
+    console.log("form");
+    console.log(form.value.firstname);
+    console.log("user before form");
+    console.log(this.user);
     const firstName = form.value.firstname;
+    
     const lastName = form.value.lastname;
     const email: string = form.value.email;
     const genre: string = form.value.genre;
