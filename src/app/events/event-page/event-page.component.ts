@@ -23,8 +23,8 @@ export class EventPageComponent implements OnInit {
   public hasApplied: boolean = null;
   public currentBookings: any[];
   public approvedBookings: Booking[];
-  public dateInBar:Number;
-  
+  public dateInBar:Date;
+  public dateString:string;
 
   EID:any;
 
@@ -46,7 +46,10 @@ export class EventPageComponent implements OnInit {
 
     this.eventService.getEventByEID(this.EID).then((event: Event) => {
       this.model = event;
-      this.dateInBar = this.model.fromDate.getDay;
+      this.dateString = this.model.fromDate.toDateString as string;
+      // this.dateInBar = this.model.fromDate
+      // console.log(this.model.fromDate.getDate);
+      // console.log(this.model.fromDate.toDateString);
       this.user = event.hostUser;
       if (this.userSerivce.user != null && this.user._id === this.userSerivce.user._id) {
         this.isCurrentUser = true;
