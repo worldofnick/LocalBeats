@@ -18,7 +18,7 @@
               <a class="listing-address">
                 <i class="fa fa-map-marker"></i>
                 <ng-template [ngIf]="model">
-                  {{ this.model.address}}, {{ this.model.city }} , {{ this.model.state}} @ {{dateString}}
+                  {{ this.model.address}}, {{ this.model.city }} , {{ this.model.state}}
                 </ng-template>
               </a>
             </span>
@@ -106,10 +106,10 @@
         <!-- Event times -->
         <div class="boxed-widget opening-hours margin-top-35">
           <h3>
-            <i class="sl sl-icon-clock"></i> Event time:</h3>
+            <i class="sl sl-icon-clock"></i> Event Date:</h3>
           <ul>
-            <li>Monday
-              <span>9 AM - 5 PM</span>
+            <li> on {{dateString}}
+              <!-- <span>9 AM - 5 PM</span> -->
             </li>
           </ul>
         </div>

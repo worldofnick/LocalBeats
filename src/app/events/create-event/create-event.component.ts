@@ -152,7 +152,8 @@ export class CreateEventComponent implements OnInit {
     this.model.eventType = eventType;
     this.model.eventGenre = eventGenre;
     this.model.address = address;
-    this.model.fromDate = this.selectedDate;
+    // this.model.fromDate = this.selectedDate;
+    this.model.fromDate = this.model.fromDate;
     // this.model.toDate = toDate;
     this.model.description = description;
     this.model.fixedPrice = fixedPrice;

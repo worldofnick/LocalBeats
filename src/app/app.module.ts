@@ -39,7 +39,7 @@ import {
   MatStepperModule,
 } from '@angular/material';
 import {CdkTableModule} from '@angular/cdk/table';
-
+import { DatePipe } from '@angular/common'
 import { AppComponent } from './app.component';
 import { ContactDetailsComponent } from './contacts/contact-details/contact-details.component';
 import { ContactListComponent } from './contacts/contact-list/contact-list.component';
@@ -141,7 +141,7 @@ import { PickEventComponent } from './events/pick-event/pick-event.component';
     AppRoutingModule,
     HttpClientModule
   ],
-  providers: [UserService, UserGuard, EventService, SearchService, BookingService],
+  providers: [UserService, UserGuard, EventService, SearchService, BookingService, DatePipe],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

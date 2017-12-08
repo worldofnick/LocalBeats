@@ -33,8 +33,7 @@
 
               <div class="col-md-4">
                 <h5>Event Type</h5>
-                <select ng-model="model.eventType" [(ngModel)]="model.eventType" 
-                  name="eventType" style="width: 500px;" class="chosen-select-no-single">
+                <select ng-model="model.eventType" [(ngModel)]="model.eventType" name="eventType" style="width: 500px;" class="chosen-select-no-single">
                   <option value="Choose Event Type Here" selected disabled hidden>Choose Event here</option>
                   <option value="Wedding">Wedding</option>
                   <option value="Live Music">Live Music</option>
@@ -47,8 +46,7 @@
 
               <div class="col-md-3">
                 <h5>Music Genre</h5>
-                <select ng-model="model.eventGenre" [(ngModel)]="model.eventGenre" name="eventGenre" 
-                  style="width: 500px;" class="chosen-select-no-single">
+                <select ng-model="model.eventGenre" [(ngModel)]="model.eventGenre" name="eventGenre" style="width: 500px;" class="chosen-select-no-single">
                   <option value="choose genre here" selected disabled hidden>Choose Genre Here</option>
                   <option value="electronic">Electronic</option>
                   <option value="rock">Rock</option>
@@ -57,9 +55,9 @@
                   <option value="blues">Blues</option>
                   <option value="hip-hop">Hip-Hop</option>
                   <option value="rap">Rap</option>
-                  <option value="alternative">Alternative</option>                  
+                  <option value="alternative">Alternative</option>
                   <option value="coutnry">Country</option>
-                  
+
                 </select>
               </div>
             </div>
@@ -70,9 +68,8 @@
               <div class="col-md-12">
                 <div class="form">
                   <h5>Description</h5>
-                  <textarea [(ngModel)]="model.description" name="description" 
-                  class="WYSIWYG" form="eventForm" cols="40" rows="3" 
-                  spellcheck="true" placeholder="Describe your event here..."></textarea>
+                  <textarea [(ngModel)]="model.description" name="description" class="WYSIWYG" form="eventForm" cols="40" rows="3" spellcheck="true"
+                    placeholder="Describe your event here..."></textarea>
                 </div>
               </div>
             </div>
@@ -115,7 +112,7 @@
                 </select>
               </div> -->
 
-              <!-- <div class="col-md-4">
+            <!-- <div class="col-md-4">
                 <select [(ngModel)]="model.toDate" name="toDate" class="chosen-select" data-placeholder="End Time">
                   <option label="End Time"></option>
                   <option>Closed</option>
@@ -146,27 +143,35 @@
                 </select>
               </div> -->
 
-             
+
 
             <!-- </div> -->
             <!-- end row  -->
 
             <div class="row with-forms">
-            <div class="col-md-4">
+
+              <div class="col-md-4">
+                <div class="fm-input pricing-price">
+                  <input [(ngModel)]="model.fixedPrice" name="fixedPrice" type="text" placeholder="Price" data-unit="USD" />
+                </div>
+              </div>
+              </div>
+              <div class="row with-forms">
+              <div class="col-md-4">
                 <div class="col-md-5">
                   <h5>Select date: (mm/dd/yy)</h5>
-                  </div>
+                </div>
                 <mat-form-field>
-                    <input  name="date" [(ngModel)]="selectedDate" matInput [matDatepicker]="dp2">
-                    <mat-datepicker-toggle matSuffix [for]="dp2" disabled></mat-datepicker-toggle>
-                    <mat-datepicker #dp2></mat-datepicker>
-                  </mat-form-field>
-                  <!-- <mat-form-field class="example-full-width">
+                  <input name="date" [(ngModel)]="this.model.fromDate" matInput [matDatepicker]="dp2">
+                  <mat-datepicker-toggle matSuffix [for]="dp2" disabled></mat-datepicker-toggle>
+                  <mat-datepicker #dp2></mat-datepicker>
+                </mat-form-field>
+                <!-- <mat-form-field class="example-full-width">
                       <input name="date" [(ngModel)]="selectedDate" matInput [matDatepicker]="picker">
                       <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                       <mat-datepicker touchUi="true" #picker></mat-datepicker>
                     </mat-form-field> -->
-            </div>
+              </div>
             </div>
           </div>
           <!-- Section / End -->
@@ -192,12 +197,13 @@
               </div>
               <!-- City -->
               <div class="main-search-input-item location">
-								
-								</div>
+
+              </div>
               <div class="col-md-4">
                 <h5>City and State</h5>
 
-                <input  [(ngModel)]="model.city"  placeholder="Location" autocorrect="off" autocapitalize="off" spellcheck="off" type="text" #search [formControl]="searchControl">
+                <input [(ngModel)]="model.city" placeholder="Location" autocorrect="off" autocapitalize="off" spellcheck="off" type="text"
+                  #search [formControl]="searchControl">
               </div>
 
               <!-- State -->
@@ -217,9 +223,11 @@
             <!-- Section / End -->
           </div>
           <!-- <div class="col-md-6"> -->
-          <input *ngIf="!this.updating"type="submit" class="button border fw margin-top-40" name="createEvent" value="Create Event" />
-          <input *ngIf="this.updating"type="submit" class="button border fw margin-top-40" name="createEvent" value="Update Event" />
-          
+          <input *ngIf="!this.updating" type="submit" class="button border fw margin-top-40" name="createEvent" value="Create Event"
+          />
+          <input *ngIf="this.updating" type="submit" class="button border fw margin-top-40" name="createEvent" value="Update Event"
+          />
+
           <!-- </div> -->
           <!-- end section -->
         </div>

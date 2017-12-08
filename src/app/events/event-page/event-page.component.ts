@@ -9,6 +9,7 @@ import { print } from 'util';
 import { Injectable } from '@angular/core';
 import { Event } from 'app/models/event';
 import { Booking } from 'app/models/booking';
+import { DatePipe } from '@angular/common'
 
 @Component({
   selector: 'app-event-page',
@@ -24,11 +25,11 @@ export class EventPageComponent implements OnInit {
   public currentBookings: any[];
   public approvedBookings: Booking[];
   public dateInBar:Date;
-  public dateString:string;
+  public dateString:any;
 
   EID:any;
 
-  constructor(private bookingService: BookingService, private eventService: EventService, private userSerivce: UserService, private router: Router, private route: ActivatedRoute) {
+  constructor(public datepipe: DatePipe, private bookingService: BookingService, private eventService: EventService, private userSerivce: UserService, private router: Router, private route: ActivatedRoute) {
 
    }
 
@@ -46,8 +47,8 @@ export class EventPageComponent implements OnInit {
 
     this.eventService.getEventByEID(this.EID).then((event: Event) => {
       this.model = event;
-      this.dateString = this.model.fromDate.toDateString as string;
-      // this.dateInBar = this.model.fromDate
+      // this.dateString = this.model.fromDate.toDateString as string;
+      this.dateString =this.datepipe.transform(this.model.fromDate, 'MM-dd-yyyy');      // this.dateInBar = this.model.fromDate
       // console.log(this.model.fromDate.getDate);
       // console.log(this.model.fromDate.toDateString);
       this.user = event.hostUser;
