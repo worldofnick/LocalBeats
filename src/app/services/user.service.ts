@@ -22,7 +22,7 @@ export class UserService {
     public signupUser(newUser: User): Promise<User> {
         const current = this.connection + '/register';
         console.log(newUser)
-        return this.http.put(current, newUser, { headers: this.headers })
+        return this.http.post(current, newUser, { headers: this.headers })
             .toPromise()
             .then((response: Response) => {
                 const data = response.json();

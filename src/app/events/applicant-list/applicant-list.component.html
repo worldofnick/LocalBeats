@@ -39,7 +39,7 @@
                         </div>
                       </div>
                     </div>
-                    <div *ngIf="!result.booking.approved && result.booking.bookingType == 'artist-request'" class="buttons-to-right">
+                    <div *ngIf="!result.booking.approved && result.booking.bookingType == 'artist-apply'" class="buttons-to-right">
                       <a (click)="onDeclineArist(result.booking, i)" class="button gray">
                         <i class="sl sl-icon-close"></i> Decline</a>
                       <a (click)="onAcceptArtist(result.booking, i)" class="button gray">

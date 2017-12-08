@@ -36,7 +36,8 @@ export class SigninComponent implements OnInit {
       email: email,
       password: password,
       spotifyID: null,
-      genres: []
+      genres: [],
+      isArtist: true
     };
 
     this.userService.signinUser(this.user).then((user: User) => {
@@ -58,7 +59,8 @@ export class SigninComponent implements OnInit {
       email: email,
       password: password,
       spotifyID: null,
-      genres: []
+      genres: [],
+      isArtist: true
     };
 
     this.userService.signupUser(this.user).then((user: User) => {

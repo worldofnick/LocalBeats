@@ -26,9 +26,6 @@ export class EventService {
     // post("/api/events/create")
     public createEvent(newEvent: Event): Promise<Event> {
         const current = this.connection + '/create';
-        console.log(current);
-        console.log("event being created: ");
-        console.log(newEvent);
         return this.http.post(current, { event: newEvent }, { headers: this.headers })
             .toPromise()
             .then((response: Response) => {
@@ -36,8 +33,6 @@ export class EventService {
                 this.accessToken = data.access_token;
                 sessionStorage.setItem('token', JSON.stringify({ accessToken: this.accessToken }))
                 this.event = data.event as Event;
-                console.log("printing event returned after creation");
-                console.log(this.event);
                 return this.event
             })
             .catch(this.handleError);
@@ -47,9 +42,6 @@ export class EventService {
         // post("/api/events/create")
         public updateEvent(newEvent: Event): Promise<Event> {
             const current = this.connection + '/' + newEvent._id;
-            console.log(current);
-            console.log("event being created: ");
-            console.log(newEvent);
             return this.http.put(current, { event: newEvent }, { headers: this.headers })
                 .toPromise()
                 .then((response: Response) => {
@@ -57,8 +49,6 @@ export class EventService {
                     this.accessToken = data.access_token;
                     sessionStorage.setItem('token', JSON.stringify({ accessToken: this.accessToken }))
                     this.event = data.event as Event;
-                    console.log("printing event returned after updating");
-                    console.log(this.event);
                     return this.event
                 })
                 .catch(this.handleError);
@@ -76,7 +66,6 @@ export class EventService {
     public getEventsByUID(UID: String): Promise<Event[]> {
         // const num = UID["id"];
         const current = this.listConnection + '/?hostUID=' + UID;
-        console.log(current);
         return this.http.get(current)
             .toPromise()
             .then((response: Response) => {
@@ -85,8 +74,6 @@ export class EventService {
                 // sessionStorage.setItem('token', JSON.stringify({ accessToken: this.accessToken }))
                 let events:Event[];
                 events = data.events as Event[];
-                console.log("printing events returned after getting");
-                console.log(events);
                 return events
             })
             .catch(this.handleError);
@@ -103,7 +90,6 @@ export class EventService {
     public getEventByEID(EID: Object): Promise<Event> {
         const num = EID["id"];
         const current = this.connection + '/' + num;
-        console.log(current);
         return this.http.get(current)
             .toPromise()
             .then((response: Response) => {
@@ -111,7 +97,6 @@ export class EventService {
                 // this.accessToken = data.access_token;
                 // sessionStorage.setItem('token', JSON.stringify({ accessToken: this.accessToken }))
                 this.event = data.event as Event;
-                console.log(this.event)
                 return this.event
             })
             .catch(this.handleError);
@@ -127,16 +112,11 @@ export class EventService {
      */
     // post("/api/events/eid")
     public deleteEventByEID(eventToDelete: Event): Promise<Number> {
-        console.log("Deleting event: ");
         const current = this.connection + '/' + eventToDelete._id;
-        console.log(eventToDelete._id);
-        console.log(eventToDelete.eventName);
         return this.http.delete(current)
             .toPromise()
             .then((response: Response) => {
                 const data = response.status;
-                console.log("delete status:");
-                console.log(data);
                 this.statusNumber = data;
                 return this.statusNumber;
             })
