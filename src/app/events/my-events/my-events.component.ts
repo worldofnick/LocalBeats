@@ -68,4 +68,9 @@ export class MyEventsComponent implements OnInit {
     this.router.navigate(['/event-page', event._id]); //this will go to the page about the event    
   }
 
+  viewApplicants(event: Event) {
+    this.eventService.event = event;
+    this.router.navigate(['/applicant-list', event._id]);  
+  }
+
 }
