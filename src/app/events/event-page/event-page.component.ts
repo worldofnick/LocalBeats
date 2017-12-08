@@ -9,6 +9,7 @@ import { print } from 'util';
 import { Injectable } from '@angular/core';
 import { Event } from 'app/models/event';
 import { Booking } from 'app/models/booking';
+import { DatePipe } from '@angular/common'
 
 @Component({
   selector: 'app-event-page',
@@ -21,28 +22,35 @@ export class EventPageComponent implements OnInit {
   public userBooking: Booking;
   public isCurrentUser: boolean = null;
   public hasApplied: boolean = null;
-  public currentBookings: any[];
-  public approvedBookings: Booking[];
-
+  public currentBookings: any[] = [];
+  public approvedBookings: Booking[] = [];
+  public dateInBar:Date;
+  public dateString:any;
 
   EID:any;
 
-  constructor(private bookingService: BookingService, private eventService: EventService, private userSerivce: UserService, private router: Router, private route: ActivatedRoute) {
+  constructor(public datepipe: DatePipe, private bookingService: BookingService, private eventService: EventService, private userSerivce: UserService, private router: Router, private route: ActivatedRoute) {
 
    }
 
   ngOnInit() {
+    // this.eventService.event.fromDate.getDate
     // this.isCurrentUser = false;
     // this.model = this.eventService.event;
     // this.user = this.userSerivce.user;
     // console.log("in ngonit in event page..printing data " );
     // console.log(this.model._id);
+    
     this.EID = {
       id: this.route.snapshot.params['id']
     }
 
     this.eventService.getEventByEID(this.EID).then((event: Event) => {
       this.model = event;
+      // this.dateString = this.model.fromDate.toDateString as string;
+      this.dateString =this.datepipe.transform(this.model.fromDate, 'MM-dd-yyyy');      // this.dateInBar = this.model.fromDate
+      // console.log(this.model.fromDate.getDate);
+      // console.log(this.model.fromDate.toDateString);
       this.user = event.hostUser;
       if (this.userSerivce.user != null && this.user._id === this.userSerivce.user._id) {
         this.isCurrentUser = true;
@@ -60,8 +68,15 @@ export class EventPageComponent implements OnInit {
           this.userBooking = result.booking
         }
       }
+      console.log(this.approvedBookings);
+
+      for(let result of this.approvedBookings){
+        console.log(result);
+        console.log(result.performerUser.firstName);
+      }
     }));
   }
+  
 
   public applyToEvent(){
     const booking = new Booking(undefined, 'artist-apply', this.model.hostUser, this.userSerivce.user, this.model._id, false, false)
@@ -85,5 +100,10 @@ export class EventPageComponent implements OnInit {
 
   public onUpdateEvent(){
     this.router.navigate(['/update-event', this.model._id]); //this will go to the page about the event            
+  }
+
+  public onClickBookedArtist(bookedUser:User){
+    this.router.navigate(['/profile', bookedUser._id]); //this will go to the page about the event            
+    
   }
 }

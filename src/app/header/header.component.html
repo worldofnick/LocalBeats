@@ -11,7 +11,7 @@
           
           <!-- Logo -->
           <div id="logo">
-            <a routerLink="/home"></a>
+            <a routerLink="/home"><img src="../../assets/images/logo.jpg" alt="localBeats"></a>
           </div>
   
           <!-- Mobile Navigation -->
@@ -27,7 +27,7 @@
           <!-- Main Navigation -->
           <nav id="navigation" class="style-1">
             <ul id="responsive">
-              <li><a routerLink="/home">localBeats</a></li>
+              <li><a routerLink="/home"></a></li>
               <ng-template [ngIf]="userService.isAuthenticated()">
                 <li><a [routerLink]="['/my-events']">Events</a></li>
                 <li><a [routerLink]="['/profile']">Profile</a></li>

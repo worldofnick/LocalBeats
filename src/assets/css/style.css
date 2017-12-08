@@ -227,7 +227,7 @@ img { max-width: 100%; }
 ------------------------------------- */
 #logo { display: inline-block; margin-top: 3px; }
 
-#logo img { max-height: 38px; width: auto; transform: translate3d(0,0,0); }
+#logo img { max-height: 50px; width: auto; transform: translate3d(0,0,0); }
 img.footer-logo { max-height: 38px; width: auto; }
 
 #header {

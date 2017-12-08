@@ -30,6 +30,7 @@ export class CreateEventComponent implements OnInit {
   public updating: boolean;
   public submitButtonText:string;
   EID: any;
+  public selectedDate:Date;
 
   @ViewChild("search")
   public searchElementRef: ElementRef;
@@ -117,6 +118,9 @@ export class CreateEventComponent implements OnInit {
 
   onCreateEvent(form: NgForm) {
 
+
+    // this.selectedDate.
+    this.model.toDate
     if (this.longitude != null) {
       this.model.location = [this.longitude, this.latitude]
     }
@@ -148,7 +152,8 @@ export class CreateEventComponent implements OnInit {
     this.model.eventType = eventType;
     this.model.eventGenre = eventGenre;
     this.model.address = address;
-    // this.model.fromDate = fromDate;
+    // this.model.fromDate = this.selectedDate;
+    this.model.fromDate = this.model.fromDate;
     // this.model.toDate = toDate;
     this.model.description = description;
     this.model.fixedPrice = fixedPrice;
