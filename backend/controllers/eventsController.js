@@ -166,7 +166,7 @@ exports.searchEvents = function(req, res) {
   }
 
   var query = {};
-  if (req.query.event_type != null) {
+  if (req.query.event_type != null && req.query.event_type != "All Events") {
     query.eventType = req.query.event_type;
   }
 
@@ -225,6 +225,6 @@ exports.searchEvents = function(req, res) {
 };
 
 exports.getEventTypes = function (req, res) {
-    var eventTypes = ["Wedding", "Birthday", "Business", "Live Music", "Party", "Festival"];
+    var eventTypes = ["All Events", "Wedding", "Birthday", "Business", "Live Music", "Party", "Festival"];
     return res.status(200).send( {"eventTypes": eventTypes} );
   };

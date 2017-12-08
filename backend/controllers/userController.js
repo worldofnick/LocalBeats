@@ -90,7 +90,7 @@ exports.searchUsers = function (req, res) {
     query.isArtist = req.query.artist;
   }
 
-  if (req.query.genre != null) {
+  if (req.query.genre != null && req.query.genre != "All Genres") {
     query.genres = req.query.genre;
   }
 
@@ -103,7 +103,6 @@ exports.searchUsers = function (req, res) {
     }
   }
 
-  console.log(query);
   User.find(query).limit(limit).skip(skip).exec(function (err, doc) {
     if (err) {
         return res.status(500).send(err);
@@ -119,6 +118,6 @@ exports.searchUsers = function (req, res) {
 };
 
 exports.getGenres = function (req, res) {
-  var genres = ["Rock", "Classical", "Electronic", "Jazz", "Blues", "Hip-Hop", "Rap", "Alternative", "Country"];
+  var genres = ["All Genres", "Rock", "Classical", "Electronic", "Jazz", "Blues", "Hip-Hop", "Rap", "Alternative", "Country"];
   return res.status(200).send( {"genres": genres} );
 };
