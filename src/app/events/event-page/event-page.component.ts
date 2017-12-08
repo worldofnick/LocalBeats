@@ -22,8 +22,8 @@ export class EventPageComponent implements OnInit {
   public userBooking: Booking;
   public isCurrentUser: boolean = null;
   public hasApplied: boolean = null;
-  public currentBookings: any[];
-  public approvedBookings: Booking[];
+  public currentBookings: any[] = [];
+  public approvedBookings: Booking[] = [];
   public dateInBar:Date;
   public dateString:any;
 
@@ -68,6 +68,12 @@ export class EventPageComponent implements OnInit {
           this.userBooking = result.booking
         }
       }
+      console.log(this.approvedBookings);
+
+      for(let result of this.approvedBookings){
+        console.log(result);
+        console.log(result.performerUser.firstName);
+      }
     }));
   }
   
@@ -94,5 +100,10 @@ export class EventPageComponent implements OnInit {
 
   public onUpdateEvent(){
     this.router.navigate(['/update-event', this.model._id]); //this will go to the page about the event            
+  }
+
+  public onClickBookedArtist(bookedUser:User){
+    this.router.navigate(['/profile', bookedUser._id]); //this will go to the page about the event            
+    
   }
 }

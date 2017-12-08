@@ -117,20 +117,22 @@
 
 
         <!-- Contact -->
+        <ng-template [ngIf]="approvedBookings">
         <div class="boxed-widget margin-top-35">
           <div class="hosted-by-title">
-            <ng-template [ngIf]="user">
+            
               <h4>Booked Artists</h4>
-            </ng-template>
+            
             <!-- <a href="pages-user-profile.html" class="hosted-by-avatar"><img src="images/dashboard-avatar.jpg" alt=""></a> -->
           </div>
           <ul class="listing-details-sidebar">
-            <li *ngFor="let booking of approvedBookings">
-              <i class="im im-icon-Music-Note"></i> {{booking.performerUser.firstName}} {{booking.performerUser.lastName}}
+            <li *ngFor="let result of approvedBookings" (click)="onClickBookedArtist(result.performerUser)">
+              <i class="im im-icon-Music-Note"></i> {{result.performerUser.firstName}} {{result.performerUser.lastName}}
             </li>
           </ul>
         </div>
         <!-- Contact / End -->
+      </ng-template>
       </div>
       <!-- Sidebar / End -->
 

@@ -73,20 +73,13 @@
             </ul>
           </ng-template>
 
-          <ng-template [ngIf]="onOwnProfile != true">
             <ul class="listing-details-sidebar">
 
-              <button class="button book-now fullwidth margin-top-5" (click)="onRequestArtist(this.user._id)">
+              <button *ngIf="onOwnProfile != true" class="button book-now fullwidth margin-top-5" (click)="onRequestArtist(this.user._id)">
                 Request Artist</button>
+                <button *ngIf="requested == true" class="button book-now fullwidth margin-top-5" (click)="onCancelArtist(this.user._id)">
+                  Cancel Artist</button>
             </ul>
-          </ng-template>
-          <ng-template [ngIf]="requested == true">
-            <ul class="listing-details-sidebar">
-
-              <button class="button book-now fullwidth margin-top-5" (click)="onCancelArtist(this.user._id)">
-                Cancel Artist</button>
-            </ul>
-          </ng-template>
 
 
 

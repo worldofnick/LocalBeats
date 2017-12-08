@@ -41,17 +41,15 @@ export class ProfileDetailsComponent implements OnInit {
       console.log(this.userService.user)
       this.onOwnProfile = true;
       this.user = this.userService.user;
-      console.log("my profile:")
-      console.log(this.user)
-      
     } else {
       //on another perons profile.
       this.onOwnProfile = false;
       let ID:String = this.userID["id"];
+      console.log(ID);
       this.userService.getUserByID(ID).then((gottenUser: User) => {
         this.user = gottenUser;
-        console.log("other user")
-        console.log(this.user)
+        // console.log("other user")
+        // console.log(this.user)
         }).then(() => this.hasRequested());
     }
 
