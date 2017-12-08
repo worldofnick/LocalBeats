@@ -9,6 +9,7 @@ import { print } from 'util';
 import { Injectable } from '@angular/core';
 import { Event } from 'app/models/event';
 import { BookingService } from 'app/services/booking.service';
+import { EventSearchResultComponent } from 'app/search/event-search-result/event-search-result.component';
 
 
 @Component({
@@ -32,45 +33,49 @@ export class PickEventComponent implements OnInit {
     
     this.eventService.getEventsByUID(this.user._id).then((events: Event[]) => {
       this.events = events;   
-      // this.eventService.events = this.events;   
-    });
-
-    this.artistID = {
-      id: this.route.snapshot.params['id']
-    }
-
-    let ID:String = this.artistID["id"];
-    this.userService.getUserByID(ID).then((gottenUser: User) => {
+    }).then(() => {
+      this.artistID = {
+        id: this.route.snapshot.params['id']
+      }
+      return this.artistID["id"];
+    }).then((ID: string) => this.userService.getUserByID(ID).then((gottenUser: User) => {
       this.artist = gottenUser;
-      });
+      })).then(() => this.getAvailableEvents());
 
   }
 
   onRequestEvent(event:Event){
     const booking = new Booking(null, 'host-request', event.hostUser, this.artist, event._id, false, false);
-    this.bookingService.createBooking(booking).then((booking: Booking) => this.getBookings(event));
+    this.bookingService.createBooking(booking).then((booking: Booking) => this.getAvailableEvents());
   }
 
-  public getBookings(event: Event) {
-    this.bookingService.getBooking(event).then((bookings: Booking[]) => {
-      let temp = []
-      for (let booking of bookings) {
-        if (booking.eventEID == event._id && this.artist._id != booking.performerUser._id) {
-          temp.push(booking.eventEID)
+  public getAvailableEvents() {
+    // Get all bookings for the current user
+    this.bookingService.getUserBookings(this.userService.user).then((bookings: any[]) => {
+      // Loop through the bookings and see if a booking exists for the selected artist
+      let tempEventIds: String[] = [];
+      for (let result of bookings) {
+        if (result.booking.performerUser._id == this.artist._id) {
+          tempEventIds.push(result.booking.eventEID);
         }
       }
-      console.log('Event IDs that are not the selected user')
-      console.log(temp)
-      let tempEvents: Event[] = []
+      // If so, remove those event ids from event list
+      let tempEvents: Event[] = [];
       for (let event of this.events) {
-        if (temp.includes(event._id)) {
+        let found = false
+        for (let tempEvent of tempEvents) {
+          if (tempEvent._id == event._id) {
+            found = true;
+            continue;
+          }
+        }
+        if (found == false) {
           tempEvents.push(event)
         }
       }
-      this.events = tempEvents
-      console.log('Events leftover')
-      console.log(this.events)
+      this.events = tempEvents;
     })
+
   }
 
 }
