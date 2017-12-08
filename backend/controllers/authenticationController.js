@@ -50,9 +50,9 @@ exports.register = function (req, res) {
    * @param {*} res : The user object
    */
   exports.changePassword = function (req, res) {
-    // var oldUser = new User(req.body.user);
-    // console.log("OLD USER: \n");
-    // console.log(oldUser);
+    var oldUser = new User(req.body.user);
+    console.log("OLD USER: \n");
+    console.log(oldUser);
 
     // var newUser = new User(req.body.user);
     var newHashPassword = bcrypt.hashSync(req.body.newPassword, 10);

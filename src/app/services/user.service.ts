@@ -74,12 +74,12 @@ export class UserService {
     public updatePassword(user: User): Promise<User> {
         const current = this.connection + '/passwordChange/' + user._id;
         let newPassword:string = user.password;
-        return this.http.put(current, newPassword, { headers: this.headers })
+        return this.http.put(current, {'newPassword': newPassword}, { headers: this.headers })
             .toPromise()
             .then((response: Response) => {
                 const data = response.json();
-                this.accessToken = data.token;
-                sessionStorage.setItem('token', JSON.stringify({ accessToken: this.accessToken }))
+                // this.accessToken = data.token;
+                // sessionStorage.setItem('token', JSON.stringify({ accessToken: this.accessToken }))
                 this.user = data.user as User;
                 return this.user
             })

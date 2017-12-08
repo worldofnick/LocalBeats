@@ -23,6 +23,8 @@ export class ProfileEditComponent implements OnInit {
   userID:any;
   public dropDownGenre:string;
   public passwordsUpdated : boolean = false;
+  public firstPass: string;
+  public secondPass: string;
 
   constructor(private userService: UserService, private router: Router, private route: ActivatedRoute) { 
     // this.user = userService.user;
@@ -59,6 +61,24 @@ export class ProfileEditComponent implements OnInit {
     });
 
   }
+
+  onChangePassword() {
+    if(this.firstPass == this.secondPass){
+      this.passwordsDontMatch = false;
+      this.user.password = this.firstPass;
+    }else{
+      this.passwordsDontMatch = true;
+    }
+
+    if(!this.passwordsDontMatch){
+      this.userService.updatePassword(this.user).then((user:User) =>{
+        this.user = user;
+        this.userService.user = this.user;
+        this.passwordsUpdated = true;
+      })
+    }
+  }
+
   onEditProfile(form: NgForm) {
     console.log("form");
     console.log(form.value.firstname);
