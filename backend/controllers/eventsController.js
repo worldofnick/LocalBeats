@@ -170,7 +170,7 @@ exports.searchEvents = function(req, res) {
     query.eventType = req.query.event_type;
   }
 
-  if (req.query.event_genre != null) {
+  if (req.query.event_genre != null && req.query.event_genre != "All Genres") {
     query.eventGenre = req.query.event_genre;
   }
 
