@@ -120,6 +120,7 @@ exports.deleteUserEventsByUID = function (req, res) {
       if (err) {
           return res.status(500).send("Failed to delete user events");
       } else {
+          // Remove event bookings and reviews
           return res.status(200).send(doc);
       }
   });
