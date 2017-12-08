@@ -81,4 +81,10 @@ export class ProfileDetailsComponent implements OnInit {
   onEditProfile() {
     this.router.navigate(['/profile-edit']);
   }
+
+  onRequestArtist(ID:string){
+    
+  }
+
+
 }

@@ -32,6 +32,7 @@ import { EventComponent } from './events/event/event.component';
 import { UserSearchResultComponent } from './search/user-search-result/user-search-result.component';
 import { EventSearchResultComponent } from './search/event-search-result/event-search-result.component';
 import { ApplicantListComponent } from './events/applicant-list/applicant-list.component';
+import { PickEventComponent } from './events/pick-event/pick-event.component';
 
 
 
@@ -57,7 +58,8 @@ import { ApplicantListComponent } from './events/applicant-list/applicant-list.c
     EventComponent,
     UserSearchResultComponent,
     EventSearchResultComponent,
-    ApplicantListComponent
+    ApplicantListComponent,
+    PickEventComponent
   ],
   imports: [
     AgmCoreModule.forRoot({

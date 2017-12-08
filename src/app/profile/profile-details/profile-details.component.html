@@ -43,12 +43,12 @@
 
       <!-- Contact -->
       <div class="boxed-widget margin-top-30 margin-bottom-50">
-        <h3>Contact</h3>
+        <h3>Dashboard:</h3>
         <ul class="listing-details-sidebar">
           <!-- <li><i class="sl sl-icon-phone"></i>{{ userService.user.phone }}</li> -->
           <!-- <li><i class="fa fa-envelope-o"></i> <a href="#">{{ this.user.email }}</a></li> -->
         </ul>
-
+<!-- 
         <ul class="listing-details-sidebar social-profiles">
           <li>
             <a href="#" class="facebook-profile">
@@ -58,17 +58,21 @@
             <a href="#" class="twitter-profile">
               <i class="fa fa-twitter"></i> Twitter</a>
           </li>
-          <!-- <li><a href="#" class="gplus-profile"><i class="fa fa-google-plus"></i> Google Plus</a></li> -->
-        </ul>
+        </ul> -->
 
 
 
         <!-- <a href="#" (click) = "onSubmit()"><i class="sl sl-icon-envelope-open"></i>Edit Profile</a> -->
         <ng-template [ngIf]="this.user">
           <ng-template [ngIf]="onOwnProfile == true">
-            <button class="button" (click)="onEditProfile()">
+            <button class="button book-now fullwidth margin-top-5" (click)="onEditProfile()">
               Edit profile</button>
           </ng-template>
+
+          <ng-template [ngIf]="onOwnProfile != true">
+              <button class="button book-now fullwidth margin-top-5" (click)="onRequestArtist(this.user._id)">
+                Request Artist</button>
+            </ng-template>
         </ng-template>
       </div>
       <!-- Contact / End-->
