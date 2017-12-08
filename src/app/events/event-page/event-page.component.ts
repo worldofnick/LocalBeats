@@ -83,4 +83,7 @@ export class EventPageComponent implements OnInit {
     this.router.navigate(['/applicant-list', this.model._id]);        
   }
 
+  public onUpdateEvent(){
+    this.router.navigate(['/update-event', this.model._id]); //this will go to the page about the event            
+  }
 }

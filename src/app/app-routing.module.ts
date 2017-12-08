@@ -16,6 +16,7 @@ const appRoutes: Routes = [
     { path: 'event-page/:id', component: EventPageComponent },
     { path: 'create-event', component: CreateEventComponent },
     { path: 'my-events', component: MyEventsComponent},
+    { path: 'update-event/:id', component: CreateEventComponent},
     { path: 'pick-event/:id', component: PickEventComponent},
     { path: 'profile/:id', component: ProfileDetailsComponent },
     { path: 'profile', component: ProfileDetailsComponent },

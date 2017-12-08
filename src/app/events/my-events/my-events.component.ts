@@ -36,8 +36,8 @@ export class MyEventsComponent implements OnInit {
       console.log(this.deleteStatus);
       if(this.deleteStatus == 200){
         //remove event from events[]
-        console.log("printing events before deletion:");
-        console.log(this.events);
+        // console.log("printing events before deletion:");
+        // console.log(this.events);
         
         var newEvents:Event[] = [];
 
@@ -50,8 +50,8 @@ export class MyEventsComponent implements OnInit {
 
         this.events = newEvents;
         
-        console.log("printing events after deletion:");
-        console.log(this.events);
+        // console.log("printing events after deletion:");
+        // console.log(this.events);
 
       }
     });
@@ -59,7 +59,7 @@ export class MyEventsComponent implements OnInit {
   }
 
   onEditEvent(event:Event){
-    
+    this.router.navigate(['/update-event', event._id]); //this will go to the page about the event        
   }
 
   onPickEvent(event:Event){

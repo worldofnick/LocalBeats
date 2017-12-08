@@ -44,6 +44,27 @@ export class EventService {
     }
 
 
+        // post("/api/events/create")
+        public updateEvent(newEvent: Event): Promise<Event> {
+            const current = this.connection + '/' + newEvent._id;
+            console.log(current);
+            console.log("event being created: ");
+            console.log(newEvent);
+            return this.http.put(current, { event: newEvent }, { headers: this.headers })
+                .toPromise()
+                .then((response: Response) => {
+                    const data = response.json();
+                    this.accessToken = data.access_token;
+                    sessionStorage.setItem('token', JSON.stringify({ accessToken: this.accessToken }))
+                    this.event = data.event as Event;
+                    console.log("printing event returned after updating");
+                    console.log(this.event);
+                    return this.event
+                })
+                .catch(this.handleError);
+        }
+
+
     /**
      * 
      * @param host 
