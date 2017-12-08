@@ -52,6 +52,40 @@
               </div>
             </div>
           </div>
+          <div class="row">
+              
+          <!-- Listings -->
+          <div class="col-lg-12 col-md-12">
+            <div class="dashboard-list-box margin-top-0">
+              <h4>Events You've Requested this Artist For:</h4>
+              <ul>
+                <li *ngFor="let result of this.requestedEvents; let i = index">
+                  <div class="list-box-listing">
+                    <div class="list-box-listing-img">
+                      <a (click)="onPickEvent(event.event)">
+                        <img src="../../assets/images/jimsmall.png" alt="">
+                      </a>
+                    </div>
+                    <div class="list-box-listing-content" (click)="onPickEvent(result.event)">
+                      <div class="inner">
+                        <h3>
+                            <a (click)="onPickEvent(event.event)">
+                          {{result.event.eventName}}
+                          </a>
+                        </h3>
+                        <span>{{ result.event.address }}</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="buttons-to-right">
+                    <a (click)="onCancelRequest(result.event)" class="button gray">
+                      <i class="sl sl-icon-note"></i>Cancel Artist for this Event</a>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
           <!-- Content / End -->
         </div>
         <!-- Dashboard / End -->

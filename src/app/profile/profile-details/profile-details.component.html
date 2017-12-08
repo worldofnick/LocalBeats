@@ -73,6 +73,10 @@
               <button class="button book-now fullwidth margin-top-5" (click)="onRequestArtist(this.user._id)">
                 Request Artist</button>
             </ng-template>
+            <ng-template [ngIf]="requested == true">
+                <button class="button book-now fullwidth margin-top-5" (click)="onCancelArtist(this.user._id)">
+                  Cancel Artist</button>
+              </ng-template>
         </ng-template>
       </div>
       <!-- Contact / End-->

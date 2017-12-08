@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { ActivatedRoute } from '@angular/router'
 import { UserService } from 'app/services/user.service'
 import { User } from 'app/models/user';
+import { BookingService } from 'app/services/booking.service';
 @Component({
   selector: 'app-profile-details',
   templateUrl: './profile-details.component.html',
@@ -11,11 +12,12 @@ import { User } from 'app/models/user';
 export class ProfileDetailsComponent implements OnInit {
   editing: boolean = false;
   user: User = null;
+  public requested: boolean = null;
 
   onOwnProfile: boolean = null;
   userID: any = null;
   // profile: Profile;
-  constructor(private userService: UserService, private router: Router, private route: ActivatedRoute) {
+  constructor(private userService: UserService, private router: Router, private route: ActivatedRoute, private bookingService: BookingService) {
 
     // this.model = new User(userService.user._id, userService.user.firstName, userService.user.lastName, userService.user.email, userService.user.password);
   }
@@ -50,10 +52,7 @@ export class ProfileDetailsComponent implements OnInit {
         this.user = gottenUser;
         console.log("other user")
         console.log(this.user)
-        }).then(() => {
-          //console.log("other user who i am viewing:");
-          //console.log(this.user);
-        });
+        }).then(() => this.hasRequested());
     }
 
     // if(this.userID != null){
@@ -84,6 +83,22 @@ export class ProfileDetailsComponent implements OnInit {
 
   onRequestArtist(ID:string){
     this.router.navigate(['/pick-event', this.user._id]);
+  }
+
+  onCancelArtist(ID:string) {
+    this.router.navigate(['/pick-event', this.user._id]);
+  }
+
+  hasRequested() {
+    this.bookingService.getUserBookings(this.userService.user).then((bookings: any[]) => {
+      for (let result of bookings) {
+        if (result.booking.performerUser._id == this.user._id && !this.onOwnProfile) {
+          this.requested = true;
+        } else {
+          this.requested = false;
+        }
+      }
+    }); 
   }
 
 

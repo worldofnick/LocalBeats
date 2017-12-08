@@ -21,7 +21,8 @@ export class PickEventComponent implements OnInit {
 
   user:User;
   artist: User;
-  events:Event[];
+  events:any[];
+  requestedEvents:any[] = [];
   deleteStatus:Number;
   artistID:any;
 
@@ -30,27 +31,35 @@ export class PickEventComponent implements OnInit {
   
   ngOnInit() {
     this.user = this.userService.user;
-    
-    this.eventService.getEventsByUID(this.user._id).then((events: Event[]) => {
-      this.events = events;   
-    }).then(() => {
       this.artistID = {
         id: this.route.snapshot.params['id']
       }
-      return this.artistID["id"];
-    }).then((ID: string) => this.userService.getUserByID(ID).then((gottenUser: User) => {
+    this.userService.getUserByID(this.artistID["id"]).then((gottenUser: User) => {
       this.artist = gottenUser;
-      })).then(() => this.getAvailableEvents());
+      }).then(() => this.getAvailableEvents());
 
   }
 
   onRequestEvent(event:Event){
-    const booking = new Booking(null, 'host-request', event.hostUser, this.artist, event._id, false, false);
+    const booking = new Booking(undefined, 'host-request', event.hostUser, this.artist, event._id, false, false);
     this.bookingService.createBooking(booking).then((booking: Booking) => this.getAvailableEvents());
+  }
+
+  onCancelRequest(event:Event) {
+    this.bookingService.getBooking(event).then((bookings: any[]) => {
+      for (let result of bookings) {
+        if (result.booking.eventEID == event._id && result.booking.performerUser._id == this.artist._id) {
+          this.bookingService.declineBooking(result.booking).then(() => this.getAvailableEvents())
+        }
+      }
+    });
   }
 
   public getAvailableEvents() {
     // Get all bookings for the current user
+    this.eventService.getEventsByUID(this.user._id).then((events: Event[]) => {
+      this.events = events;   
+    }).then(() =>
     this.bookingService.getUserBookings(this.userService.user).then((bookings: any[]) => {
       // Loop through the bookings and see if a booking exists for the selected artist
       let tempEventIds: String[] = [];
@@ -60,13 +69,14 @@ export class PickEventComponent implements OnInit {
         }
       }
       // If so, remove those event ids from event list
-      let tempEvents: Event[] = [];
+      let tempEvents: any[] = [];
+      let tempRequestedEvents: any[] = [];
       for (let event of this.events) {
         let found = false
-        for (let tempEvent of tempEvents) {
-          if (tempEvent._id == event._id) {
+        for (let tempEventId of tempEventIds) {
+          if (tempEventId == event.event._id) {
             found = true;
-            continue;
+            tempRequestedEvents.push(event)
           }
         }
         if (found == false) {
@@ -74,7 +84,8 @@ export class PickEventComponent implements OnInit {
         }
       }
       this.events = tempEvents;
-    })
+      this.requestedEvents = tempRequestedEvents
+    }));
 
   }
 
