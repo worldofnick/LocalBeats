@@ -48,7 +48,7 @@
           <!-- <li><i class="sl sl-icon-phone"></i>{{ userService.user.phone }}</li> -->
           <!-- <li><i class="fa fa-envelope-o"></i> <a href="#">{{ this.user.email }}</a></li> -->
         </ul>
-<!-- 
+        <!-- 
         <ul class="listing-details-sidebar social-profiles">
           <li>
             <a href="#" class="facebook-profile">
@@ -64,23 +64,43 @@
 
         <!-- <a href="#" (click) = "onSubmit()"><i class="sl sl-icon-envelope-open"></i>Edit Profile</a> -->
         <ng-template [ngIf]="this.user && userService.isAuthenticated()">
+
           <ng-template [ngIf]="onOwnProfile == true">
-            <button class="button book-now fullwidth margin-top-5" (click)="onEditProfile()">
-              Edit profile</button>
+            <ul class="listing-details-sidebar">
+
+              <button class="button book-now fullwidth margin-top-5" (click)="onEditProfile()">
+                Edit profile</button>
+            </ul>
           </ng-template>
 
           <ng-template [ngIf]="onOwnProfile != true">
+            <ul class="listing-details-sidebar">
+
               <button class="button book-now fullwidth margin-top-5" (click)="onRequestArtist(this.user._id)">
                 Request Artist</button>
-            </ng-template>
-            <ng-template [ngIf]="requested == true">
-                <button class="button book-now fullwidth margin-top-5" (click)="onCancelArtist(this.user._id)">
-                  Cancel Artist</button>
-              </ng-template>
+            </ul>
+          </ng-template>
+          <ng-template [ngIf]="requested == true">
+            <ul class="listing-details-sidebar">
+
+              <button class="button book-now fullwidth margin-top-5" (click)="onCancelArtist(this.user._id)">
+                Cancel Artist</button>
+            </ul>
+          </ng-template>
+
+
+
         </ng-template>
+
       </div>
       <!-- Contact / End-->
 
+      <ul class="listing-details-sidebar">
+          
+                    <h3 class="margin-top-0 margin-bottom-40">Music Feed</h3>
+                    <iframe src="https://open.spotify.com/embed?uri=spotify:user:spotify:playlist:3rgsDhGHZxZ9sB9DQWQfuf&theme=white" width="375"
+                      height="380" frameborder="0" allowtransparency="true"></iframe>
+                  </ul>
     </div>
     <!-- Sidebar / End -->
 
@@ -88,26 +108,26 @@
     <!-- Content ============================================= -->
     <div class="col-lg-8 col-md-8 padding-left-30">
 
-      <h3 class="margin-top-0 margin-bottom-40">Music Feed</h3>
+      <!-- <h3 class="margin-top-0 margin-bottom-40">Music Feed</h3> -->
 
       <!-- Listings Container -->
-      <div class="row">
+      <!-- <div class="row"> -->
 
-        <!-- Listing Item -->
-        <div class="col-lg-12 col-md-12">
+      <!-- Listing Item -->
+      <!-- <div class="col-lg-12 col-md-12">
             <iframe src="https://open.spotify.com/embed?uri=spotify:user:spotify:playlist:3rgsDhGHZxZ9sB9DQWQfuf&theme=white" width="300" height="380" frameborder="0" allowtransparency="true"></iframe>  
-        </div>
-        <!-- Listing Item / End -->
-
-       
+        </div> -->
+      <!-- Listing Item / End -->
 
 
 
-        <!-- <div class="col-md-12 browse-all-user-listings"> -->
-        <!-- <a href="#">Browse All Listings <i class="fa fa-angle-right"></i> </a> -->
-        <!-- </div> -->
 
-      </div>
+
+      <!-- <div class="col-md-12 browse-all-user-listings"> -->
+      <!-- <a href="#">Browse All Listings <i class="fa fa-angle-right"></i> </a> -->
+      <!-- </div> -->
+
+      <!-- </div> -->
       <!-- Listings Container / End -->
 
       <app-reviews></app-reviews>
