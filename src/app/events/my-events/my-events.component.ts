@@ -69,7 +69,7 @@ export class MyEventsComponent implements OnInit {
   }
 
   onCancelRequest(event:Event, index: number) {
-    this.bookingService.declineBooking(this.requestedArtistBookings[index]).then(() => this.getEvents());
+    this.bookingService.declineBooking(this.appliedBookings[index]).then(() => this.getEvents());
   }
 
   public getEvents() {
@@ -81,6 +81,7 @@ export class MyEventsComponent implements OnInit {
       this.appliedBookings = [];  
       // this.eventService.events = this.events;   
     }).then(() => this.bookingService.getUserBookings(this.userService.user, 'artist').then((bookings: any[]) => {
+      console.log(bookings);
       // Where the current user is the requested artist
       let tempappliedEventsId: string[] = []
       let tempRequestArtistEventId: string[] = []
@@ -88,7 +89,7 @@ export class MyEventsComponent implements OnInit {
         if (result.booking.bookingType == 'host-request') {
           tempRequestArtistEventId.push(result.booking.eventEID);
           this.requestedArtistBookings.push(result.booking);
-        } else if (result.booking.bookingType == 'artist-request') {
+        } else if (result.booking.bookingType == 'artist-apply') {
           tempappliedEventsId.push(result.booking.eventEID);
           this.appliedBookings.push(result.booking);
         }
@@ -99,6 +100,8 @@ export class MyEventsComponent implements OnInit {
           this.appliedEvents.push(event);
         });
       }
+      console.log('Applied Events:')
+      console.log(this.appliedEvents)
 
       for (let id of tempRequestArtistEventId) {
         let temp = { 'id': id}

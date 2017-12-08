@@ -46,7 +46,6 @@ export class ApplicantListComponent implements OnInit {
   public getBookings(event: Event) {
     this.bookingService.getBooking(this.model).then((bookings: Booking[]) => {
       this.currentBookings = bookings;
-      console.log(this.currentBookings)
     })
   }
 
