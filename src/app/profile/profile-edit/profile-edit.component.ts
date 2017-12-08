@@ -18,9 +18,11 @@ export class ProfileEditComponent implements OnInit {
   submitted = false;
   // private user: User;
   
+  public passwordsDontMatch:boolean = null;
   user:User;
   userID:any;
   public dropDownGenre:String;
+  public passwordsUpdated : boolean = false;
 
   constructor(private userService: UserService, private router: Router, private route: ActivatedRoute) { 
     // this.user = userService.user;
@@ -70,6 +72,25 @@ export class ProfileEditComponent implements OnInit {
       this.userService.user = this.user; 
       this.router.navigate(['/profile']);
     });
+  }
+  onEditChangePass(form:NgForm){
+    const p1 = form.value.firstPass;
+    const p2 = form.value.secondPass;
+
+    if(p1 == p2){
+      this.passwordsDontMatch = false;
+      this.user.password = p1;
+    }else{
+      this.passwordsDontMatch = true;
+    }
+
+    if(!this.passwordsDontMatch){
+      this.userService.updatePassword(this.user).then((user:User) =>{
+        this.user = user;
+        this.userService.user = this.user;
+        this.passwordsUpdated = true;
+      })
+    }
   }
   
 }

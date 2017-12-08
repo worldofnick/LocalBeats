@@ -18,11 +18,11 @@ export class UserService {
 
     constructor(private http: Http) { }
 
-    // post("/api/user")
+    // post("api/auth/passwordChange/:uid')
     public signupUser(newUser: User): Promise<User> {
         const current = this.connection + '/register';
         console.log(newUser)
-        return this.http.post(current, newUser, { headers: this.headers })
+        return this.http.put(current, newUser, { headers: this.headers })
             .toPromise()
             .then((response: Response) => {
                 const data = response.json();
@@ -64,6 +64,28 @@ export class UserService {
     }
 
 
+    /**
+     * 
+     * @param user 
+     * change password
+     * /api/auth/passwordChange/:uid')
+     */
+    // /api/auth/passwordChange/:uid')
+    public updatePassword(user: User): Promise<User> {
+        const current = this.connection + '/passwordChange/' + user._id;
+        let newPassword:string = user.password;
+        return this.http.put(current, newPassword, { headers: this.headers })
+            .toPromise()
+            .then((response: Response) => {
+                const data = response.json();
+                this.accessToken = data.token;
+                sessionStorage.setItem('token', JSON.stringify({ accessToken: this.accessToken }))
+                this.user = data.user as User;
+                return this.user
+            })
+            .catch(this.handleError);
+    }
+
     // get user
     ///api/users/:uid
     /**
@@ -72,7 +94,7 @@ export class UserService {
      * 
      * 
      */
-    public getUserByID(ID:String): Promise<User> {
+    public getUserByID(ID: String): Promise<User> {
         // const num = ID["id"];
         const current = this.userConnection + '/' + ID;
         //console.log("getting: ");
