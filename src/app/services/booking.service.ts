@@ -23,13 +23,13 @@ export class BookingService {
     // post("/api/events/create")
     public createBooking(newBooking: Booking): Promise<Booking> {
         const current = this.connection + '/create';
-
+        console.log(newBooking)
         return this.http.post(current, { booking: newBooking }, { headers: this.headers })
             .toPromise()
             .then((response: Response) => {
                 const data = response.json();
                 console.log("response data")
-                console.log(data)
+                console.log(response)
                 const booking = data.booking as Booking;
                 return booking
             })

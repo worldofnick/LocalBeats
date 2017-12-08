@@ -64,7 +64,7 @@ export class EventPageComponent implements OnInit {
   }
 
   public applyToEvent(){
-    const booking = new Booking(null, 'artist-apply', this.model.hostUser, this.userSerivce.user, this.model._id, false, false)
+    const booking = new Booking(undefined, 'artist-apply', this.model.hostUser, this.userSerivce.user, this.model._id, false, false)
     this.bookingService.createBooking(booking).then((booking: Booking) => {
       this.hasApplied = true;
       this.userBooking = booking;
