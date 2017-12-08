@@ -61,7 +61,7 @@ export class ReviewService {
     }
 
     // DELETE delete a review by id
-    public deleteEventByEID(reviewToDelete: Review): Promise<Number> {
+    public deleteReviewByRID(reviewToDelete: Review): Promise<Number> {
         const current = this.connection + '/' + reviewToDelete._id;
         return this.http.delete(current)
             .toPromise()
@@ -71,6 +71,36 @@ export class ReviewService {
             })
             .catch(this.handleError);
     }
+
+    // GET gets all reviews left for this user
+    public getReviewsTo(user: User): Promise<Review[]> {
+        const current = this.userReviewsToConnection + '/?uid=' + user._id;
+        return this.http.get(current)
+        .toPromise()
+        .then((response: Response) => {
+            const data = response.json();
+            let reviews:Review[];
+            reviews = data.reviews as Review[];
+            return reviews
+        })
+        .catch(this.handleError);
+    }
+
+    // GET gets all reviews left for this user
+    public getReviewsFrom(user: User): Promise<Review[]> {
+        const current = this.userReviewsFromConnection + '/?uid=' + user._id;
+        return this.http.get(current)
+        .toPromise()
+        .then((response: Response) => {
+            const data = response.json();
+            let reviews:Review[];
+            reviews = data.reviews as Review[];
+            return reviews
+        })
+        .catch(this.handleError);
+    }
+
+    // Can add flag review if needed
 
     private handleError(error: any): Promise<any> {
         let errMsg = (error.message) ? error.message :

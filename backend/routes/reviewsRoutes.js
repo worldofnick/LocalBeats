@@ -23,6 +23,6 @@ module.exports = function(app) {
         .get(reviewsHandlers.getUserReviewsByUIDFrom);
     
     app.route('/api/flagReview/:rid')
-    .get(reviewsHandlers.flagReviewByID);
+        .get(reviewsHandlers.flagReviewByID);
 
 };
