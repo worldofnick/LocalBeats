@@ -90,6 +90,7 @@ export class EventService {
                 // this.accessToken = data.access_token;
                 // sessionStorage.setItem('token', JSON.stringify({ accessToken: this.accessToken }))
                 this.event = data.event as Event;
+                console.log(this.event)
                 return this.event
             })
             .catch(this.handleError);

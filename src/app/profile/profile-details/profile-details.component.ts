@@ -90,7 +90,7 @@ export class ProfileDetailsComponent implements OnInit {
   }
 
   hasRequested() {
-    this.bookingService.getUserBookings(this.userService.user).then((bookings: any[]) => {
+    this.bookingService.getUserBookings(this.userService.user, 'host').then((bookings: any[]) => {
       for (let result of bookings) {
         if (result.booking.performerUser._id == this.user._id && !this.onOwnProfile) {
           this.requested = true;

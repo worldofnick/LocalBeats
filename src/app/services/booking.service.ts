@@ -49,12 +49,12 @@ export class BookingService {
             .catch(this.handleError);
     }
 
-    public getUserBookings(user: User): Promise<any[]> {
+    public getUserBookings(user: User, type: string): Promise<any[]> {
         const current = this.userBooking
 
         let params: URLSearchParams = new URLSearchParams();
         params.set('uid', user._id)
-        params.set('user_type', 'host')
+        params.set('user_type', type)
         
         return this.http.get(current, { headers: this.headers, search: params  })
             .toPromise()

@@ -61,6 +61,10 @@ export class ApplicantListComponent implements OnInit {
     this.bookingService.acceptBooking(booking).then((newBooking: Booking) => this.getBookings(this.model));
   }
 
+  onCancelRequest(booking:Booking, index: number){
+    this.bookingService.declineBooking(booking).then(() => this.getBookings(this.model));
+  }
+
   /**
    * passed result.booking.performerUser._id
    */

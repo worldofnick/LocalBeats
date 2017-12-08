@@ -4,9 +4,11 @@ import { Router } from '@angular/router';
 import { NgForm } from '@angular/forms/src/directives/ng_form';
 import { UserService } from 'app/services/user.service';
 import { EventService } from 'app/services/event.service';
+import { BookingService } from 'app/services/booking.service';
 import { print } from 'util';
 import { Injectable } from '@angular/core';
 import { Event } from 'app/models/event';
+import { Booking } from 'app/models/booking';
 
 @Component({
   selector: 'app-my-events',
@@ -16,18 +18,18 @@ import { Event } from 'app/models/event';
 export class MyEventsComponent implements OnInit {
 
   user:User;
-  events:Event[];
+  events:any[];
+  requestedArtistEvents: any[] = [];
+  requestedArtistBookings: any[] = [];
+  appliedEvents: Event[] = [];
+  appliedBookings: any[] = [];
   deleteStatus:Number;
 
-  constructor(private eventService: EventService, private userService: UserService, private router: Router) { }
+  constructor(private eventService: EventService, private userService: UserService, private bookingService: BookingService, private router: Router) { }
   
   ngOnInit() {
     this.user = this.userService.user;
-    
-    this.eventService.getEventsByUID(this.user._id).then((events: Event[]) => {
-      this.events = events;   
-      // this.eventService.events = this.events;   
-    });
+    this.getEvents();
   }
 
   onDeleteEvent(event:Event, index:Number){
@@ -56,6 +58,55 @@ export class MyEventsComponent implements OnInit {
       }
     });
 
+  }
+
+  onDeclineArtist(event:Event, index: number){
+    this.bookingService.declineBooking(this.requestedArtistBookings[index]).then(() => this.getEvents());
+  }
+
+  onAcceptArtist(event:Event, index: number){
+    this.bookingService.acceptBooking(this.requestedArtistBookings[index]).then(() => this.getEvents());
+  }
+
+  onCancelRequest(event:Event, index: number) {
+    this.bookingService.declineBooking(this.requestedArtistBookings[index]).then(() => this.getEvents());
+  }
+
+  public getEvents() {
+    this.eventService.getEventsByUID(this.user._id).then((events: Event[]) => {
+      this.events = events; 
+      this.requestedArtistBookings = [];
+      this.requestedArtistEvents = [];
+      this.appliedEvents = [];
+      this.appliedBookings = [];  
+      // this.eventService.events = this.events;   
+    }).then(() => this.bookingService.getUserBookings(this.userService.user, 'artist').then((bookings: any[]) => {
+      // Where the current user is the requested artist
+      let tempappliedEventsId: string[] = []
+      let tempRequestArtistEventId: string[] = []
+      for (let result of bookings) {
+        if (result.booking.bookingType == 'host-request') {
+          tempRequestArtistEventId.push(result.booking.eventEID);
+          this.requestedArtistBookings.push(result.booking);
+        } else if (result.booking.bookingType == 'artist-request') {
+          tempappliedEventsId.push(result.booking.eventEID);
+          this.appliedBookings.push(result.booking);
+        }
+      }
+      for (let id of tempappliedEventsId) {
+        let temp = { 'id': id}
+        this.eventService.getEventByEID(temp).then((event: Event) => {
+          this.appliedEvents.push(event);
+        });
+      }
+
+      for (let id of tempRequestArtistEventId) {
+        let temp = { 'id': id}
+        this.eventService.getEventByEID(temp).then((event: Event) => {
+          this.requestedArtistEvents.push(event);
+        });
+      }
+    }));
   }
 
   onEditEvent(event:Event){

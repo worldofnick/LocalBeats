@@ -61,29 +61,31 @@
 					<div class="dashboard-list-box margin-top-0">
 						<h4>Events that have requested you:</h4>
 						<ul>
-							<li *ngFor="let event of this.events; let i = index">
+							<li *ngFor="let event of this.requestedArtistEvents; let i = index">
 								<div class="list-box-listing">
 									<div class="list-box-listing-img">
-										<a (click)="onPickEvent(event.event)">
+										<a (click)="onPickEvent(event)">
 											<img src="../../assets/images/jimsmall.png" alt="">
 										</a>
 									</div>
-									<div class="list-box-listing-content" (click)="onPickEvent(event.event)">
+									<div class="list-box-listing-content" (click)="onPickEvent(event)">
 										<div class="inner">
 											<h3>
 												<a (click)="onPickEvent(event.event)">
-													{{event.event.eventName}}
+													{{event.eventName}}
 												</a>
 											</h3>
-											<span>{{ event.event.address }}</span>
+											<span>{{ event.address }}</span>
 										</div>
 									</div>
 								</div>
 								<div class="buttons-to-right">
-									<a (click)="onEditEvent(event.event)" class="button gray">
-										<i class="sl sl-icon-note"></i> Edit</a>
-									<a (click)="onDeleteEvent(event.event, i)" class="button gray">
-										<i class="sl sl-icon-close"></i> Delete</a>
+									<a *ngIf="!requestedArtistBookings[i].approved" (click)="onAcceptArtist(event, i)" class="button gray">
+										<i class="sl sl-icon-note"></i> Approve</a>
+									<a *ngIf="!requestedArtistBookings[i].approved" (click)="onDeclineArtist(event, i)" class="button gray">
+										<i class="sl sl-icon-close"></i> Decline</a>
+									<a *ngIf="requestedArtistBookings[i].approved" (click)="onDeclineArtist(event, i)" class="button gray">
+										<i class="sl sl-icon-close"></i> Cancel Performance</a>
 								</div>
 							</li>
 						</ul>
@@ -93,31 +95,29 @@
 			<div class="row">
 				<div class="col-lg-12 col-md-12">
 					<div class="dashboard-list-box margin-top-0">
-						<h4>Events you've requested:</h4>
+						<h4>Events you've applied for:</h4>
 						<ul>
-							<li *ngFor="let event of this.events; let i = index">
+							<li *ngFor="let event of this.appliedEvents; let i = index">
 								<div class="list-box-listing">
 									<div class="list-box-listing-img">
-										<a (click)="onPickEvent(event.event)">
+										<a (click)="onPickEvent(event)">
 											<img src="../../assets/images/jimsmall.png" alt="">
 										</a>
 									</div>
-									<div class="list-box-listing-content" (click)="onPickEvent(event.event)">
+									<div class="list-box-listing-content" (click)="onPickEvent(event)">
 										<div class="inner">
 											<h3>
-												<a (click)="onPickEvent(event.event)">
-													{{event.event.eventName}}
+												<a (click)="onPickEvent(event)">
+													{{event.eventName}}
 												</a>
 											</h3>
-											<span>{{ event.event.address }}</span>
+											<span>{{ event.address }}</span>
 										</div>
 									</div>
 								</div>
 								<div class="buttons-to-right">
-									<a (click)="onEditEvent(event.event)" class="button gray">
-										<i class="sl sl-icon-note"></i> Edit</a>
-									<a (click)="onDeleteEvent(event.event, i)" class="button gray">
-										<i class="sl sl-icon-close"></i> Delete</a>
+									<a (click)="onCancelRequest(event, i)" class="button gray">
+										<i class="sl sl-icon-note"></i> Cancel</a>
 								</div>
 							</li>
 						</ul>

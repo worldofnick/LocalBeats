@@ -39,12 +39,16 @@
                         </div>
                       </div>
                     </div>
-                    <div *ngIf="!result.booking.approved" class="buttons-to-right">
+                    <div *ngIf="!result.booking.approved && result.booking.bookingType == 'artist-request'" class="buttons-to-right">
                       <a (click)="onDeclineArist(result.booking, i)" class="button gray">
                         <i class="sl sl-icon-close"></i> Decline</a>
                       <a (click)="onAcceptArtist(result.booking, i)" class="button gray">
                         <i class="im im-icon-Yes"></i> Accept</a>
                     </div>
+                    <div *ngIf="!result.booking.approved && result.booking.bookingType == 'host-request'" class="buttons-to-right">
+                        <a (click)="onDeclineArist(result.booking, i)" class="button gray">
+                          <i class="sl sl-icon-close"></i> Cancel Request</a>
+                      </div>
                     <div *ngIf="result.booking.approved" class="buttons-to-right">
                       <a (click)="onDeclineArist(result.booking, i)" class="button gray">
                         <i class="sl sl-icon-close"></i> Cancel Musician</a>

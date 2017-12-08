@@ -60,7 +60,7 @@ export class PickEventComponent implements OnInit {
     this.eventService.getEventsByUID(this.user._id).then((events: Event[]) => {
       this.events = events;   
     }).then(() =>
-    this.bookingService.getUserBookings(this.userService.user).then((bookings: any[]) => {
+    this.bookingService.getUserBookings(this.userService.user, 'host').then((bookings: any[]) => {
       // Loop through the bookings and see if a booking exists for the selected artist
       let tempEventIds: String[] = [];
       for (let result of bookings) {
