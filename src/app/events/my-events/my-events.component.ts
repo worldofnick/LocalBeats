@@ -109,6 +109,9 @@ export class MyEventsComponent implements OnInit {
           this.requestedArtistEvents.push(event);
         });
       }
+
+      console.log('My Events');
+      console.log(this.events)
     }));
   }
 
