@@ -11,7 +11,7 @@
 - Base Booking system in Angular
 
 ### Snehashish Mishra
-- Setting up the backend EXPRESS server, mongoDB via mongoose and hosting it on Heroku 
+- mongoDB via mongoose
 - Basic Authentication and Authorization using JWT
 - REST API for authentication, authorization, and User Routes
 - Basic Spotify authentication
@@ -21,10 +21,9 @@
 ### Nick Porter
 - Configure initial project setup
 - Get Project building on Heroku
-- Searching and filtering API through REST backend
 - Routes for Events, Bookings, Searching, Profiles
-- Backend REST API for notification system to send email notifications and notifications to users on site
-- Backend REST API for creating an event and booking
+- Searching and filtering with filters, location, and other parmeters API through REST backend
+- Backend REST API for creating an event and booking (accepting/declining booking)
 
 ### Adam Rosenberg
 - Profile page and profile editing form for the front end in Angular 
