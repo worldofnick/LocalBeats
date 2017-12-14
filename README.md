@@ -20,10 +20,11 @@
 
 ### Nick Porter
 - Configure initial project setup
-- Get Project building on Heroku
-- Routes for Events, Bookings, Searching, Profiles
+- Get Project building and hosted on Heroku
+- All backend work excluding authenitcation & Spotify
+- Routes for Events, Bookings, Searching, Users, Profile
 - Searching and filtering with filters, location, and other parmeters API through REST backend
-- Backend REST API for creating an event and booking (accepting/declining booking)
+- Backend REST API for creating and editing an event and booking (accepting/declining booking)
 
 ### Adam Rosenberg
 - Profile page and profile editing form for the front end in Angular 
