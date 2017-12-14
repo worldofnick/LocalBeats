@@ -29,16 +29,18 @@
 ## Work Done...
 
 ### Brandon Koch
-- Angular Architecture
+- Angular Project Architecture
 - Basic Landing Page and Authentication in Angular
 - Navigation Bar with Search and Filtering of Events/Musicians in Angular
 - Base Searching with Near You Google Maps functionality in Angular
-- Base Booking system in Angular
+- Designed UI for Landing Page, Booking Pages, and Search Reults
+- Create TypeScript models for User, Booking, and Search
+- Angular Services to interact with backend API
+- Design the logic and UI for creating, accepting, and declining a booking request.
 
 ### Snehashish Mishra
-- Learned javascript, node.js, express
-- Modified Server to run locally, added mongoDB via mongoose
-- Setup the model, routes, controller architecture for the EXPRESS server
+- Modified Server to run locally, added MongoDB via Mongoose
+- Setup the model, routes, controller architecture for the Express server
 - Basic Authentication and Authorization using JWT
 - REST API for authentication, authorization, and User Routes
 - Basic Spotify authentication
@@ -58,10 +60,13 @@
 - Reviews model and serviews in Angular TypeScript
 
 ### Adam Rosenberg
-- Profile page and profile editing form for the front end in Angular 
-- Front end for the events page / create events
-- Spotify widget
-- Help Brandon with booking system
+- Profile page and profile editing form for the frontend in Angular 
+- Frontend for the events page / create events / edit events
+- Integrated Spotify widget for frontend use
+- Create TypeScript models for Event, Profile, and Biiking
+- Designed UI for Profile, Event, and Bookings
+- Angular Services to interact with backend API
+- Help Brandon develp and design the logic and UI for creating, accepting, and declining a booking request.
 
 ## Future Features Backlog
 1. Advanced Authentication
