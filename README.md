@@ -12,16 +12,16 @@
    - Search algorithm which takes into account the filters that are selected ad returns a page of results that are managed in the backend. Clicking on any of the results will take one to the respective profile page.
 
 4.  Basic Event Booking System
-   - Allow artists to book for an event (from the profile page) or create an event. It does not include payment or contracts.
+    - Allow artists to book for an event (from the profile page) or create an event. It does not include payment or contracts.
 
 5.  Basic Spotify Playlist Integration
-   - The ability for artists to optionally integrate their Spotify profiles into a music feed on their profile, using the Spotify API.
+    - The ability for artists to optionally integrate their Spotify profiles into a music feed on their profile, using the Spotify API.
 
 6.  Backend relationships & Heroku
-   - Heroku will be used to host our mongoDB database. It will also host our backend and front end. 
+    - Heroku will be used to host our mongoDB database. It will also host our backend and front end. 
 
 7.  Mobile Web UI
-   - Allow for a flexible UI for different screen sizes and devices
+    - Allow for a flexible UI for different screen sizes and devices
 
 8. CSS Style Specifications
    - Create uniform CSS templates that all page design will refer to
