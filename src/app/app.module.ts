@@ -45,6 +45,7 @@ import { ContactDetailsComponent } from './contacts/contact-details/contact-deta
 import { ContactListComponent } from './contacts/contact-list/contact-list.component';
 import { SigninComponent } from './auth/signin/signin.component';
 import { UserService } from 'app/services/user.service';
+import { ImgurService } from 'app/services/imgur.service';
 import { SearchService } from 'app/services/search.service';
 import { BookingService } from 'app/services/booking.service';
 import { UserGuard } from 'app/services/user-guard.service';
@@ -141,7 +142,7 @@ import { PickEventComponent } from './events/pick-event/pick-event.component';
     AppRoutingModule,
     HttpClientModule
   ],
-  providers: [UserService, UserGuard, EventService, SearchService, BookingService, DatePipe],
+  providers: [UserService, UserGuard, EventService, SearchService, BookingService, DatePipe, ImgurService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
