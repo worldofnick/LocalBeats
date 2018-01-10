@@ -41,11 +41,8 @@ export class ProfileEditComponent implements OnInit {
         let blob = file as Blob;
 
         this.imgurService.uploadToImgur(file).then(link => {
-          console.log("link");
-          console.log(link);
           this.user.profilePicUrl = link as string;
         }).then(link => {
-            console.log("upload good");
             this.userService.onEditProfile(this.user).then((user: User) => {
               this.user = user;
               this.userService.user = this.user;
@@ -53,7 +50,7 @@ export class ProfileEditComponent implements OnInit {
             });
           }).catch(err => {
             console.log(err);
-            console.log("upload failed");
+            this.router.navigate(['/profile']);
         });
 }
 
