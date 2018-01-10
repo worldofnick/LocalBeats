@@ -21,6 +21,7 @@ export class Event {
     public deposit: string
     public isBooked: string
     public location: number[]
+    public eventPicUrl: string
 }
 
 
