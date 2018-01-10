@@ -33,7 +33,6 @@ export class ProfileEditComponent implements OnInit {
   }
 
   onChange(event: EventTarget) {
-        console.log("FILE UPLOAD");
         let eventObj: MSInputMethodContext = <MSInputMethodContext> event;
         let target: HTMLInputElement = <HTMLInputElement> eventObj.target;
         let files: FileList = target.files;
