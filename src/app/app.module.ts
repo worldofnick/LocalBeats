@@ -64,7 +64,6 @@ import { EventService } from 'app/services/event.service';
 import { EventPageComponent } from './events/event-page/event-page.component';
 import { MyEventsComponent } from './events/my-events/my-events.component';
 import { EventComponent } from './events/event/event.component';
-import { UserSearchResultComponent } from './search/user-search-result/user-search-result.component';
 import { EventSearchResultComponent } from './search/event-search-result/event-search-result.component';
 import { ApplicantListComponent } from './events/applicant-list/applicant-list.component';
 import { PickEventComponent } from './events/pick-event/pick-event.component';
@@ -92,7 +91,6 @@ import { PickEventComponent } from './events/pick-event/pick-event.component';
     EventPageComponent,
     MyEventsComponent,
     EventComponent,
-    UserSearchResultComponent,
     EventSearchResultComponent,
     ApplicantListComponent,
     PickEventComponent
