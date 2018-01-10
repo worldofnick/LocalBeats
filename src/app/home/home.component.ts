@@ -135,8 +135,8 @@ export class HomeComponent implements OnInit {
       this.router.navigate(['/event-page', result._id]); //this will go to the page about the event   
     } else{
       console.log("result form click: ");
-      console.log(result.user);
-      result = result.user as User;
+      console.log(result);
+      result = result as User;
       this.router.navigate(['/profile', result._id]); //this will go to the page about the user   
     }
   }
