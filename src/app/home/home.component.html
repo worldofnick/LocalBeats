@@ -68,9 +68,14 @@
 								<div class="listing-item-content">
 									<!-- <div class="listing-badge now-open">Now Open</div> -->
 
-									<div class="listing-item-inner" (click)="onClickResult(result)">
+									<div *ngIf="currentSearch.searchType == 'Event'" class="listing-item-inner" (click)="onClickResult(result.event)">
 										<h3 *ngIf="currentSearch.searchType == 'Event'">{{result.event.eventName}}</h3>
 										<span *ngIf="currentSearch.searchType == 'Event'">{{result.event.eventAddress}}</span>
+										<!-- <div class="star-rating" data-rating="3.5">
+												<div class="rating-counter">Hosted by: {{}}</div>
+											</div> -->
+									</div>
+									<div *ngIf="currentSearch.searchType == 'Musician'" class="listing-item-inner" (click)="onClickResult(result.user)">
 										<h3 *ngIf="currentSearch.searchType == 'Musician'">{{result.user.firstName}} {{result.user.lastName}}</h3>
 										<!-- <div class="star-rating" data-rating="3.5">
 												<div class="rating-counter">Hosted by: {{}}</div>

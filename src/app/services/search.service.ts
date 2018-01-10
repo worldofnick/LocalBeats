@@ -52,8 +52,6 @@ export class SearchService {
             .toPromise()
             .then((response: Response) => {
                 const data = response.json();
-                console.log(response)
-                console.log(data)
                 const events = data.events as Array<Event>;
                 return events;
             })
