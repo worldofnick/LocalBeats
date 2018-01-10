@@ -59,7 +59,8 @@
 
 								<!-- Image -->
 								<div class="listing-item-image">
-									<img src="assets/images/listing-item-01.jpg" alt="">
+									<img *ngIf="currentSearch.searchType == 'Event'" src="assets/images/listing-item-01.jpg" alt="">
+									<img *ngIf="currentSearch.searchType == 'Musician'" [src]="result.user.profilePicUrl" alt="">
 									<span class="tag" *ngIf="currentSearch.searchType == 'Event'">{{result.event.eventType}}</span>
 									<!-- <span class="tag" *ngIf="currentSearch.searchType == 'Musician'">{{result.user.genre}}</span> -->
 								</div>
