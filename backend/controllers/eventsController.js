@@ -13,17 +13,12 @@ exports.listAllEvents = function (req, res) {
     Events.find({}).populate('hostUser').populate('performerUser').exec(function (err, event) {
       if (err)
         return res.send(err);
-    
-        var events = [];
-        event.forEach(function(event) {
-            events.push({"event": event});
-        });
-        
-      return res.status(200).send({"events": events});
+
+      return res.status(200).send({"events": event});
     });
   };
 
-// app.get("/api/events/:eid", 
+// app.get("/api/events/:eid",
 exports.getEventByID = function (req, res) {
     Events.findById(req.params.eid).populate('hostUser').populate('performerUser').exec(function (err, event) {
         if (err) {
@@ -52,7 +47,7 @@ exports.createEvent = function (req, res) {
             });
         }
     });
-};    
+};
 
 exports.updateEventByID = function (req, res) {
     Events.findByIdAndUpdate(req.params.eid, req.body.event, { new: true }, function (err, event) {
@@ -105,12 +100,8 @@ exports.getUserEventsByUID = function (req, res) {
         if (err) {
             return res.status(500).send("Failed to get user events");
         } else {
-            var events = [];
-            doc.forEach(function(event) {
-                events.push({"event": event});
-            });
-            
-            return res.status(200).send({"events": events});
+
+            return res.status(200).send({"events": doc});
         }
     });
 };
@@ -215,12 +206,12 @@ exports.searchEvents = function(req, res) {
       if (err) {
           return res.status(500).send(err);
       } else {
-            var events = [];
-            doc.forEach(function(event) {
-                events.push({"event": event});
-            });
-            
-            return res.status(200).send({"events": events});
+            // var events = [];
+            // doc.forEach(function(event) {
+            //     events.push({"event": event});
+            // });
+
+            return res.status(200).send({"events": doc});
       }
   });
 };

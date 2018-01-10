@@ -60,7 +60,7 @@
 								<!-- Image -->
 								<div class="listing-item-image">
 									<img src="assets/images/listing-item-01.jpg" alt="">
-									<span class="tag" *ngIf="currentSearch.searchType == 'Event'">{{result.event.eventType}}</span>
+									<span class="tag" *ngIf="currentSearch.searchType == 'Event'">{{result.eventType}}</span>
 									<!-- <span class="tag" *ngIf="currentSearch.searchType == 'Musician'">{{result.user.genre}}</span> -->
 								</div>
 
@@ -68,15 +68,15 @@
 								<div class="listing-item-content">
 									<!-- <div class="listing-badge now-open">Now Open</div> -->
 
-									<div *ngIf="currentSearch.searchType == 'Event'" class="listing-item-inner" (click)="onClickResult(result.event)">
-										<h3 *ngIf="currentSearch.searchType == 'Event'">{{result.event.eventName}}</h3>
-										<span *ngIf="currentSearch.searchType == 'Event'">{{result.event.eventAddress}}</span>
+									<div *ngIf="currentSearch.searchType == 'Event'" class="listing-item-inner" (click)="onClickResult(result)">
+										<h3 *ngIf="currentSearch.searchType == 'Event'">{{result.eventName}}</h3>
+										<span *ngIf="currentSearch.searchType == 'Event'">{{result.eventAddress}}</span>
 										<!-- <div class="star-rating" data-rating="3.5">
 												<div class="rating-counter">Hosted by: {{}}</div>
 											</div> -->
 									</div>
-									<div *ngIf="currentSearch.searchType == 'Musician'" class="listing-item-inner" (click)="onClickResult(result.user)">
-										<h3 *ngIf="currentSearch.searchType == 'Musician'">{{result.user.firstName}} {{result.user.lastName}}</h3>
+									<div *ngIf="currentSearch.searchType == 'Musician'" class="listing-item-inner" (click)="onClickResult(result)">
+										<h3 *ngIf="currentSearch.searchType == 'Musician'">{{result.firstName}} {{result.lastName}}</h3>
 										<!-- <div class="star-rating" data-rating="3.5">
 												<div class="rating-counter">Hosted by: {{}}</div>
 											</div> -->

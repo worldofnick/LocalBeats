@@ -13,11 +13,11 @@ exports.listAllUsers = function (req, res) {
     if (err)
       return res.send(err);
     users.hashPassword = undefined;
-    var usrs = [];
-    users.forEach(function(user) {
-      usrs.push({"user": user});
-    });
-    return res.status(200).send({"users": usrs});
+    // var usrs = [];
+    // users.forEach(function(user) {
+    //   usrs.push({"user": user});
+    // });
+    return res.status(200).send({"users": users});
   });
 };
 
@@ -31,7 +31,7 @@ exports.getUserByID = function (req, res) {
 
 exports.updateUserByID = function (req, res, next) {
   User.findByIdAndUpdate(req.params.uid, req.body.user, { new: true }, function (err, user) {
-    if (err) { 
+    if (err) {
       return res.status(520).send({ message: "Error finding the user from this UID...", error: err });
     }
 
@@ -42,7 +42,7 @@ exports.updateUserByID = function (req, res, next) {
     }else {
       return res.status(200).send({ user: user });
     }
-    
+
   });
 };
 
@@ -63,7 +63,7 @@ exports.deleteUserByID = function (req, res) {
   });
 };
 
-// Params 
+// Params
 // name (string) name of the user
 // artist (boolean) true to return only artists, false to return all. Defaults to true
 // lat/lon..
@@ -113,8 +113,8 @@ exports.searchUsers = function (req, res) {
           doc.forEach(function(user) {
               users.push({"user": user});
           });
-          
-          return res.status(200).send({"users": users});
+
+          return res.status(200).send({"users": doc});
     }
   });
 };

@@ -14,12 +14,7 @@ exports.listAllBookings = function (req, res) {
       if (err)
         return res.send(err);
 
-        var bkkins = [];
-        bookings.forEach(function(booking) {
-            bkkins.push({"booking": booking});
-        });
-            
-        return res.status(200).send({"bookings": bkkins});
+        return res.status(200).send({"bookings": bookings});
     });
 };
 
@@ -29,12 +24,7 @@ exports.getBookingByEID = function (req, res) {
       if (err)
         return res.send(err);
 
-        var bkkins = [];
-        bookings.forEach(function(booking) {
-            bkkins.push({"booking": booking});
-        });
-            
-        return res.status(200).send({"bookings": bkkins});
+        return res.status(200).send({"bookings": bookings});
     });
 };
 
@@ -97,7 +87,7 @@ exports.deleteBookingByID = function (req, res) {
     });
 };
 
-// Params 
+// Params
 // uid (string) user id in question --requied
 // user_type (string) in {"arist", "host"} which is the user type of uid. Does the uid correspond to an artist or event host?--required
 // status (string) in {"approved", "pending", "completed"} --optional - defaults to all
@@ -111,7 +101,7 @@ exports.deleteBookingByID = function (req, res) {
 // Get a list of all bookings for a user
 // Get a list of all approved events for an artist
 exports.getUserBookingsByUID = function (req, res) {
-  
+
   if (req.query.uid == null) {
       return res.status(403).send({"error": "Must provided uid"});
   }
@@ -163,11 +153,11 @@ exports.getUserBookingsByUID = function (req, res) {
           return res.status(500).send("Failed to get user bookings");
       } else {
             var bkkins = [];
-            doc.forEach(function(booking) {
-                bkkins.push({"booking": booking});
-            });
-                
-            return res.status(200).send({"bookings": bkkins});
+            // doc.forEach(function(booking) {
+            //     bkkins.push({"booking": booking});
+            // });
+
+            return res.status(200).send({"bookings": doc});
       }
   });
 };
@@ -231,7 +221,6 @@ exports.userHasBooked = function(req, res) {
             return res.status(500).send("There was a problem declining the booking");
         } else {
             return res.status(200).send({"result": bookings.length == 0});
-        } 
+        }
     });
 };
-
