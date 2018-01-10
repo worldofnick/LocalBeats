@@ -173,6 +173,19 @@
                     </mat-form-field> -->
               </div>
             </div>
+
+            <div class="edit-profile-photo">
+              <img *ngIf="this.model.eventPicUrl" [src]="this.model.eventPicUrl" alt="">
+              <img *ngIf="!this.model.eventPicUrl" src="../../assets/images/no-img.jpg" alt="">
+              <div class="change-photo-btn">
+                <div class="photoUpload">
+                  <span>
+                    <i class="fa fa-upload"></i> Upload Photo</span>
+                  <input type="file" class="upload" accept=".jpg,.png" (change)="onChange($event)"/>
+                </div>
+              </div>
+            </div>
+
           </div>
           <!-- Section / End -->
 
