@@ -41,15 +41,15 @@ export class PickEventComponent implements OnInit {
   }
 
   onRequestEvent(event:Event){
-    const booking = new Booking(undefined, 'host-request', event.hostUser, this.artist, event._id, false, false);
+    const booking = new Booking(undefined, 'host-request', event.hostUser, this.artist, event, false, false);
     this.bookingService.createBooking(booking).then((booking: Booking) => this.getAvailableEvents());
   }
 
   onCancelRequest(event:Event) {
     this.bookingService.getBooking(event).then((bookings: any[]) => {
       for (let result of bookings) {
-        if (result.booking.eventEID == event._id && result.booking.performerUser._id == this.artist._id) {
-          this.bookingService.declineBooking(result.booking).then(() => this.getAvailableEvents())
+        if (result.eventEID._id == event._id && result.performerUser._id == this.artist._id) {
+          this.bookingService.declineBooking(result).then(() => this.getAvailableEvents())
         }
       }
     });
@@ -64,8 +64,8 @@ export class PickEventComponent implements OnInit {
       // Loop through the bookings and see if a booking exists for the selected artist
       let tempEventIds: String[] = [];
       for (let result of bookings) {
-        if (result.booking.performerUser._id == this.artist._id) {
-          tempEventIds.push(result.booking.eventEID);
+        if (result.performerUser._id == this.artist._id) {
+          tempEventIds.push(result.eventEID._id);
         }
       }
       // If so, remove those event ids from event list
@@ -74,7 +74,7 @@ export class PickEventComponent implements OnInit {
       for (let event of this.events) {
         let found = false
         for (let tempEventId of tempEventIds) {
-          if (tempEventId == event.event._id) {
+          if (tempEventId == event._id) {
             found = true;
             tempRequestedEvents.push(event)
           }

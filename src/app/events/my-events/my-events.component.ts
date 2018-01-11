@@ -86,12 +86,14 @@ export class MyEventsComponent implements OnInit {
       let tempappliedEventsId: string[] = []
       let tempRequestArtistEventId: string[] = []
       for (let result of bookings) {
-        if (result.booking.bookingType == 'host-request') {
-          tempRequestArtistEventId.push(result.booking.eventEID);
-          this.requestedArtistBookings.push(result.booking);
-        } else if (result.booking.bookingType == 'artist-apply') {
-          tempappliedEventsId.push(result.booking.eventEID);
-          this.appliedBookings.push(result.booking);
+        console.log('user bookings:')
+        console.log(result)
+        if (result.bookingType == 'host-request') {
+          tempRequestArtistEventId.push(result.eventEID._id);
+          this.requestedArtistBookings.push(result);
+        } else if (result.bookingType == 'artist-apply') {
+          tempappliedEventsId.push(result.eventEID._id);
+          this.appliedBookings.push(result);
         }
       }
       for (let id of tempappliedEventsId) {

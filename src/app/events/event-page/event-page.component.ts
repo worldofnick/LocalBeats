@@ -60,12 +60,12 @@ export class EventPageComponent implements OnInit {
     }).then(() => this.bookingService.getBooking(this.model).then((bookings: any[]) => {
       this.currentBookings = bookings;
       for (let result of this.currentBookings) {
-        if (result.booking.approved) {
-          this.approvedBookings.push(result.booking)
+        if (result.approved) {
+          this.approvedBookings.push(result)
         }
-        if (this.userSerivce.user != null && result.booking.performerUser._id === this.userSerivce.user._id){
+        if (this.userSerivce.user != null && result.performerUser._id === this.userSerivce.user._id){
           this.hasApplied = true;
-          this.userBooking = result.booking
+          this.userBooking = result
         }
       }
       console.log(this.approvedBookings);
@@ -79,7 +79,7 @@ export class EventPageComponent implements OnInit {
   
 
   public applyToEvent(){
-    const booking = new Booking(undefined, 'artist-apply', this.model.hostUser, this.userSerivce.user, this.model._id, false, false)
+    const booking = new Booking(undefined, 'artist-apply', this.model.hostUser, this.userSerivce.user, this.model, false, false)
     this.bookingService.createBooking(booking).then((booking: Booking) => {
       this.hasApplied = true;
       this.userBooking = booking;

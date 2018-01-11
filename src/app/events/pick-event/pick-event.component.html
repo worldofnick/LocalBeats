@@ -36,15 +36,15 @@
                         <div class="inner">
                           <h3>
                               <a (click)="onPickEvent(event.event)">
-                            {{event.event.eventName}}
+                            {{event.eventName}}
                             </a>
                           </h3>
-                          <span>{{ event.event.address }}</span>
+                          <span>{{ event.address }}</span>
                         </div>
                       </div>
                     </div>
                     <div class="buttons-to-right">
-                      <a (click)="onRequestEvent(event.event)" class="button gray">
+                      <a (click)="onRequestEvent(event)" class="button gray">
                         <i class="sl sl-icon-note"></i>Request Artist for this Event</a>
                     </div>
                   </li>
@@ -62,23 +62,23 @@
                 <li *ngFor="let result of this.requestedEvents; let i = index">
                   <div class="list-box-listing">
                     <div class="list-box-listing-img">
-                      <a (click)="onPickEvent(event.event)">
+                      <a (click)="onPickEvent(event)">
                         <img src="../../assets/images/jimsmall.png" alt="">
                       </a>
                     </div>
                     <div class="list-box-listing-content" (click)="onPickEvent(result.event)">
                       <div class="inner">
                         <h3>
-                            <a (click)="onPickEvent(event.event)">
-                          {{result.event.eventName}}
+                            <a (click)="onPickEvent(event)">
+                          {{result.eventName}}
                           </a>
                         </h3>
-                        <span>{{ result.event.address }}</span>
+                        <span>{{ result.address }}</span>
                       </div>
                     </div>
                   </div>
                   <div class="buttons-to-right">
-                    <a (click)="onCancelRequest(result.event)" class="button gray">
+                    <a (click)="onCancelRequest(result)" class="button gray">
                       <i class="sl sl-icon-note"></i>Cancel Artist for this Event</a>
                   </div>
                 </li>
