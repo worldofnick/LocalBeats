@@ -66,7 +66,7 @@
 - Create TypeScript models for Event, Profile, and Biiking
 - Designed UI for Profile, Event, and Bookings
 - Angular Services to interact with backend API
-- Help Brandon develp and design the logic and UI for creating, accepting, and declining a booking request.
+- Help Brandon develop and design the logic and UI for creating, accepting, and declining a booking request.
 
 ## Future Features Backlog
 1. Advanced Authentication
