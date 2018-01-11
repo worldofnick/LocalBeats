@@ -10,7 +10,7 @@ var config    = require('../../config.js');
 // ====== Bookings ROUTES ======
 
 exports.listAllBookings = function (req, res) {
-    Bookings.find({}).populate('hostUser').populate('performerUser').exec(function (err, bookings) {
+    Bookings.find({}).populate('hostUser').populate('performerUser').populate('eventEID').exec(function (err, bookings) {
       if (err)
         return res.send(err);
 
@@ -20,7 +20,7 @@ exports.listAllBookings = function (req, res) {
 
 // params eid
 exports.getBookingByEID = function (req, res) {
-    Bookings.find({eventEID: req.query.eid}).populate('hostUser').populate('performerUser').exec(function (err, bookings) {
+    Bookings.find({eventEID: req.query.eid}).populate('hostUser').populate('performerUser').populate('eventEID').exec(function (err, bookings) {
       if (err)
         return res.send(err);
 
@@ -29,7 +29,7 @@ exports.getBookingByEID = function (req, res) {
 };
 
 exports.getBookingByID = function (req, res) {
-  Bookings.findById(req.params.bid).populate('hostUser').populate('performerUser').exec(function (err, booking) {
+  Bookings.findById(req.params.bid).populate('hostUser').populate('performerUser').populate('eventEID').exec(function (err, booking) {
       if (err) {
           return res.status(500).send("Failed to get booking");
       } else {
@@ -47,7 +47,7 @@ exports.createBooking = function (req, res) {
                 description: "Failed to create a booking"
             });
         } else {
-            Bookings.findById(booking._id).populate('hostUser').populate('performerUser').exec(function (err, booking) {
+            Bookings.findById(booking._id).populate('hostUser').populate('performerUser').populate('eventEID').exec(function (err, booking) {
                 if (err) {
                     return res.status(500).send("Failed to create booking");
                 } else {
@@ -59,11 +59,11 @@ exports.createBooking = function (req, res) {
 };
 
 exports.updateBookingByID = function (req, res) {
-    Bookings.findByIdAndUpdate(req.params.bid, req.body.booking, { new: true }).populate('hostUser').populate('performerUser').exec(function (err, booking) {
+    Bookings.findByIdAndUpdate(req.params.bid, req.body.booking, { new: true }).populate('hostUser').populate('performerUser').populate('eventEID').exec(function (err, booking) {
         if (err) {
             return res.status(500).send("There was a problem updating the booking.");
         }
-        Bookings.findById(booking._id).populate('hostUser').populate('performerUser').exec(function (err, booking) {
+        Bookings.findById(booking._id).populate('hostUser').populate('performerUser').populate('eventEID').exec(function (err, booking) {
             if (err) {
                 return res.status(500).send("Failed to update booking");
             } else {
@@ -148,7 +148,7 @@ exports.getUserBookingsByUID = function (req, res) {
       query.eventEID = req.query.eid;
   }
 
-  Bookings.find(query).limit(limit).skip(skip).sort({ fromDate: -1 }).populate('hostUser').populate('performerUser').exec(function (err, doc) {
+  Bookings.find(query).limit(limit).skip(skip).sort({ fromDate: -1 }).populate('hostUser').populate('performerUser').populate('eventEID').exec(function (err, doc) {
       if (err) {
           return res.status(500).send("Failed to get user bookings");
       } else {

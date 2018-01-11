@@ -103,12 +103,7 @@ exports.getUserReviewsByUIDFrom = function (req, res) {
       if (err) {
           return res.status(500).send("Failed to get user reviews");
       } else {
-            // var revws = [];
-            // doc.forEach(function(review) {
-            //     revws.push({"review": review});
-            // });
-                
-            return res.status(200).send({"reviews": doc});
+          return res.status(200).send({"reviews": doc});
       }
   });
 };
