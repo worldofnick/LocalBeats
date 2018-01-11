@@ -3,6 +3,7 @@ import { User } from 'app/models/user';
 import { Router, ActivatedRoute } from '@angular/router';
 import { NgForm } from '@angular/forms/src/directives/ng_form';
 import { UserService } from 'app/services/user.service';
+import { ImgurService } from 'app/services/imgur.service';
 import { print } from 'util';
 import { Injectable } from '@angular/core';
 
@@ -26,11 +27,32 @@ export class ProfileEditComponent implements OnInit {
   public firstPass: string;
   public secondPass: string;
 
-  constructor(private userService: UserService, private router: Router, private route: ActivatedRoute) { 
+  constructor(private userService: UserService, private imgurService: ImgurService, private router: Router, private route: ActivatedRoute) {
     // this.user = userService.user;
     // this.model = new User(this.user._id, this.user.firstName, this.user.lastName, this.user.email, this.user.password);
-    
   }
+
+  onChange(event: EventTarget) {
+        let eventObj: MSInputMethodContext = <MSInputMethodContext> event;
+        let target: HTMLInputElement = <HTMLInputElement> eventObj.target;
+        let files: FileList = target.files;
+        let file: File = files[0];
+        let blob = file as Blob;
+
+        this.imgurService.uploadToImgur(file).then(link => {
+          this.user.profilePicUrl = link as string;
+        }).then(link => {
+            this.userService.onEditProfile(this.user).then((user: User) => {
+              this.user = user;
+              this.userService.user = this.user;
+              this.router.navigate(['/profile']);
+            });
+          }).catch(err => {
+            console.log(err);
+            this.router.navigate(['/profile']);
+        });
+}
+
 
   ngOnInit() {
     this.user = this.userService.user;
@@ -43,10 +65,10 @@ export class ProfileEditComponent implements OnInit {
     //   id: this.route.snapshot.params['id']
     // }
     // //TODO set up subscription. fetching route paramters reactively
- 
+
     // this.userService.getUserByID(this.userID).then((gottenUser:User) => {
-    //   this.user = gottenUser;   
-    //   // this.eventService.events = this.events;   
+    //   this.user = gottenUser;
+    //   // this.eventService.events = this.events;
     // });
   }
 
@@ -55,8 +77,8 @@ export class ProfileEditComponent implements OnInit {
     this.user.genres = []
     this.user.genres.push(this.dropDownGenre)
     this.userService.onEditProfile(this.user).then((user: User) => {
-      this.user = user;      
-      this.userService.user = this.user; 
+      this.user = user;
+      this.userService.user = this.user;
       this.router.navigate(['/profile']);
     });
 
@@ -85,7 +107,7 @@ export class ProfileEditComponent implements OnInit {
     console.log("user before form");
     console.log(this.user);
     const firstName = form.value.firstname;
-    
+
     const lastName = form.value.lastname;
     const email: string = form.value.email;
     const genre: string = form.value.genre;
@@ -104,8 +126,8 @@ export class ProfileEditComponent implements OnInit {
     console.log(this.user);
 
     this.userService.onEditProfile(this.user).then((user: User) => {
-      this.user = user;      
-      this.userService.user = this.user; 
+      this.user = user;
+      this.userService.user = this.user;
       this.router.navigate(['/profile']);
     });
   }
@@ -128,5 +150,5 @@ export class ProfileEditComponent implements OnInit {
       })
     }
   }
-  
+
 }

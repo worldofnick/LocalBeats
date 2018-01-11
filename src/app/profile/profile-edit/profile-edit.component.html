@@ -19,12 +19,12 @@
 
 							<!-- Profile picture -->
 							<div class="edit-profile-photo">
-								<img src="../../assets/images/jimsmall.png" alt="">
+								<img [src]="user.profilePicUrl" alt="">
 								<div class="change-photo-btn">
 									<div class="photoUpload">
 										<span>
 											<i class="fa fa-upload"></i> Upload Photo</span>
-										<input type="file" class="upload" />
+										<input type="file" class="upload" accept=".jpg,.png" (change)="onChange($event)"/>
 									</div>
 								</div>
 							</div>

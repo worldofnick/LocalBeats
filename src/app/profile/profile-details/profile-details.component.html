@@ -7,7 +7,7 @@
 
         <div class="user-profile-titlebar">
           <div class="user-profile-avatar">
-            <img src="../../assets/images/jimsmall.png" alt="">
+            <img [src]="user.profilePicUrl" alt="">
           </div>
           <div class="user-profile-name">
             <ng-template [ngIf]="this.user">

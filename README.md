@@ -58,6 +58,7 @@
 - Backend REST API for revewing a user
 - Backend REST API for creating and editing an event and accepting/declining booking
 - Reviews model and serviews in Angular TypeScript
+- Uploading and storing images
 
 ### Adam Rosenberg
 - Profile page and profile editing form for the frontend in Angular 

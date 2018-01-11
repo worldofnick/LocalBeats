@@ -4,6 +4,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { NgForm } from '@angular/forms/src/directives/ng_form';
 import { UserService } from 'app/services/user.service';
 import { EventService } from 'app/services/event.service';
+import { ImgurService } from 'app/services/imgur.service';
 import { print } from 'util';
 import { Injectable } from '@angular/core';
 import { Event } from 'app/models/event';
@@ -35,7 +36,7 @@ export class CreateEventComponent implements OnInit {
   @ViewChild("search")
   public searchElementRef: ElementRef;
 
-  constructor(private eventService: EventService, private userSerivce: UserService, private router: Router,
+  constructor(private eventService: EventService, private userSerivce: UserService, private imgurService: ImgurService, private router: Router,
     private ngZone: NgZone, private mapsAPILoader: MapsAPILoader, private route: ActivatedRoute) { }
 
   ngOnInit() {
@@ -116,6 +117,24 @@ export class CreateEventComponent implements OnInit {
     }
   }
 
+  onChange(event: EventTarget) {
+        let eventObj: MSInputMethodContext = <MSInputMethodContext> event;
+        let target: HTMLInputElement = <HTMLInputElement> eventObj.target;
+        let files: FileList = target.files;
+        let file: File = files[0];
+        let blob = file as Blob;
+
+        this.imgurService.uploadToImgur(file).then(link => {
+          this.model.eventPicUrl = link as string;
+        }).then(link => {
+            // update the image view
+
+          }).catch(err => {
+            console.log(err);
+            this.router.navigate(['/my-events']); //this will go back to my events.
+        });
+}
+
   onCreateEvent(form: NgForm) {
 
 
@@ -138,7 +157,7 @@ export class CreateEventComponent implements OnInit {
     // const deposit: string
     // const isBooked: string
     // this.model.zip = zip;
-  
+
     try {
       const city = this.place.address_components[0].long_name
       const state = this.place.address_components[2].short_name

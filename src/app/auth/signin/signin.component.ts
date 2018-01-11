@@ -37,7 +37,8 @@ export class SigninComponent implements OnInit {
       password: password,
       spotifyID: null,
       genres: [],
-      isArtist: true
+      isArtist: true,
+      profilePicUrl: "https://www.vccircle.com/wp-content/uploads/2017/03/default-profile.png"
     };
 
     this.userService.signinUser(this.user).then((user: User) => {
@@ -60,7 +61,8 @@ export class SigninComponent implements OnInit {
       password: password,
       spotifyID: null,
       genres: [],
-      isArtist: true
+      isArtist: true,
+      profilePicUrl: "https://www.vccircle.com/wp-content/uploads/2017/03/default-profile.png"
     };
 
     this.userService.signupUser(this.user).then((user: User) => {

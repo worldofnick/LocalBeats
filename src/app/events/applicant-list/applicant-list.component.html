@@ -25,7 +25,7 @@
                     <div class="list-box-listing">
                       <div class="list-box-listing-img">
                         <a (click)="onClickArtist(result.booking.performerUser._id)">
-                          <img src="../../assets/images/jimsmall.png" alt="">
+                          <img [src]="result.booking.performerUser.profilePicUrl" alt="">
                         </a>
                       </div>
                       <div class="list-box-listing-content" (click)="onClickArtist(result.booking.performerUser._id)">
