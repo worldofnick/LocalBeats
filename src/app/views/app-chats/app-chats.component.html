@@ -1,0 +1,163 @@
+<mat-card class="p-0">
+  <mat-sidenav-container class="chat-container">
+    <!-- Left sidebar -->
+    <mat-sidenav class="chat-sidenav" #chatSidebar [opened]="isSidenavOpen" mode="side">
+      <!-- Left side topbar -->
+      <mat-toolbar color="primary" class="chat-sidebar-toolbar">
+        <a href="" class="toolbar-avatar online">
+          <img src="assets/images/face-3.jpg" alt="">
+          <span class="status-dot"></span>
+        </a>
+      </mat-toolbar>
+      <!-- Left side contact list -->
+      <mat-nav-list class="inbox-nav-list" role="list">
+        <mat-list-item
+        *ngFor="let user of connectedUsers"
+        (click)="changeActiveUser(user)">
+          <a 
+          mat-list-avatar 
+          [ngClass]="{online: user.isOnline}"
+          class="toolbar-avatar">
+            <img [src]="user.photo" alt="">
+            <span class="status-dot"></span>
+          </a>
+          <h6 matLine>{{user.name}}</h6>
+          <p matLine class="text-muted">{{user.lastMsg}}</p>
+        </mat-list-item>
+        
+      </mat-nav-list>
+    </mat-sidenav>
+
+    <!-- Right side -->
+    <div class="chats-wrap">
+      <!-- Right side topbar -->
+      <mat-toolbar color="primary" class="chat-toolbar mb-1">
+        <!-- sidebar toggle button -->
+        <button 
+        mat-icon-button
+        [style.alignSelf]="'center'"
+        class="mr-1" 
+        (click)="chatSidebar.toggle()"><mat-icon>short_text</mat-icon>
+        </button>
+
+        <!-- Selected active user -->
+        <div 
+        class="active-chat-user" 
+        fxLayout="row" 
+        fxLayoutAlign="start center">
+          <a 
+          [ngClass]="{online: activeChatUser.isOnline}" 
+          class="toolbar-avatar mr-1">
+            <img [src]="activeChatUser.photo" alt="">
+            <span class="status-dot"></span>
+          </a>
+          <div fxLayout="column">
+            <h6 class="m-0 font-normal fz-1">{{activeChatUser.name}}</h6>
+          </div>
+        </div>
+
+        <!-- Right side top menu -->
+        <span fxFlex></span>
+        <button 
+        [style.alignSelf]="'center'" 
+        mat-icon-button 
+        [matMenuTriggerFor]="toolbarDDMenu" 
+        class="topbar-button-right hidden-on-open">
+            <mat-icon>more_vert</mat-icon>
+        </button>
+        <mat-menu #toolbarDDMenu="matMenu">
+            <button mat-menu-item><mat-icon>account_circle</mat-icon>Contact info</button>
+            <button mat-menu-item><mat-icon>volume_mute</mat-icon>Mute</button>
+            <button mat-menu-item><mat-icon>delete</mat-icon>Clear chat</button>
+        </mat-menu>
+      </mat-toolbar>
+
+      <!-- Main chat body -->
+      <div class="conversations-hold">
+        <!-- single chat item -->
+        <div class="single-conversation sender" fxLayout="row">
+          <a href="" class="toolbar-avatar online">
+            <img src="assets/images/face-2.jpg" alt="">
+            <span class="status-dot"></span>
+          </a>
+          <div>
+            <h5 class="chat-username text-muted">Gevorg Spartak</h5>
+            <div class="conversation-msg">
+              Hello, How are you
+            </div>
+            <p class="chat-date text-muted">10 min ago</p>
+          </div>
+        </div>
+        <!-- single chat item -->
+        <div class="single-conversation me" fxLayout="row">
+          <a href="" class="toolbar-avatar online">
+            <img src="assets/images/face-3.jpg" alt="">
+            <span class="status-dot"></span>
+          </a>
+          <div>
+            <h5 class="chat-username text-muted">Dave Wolf</h5>
+            <div class="conversation-msg">
+              I'm good, Thanks
+            </div>
+            <p class="chat-date text-muted">10 min ago</p>
+          </div>
+        </div>
+        <!-- single chat item -->
+        <div class="single-conversation sender" fxLayout="row">
+          <a href="" class="toolbar-avatar online">
+            <img src="assets/images/face-2.jpg" alt="">
+            <span class="status-dot"></span>
+          </a>
+          <div>
+            <h5 class="chat-username text-muted">Gevorg Spartak</h5>
+            <div class="conversation-msg">
+              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Delectus, obcaecati!
+            </div>
+            <p class="chat-date text-muted">10 min ago</p>
+          </div>
+        </div>
+        <!-- single chat item -->
+        <div class="single-conversation me" fxLayout="row">
+          <a href="" class="toolbar-avatar online">
+            <img src="assets/images/face-3.jpg" alt="">
+            <span class="status-dot"></span>
+          </a>
+          <div>
+            <h5 class="chat-username text-muted">Dave Wolf</h5>
+            <div class="conversation-msg">
+              Consectetur adipisicing elit. Delectus, obcaecati!
+            </div>
+            <p class="chat-date text-muted">10 min ago</p>
+          </div>
+        </div>
+        <!-- single chat item -->
+        <div class="single-conversation sender" fxLayout="row">
+          <a href="" class="toolbar-avatar online">
+            <img src="assets/images/face-2.jpg" alt="">
+            <span class="status-dot"></span>
+          </a>
+          <div>
+            <h5 class="chat-username text-muted">Gevorg Spartak</h5>
+            <div class="conversation-msg">
+              Consectetur adipisicing elit. Delectus, obcaecati!
+            </div>
+            <p class="chat-date text-muted">10 min ago</p>
+          </div>
+        </div>
+      </div>
+      <mat-divider></mat-divider>
+
+      <!-- Input box and send button -->
+      <div class="chat-input-actions" fxLayout="row">
+        <mat-form-field class="full-width mr-1">
+          <input
+          matInput
+          placeholder="Type your message"
+          value="">
+        </mat-form-field>
+        <button mat-fab color="primary"><mat-icon>send</mat-icon></button>
+      </div>
+
+    </div>
+  </mat-sidenav-container>
+</mat-card>
