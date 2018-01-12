@@ -12,7 +12,7 @@ import { RoutePartsService } from "./services/route-parts/route-parts.service";
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  appTitle = 'Egret';
+  appTitle = 'localBeats';
   pageTitle = '';
 
   constructor(public title: Title, 
