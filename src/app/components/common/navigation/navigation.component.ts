@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { NavigationService } from "../../../services/navigation/navigation.service";
+import { UserService } from '../../../services/auth/user.service';
 
 @Component({
   selector: 'navigation',
@@ -8,11 +8,64 @@ import { NavigationService } from "../../../services/navigation/navigation.servi
 export class NavigationComponent {
   menuItems:any[];
 
-  constructor(private navService: NavigationService) {}
+  constructor(private userService: UserService) {}
   ngOnInit() {
-    // Loads menu items from NavigationService
-    this.navService.menuItems$.subscribe(menuItem => {
-      this.menuItems = menuItem;
-    });
+    this.menuItems = [
+      {
+        name: 'HOME',
+        type: 'link',
+        tooltip: 'Home',
+        icon: 'home',
+        state: 'home'
+      },
+      {
+        name: 'DASHBOARD',
+        type: 'link',
+        tooltip: 'Dashboard',
+        icon: 'dashboard',
+        state: 'dashboard'
+      },
+      {
+        name: 'CHAT',
+        type: 'link',
+        tooltip: 'Chat',
+        icon: 'chat',
+        state: 'chat'
+      },
+      {
+        name: 'CALENDAR',
+        type: 'link',
+        tooltip: 'Calendar',
+        icon: 'date_range',
+        state: 'calendar'
+      },
+      {
+        name: 'PROFILE',
+        type: 'dropDown',
+        tooltip: 'Profile',
+        icon: 'person',
+        state: 'profile',
+        sub: [
+          {name: 'OVERVIEW', state: 'overview'},
+          {name: 'SETTINGS', state: 'settings'},
+          {name: 'BLANK', state: 'blank'},
+        ]
+      },
+      {
+        name: 'SESSIONS',
+        type: 'dropDown',
+        tooltip: 'Pages',
+        icon: 'view_carousel',
+        state: 'sessions',
+        sub: [
+          {name: 'SIGNUP', state: 'signup'},
+          {name: 'SIGNIN', state: 'signin'},
+          {name: 'FORGOT', state: 'forgot-password'},
+          {name: 'LOCKSCREEN', state: 'lockscreen'},
+          {name: 'NOTFOUND', state: '404'},
+          {name: 'ERROR', state: 'error'}
+        ]
+      }
+    ];
   }
 }

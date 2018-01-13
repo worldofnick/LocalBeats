@@ -12,7 +12,7 @@ import { AppComponent } from './app.component';
 import { RoutePartsService } from './services/route-parts/route-parts.service';
 import { NavigationService } from "./services/navigation/navigation.service";
 import { UserService } from './services/auth/user.service';
-import { AuthGuard } from './services/auth/auth.guard';
+import { UserGuard } from './services/auth/user-guard.service';
 
 export function createTranslateLoader(http: Http) {
   return new TranslateStaticLoader(http, './assets/i18n', '.json');
@@ -36,7 +36,7 @@ export function createTranslateLoader(http: Http) {
     RoutePartsService, 
     NavigationService,
     UserService, 
-    AuthGuard
+    UserGuard
   ],
   bootstrap: [AppComponent]
 })

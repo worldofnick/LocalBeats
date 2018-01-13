@@ -66,7 +66,7 @@
       </mat-grid-tile>
     </mat-grid-list>
   </mat-menu> -->
-  <ng-template [ngIf]="userService.isAuthenticated()">
+  <div *ngIf="userService.isAuthenticated(); else login">
     <!-- Notification toggle button -->
     <button 
     mat-icon-button
@@ -99,5 +99,17 @@
         <span>Sign out</span>
       </button>
     </mat-menu>
+  </div>
+  <ng-template #login>
+    <button 
+    mat-icon-button
+    [routerLink]="['/auth']" 
+    [style.width]="'auto'"
+    [style.overflow]="'visible'"
+    matTooltip="Login or Register"
+    class="topbar-button-right">
+      <span>Login</span>
+      <mat-icon>headset</mat-icon>
+    </button>
   </ng-template>
 </mat-toolbar>

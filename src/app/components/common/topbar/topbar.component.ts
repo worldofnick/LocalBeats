@@ -24,6 +24,7 @@ export class TopbarComponent implements OnInit {
   constructor(private themeService: ThemeService, private userService: UserService) {}
   ngOnInit() {
     this.egretThemes = this.themeService.egretThemes;
+    domHelper.toggleClass(document.body, 'collapsed-menu');
   }
   setLang() {
     this.onLangChange.emit(this.currentLang);

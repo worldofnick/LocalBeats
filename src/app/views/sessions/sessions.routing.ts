@@ -10,14 +10,11 @@ import { ErrorComponent } from './error/error.component';
 export const SessionsRoutes: Routes = [
   {
     path: '',
+    component: SigninComponent,
     children: [{
       path: 'signup',
       component: SignupComponent,
-      data: { title: 'Signup' }
-    }, {
-      path: 'signin',
-      component: SigninComponent,
-      data: { title: 'Signin' }
+      data: { title: 'Signup', breadcrumb: 'SIGNUP' }
     }, {
       path: 'forgot-password',
       component: ForgotPasswordComponent,

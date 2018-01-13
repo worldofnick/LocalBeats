@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { UserService } from '../../../../services/auth/user.service';
 import { 
   Router, 
   NavigationEnd, 
@@ -28,7 +29,8 @@ export class AdminLayoutComponent implements OnInit {
   constructor(
     private router: Router,
     public translate: TranslateService,
-    public themeService: ThemeService
+    public themeService: ThemeService,
+    private userService: UserService
   ) {
     // Close sidenav after route change in mobile
     router.events.filter(event => event instanceof NavigationEnd)

@@ -2,11 +2,11 @@
   <!-- Regular menu items -->
   <div *ngFor="let item of menuItems">
     <!-- if it's not desabled and not a separator and not icon -->
-    <mat-list-item 
+    <mat-list-item
     sideNavAccordion 
     class="sidebar-list-item" 
     role="listitem"
-    *ngIf="!item.disabled && item.type !== 'separator' && item.type !== 'icon'"
+    *ngIf="!item.disabled && (item.name != 'HOME' && userService.isAuthenticated()) || item.name == 'HOME'"
     [ngClass]="{'has-submenu': item.type === 'dropDown'}"
     routerLinkActive="open">
       <a routerLink="/{{item.state}}" *ngIf="item.type === 'link'">
