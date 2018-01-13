@@ -8,7 +8,7 @@ import { AuthGuard } from './services/auth/auth.guard';
 export const rootRouterConfig: Routes = [
   { 
     path: '', 
-    redirectTo: 'dashboard', 
+    redirectTo: 'home', 
     pathMatch: 'full' 
   },
   {
@@ -25,11 +25,16 @@ export const rootRouterConfig: Routes = [
   {
     path: '', 
     component: AdminLayoutComponent,
-    canActivate: [AuthGuard],
     children: [
       { 
+        path: 'home', 
+        loadChildren: './views/home/home.module#HomeModule', 
+        data: { title: 'Home', breadcrumb: 'HOME'}
+      },
+      { 
         path: 'dashboard', 
-        loadChildren: './views/dashboard/dashboard.module#DashboardModule', 
+        loadChildren: './views/dashboard/dashboard.module#DashboardModule',
+        canActivate: [AuthGuard], 
         data: { title: 'Dashboard', breadcrumb: 'DASHBOARD'}
       },
       {

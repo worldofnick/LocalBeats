@@ -29,7 +29,6 @@ import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout.compon
 import { AuthLayoutComponent } from './layouts/auth-layout/auth-layout.component';
 import { CommonDirectivesModule } from '../../directives/common/common-directives.module';
 import { ThemeService } from '../../services/theme/theme.service';
-import { CustomizerComponent } from './customizer/customizer.component';
 import { BreadcrumbComponent } from './breadcrumb/breadcrumb.component';
 
 @NgModule({
@@ -62,7 +61,7 @@ import { BreadcrumbComponent } from './breadcrumb/breadcrumb.component';
     AuthLayoutComponent,
     TopbarComponent, 
     NavigationComponent, 
-    NotificationsComponent, CustomizerComponent, BreadcrumbComponent
+    NotificationsComponent, BreadcrumbComponent
   ],
   providers: [ThemeService],
   exports: []

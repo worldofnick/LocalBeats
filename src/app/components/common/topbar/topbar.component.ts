@@ -1,6 +1,7 @@
 import { Component, OnInit, EventEmitter, Input, Output } from '@angular/core';
 import * as domHelper from '../../../helpers/dom.helper';
 import { ThemeService } from '../../../services/theme/theme.service';
+import { UserService } from '../../../services/auth/user.service';
 
 @Component({
   selector: 'topbar',
@@ -19,8 +20,8 @@ export class TopbarComponent implements OnInit {
     code: 'es',
   }]
   egretThemes;
-  
-  constructor(private themeService: ThemeService) {}
+
+  constructor(private themeService: ThemeService, private userService: UserService) {}
   ngOnInit() {
     this.egretThemes = this.themeService.egretThemes;
   }

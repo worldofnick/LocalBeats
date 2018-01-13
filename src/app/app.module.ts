@@ -11,6 +11,7 @@ import { AppComponent } from './app.component';
 
 import { RoutePartsService } from './services/route-parts/route-parts.service';
 import { NavigationService } from "./services/navigation/navigation.service";
+import { UserService } from './services/auth/user.service';
 import { AuthGuard } from './services/auth/auth.guard';
 
 export function createTranslateLoader(http: Http) {
@@ -33,7 +34,8 @@ export function createTranslateLoader(http: Http) {
   declarations: [AppComponent],
   providers: [
     RoutePartsService, 
-    NavigationService, 
+    NavigationService,
+    UserService, 
     AuthGuard
   ],
   bootstrap: [AppComponent]
