@@ -4,9 +4,9 @@
     <div id="scroll-area" class="navigation-hold" fxLayout="column">
       <!-- App Logo -->
       <div class="branding default-bg">
-          <img src="assets/images/logo.png" alt="" class="app-logo">
+          <img src="assets/images/logo.jpg" alt="" class="app-logo">
           <!-- Two different logos for dark and light themes -->
-          <img 
+          <!-- <img 
           src="assets/images/logo-text-white.png" 
           alt="" 
           class="app-logo-text"
@@ -15,7 +15,7 @@
           src="assets/images/logo-text.png" 
           alt="" 
           class="app-logo-text"
-          *ngIf="themeService.activatedThemeName.indexOf('dark') === -1">
+          *ngIf="themeService.activatedThemeName.indexOf('dark') === -1"> -->
       </div>
       <ng-template [ngIf]="userService.isAuthenticated()">
         <!-- Sidebar user -->
@@ -25,7 +25,7 @@
           </div>
           <span class="app-user-name mb-05">
             <mat-icon class="icon-xs text-muted">lock</mat-icon> 
-            Watson Joyce
+            {{userService.user.firstName}} {{userService.user.lastName}}
           </span>
           <!-- Small buttons -->
           <div class="app-user-controls">
