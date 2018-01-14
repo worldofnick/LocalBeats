@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from "@angular/router";
+import { UserService } from '../../services/auth/user.service';
+import { User } from '../../models/user';
 
 @Component({
   selector: 'app-profile',
@@ -7,6 +9,7 @@ import { ActivatedRoute } from "@angular/router";
 })
 export class ProfileComponent implements OnInit {
   activeView : string = 'overview';
+  user: User;
 
   // Doughnut
   doughnutChartColors: any[] = [{
@@ -40,7 +43,7 @@ export class ProfileComponent implements OnInit {
     }
   };
 
-  constructor(private router: ActivatedRoute) { }
+  constructor(private router: ActivatedRoute, private userService: UserService) { }
 
   ngOnInit() {
     this.activeView = this.router.snapshot.params['view']
