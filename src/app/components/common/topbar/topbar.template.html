@@ -21,13 +21,24 @@
   <!-- Search form -->
   <div 
   fxFlex
-  fxHide.lt-sm="true" 
+  fxHide.lt-sm="true"
   class="search-bar">
     <form class="top-search-form">
       <mat-icon role="img">search</mat-icon>
       <input autofocus="true" placeholder="Search" type="text">
     </form>
   </div>
+  <mat-select 
+  placeholder=""
+  id="langToggle"
+  [style.width]="'auto'"
+  name="currentSearchType"
+  [(ngModel)]="currentSearchType" 
+  (change)="setSearchType()">
+    <mat-option 
+    *ngFor="let type of searchTypes" 
+    [value]="type" ngDefaultControl>{{ type }}</mat-option>
+  </mat-select>
   <span fxFlex></span>
   <!-- Language Switcher -->
   <!-- <mat-select 

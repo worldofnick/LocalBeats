@@ -11,15 +11,9 @@ import { UserService } from '../../../services/auth/user.service';
 export class TopbarComponent implements OnInit {
   @Input() sidenav;
   @Input() notificPanel;
-  @Output() onLangChange = new EventEmitter<any>();
-  currentLang = 'en';
-  availableLangs = [{
-    name: 'English',
-    code: 'en',
-  }, {
-    name: 'Spanish',
-    code: 'es',
-  }]
+  @Output() onSearchTypeChange = new EventEmitter<any>();
+  currentSearchType = 'Musician';
+  searchTypes = ['Musician', 'Event']
   egretThemes;
 
   constructor(private themeService: ThemeService, private userService: UserService, private router: Router) {}
@@ -32,9 +26,9 @@ export class TopbarComponent implements OnInit {
     this.userService.logout();
     this.router.navigate(['/']);
   }
-  
-  setLang() {
-    this.onLangChange.emit(this.currentLang);
+
+  setSearchType() {
+    this.onSearchTypeChange.emit(this.currentSearchType);
   }
   changeTheme(theme) {
     this.themeService.changeTheme(theme);
