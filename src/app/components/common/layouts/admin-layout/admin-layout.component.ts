@@ -73,4 +73,10 @@ export class AdminLayoutComponent implements OnInit {
     }
     return isSm;
   }
+
+  logout() {
+    this.userService.logout();
+    console.log('logging out');
+    this.router.navigate(['/']);
+  }
 }

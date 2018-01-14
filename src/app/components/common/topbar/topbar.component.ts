@@ -1,4 +1,5 @@
 import { Component, OnInit, EventEmitter, Input, Output } from '@angular/core';
+import { Router } from '@angular/router';
 import * as domHelper from '../../../helpers/dom.helper';
 import { ThemeService } from '../../../services/theme/theme.service';
 import { UserService } from '../../../services/auth/user.service';
@@ -21,11 +22,17 @@ export class TopbarComponent implements OnInit {
   }]
   egretThemes;
 
-  constructor(private themeService: ThemeService, private userService: UserService) {}
+  constructor(private themeService: ThemeService, private userService: UserService, private router: Router) {}
   ngOnInit() {
     this.egretThemes = this.themeService.egretThemes;
     domHelper.toggleClass(document.body, 'collapsed-menu');
   }
+
+  logout() {
+    this.userService.logout();
+    this.router.navigate(['/']);
+  }
+  
   setLang() {
     this.onLangChange.emit(this.currentLang);
   }
