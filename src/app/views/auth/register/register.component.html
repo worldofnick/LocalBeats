@@ -8,6 +8,34 @@
             <p class="text-muted m-0">Sign up to use our service</p>
           </div>
           <form [formGroup]="signupForm"  (ngSubmit)="signup()">
+          <div class="">
+              <mat-form-field class="full-width">
+                <input 
+                  type="input-text"
+                  name="firstName"
+                  matInput
+                  [formControl]="signupForm.controls['firstName']"
+                  placeholder="First Name" 
+                  value="">
+              </mat-form-field>
+              <small 
+                *ngIf="signupForm.controls['firstName'].hasError('required') && signupForm.controls['firstName'].touched" 
+                class="form-error-msg"> First Name is required </small>
+            </div>
+            <div class="">
+                <mat-form-field class="full-width">
+                  <input 
+                    type="input-text"
+                    name="lastName"
+                    matInput
+                    [formControl]="signupForm.controls['lastName']"
+                    placeholder="Last Name" 
+                    value="">
+                </mat-form-field>
+                <small 
+                  *ngIf="signupForm.controls['lastName'].hasError('required') && signupForm.controls['lastName'].touched" 
+                  class="form-error-msg"> Last Name is required </small>
+              </div>
             <div class="">
               <mat-form-field class="full-width">
                 <input
