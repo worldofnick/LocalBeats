@@ -1,5 +1,6 @@
 import { Component, OnInit, EventEmitter, Input, Output } from '@angular/core';
 import { Router } from '@angular/router';
+import {FormControl} from '@angular/forms';
 import * as domHelper from '../../../helpers/dom.helper';
 import { ThemeService } from '../../../services/theme/theme.service';
 import { UserService } from '../../../services/auth/user.service';
@@ -14,11 +15,15 @@ export class TopbarComponent implements OnInit {
   @Output() onSearchTypeChange = new EventEmitter<any>();
   currentSearchType = 'Musician';
   searchTypes = ['Musician', 'Event']
-  egretThemes;
+  selectedValues: string[];
+  foods = [
+    { value: 'rock', viewValue: 'Rock' },
+    { value: 'country', viewValue: 'Country' },
+    { value: 'jazz', viewValue: 'Jazz' }
+  ];
 
-  constructor(private themeService: ThemeService, private userService: UserService, private router: Router) {}
+  constructor(private userService: UserService, private router: Router) {}
   ngOnInit() {
-    this.egretThemes = this.themeService.egretThemes;
     domHelper.toggleClass(document.body, 'collapsed-menu');
   }
 
@@ -30,9 +35,7 @@ export class TopbarComponent implements OnInit {
   setSearchType() {
     this.onSearchTypeChange.emit(this.currentSearchType);
   }
-  changeTheme(theme) {
-    this.themeService.changeTheme(theme);
-  }
+
   toggleNotific() {
     this.notificPanel.toggle();
   }

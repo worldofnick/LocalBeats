@@ -39,6 +39,15 @@
     *ngFor="let type of searchTypes" 
     [value]="type" ngDefaultControl>{{ type }}</mat-option>
   </mat-select>
+  <form class="pt-1">
+      <mat-select id="langToggle" placeholder="Type" [(ngModel)]="selectedValues" name="food" class="mb-1" multiple>
+        <mat-option *ngFor="let food of foods" [value]="food.value" ngDefaultControl>
+          {{food.viewValue}}
+        </mat-option>
+      </mat-select>
+  </form>
+  
+  
   <span fxFlex></span>
   <!-- Language Switcher -->
   <!-- <mat-select 
