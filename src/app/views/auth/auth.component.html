@@ -14,12 +14,12 @@
                   matInput
                   name="username"
                   [formControl]="signinForm.controls['username']"
-                  placeholder="Username"
+                  placeholder="Email"
                   value="">
               </mat-form-field>
               <small 
                 *ngIf="signinForm.controls['username'].hasError('required') && signinForm.controls['username'].touched" 
-                class="form-error-msg"> Username is required </small>
+                class="form-error-msg"> Email is required </small>
             </div>
   
             <div class="">
