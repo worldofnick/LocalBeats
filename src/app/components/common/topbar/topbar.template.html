@@ -30,7 +30,7 @@
   </div>
   <mat-select 
   placeholder=""
-  id="langToggle"
+  class="selectorToggle"
   [style.width]="'auto'"
   name="currentSearchType"
   [(ngModel)]="currentSearchType" 
@@ -40,7 +40,7 @@
     [value]="type" ngDefaultControl>{{ type }}</mat-option>
   </mat-select>
   <form class="pt-1">
-      <mat-select id="langToggle" placeholder="Type" [(ngModel)]="selectedValues" name="food" class="mb-1" multiple>
+      <mat-select class="selectorToggle mb-1" placeholder="Type" [(ngModel)]="selectedValues" name="food" multiple>
         <mat-option *ngFor="let food of foods" [value]="food.value" ngDefaultControl>
           {{food.viewValue}}
         </mat-option>
