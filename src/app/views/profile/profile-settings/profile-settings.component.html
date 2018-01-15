@@ -2,48 +2,29 @@
   <mat-tab-group>
     <mat-tab label="Account Settings">
       <mat-card-content class="mt-1">
-          <form>
-            <mat-form-field class="full-width">
+        <form (ngSubmit)="onEditProfile()" #r="ngForm" method="post" class="editProfile">
+          <mat-form-field class="full-width">
               <input
               matInput
               name="name"
               placeholder="Name"
-              value="">
+              [(ngModel)]="this.user.firstName"
+              >
             </mat-form-field>
             <mat-form-field class="full-width">
                 <input
                 matInput
                 name="title"
                 placeholder="Title"
-                value="">
+                [(ngModel)]="this.user.lastName"
+                >
               </mat-form-field>
             <mat-form-field class="full-width">
               <input
               matInput
               name="email"
               placeholder="Email"
-              value="">
-            </mat-form-field>
-            <mat-form-field class="full-width">
-              <input
-              matInput
-              name="phone"
-              placeholder="Phone"
-              value="">
-            </mat-form-field>
-            <mat-form-field class="full-width">
-              <input
-              matInput
-              name="address"
-              placeholder="Adresss"
-              value="">
-            </mat-form-field>
-            <mat-form-field class="full-width">
-              <input
-              matInput
-              name="website"
-              placeholder="Website"
-              value="">
+              [(ngModel)]="this.user.email">
             </mat-form-field>
             <button mat-raised-button color="primary">Save</button>
           </form>

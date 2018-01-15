@@ -9,7 +9,9 @@ import { User } from '../../models/user';
 })
 export class ProfileComponent implements OnInit {
   activeView : string = 'overview';
-  user: User;
+  user: User = null;
+  onOwnProfile: boolean = null;
+  userID: any = null;
 
   // Doughnut
   doughnutChartColors: any[] = [{
@@ -43,10 +45,40 @@ export class ProfileComponent implements OnInit {
     }
   };
 
-  constructor(private router: ActivatedRoute, private userService: UserService) { }
+  constructor(private route: ActivatedRoute, private userService: UserService) { 
+    console.log("in profile component constructor");
+  }
 
   ngOnInit() {
-    this.activeView = this.router.snapshot.params['view']
+    this.activeView = this.route.snapshot.params['view']
+    this.user = this.userService.user;
+
+    //snapshot params returns a javascript object. index into it with the property field to get a property.
+    this.userID = {
+      id: this.route.snapshot.params['id']
+    }
+
+    console.log("id from url");
+    console.log(this.userID["id"]);
+    if (this.userID["id"] == null) {
+      //nothing in url.
+      console.log('on own profile')
+      console.log(this.userService.user)
+      this.onOwnProfile = true;
+      this.user = this.userService.user;
+    } else {
+      //on another perons profile.
+      this.onOwnProfile = false;
+      let ID:String = this.userID["id"];
+      console.log("on another perosns profile");
+      console.log(ID);
+      this.userService.getUserByID(ID).then((gottenUser: User) => {
+        this.user = gottenUser;
+        // console.log("other user")
+        // console.log(this.user)
+        // }).then(() => this.hasRequested());
+      })
+    }
   }
 
 }

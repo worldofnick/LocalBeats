@@ -5,30 +5,40 @@
         <img src="assets/images/sq-face-220.jpg" alt="">
       </div>
       <div class="profile-title text-center mb-1">
-        <div class="main-title">{{userService.user.firstName}} <b>{{userService.user.lastName}}</b></div>
-        <div class="subtitle mb-05">Big Data Expert</div>
-        <div class="text-muted">Hi I'm Jhone, sit amet consectetur adipisicing elit. Aperiam repellendus nam perspiciatis.</div>
+        <div class="main-title">{{this.user.firstName}} <b>{{this.user.lastName}}</b></div>
+        <!-- <div class="subtitle mb-05">Big Data Expert</div> -->
+        <div class="text-muted">Hello my name is {{this.user.firstName}}</div>
       </div>
       <div class="profile-actions text-center mb-1">
         <button mat-raised-button color="primary">Message</button>
         <button mat-raised-button color="accent">Follow</button>
+        <button 
+        mat-icon-button
+        [routerLink]="['/profile', '5a5d0c09cde9265e811a13e0']" 
+        [style.width]="'auto'"
+        [style.overflow]="'visible'"
+        matTooltip="Login or Register"
+        class="topbar-button-right">
+          <span>other user</span>
+          <!-- <mat-icon>exit_to_app</mat-icon> -->
+        </button>
       </div>
       <div class="profile-nav">
         <mat-nav-list>
+          <!-- check here if to see if on another profile and go to profile/id/overview -->
           <mat-list-item routerLink="/profile/overview" routerLinkActive="list-item-active">
             <mat-icon>home</mat-icon>
             Overview
           </mat-list-item>
-          <mat-divider></mat-divider>
-          <mat-list-item routerLink="/profile/settings" routerLinkActive="list-item-active">
-            <mat-icon>settings</mat-icon>
-            Settings
-          </mat-list-item>
-          <mat-divider></mat-divider>
-          <mat-list-item routerLink="/profile/blank" routerLinkActive="list-item-active">
-            <mat-icon>content_paste</mat-icon>
-            Blank
-          </mat-list-item>
+          <ng-template [ngIf]="this.onOwnProfile">
+            <mat-divider></mat-divider>
+            <!-- if not on your own profile this doesnt show -->
+
+            <mat-list-item routerLink="/profile/settings" routerLinkActive="list-item-active">
+              <mat-icon>settings</mat-icon>
+              Settings
+            </mat-list-item>
+        </ng-template>
         </mat-nav-list>
       </div>
     </mat-card>
@@ -39,13 +49,13 @@
       <mat-card-content>
           <div fxLayout="row" fxLayoutWrap="wrap" class="doughnut-grid text-center">
               <div fxFlex="50" class="doughnut-grid-item mat-bg-primary">
-                  <canvas 
+                  <!-- <canvas 
                   baseChart
                   class="chart"
                   [data]="doughnutChartData1"
                   [options]="doughnutOptions"
                   [colors]="doughnutChartColors"
-                  [chartType]="doughnutChartType"></canvas>
+                  [chartType]="doughnutChartType"></canvas> -->
                   <small>Space: {{data1}}/{{total1}} GB</small>
             </div>
             <div fxFlex="50" class="doughnut-grid-item light-gray">
