@@ -796,13 +796,25 @@ div.hopscotch-bubble .hopscotch-nav-button.prev:hover {
 .collapsed-menu .toggle-collapsed {
     transform: rotate(180deg);
 }
+
+.search-bar .app-search {
+    position: absolute;
+    background: #fff;
+    border-radius: 2px;
+    margin-right: 1rem;
+    display: block;
+    max-width: 600px;
+    margin-left: 20px;
+    box-shadow: 0 3px 0px -2px rgba(0,0,0,.2), 0 2px 0px 0 rgba(0,0,0,.14), 0 1px 0px 0 rgba(0,0,0,.12);
+}
+
 .search-bar .top-search-form {
     position: relative;
     background: #fff;
     border-radius: 2px;
     margin-right: 1rem;
     display: block;
-    max-width: 800px;
+    max-width: 600px;
     margin-left: 20px;
 }
 .search-bar .top-search-form .material-icons {
@@ -1633,6 +1645,10 @@ div.hopscotch-bubble .hopscotch-nav-button.prev:hover {
 }
 .footer-box .mat-list-text {
     color: #ffffff;
+}
+
+.no-shadow {
+    box-shadow: none !important;
 }
 
 .socials ul {

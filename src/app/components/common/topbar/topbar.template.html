@@ -25,10 +25,23 @@
   class="search-bar">
     <form class="top-search-form">
       <mat-icon role="img">search</mat-icon>
-      <input autofocus="true" placeholder="Search" type="text">
+      <input autofocus="true" placeholder="Search" type="text" (click)="clickedInsideSearch()">
     </form>
+    <div class="app-search" (offClick)="clickedOutsideSearch()">
+        <mat-card class="no-shadow" *ngIf="isSearchOpen">
+          <mat-card-content>
+              <textarea matInput placeholder="Autosize textarea" matTextareaAutosize matAutosizeMinRows="2"
+              matAutosizeMaxRows="5"></textarea>
+            <mat-divider></mat-divider>
+            <div class="">
+            </div>
+            <div class="">
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
   </div>
-  <mat-select 
+  <!-- <mat-select 
   placeholder=""
   class="selectorToggle"
   [style.width]="'auto'"
@@ -45,7 +58,7 @@
           {{food.viewValue}}
         </mat-option>
       </mat-select>
-  </form>
+  </form> -->
   
   
   <span fxFlex></span>

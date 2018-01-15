@@ -7,9 +7,13 @@ import { UserService } from '../../../services/auth/user.service';
 
 @Component({
   selector: 'topbar',
-  templateUrl: './topbar.template.html'
+  templateUrl: './topbar.template.html',
+  styleUrls: ['./topbar.component.css']
 })
 export class TopbarComponent implements OnInit {
+  isSearchOpen: boolean = false;
+  clickedSearch: boolean = false;
+
   @Input() sidenav;
   @Input() notificPanel;
   @Output() onSearchTypeChange = new EventEmitter<any>();
@@ -30,6 +34,19 @@ export class TopbarComponent implements OnInit {
   logout() {
     this.userService.logout();
     this.router.navigate(['/']);
+  }
+
+  clickedInsideSearch() {
+    this.clickedSearch = true;
+    this.isSearchOpen = true;
+  }
+
+  clickedOutsideSearch() {
+    if(this.isSearchOpen && !this.clickedSearch) {
+      this.isSearchOpen = false;
+    } else {
+      this.clickedSearch = false;
+    }
   }
 
   setSearchType() {

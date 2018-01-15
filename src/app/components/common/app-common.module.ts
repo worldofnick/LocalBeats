@@ -5,6 +5,7 @@ import { BrowserModule } from "@angular/platform-browser";
 import { RouterModule } from "@angular/router";
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { TranslateModule } from 'ng2-translate/ng2-translate';
+import { OffClickModule } from 'angular2-off-click';
 import { 
   MatSidenavModule,
   MatListModule,
@@ -34,6 +35,7 @@ import { BreadcrumbComponent } from './breadcrumb/breadcrumb.component';
 @NgModule({
   imports: [
     CommonModule,
+    OffClickModule,
     FormsModule,
     ReactiveFormsModule,
     BrowserModule,
