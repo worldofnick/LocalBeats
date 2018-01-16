@@ -1,10 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from '../../../services/auth/user.service';
 import { BookingService } from '../../../services/booking/booking.service';
+import { EventService } from '../../../services/event/event.service';
 import { User } from '../../../models/user';
+import { Event } from '../../../models/event';
 import { NgForm } from '@angular/forms/src/directives/ng_form';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { CustomValidators } from 'ng2-validation';
+import { ActivatedRoute } from "@angular/router";
+
+
 
 @Component({
   selector: 'app-create-events',
@@ -15,30 +20,32 @@ export class CreateEventsComponent implements OnInit {
   formData = {}
   console = console;
   basicForm: FormGroup;
-  selectedValue: string = 'pizza';
-  foods = [
-    { value: 'steak', viewValue: 'Steak' },
-    { value: 'pizza', viewValue: 'Pizza' },
-    { value: 'tacos', viewValue: 'Tacos' }
-  ];
+  event:Event;
+  user:User;
 
-  constructor() { }
-
+  constructor(private route: ActivatedRoute, 
+              private userService: UserService, 
+              private bookingService: BookingService,
+              private eventService: EventService
+              ) { }
+  
   ngOnInit() {
 
-    let password = new FormControl('', Validators.required);
-    let confirmPassword = new FormControl('', CustomValidators.equalTo(password));
+    this.user = this.userService.user;
 
+    this.event = new Event;
+    
     this.basicForm = new FormGroup({
       eventName: new FormControl('', [
         Validators.minLength(4),
-        Validators.maxLength(40)
+        Validators.maxLength(40),
+        Validators.required
       ]),
       eventType: new FormControl('', [
         Validators.required
       ]),
       eventPrice: new FormControl('', [
-        Validators.required,
+        // Validators.required,
       ]),
       eventGenre: new FormControl('', [
         Validators.required,
@@ -56,11 +63,23 @@ export class CreateEventsComponent implements OnInit {
 
   }
   onCreateEvent(form: NgForm) {
-    console.log("submitted")
-    console.log(this.basicForm.controls.eventName.value);
-    console.log(this.basicForm.controls.eventType.value);
-    console.log(this.basicForm.controls.date.value);
+    console.log("creating this event: ")
     
+    this.event.eventName = this.basicForm.controls.eventName.value;
+    this.event.eventGenre = this.basicForm.controls.eventGenre.value;
+    this.event.eventType = this.basicForm.controls.eventType.value;
+    console.log(this.event.eventName);
+
+    this.event.hostUser = this.user;
+    this.event.hostEmail = this.user.email;
+
+    console.log(this.event);
+    
+    this.eventService.createEvent(this.event).then((newEvent: Event) => {
+      this.event = newEvent;
+      this.eventService.event = this.event;
+      // this.router.navigate(['/my-events']); //this will go back to my events.
+    });
   }
 }
 
