@@ -14,5 +14,11 @@ export const EventRoutes: Routes = [
   {
   path: ':id',
   component: EventSingletonComponent,
-  data: { title: 'EVent', breadcrumb: 'Event'},}
+  data: { title: 'Event', breadcrumb: 'Event'}},
+  {
+    path: 'update/:id',
+    component: CreateEventsComponent,
+    data: { title: 'Event', breadcrumb: 'Event'},
+  
+  }
 ];

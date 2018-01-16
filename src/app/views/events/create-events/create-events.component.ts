@@ -24,6 +24,9 @@ export class CreateEventsComponent implements OnInit {
   event:Event;
   user:User;
   eventID;
+  EID: any;  
+  submitButtonText:string
+  updating:Boolean
 
   constructor(private route: ActivatedRoute, 
               private userService: UserService, 
@@ -37,6 +40,28 @@ export class CreateEventsComponent implements OnInit {
     this.user = this.userService.user;
 
     this.event = new Event;
+
+    this.EID = {
+      id: this.route.snapshot.params['id']
+    }
+
+    let ID = this.EID["id"];
+    if (ID == null) {
+      // console.log("creating event");
+      this.updating = false;
+    } else {
+      console.log("updating event w/ id");
+      // console.log(ID);
+      this.updating = true;
+    }
+
+    if (this.updating) {
+      this.eventService.getEventByEID(this.EID).then((eventEdit: Event) => {
+        this.event = eventEdit;
+        // console.log(this.model);
+        // this.user = event.hostUser;
+      });
+    }
     
     this.basicForm = new FormGroup({
       eventName: new FormControl('', [
@@ -47,7 +72,7 @@ export class CreateEventsComponent implements OnInit {
       eventType: new FormControl('', [
         Validators.required
       ]),
-      eventPrice: new FormControl('', [
+      fixedPrice: new FormControl('', [
         // Validators.required,
       ]),
       eventGenre: new FormControl('', [
@@ -71,6 +96,8 @@ export class CreateEventsComponent implements OnInit {
     this.event.eventName = this.basicForm.controls.eventName.value;
     this.event.eventGenre = this.basicForm.controls.eventGenre.value;
     this.event.eventType = this.basicForm.controls.eventType.value;
+    this.event.fixedPrice = this.basicForm.controls.fixedPrice.value;
+    this.event.toDate = this.basicForm.controls.date.value;
     console.log(this.event.eventName);
 
     this.event.hostUser = this.user;
@@ -84,6 +111,21 @@ export class CreateEventsComponent implements OnInit {
       this.eventID = this.event._id;
       this.router.navigate(['/events', this.event._id]);        
     });
+
+
+    if (!this.updating) {
+      this.eventService.createEvent(this.event).then((newEvent: Event) => {
+        this.event = newEvent;
+        this.eventService.event = this.event;
+        this.router.navigate(['/events', this.event._id]); //this will go to the page about the event
+      });
+    } else {
+      this.eventService.updateEvent(this.event).then((newEvent: Event) => {
+        this.event = newEvent;
+        this.eventService.event = this.event;
+        this.router.navigate(['/events', this.event._id]); //this will go to the page about the event
+      });
+    }
   }
 }
 

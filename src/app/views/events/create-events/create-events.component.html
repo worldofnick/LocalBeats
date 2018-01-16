@@ -9,7 +9,7 @@
         <div fxFlex="100" fxFlex.gt-xs="50" class="pr-1">
           <div class="pb-1">
             <mat-form-field class="full-width">
-              <input matInput name="eventName" formControlName="eventName" placeholder="Event Name (Min Length: 4, Max Length: 40)" value="">
+              <input matInput [(ngModel)]="this.event.eventName" name="eventName" formControlName="eventName" placeholder="Event Name (Min Length: 4, Max Length: 40)" value="">
             </mat-form-field>
           </div>
           <!-- <div class="pb-1">
@@ -29,7 +29,7 @@
 
           <div class="pb-1">
             <mat-form-field class="full-width">
-              <input matInput name="eventPrice" formControlName="eventPrice" placeholder="Event Price" value="">
+              <input matInput name="fixedPrice" formControlName="fixedPrice" placeholder="Event Price" value="">
             </mat-form-field>
           </div>
 
@@ -56,7 +56,11 @@
           </div>
         </div>
       </div>
-      <button mat-raised-button color="primary">Create Event</button>
+      <button *ngIf="!this.updating" mat-raised-button color="primary">Create Event</button>
+      <button *ngIf="this.updating" mat-raised-button color="primary">Update Event</button>
+      
+      
+
     </form>
   </mat-card-content>
 </mat-card>

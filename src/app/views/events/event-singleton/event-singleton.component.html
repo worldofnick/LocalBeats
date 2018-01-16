@@ -1,3 +1,25 @@
-<p>
-  event-singleton works!
-</p>
+<mat-card *ngIf="this.model" class="p-0">
+  <mat-tab-group>
+    <mat-tab label="{{this.model.eventName}}">
+      <mat-card  class="example-card">
+        <mat-card-header>
+          <div mat-card-avatar class="example-header-image"></div>
+
+          <mat-card-title>{{this.model.eventType}}</mat-card-title>
+          <mat-card-subtitle>{{this.model.fixedPrice}}</mat-card-subtitle>
+
+        </mat-card-header>
+        <!-- <img mat-card-image src="https://material.angular.io/assets/img/examples/shiba2.jpg" width="50px" heaight="50px"alt="Photo of a Shiba Inu"> -->
+        <mat-card-content>
+          <p>
+            The event is on {{this.model.toDate}}
+          </p>
+        </mat-card-content>
+        <mat-card-actions>
+          <button (click)="onEditEvent()"mat-button>Edit</button>
+          <button (click)="onDeleteEvent()"mat-button>Delete</button>
+        </mat-card-actions>
+      </mat-card>
+    </mat-tab>
+  </mat-tab-group>
+</mat-card>

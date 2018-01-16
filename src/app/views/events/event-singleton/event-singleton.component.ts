@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from "@angular/router";
 // import { DatePipe } from '@angular/common'
+import { Router } from "@angular/router";
+
 
 import { UserService } from '../../../services/auth/user.service';
 import { BookingService } from '../../../services/booking/booking.service';
@@ -26,6 +28,8 @@ export class EventSingletonComponent implements OnInit {
   public approvedBookings: Booking[] = [];
   public dateInBar:Date;
   public dateString:any;
+  deleteStatus:Number;
+  
 
   EID:any;
 
@@ -33,6 +37,7 @@ export class EventSingletonComponent implements OnInit {
               private userService: UserService,
               private bookingService: BookingService,
               private route: ActivatedRoute,
+              private router: Router
               ) { }
   
   ngOnInit() {
@@ -74,6 +79,30 @@ export class EventSingletonComponent implements OnInit {
     }));
 
 
+  }
+
+  onEditEvent(){
+    console.log("editing event");
+    console.log(this.model._id);
+
+    this.router.navigate(['/events', 'update', this.model._id]); //this will go to the page about the event
+    
+
+    
+  }
+
+  onDeleteEvent(){
+    console.log("deleting");
+    console.log(this.model._id);
+    this.eventService.deleteEventByEID(this.model).then((status:Number) => {
+      this.deleteStatus = status;
+      console.log(this.deleteStatus);
+      if(this.deleteStatus == 200){
+        // this.eventService.events = this.eventService.events.filter(e => e !== this.event);
+        // this.router.navigate(['/profile']);
+        this.model = null;        
+      }
+    });
   }
 
 }
