@@ -122,10 +122,41 @@ export class TopbarComponent implements OnInit {
   }
 
   submit() {
-    console.log('here');
-    const searchData = this.searchForm.value;
-    console.log(searchData);
-    this.router.navigate(['/search'])
+    // Set location for submission
+    if (this.longitude != null) {
+      this.currentSearch.location = {
+        longitude: this.longitude,
+        latitude: this.latitude
+      };
+    }
+    // Set search type
+    this.currentSearch.searchType = this.searchForm.get('type').value;
+    // Set text
+    this.currentSearch.text = this.searchForm.get('text').value;
+    console.log(typeof(this.currentSearch.text))
+    // Set genre
+    const genres = <FormArray>this.searchForm.get('genres') as FormArray;
+    if(genres.length == 0 && this.currentSearch.searchType == 'Musician') {
+      this.currentSearch.genre = 'All Genres';
+    } else {
+      this.currentSearch.genre = 'All Events'
+    }
+
+    if (this.currentSearch.searchType === 'Musician') {
+      this.searchService.userSearch(this.currentSearch).then((users: User[]) => {
+        this.results = users;
+        this.searchService.changeResult(this.results, this.currentSearch.searchType);
+        console.log(this.results);
+        this.router.navigate(['/search'])
+      });
+    } else {
+      this.searchService.eventSearch(this.currentSearch).then((events: Event[]) => {
+        this.results = events;
+        this.searchService.changeResult(this.results, this.currentSearch.searchType);
+        console.log(this.results)
+        this.router.navigate(['/search'])
+      });
+    }
   }
 
   onPickingGenre(event) {

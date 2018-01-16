@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Http, Headers, RequestOptions, Response, URLSearchParams } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import { SearchTerms } from 'app/models/search';
@@ -11,9 +12,17 @@ export class SearchService {
 
     private headers: Headers = new Headers({ 'Content-Type': 'application/json' });
 
-    public results: any;
+    private resultSource = new BehaviorSubject<string>("default message");
+    results = this.resultSource.asObservable();
+    private searchTypeSource = new BehaviorSubject<string>("Musician");
+    searchType = this.searchTypeSource.asObservable();
 
     constructor (private http: Http) {}
+
+    changeResult(result: any, searchType: string) {
+        this.resultSource.next(result);
+        this.searchTypeSource.next(searchType);
+    }
 
     public eventTypes(): Promise<Object> {
         let current = (this.connection + 'eventTypes/')
@@ -55,7 +64,6 @@ export class SearchService {
             .then((response: Response) => {
                 const data = response.json();
                 const events = data.events as Array<Event>;
-                this.results = events;
                 return events;
             })
             .catch(this.handleError);
@@ -65,6 +73,7 @@ export class SearchService {
         let current = (this.connection + 'searchUsers/')
         let params: URLSearchParams = new URLSearchParams();
         params.set('artist', 'true')
+        console.log(searchTerms);
         params.set('genre', searchTerms.genre.toLowerCase())
         //params.set('lat', String(searchTerms.location.latitude))
         //params.set('lon', String(searchTerms.location.longitude))
@@ -78,7 +87,6 @@ export class SearchService {
                 console.log(response);
                 const data = response.json();
                 const users = data.users as Array<User>;
-                this.results = users;
                 return users;
             })
             .catch(this.handleError);
