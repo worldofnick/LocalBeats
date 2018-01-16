@@ -1,6 +1,6 @@
 import { Component, OnInit, EventEmitter, Input, Output, ElementRef, NgZone, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
-import { FormControl } from '@angular/forms';
+import { Validators, FormGroup, FormControl, FormArray, FormBuilder } from '@angular/forms';
 import 'rxjs/add/operator/startWith';
 import 'rxjs/add/operator/map';
 import { } from 'googlemaps';
@@ -17,6 +17,9 @@ import { SearchTerms, Location } from '../../../models/search';
   styleUrls: ['./topbar.component.css']
 })
 export class TopbarComponent implements OnInit {
+  searchForm: FormGroup;
+  
+  
   isSearchOpen: boolean = false;
   clickedSearch: boolean = false;
 
@@ -24,12 +27,11 @@ export class TopbarComponent implements OnInit {
   @Input() notificPanel;
   @Output() onSearchTypeChange = new EventEmitter<any>();
   selectedValues: string[];
-  musicGenres: string[] = ['Rock', 'Country', 'Jazz', 'Blues', 'Hip Hop'];
-  eventTypes: string[] = ['Wedding', 'Birthday', 'Business'];
+  musicGenres: any = [{genre:'Rock', checked:true}, {genre:'Country', checked:false}, {genre:'Jazz', checked:false}, {genre:'Blues', checked:false}, {genre:'Rap', checked:false}];
+  eventTypes: any = [{genre:'Wedding', checked:false}, {genre:'Birthday', checked:false}, {genre:'Business', checked:false}];
   searchTypes: string[] = ['Musician', 'Event'];
-  searchType: string = this.searchTypes[0];
-  genres: string[] = this.musicGenres;
-  currentSearch: SearchTerms = new SearchTerms(this.searchType, '', null, this.musicGenres[0]);
+  genres: any = this.musicGenres;
+  currentSearch: SearchTerms = new SearchTerms(this.searchTypes[0], '', null, this.musicGenres[0]);
   public results: any = null;
 
 
@@ -37,10 +39,10 @@ export class TopbarComponent implements OnInit {
 
   latitude: number;
   longitude: number;
-  searchControl: FormControl;
+  //searchControl: FormControl;
   zoom: number;
 
-  constructor(private userService: UserService, private router: Router, private mapsAPILoader: MapsAPILoader, private ngZone: NgZone, private changeDetector: ChangeDetectorRef) {}
+  constructor(private formBuilder: FormBuilder, private userService: UserService, private router: Router, private mapsAPILoader: MapsAPILoader, private ngZone: NgZone, private changeDetector: ChangeDetectorRef) {}
 
   ngOnInit() {
     domHelper.toggleClass(document.body, 'collapsed-menu');
@@ -51,10 +53,17 @@ export class TopbarComponent implements OnInit {
     this.longitude = -98.5795;
     
     //create search FormControl
-    this.searchControl = new FormControl();
+    //this.searchControl = new FormControl();
     
     //set current position
     this.setCurrentPosition();
+
+    this.searchForm = this.formBuilder.group({
+      text: new FormControl('', Validators.required),
+      type: new FormControl('Musician', Validators.required),
+      genres: this.formBuilder.array([]),
+      location: new FormControl()
+    });
   }
 
   private setCurrentPosition() {
@@ -86,15 +95,13 @@ export class TopbarComponent implements OnInit {
         this.ngZone.run(() => {
           //get the place result
           let place: google.maps.places.PlaceResult = autocomplete.getPlace();
-          console.log("addy:");
-          // place.address_components.
-          console.log(place.address_components);
-          console.log(place.formatted_address);
+          // place.address_components
+          // place.formatted_address
+          this.searchForm.setControl('location', new FormControl(place.formatted_address))
           //verify result
           if (place.geometry === undefined || place.geometry === null) {
             return;
           }
-          
           //set latitude, longitude and zoom
           this.latitude = place.geometry.location.lat();
           this.longitude = place.geometry.location.lng();
@@ -112,15 +119,36 @@ export class TopbarComponent implements OnInit {
     }
   }
 
+  submit() {
+
+  }
+
+  onPickingGenre(event) {
+    const genres = <FormArray>this.searchForm.get('genres') as FormArray;
+
+    if(event.checked) {
+      event.source.value.checked = true;
+      genres.push(new FormControl(event.source.value))
+    } else {
+      event.source.value.checked = false;
+      const i = genres.controls.findIndex(x => x.value === event.source.value);
+      genres.removeAt(i);
+    }
+  }
+
   onChange() {
-    console.log(this.searchType);
+    const genres = <FormArray>this.searchForm.get('genres') as FormArray;
+    while (genres.length !== 0) {
+      genres.removeAt(0)
+    }
+    for(let i = 0; i < this.genres.length; i++) {
+      this.genres[i].checked = false;
+    }
     this.results = null;
-    if (this.searchType == this.searchTypes[1]) {
+    if (this.searchForm.controls['type'].value == this.searchTypes[1]) {
       this.genres = this.eventTypes
-      this.currentSearch.genre = this.searchType;
     } else {
       this.genres = this.musicGenres
-      this.currentSearch.genre = this.musicGenres[0];
     }
   }
 
