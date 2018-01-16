@@ -13,7 +13,6 @@ export class UserService {
     // public getUserConnection: string = 'https://localbeats.herokuapp.com/api/user';
     public accessToken: string = null;
     public user: User = null;
-    public currentUser:User = null;
 
     private headers: Headers = new Headers({ 'Content-Type': 'application/json' });
 
@@ -59,7 +58,6 @@ export class UserService {
                 this.accessToken = data.token;
                 sessionStorage.setItem('token', JSON.stringify({ accessToken: this.accessToken }))
                 this.user = data.user as User;
-                this.currentUser = data.user as User;
                 return this.user
             })
             .catch(this.handleError);
