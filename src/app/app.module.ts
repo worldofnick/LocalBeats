@@ -11,6 +11,7 @@ import { AppComponent } from './app.component';
 
 import { RoutePartsService } from './services/route-parts/route-parts.service';
 import { NavigationService } from "./services/navigation/navigation.service";
+import { SearchService } from './services/search/search.service';
 import { UserService } from './services/auth/user.service';
 import { BookingService } from './services/booking/booking.service';
 import { EventService } from './services/event/event.service';
@@ -38,6 +39,7 @@ export function createTranslateLoader(http: Http) {
   providers: [
     RoutePartsService, 
     NavigationService,
+    SearchService,
     UserService, 
     BookingService,
     EventService,

@@ -23,23 +23,45 @@
   fxFlex
   fxHide.lt-sm="true"
   class="search-bar">
-    <form class="top-search-form">
-      <mat-icon role="img">search</mat-icon>
-      <input autofocus="true" placeholder="Search" type="text" (click)="clickedInsideSearch()">
-    </form>
-    <div class="app-search" (offClick)="clickedOutsideSearch()">
+    <form [formGroup]="searchForm" (ngSubmit)="submit()">
+      <div class="top-search-form">
+        <mat-icon role="img">search</mat-icon>
+        <input [formControl]="searchForm.controls['text']" autofocus="true" placeholder="Search" type="text" (click)="clickedInsideSearch()">
+      </div>
+      <div class="app-search" (offClick)="clickedOutsideSearch()">
         <mat-card class="no-shadow" *ngIf="isSearchOpen">
           <mat-card-content>
-              <textarea matInput placeholder="Autosize textarea" matTextareaAutosize matAutosizeMinRows="2"
-              matAutosizeMaxRows="5"></textarea>
+            <div class="pb-1">
+              <p>What are you searching for?</p>
+              <mat-button-toggle-group [formControl]="searchForm.controls['type']" (change)="onChange()" name="searchType" value="musician">
+                <mat-button-toggle value="Musician">
+                  Musicians <mat-icon>music_note</mat-icon>
+                </mat-button-toggle>
+                <mat-button-toggle value="Event">
+                  Events <mat-icon>event</mat-icon>
+                </mat-button-toggle>
+              </mat-button-toggle-group>
+            </div>
             <mat-divider></mat-divider>
-            <div class="">
+            <p>What type of {{searchForm.controls['type'].value}} do you want?</p>
+            <div class="pb-1">
+              <mat-grid-list cols="3" rows="genres.length/3" rowHeight="2:1">
+                  <mat-grid-tile *ngFor="let genre of genres; let i = index">
+                    <mat-checkbox class="grid-center" (change)="onPickingGenre($event)" [value]="genre" [checked]="genre.checked">{{genre.genre}}</mat-checkbox>
+                  </mat-grid-tile>
+              </mat-grid-list>
             </div>
-            <div class="">
-            </div>
+            <mat-divider></mat-divider>
+            <p>Where are you looking?</p>
+            <mat-form-field>
+              <input matInput placeholder="City, State" autocorrect="off" autocapitalize="off" spellcheck="off" type="text" #searchplaces [formControl]="searchForm.controls['location']">
+            </mat-form-field>
+            <br>
+            <button mat-raised-button class="mr-1">Submit</button>
           </mat-card-content>
         </mat-card>
       </div>
+    </form>
   </div>
   <!-- <mat-select 
   placeholder=""

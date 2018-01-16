@@ -21,6 +21,11 @@ export const rootRouterConfig: Routes = [
         data: { title: 'Home', breadcrumb: 'HOME'}
       },
       { 
+        path: 'search', 
+        loadChildren: './views/search-results/search.module#SearchModule',
+        data: { title: 'Search', breadcrumb: 'SEARCH'}
+      },
+      { 
         path: 'dashboard', 
         loadChildren: './views/dashboard/dashboard.module#DashboardModule',
         canActivate: [UserGuard], 
