@@ -52,6 +52,13 @@ export class NavigationComponent {
         ]
       },
       {
+        name: 'EVENTS',
+        type: 'link',
+        tooltip: 'My Events',
+        icon: 'event',
+        state: 'events'
+      },
+      {
         name: 'SESSIONS',
         type: 'dropDown',
         tooltip: 'Pages',

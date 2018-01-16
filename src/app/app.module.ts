@@ -14,6 +14,7 @@ import { NavigationService } from "./services/navigation/navigation.service";
 import { UserService } from './services/auth/user.service';
 import { UserGuard } from './services/auth/user-guard.service';
 
+
 export function createTranslateLoader(http: Http) {
   return new TranslateStaticLoader(http, './assets/i18n', '.json');
 }

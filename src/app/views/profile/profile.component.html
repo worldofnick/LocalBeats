@@ -26,10 +26,28 @@
       <div class="profile-nav">
         <mat-nav-list>
           <!-- check here if to see if on another profile and go to profile/id/overview -->
-          <mat-list-item routerLink="/profile/overview" routerLinkActive="list-item-active">
-            <mat-icon>home</mat-icon>
-            Overview
-          </mat-list-item>
+          <ng-template [ngIf]="this.onOwnProfile">              
+            <mat-list-item [routerLink]="['/profile', 'overview']" routerLinkActive="list-item-active">
+              <mat-icon>home</mat-icon>
+              Overview
+            </mat-list-item>
+          </ng-template>
+
+          <ng-template [ngIf]="!this.onOwnProfile">              
+              <mat-list-item [routerLink]="['/profile', 'overview']" routerLinkActive="list-item-active">
+                <mat-icon>home</mat-icon>
+                Overview
+              </mat-list-item>
+          </ng-template>
+
+
+          <ng-template [ngIf]="this.onOwnProfile">              
+              <mat-list-item [routerLink]="['/profile', 'events']" routerLinkActive="list-item-active">
+                <mat-icon>events</mat-icon>
+                Events
+              </mat-list-item>
+          </ng-template>
+
           <ng-template [ngIf]="this.onOwnProfile">
             <mat-divider></mat-divider>
             <!-- if not on your own profile this doesnt show -->
@@ -39,6 +57,7 @@
               Settings
             </mat-list-item>
         </ng-template>
+
         </mat-nav-list>
       </div>
     </mat-card>
