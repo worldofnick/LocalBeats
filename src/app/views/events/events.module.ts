@@ -44,6 +44,7 @@ import { CommonDirectivesModule } from '../../directives/common/common-directive
 import { CreateEventsComponent } from './create-events/create-events.component';
 
 import { EventRoutes } from "./events.routing";
+import { EventSingletonComponent } from './event-singleton/event-singleton.component';
 
 
 @NgModule({
@@ -100,6 +101,6 @@ import { EventRoutes } from "./events.routing";
     MatTooltipModule,
     RouterModule.forChild(EventRoutes)
   ],
-  declarations: [CreateEventsComponent]
+  declarations: [CreateEventsComponent, EventSingletonComponent]
 })
 export class EventsModule { }

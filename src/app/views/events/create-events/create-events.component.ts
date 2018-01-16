@@ -8,6 +8,7 @@ import { NgForm } from '@angular/forms/src/directives/ng_form';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { CustomValidators } from 'ng2-validation';
 import { ActivatedRoute } from "@angular/router";
+import { Router } from "@angular/router";
 
 
 
@@ -22,11 +23,13 @@ export class CreateEventsComponent implements OnInit {
   basicForm: FormGroup;
   event:Event;
   user:User;
+  eventID;
 
   constructor(private route: ActivatedRoute, 
               private userService: UserService, 
               private bookingService: BookingService,
-              private eventService: EventService
+              private eventService: EventService,
+              private router: Router
               ) { }
   
   ngOnInit() {
@@ -78,7 +81,8 @@ export class CreateEventsComponent implements OnInit {
     this.eventService.createEvent(this.event).then((newEvent: Event) => {
       this.event = newEvent;
       this.eventService.event = this.event;
-      // this.router.navigate(['/my-events']); //this will go back to my events.
+      this.eventID = this.event._id;
+      // this.router.navigate(['/single']);        
     });
   }
 }

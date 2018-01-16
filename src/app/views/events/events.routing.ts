@@ -2,7 +2,7 @@ import { Routes } from '@angular/router';
 
 import { CreateEventsComponent } from "./create-events/create-events.component"
 import { EventsComponent } from "./events.component"
-
+import { EventSingletonComponent } from "./event-singleton/event-singleton.component"
 
 
 export const EventRoutes: Routes = [
@@ -10,11 +10,9 @@ export const EventRoutes: Routes = [
     path: '',
     component: CreateEventsComponent,
     data: { title: 'MyEvents', breadcrumb: 'My Events'},
-    // children: [{
-    //   path: 'events',
-    //   component: MyEventsComponent,
-    //   data: { title: 'Events', breadcrumb: 'EVENTS' }
-    // } 
-    // ]
-  }
+  },
+  {
+  path: 'event',
+  component: EventSingletonComponent,
+  data: { title: 'EVent', breadcrumb: 'Event'},}
 ];
