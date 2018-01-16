@@ -82,7 +82,7 @@ export class CreateEventsComponent implements OnInit {
       this.event = newEvent;
       this.eventService.event = this.event;
       this.eventID = this.event._id;
-      // this.router.navigate(['/single']);        
+      this.router.navigate(['/events', this.event._id]);        
     });
   }
 }

@@ -43,6 +43,7 @@ export class EventSingletonComponent implements OnInit {
 
     this.eventService.getEventByEID(this.EID).then((event: Event) => {
       this.model = event;
+      console.log(this.model);
       // this.dateString = this.model.fromDate.toDateString as string;
       // this.dateString =this.datepipe.transform(this.model.fromDate, 'MM-dd-yyyy');      // this.dateInBar = this.model.fromDate
       // console.log(this.model.fromDate.getDate);
