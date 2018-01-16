@@ -11,6 +11,8 @@ export class SearchService {
 
     private headers: Headers = new Headers({ 'Content-Type': 'application/json' });
 
+    public results: any;
+
     constructor (private http: Http) {}
 
     public eventTypes(): Promise<Object> {
@@ -53,6 +55,7 @@ export class SearchService {
             .then((response: Response) => {
                 const data = response.json();
                 const events = data.events as Array<Event>;
+                this.results = events;
                 return events;
             })
             .catch(this.handleError);
@@ -75,6 +78,7 @@ export class SearchService {
                 console.log(response);
                 const data = response.json();
                 const users = data.users as Array<User>;
+                this.results = users;
                 return users;
             })
             .catch(this.handleError);

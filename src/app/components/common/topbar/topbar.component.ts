@@ -10,6 +10,8 @@ import { ThemeService } from '../../../services/theme/theme.service';
 import { UserService } from '../../../services/auth/user.service';
 import { SearchService } from '../../../services/search/search.service';
 import { SearchTerms, Location } from '../../../models/search';
+import { User } from '../../../models/user';
+import { Event } from '../../../models/event';
 
 @Component({
   selector: 'topbar',
@@ -27,7 +29,7 @@ export class TopbarComponent implements OnInit {
   @Input() notificPanel;
   @Output() onSearchTypeChange = new EventEmitter<any>();
   selectedValues: string[];
-  musicGenres: any = [{genre:'Rock', checked:true}, {genre:'Country', checked:false}, {genre:'Jazz', checked:false}, {genre:'Blues', checked:false}, {genre:'Rap', checked:false}];
+  musicGenres: any = [{genre:'Rock', checked:false}, {genre:'Country', checked:false}, {genre:'Jazz', checked:false}, {genre:'Blues', checked:false}, {genre:'Rap', checked:false}];
   eventTypes: any = [{genre:'Wedding', checked:false}, {genre:'Birthday', checked:false}, {genre:'Business', checked:false}];
   searchTypes: string[] = ['Musician', 'Event'];
   genres: any = this.musicGenres;
@@ -42,7 +44,7 @@ export class TopbarComponent implements OnInit {
   //searchControl: FormControl;
   zoom: number;
 
-  constructor(private formBuilder: FormBuilder, private userService: UserService, private router: Router, private mapsAPILoader: MapsAPILoader, private ngZone: NgZone, private changeDetector: ChangeDetectorRef) {}
+  constructor(private formBuilder: FormBuilder, private userService: UserService, private searchService: SearchService, private router: Router, private mapsAPILoader: MapsAPILoader, private ngZone: NgZone, private changeDetector: ChangeDetectorRef) {}
 
   ngOnInit() {
     domHelper.toggleClass(document.body, 'collapsed-menu');
@@ -120,7 +122,10 @@ export class TopbarComponent implements OnInit {
   }
 
   submit() {
-
+    console.log('here');
+    const searchData = this.searchForm.value;
+    console.log(searchData);
+    this.router.navigate(['/search'])
   }
 
   onPickingGenre(event) {
