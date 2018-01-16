@@ -23,19 +23,19 @@
           </div> -->
           <div class="pb-1">
             <mat-form-field class="full-width">
-              <input matInput name="eventType" formControlName="eventType" placeholder="Event Type" value="">
+              <input matInput [(ngModel)]="this.event.eventType" name="eventType" formControlName="eventType" placeholder="Event Type" value="">
             </mat-form-field>
           </div>
 
           <div class="pb-1">
             <mat-form-field class="full-width">
-              <input matInput name="fixedPrice" formControlName="fixedPrice" placeholder="Event Price" value="">
+              <input matInput [(ngModel)]="this.event.fixedPrice" name="fixedPrice" formControlName="fixedPrice" placeholder="Event Price" value="">
             </mat-form-field>
           </div>
 
           <div class="pb-1">
             <mat-form-field class="full-width">
-              <input matInput name="date" formControlName="date" placeholder="Date" [matDatepicker]="appDatepicker">
+              <input matInput [(ngModel)]="this.event.toDate" name="date" formControlName="date" placeholder="Date" [matDatepicker]="appDatepicker">
 
               <mat-datepicker-toggle matSuffix [for]="appDatepicker"></mat-datepicker-toggle>
             </mat-form-field>
@@ -45,7 +45,7 @@
 
           <div class="pb-1">
             <Label>Genre</Label>
-            <mat-radio-group name="eventGenre" formControlName="eventGenre">
+            <mat-radio-group [(ngModel)]="this.event.eventGenre" name="eventGenre" formControlName="eventGenre">
               <mat-radio-button value="male">Rock</mat-radio-button>
               <mat-radio-button value="female">Jazz</mat-radio-button>
             </mat-radio-group>

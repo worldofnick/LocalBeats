@@ -104,13 +104,7 @@ export class CreateEventsComponent implements OnInit {
     this.event.hostEmail = this.user.email;
 
     console.log(this.event);
-    
-    this.eventService.createEvent(this.event).then((newEvent: Event) => {
-      this.event = newEvent;
-      this.eventService.event = this.event;
-      this.eventID = this.event._id;
-      this.router.navigate(['/events', this.event._id]);        
-    });
+
 
 
     if (!this.updating) {
@@ -120,6 +114,7 @@ export class CreateEventsComponent implements OnInit {
         this.router.navigate(['/events', this.event._id]); //this will go to the page about the event
       });
     } else {
+      console.log("updating");
       this.eventService.updateEvent(this.event).then((newEvent: Event) => {
         this.event = newEvent;
         this.eventService.event = this.event;

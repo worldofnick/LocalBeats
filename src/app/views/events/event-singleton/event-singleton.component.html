@@ -5,8 +5,8 @@
         <mat-card-header>
           <div mat-card-avatar class="example-header-image"></div>
 
-          <mat-card-title>{{this.model.eventType}}</mat-card-title>
-          <mat-card-subtitle>{{this.model.fixedPrice}}</mat-card-subtitle>
+          <mat-card-title>Event type: {{this.model.eventType}}</mat-card-title>
+          <mat-card-subtitle>Event price: {{this.model.fixedPrice}}</mat-card-subtitle>
 
         </mat-card-header>
         <!-- <img mat-card-image src="https://material.angular.io/assets/img/examples/shiba2.jpg" width="50px" heaight="50px"alt="Photo of a Shiba Inu"> -->
@@ -16,8 +16,8 @@
           </p>
         </mat-card-content>
         <mat-card-actions>
-          <button (click)="onEditEvent()"mat-button>Edit</button>
-          <button (click)="onDeleteEvent()"mat-button>Delete</button>
+          <button *ngIf="this.model.hostUser._id == this.user._id" (click)="onEditEvent()"mat-button>Edit</button>
+          <button *ngIf="this.model.hostUser._id == this.user._id" (click)="onDeleteEvent()"mat-button>Delete</button>
         </mat-card-actions>
       </mat-card>
     </mat-tab>
