@@ -1,5 +1,5 @@
 <div fxLayout="row" fxLayoutWrap="wrap">
-  <div fxFlex="100" fxFlex.gt-md="300px" fxFlex.gt-sm="50">
+  <div *ngIf="this.user" fxFlex="100" fxFlex.gt-md="300px" fxFlex.gt-sm="50">
     <mat-card class="profile-sidebar mb-1 pb-0">
       <div class="propic text-center">
         <img src="assets/images/sq-face-220.jpg" alt="">
@@ -12,16 +12,6 @@
       <div class="profile-actions text-center mb-1">
         <button mat-raised-button color="primary">Message</button>
         <button mat-raised-button color="accent">Follow</button>
-        <button 
-        mat-icon-button
-        [routerLink]="['/profile', '5a5d0c09cde9265e811a13e0']" 
-        [style.width]="'auto'"
-        [style.overflow]="'visible'"
-        matTooltip="Login or Register"
-        class="topbar-button-right">
-          <span>other user</span>
-          <!-- <mat-icon>exit_to_app</mat-icon> -->
-        </button>
       </div>
       <div class="profile-nav">
         <mat-nav-list>

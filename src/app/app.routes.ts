@@ -34,7 +34,7 @@ export const rootRouterConfig: Routes = [
       {
         path: 'profile', 
         loadChildren: './views/profile/profile.module#ProfileModule', 
-        canActivate: [UserGuard], 
+        // canActivate: [UserGuard], 
         data: { title: 'Profile', breadcrumb: 'PROFILE'}
       },
       {

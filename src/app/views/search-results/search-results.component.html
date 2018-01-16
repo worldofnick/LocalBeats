@@ -26,7 +26,9 @@
         </div>
         <mat-divider></mat-divider>
       </mat-card-title>
-      <img mat-card-image src="assets/images/photo-2.jpg">
+      <img *ngIf="searchType == 'Event'" [routerLink]="['/events', result._id]" mat-card-image src="assets/images/photo-2.jpg">
+      <img *ngIf="searchType == 'Musician'" [routerLink]="['/profile', result._id]" mat-card-image src="assets/images/photo-2.jpg">
+      
       <mat-card-content>
         <p>
           Adipisci quas repellat sed. Quasi quaerat aut nam possimus vitae dignissimos, sapiente est atque tenetur eveniet iste iusto

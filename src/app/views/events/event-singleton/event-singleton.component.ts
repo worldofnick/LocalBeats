@@ -45,6 +45,7 @@ export class EventSingletonComponent implements OnInit {
     this.EID = {
       id: this.route.snapshot.params['id']
     }
+    
 
     this.eventService.getEventByEID(this.EID).then((event: Event) => {
       this.model = event;
@@ -86,8 +87,6 @@ export class EventSingletonComponent implements OnInit {
     console.log(this.model._id);
 
     this.router.navigate(['/events', 'update', this.model._id]); //this will go to the page about the event
-    
-
     
   }
 
