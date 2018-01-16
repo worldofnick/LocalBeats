@@ -34,8 +34,14 @@ export const rootRouterConfig: Routes = [
       {
         path: 'profile', 
         loadChildren: './views/profile/profile.module#ProfileModule', 
-        canActivate: [UserGuard], 
+        // canActivate: [UserGuard], 
         data: { title: 'Profile', breadcrumb: 'PROFILE'}
+      },
+      {
+        path: 'events', 
+        loadChildren: './views/events/events.module#EventsModule', 
+        canActivate: [UserGuard], 
+        data: { title: 'Events', breadcrumb: 'EVENTS'}
       },
       {
         path: 'auth', 

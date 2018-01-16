@@ -1,0 +1,66 @@
+<mat-card class="p-0">
+  <mat-card-title class="">
+    <div class="card-title-text">Create Event</div>
+    <mat-divider></mat-divider>
+  </mat-card-title>
+  <mat-card-content>
+    <form [formGroup]="basicForm" (ngSubmit)="onCreateEvent()">
+      <div fxLayout="row" fxLayoutWrap="wrap">
+        <div fxFlex="100" fxFlex.gt-xs="50" class="pr-1">
+          <div class="pb-1">
+            <mat-form-field class="full-width">
+              <input matInput [(ngModel)]="this.event.eventName" name="eventName" formControlName="eventName" placeholder="Event Name (Min Length: 4, Max Length: 40)" value="">
+            </mat-form-field>
+          </div>
+          <!-- <div class="pb-1">
+            <mat-form-field class="full-width">
+              <mat-select id="langToggle" placeholder="" [(ngModel)]="selectedValue" name="food" class="mb-1">
+                <mat-option *ngFor="let food of foods" [value]="food.value" ngDefaultControl>
+                  {{food.viewValue}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div> -->
+          <div class="pb-1">
+            <mat-form-field class="full-width">
+              <input matInput [(ngModel)]="this.event.eventType" name="eventType" formControlName="eventType" placeholder="Event Type" value="">
+            </mat-form-field>
+          </div>
+
+          <div class="pb-1">
+            <mat-form-field class="full-width">
+              <input matInput [(ngModel)]="this.event.fixedPrice" name="fixedPrice" formControlName="fixedPrice" placeholder="Event Price" value="">
+            </mat-form-field>
+          </div>
+
+          <div class="pb-1">
+            <mat-form-field class="full-width">
+              <input matInput [(ngModel)]="this.event.toDate" name="date" formControlName="date" placeholder="Date" [matDatepicker]="appDatepicker">
+
+              <mat-datepicker-toggle matSuffix [for]="appDatepicker"></mat-datepicker-toggle>
+            </mat-form-field>
+            <mat-datepicker #appDatepicker></mat-datepicker>
+          </div>
+
+
+          <div class="pb-1">
+            <Label>Genre</Label>
+            <mat-radio-group [(ngModel)]="this.event.eventGenre" name="eventGenre" formControlName="eventGenre">
+              <mat-radio-button value="rock">Rock</mat-radio-button>
+              <mat-radio-button value="jazz">Jazz</mat-radio-button>
+            </mat-radio-group>
+          </div>
+
+          <div class="pb-1 pt-05">
+            <mat-checkbox name="agreed" formControlName="agreed" class="pb-1">I have read and agree to the terms of service.</mat-checkbox>
+          </div>
+        </div>
+      </div>
+      <button *ngIf="!this.updating" mat-raised-button color="primary">Create Event</button>
+      <button *ngIf="this.updating" mat-raised-button color="primary">Update Event</button>
+      
+      
+
+    </form>
+  </mat-card-content>
+</mat-card>

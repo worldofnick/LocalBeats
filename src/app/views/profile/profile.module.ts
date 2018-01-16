@@ -28,6 +28,7 @@ import { ProfileOverviewComponent } from './profile-overview/profile-overview.co
 import { ProfileSettingsComponent } from './profile-settings/profile-settings.component';
 import { ProfileBlankComponent } from './profile-blank/profile-blank.component';
 import { ProfileRoutes } from "./profile.routing";
+import { ProfileEventsComponent } from './profile-events/profile-events.component';
 
 @NgModule({
   imports: [
@@ -53,6 +54,6 @@ import { ProfileRoutes } from "./profile.routing";
     CommonPipesModule,
     RouterModule.forChild(ProfileRoutes)
   ],
-  declarations: [ProfileComponent, ProfileOverviewComponent, ProfileSettingsComponent, ProfileBlankComponent]
+  declarations: [ProfileComponent, ProfileOverviewComponent, ProfileSettingsComponent, ProfileBlankComponent, ProfileEventsComponent]
 })
 export class ProfileModule { }
