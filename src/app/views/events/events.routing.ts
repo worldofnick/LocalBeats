@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 
-import { MyEventsComponent } from "./my-events/my-events.component"
+import { CreateEventsComponent } from "./create-events/create-events.component"
 import { EventsComponent } from "./events.component"
 
 
@@ -8,7 +8,7 @@ import { EventsComponent } from "./events.component"
 export const EventRoutes: Routes = [
   {
     path: '',
-    component: MyEventsComponent,
+    component: CreateEventsComponent,
     data: { title: 'MyEvents', breadcrumb: 'My Events'},
     // children: [{
     //   path: 'events',
