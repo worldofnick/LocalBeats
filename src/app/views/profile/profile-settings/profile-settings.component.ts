@@ -49,7 +49,11 @@ export class ProfileSettingsComponent implements OnInit {
         this.user.profilePicUrl = link as string;
       }).then(link => {
           // update the image view
-
+          this.userService.onEditProfile(this.user).then((user: User) => {
+            this.user = user;
+            this.userService.user = this.user;
+            // this.router.navigate(['/profile']);
+          });
         }).catch(err => {
           console.log(err);
           //this.router.navigate(['/profile']); //this will go back to my events.
