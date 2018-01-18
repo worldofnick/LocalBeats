@@ -42,6 +42,15 @@
             <mat-datepicker #appDatepicker></mat-datepicker>
           </div>
 
+          <div class="propic text-center">
+            <img *ngIf="!this.event.eventPicUrl" mat-card-image src="http://www.upalumni.ph/wp-content/themes/upaa/img/placeholder.png">
+            <img *ngIf="this.event.eventPicUrl" mat-card-image [src]="this.event.eventPicUrl">
+          </div>
+          <div class="mb-1 mt-1">
+            <p>Upload an event picture (optional)</p>
+            <input type="file" (change)="onChange($event)" accept=".jpg,.png"/>
+          </div>
+
 
           <div class="pb-1">
             <Label>Genre</Label>
