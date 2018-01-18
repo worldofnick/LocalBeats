@@ -17,6 +17,7 @@ var UserSchema = new Schema({
     soundcloudID  : {type: String},
     spotifyID     : {type: String},
     genres        : {type: Array}, // Kept empty if the user is not an artist
+    eventTypes    : {type: Array}, // Kept empty if the user is not an artist
     isArtist      : {type: Boolean, default: false},
     location: {
         type: [Number],  // [<longitude>, <latitude>]

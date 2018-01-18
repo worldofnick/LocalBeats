@@ -67,7 +67,8 @@ exports.deleteUserByID = function (req, res) {
 // name (string) name of the user
 // artist (boolean) true to return only artists, false to return all. Defaults to true
 // lat/lon..
-// genre (string) genre of the user ** cannot be used in junction with artist=false
+// genres (array) genre of the user ** cannot be used in junction with artist=false
+// event_types (array)
 // skip (int)
 // limit (int)
 exports.searchUsers = function (req, res) {
@@ -87,13 +88,21 @@ exports.searchUsers = function (req, res) {
     query.firstName = new RegExp(req.query.name);
   }
 
-  query.isArtist = true
+  query.isArtist = false
   if (req.query.artist != null) {
     query.isArtist = req.query.artist;
   }
 
-  if (req.query.genre != null && req.query.genre != "all genres") {
-    query.genres = req.query.genre;
+  if (req.query.genres != null && req.query.genres != "all genres") {
+    query.genres = {
+        "$in": req.query.genres
+    }
+  }
+
+  if (req.query.event_types != null) {
+    query.event_types = {
+      "$in": req.query.event_type
+    }
   }
 
   if (req.query.lat != null && req.query.lon != null) {
