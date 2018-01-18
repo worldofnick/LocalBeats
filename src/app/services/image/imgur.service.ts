@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Http, Headers, RequestOptions, Response } from '@angular/http';
-import { ImageUtilService } from '../services/imageutil.service';
+import { ImageUtilService } from './imageutil.service';
 import { Observable, Subject } from 'rxjs';
 
 export type ImgurUploadOptions = {
