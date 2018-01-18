@@ -50,7 +50,8 @@ export class RegisterComponent implements OnInit {
       password: signupData.password,
       spotifyID: null,
       genres: [],
-      isArtist: true
+      isArtist: true,
+      profilePicUrl: "https://www.vccircle.com/wp-content/uploads/2017/03/default-profile.png"
     };
     console.log(this.user);
 
