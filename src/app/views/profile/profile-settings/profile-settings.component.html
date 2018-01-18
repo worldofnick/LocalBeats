@@ -34,14 +34,14 @@
       <mat-card-content>
         <div class="mb-1 mt-1">
           <p>Upload a profile picture</p>
-          <input type="file" ng2FileSelect [uploader]="uploader" />
+          <input type="file" (change)="onChange($event)"/>
         </div>
 
         <div class="mb-1">
           <div ng2FileDrop
           [ngClass]="{'dz-file-over': hasBaseDropZoneOver}"
-          [uploader]="uploader"
           (fileOver)="fileOverBase($event)"
+
           class="fileupload-drop-zone">
           Drop png/jpeg file here
           </div>
