@@ -17,6 +17,7 @@ export class ProfileComponent implements OnInit {
   onOwnProfile: boolean = null;
   userID: any = null;
   requested: boolean = null;
+  clickedRequestArtist:boolean = null;
 
   clickedOverview = false;
 
@@ -84,6 +85,7 @@ export class ProfileComponent implements OnInit {
 
   onRequestArtist(ID:string){
     // this.router.navigate(['/pick-event', this.user._id]);
+    // this.clickedRequestArtist
   }
 
   onCancelArtist(ID:string) {
