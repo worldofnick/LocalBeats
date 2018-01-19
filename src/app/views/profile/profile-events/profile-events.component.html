@@ -27,42 +27,51 @@
 
 
     <mat-tab label="Events that Have Requested You">
-      <mat-card *ngFor="let event of this.requestedArtistEvents; let i = index" class="example-card">
+      <mat-card *ngFor="let booking of this.requestedArtistBookings; let i = index" class="example-card">
         <mat-card-header>
           <div mat-card-avatar class="example-header-image"></div>
-          <mat-card-title>Event 1</mat-card-title>
-          <mat-card-subtitle>Birthday party</mat-card-subtitle>
+          <mat-card-title>Event name: {{ booking.eventEID.eventName }}</mat-card-title>
+          <mat-card-subtitle>Event type: {{booking.eventEID.eventType}}</mat-card-subtitle>
+          <mat-card-subtitle>Event price: {{booking.eventEID.fixedPrice}}</mat-card-subtitle>
         </mat-card-header>
         <!-- <img mat-card-image src="https://material.angular.io/assets/img/examples/shiba2.jpg" width="50px" heaight="50px"alt="Photo of a Shiba Inu"> -->
         <mat-card-content>
           <p>
-            On December 21 2018, pays 500 dollars
+              The event is on {{booking.eventEID.toDate}}
           </p>
         </mat-card-content>
         <mat-card-actions>
-          <button mat-button>Accept </button>
-          <button mat-button>Reject</button>
+          
+          <button *ngIf="isCurrentUser && userService.isAuthenticated() && !requestedArtistBookings[i].approved" 
+          (click)="onAcceptArtist(booking, i)" mat-button>Accept </button>
+          
+          <button *ngIf="!isCurrentUser  && userService.isAuthenticated() && !requestedArtistBookings[i].approved" 
+          (click)="onDeclineArtist(booking, i)"mat-button>Reject</button>
+
+          <button *ngIf="!isCurrentUser  && userService.isAuthenticated() && requestedArtistBookings[i].approved" 
+          (click)="onDeclineArtist(booking, i)"mat-button>Cancel Performance</button>
+        
         </mat-card-actions>
       </mat-card>
     </mat-tab>
 
 
     <mat-tab label="Events I've Applied For">
-      <mat-card *ngFor="let event of this.appliedEvents; let i = index" class="example-card">
+      <mat-card *ngFor="let booking of this.appliedBookings; let i = index" class="example-card">
         <mat-card-header>
           <div mat-card-avatar class="example-header-image"></div>
-          <mat-card-title>Event name: {{ event.eventName }}</mat-card-title>
-          <mat-card-subtitle>Event type: {{event.eventType}}</mat-card-subtitle>
-          <mat-card-subtitle>Event price: {{event.fixedPrice}}</mat-card-subtitle>
+          <mat-card-title>Event name: {{ booking.eventEID.eventName }}</mat-card-title>
+          <mat-card-subtitle>Event type: {{booking.eventEID.eventType}}</mat-card-subtitle>
+          <mat-card-subtitle>Event price: {{booking.eventEID.fixedPrice}}</mat-card-subtitle>
         </mat-card-header>
         <!-- <img mat-card-image src="https://material.angular.io/assets/img/examples/shiba2.jpg" width="50px" heaight="50px"alt="Photo of a Shiba Inu"> -->
         <mat-card-content>
           <p>
-              The event is on {{event.toDate}}
+              The event is on {{booking.eventEID.toDate}}
             </p>
         </mat-card-content>
         <mat-card-actions>
-          <button *ngIf="!isCurrentUser  && userService.isAuthenticated() && hasApplied " (click)="onCancelApp(event, i)" mat-button>Cancel Application</button>
+          <button *ngIf="!isCurrentUser  && userService.isAuthenticated() && hasApplied " (click)="onCancelApp(booking)" mat-button>Cancel Application</button>
         </mat-card-actions>
       </mat-card>
     </mat-tab>
