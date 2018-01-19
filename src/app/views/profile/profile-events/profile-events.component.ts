@@ -74,31 +74,26 @@ export class ProfileEventsComponent implements OnInit {
 
   //TODO remove event from passses in params below...not used.
     //cancel your application
-  onCancelApp(event:Event, index:number){
+  onCancelApp(bookingToCancel:Booking){
 
-    var bookingToCancel:Booking;
-
-    console.log(this.appliedEvents[index]);
-    var currentEvent = this.appliedEvents[index] ;
-
-    //now associate a booking with an event eid.
-    for(let booking of this.appliedBookings){
-      if(booking.eventEID == currentEvent._id){
-        bookingToCancel = booking;
-      }
-    }
-
-      this.bookingService.declineBooking(bookingToCancel).then(() => {
-        this.hasApplied = false;
-        // this.userBooking = null
-      })
+    // console.log(this.userBooking)
+    this.bookingService.declineBooking(bookingToCancel).then(() => {this.getEvents();})
   }
 
-  onDeclineArtist(event:Event, index: number){
+  // <button *ngIf="isCurrentUser && userService.isAuthenticated() && !requestedArtistBookings[i].approved" 
+  // (click)="onAcceptArtist(booking, i)" mat-button>Accept </button>
+  
+  // <button *ngIf="!isCurrentUser  && userService.isAuthenticated() && !requestedArtistBookings[i].approved" 
+  // (click)="onDeclineArtist(booking, i)"mat-button>Reject</button>
+
+  // <button *ngIf="!isCurrentUser  && userService.isAuthenticated() && requestedArtistBookings[i].approved" 
+  // (click)="onDeclineArtist(booking, i)"mat-button>Cancel Performance</button>
+
+  onDeclineArtist(booking:Booking, index: number){
     this.bookingService.declineBooking(this.requestedArtistBookings[index]).then(() => this.getEvents());
   }
 
-  onAcceptArtist(event:Event, index: number){
+  onAcceptArtist(booking:Booking, index: number){
     this.bookingService.acceptBooking(this.requestedArtistBookings[index]).then(() => this.getEvents());
   }
 

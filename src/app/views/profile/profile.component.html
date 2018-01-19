@@ -30,6 +30,20 @@
               </mat-list-item>
           </ng-template>
 
+          <ng-template [ngIf]="!this.onOwnProfile && this.userService.isAuthenticated()">              
+              <mat-list-item (click)="onRequestArtist(this.user._id)" routerLinkActive="list-item-active">
+                <mat-icon>music_note</mat-icon>
+                Request Artist
+              </mat-list-item>
+          </ng-template>
+
+          <ng-template [ngIf]="!this.onOwnProfile && this.requested && this.userService.isAuthenticated()">              
+              <mat-list-item (click)="onCancelArtist(this.user._id)" routerLinkActive="list-item-active">
+                <mat-icon>music_note</mat-icon>
+                Cancel Artist
+              </mat-list-item>
+          </ng-template>
+
 
           <ng-template [ngIf]="this.onOwnProfile">              
               <mat-list-item [routerLink]="['/profile', 'events']" routerLinkActive="list-item-active">
