@@ -18,6 +18,8 @@ export class ProfileComponent implements OnInit {
   userID: any = null;
   requested: boolean = null;
 
+  clickedOverview = false;
+
   events:any[];
   requestedArtistEvents: any[] = [];
   requestedArtistBookings: any[] = [];
