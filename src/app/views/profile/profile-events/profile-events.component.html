@@ -4,6 +4,10 @@
     <!-- my events -->
     <mat-tab label="Events I'm Hosting">
       <mat-card *ngFor="let event of this.events; let i = index" class="example-card">
+          <mat-card class="p-0">
+              <mat-tab-group>
+        <mat-tab label="Event Details">
+          <mat-card>
         <mat-card-header>
           <div mat-card-avatar class="example-header-image"></div>
 
@@ -22,6 +26,16 @@
           <button *ngIf="event.hostUser._id == this.user._id" (click)="onEditEvent(event, i)" mat-button>Edit</button>
           <button *ngIf="event.hostUser._id == this.user._id" (click)="onDeleteEvent(event, i)" mat-button>Delete</button>
         </mat-card-actions>
+      </mat-card>
+      </mat-tab>
+      <mat-tab label="Applicants">
+
+        </mat-tab>
+        <mat-tab label="Approved Musicians">
+
+          </mat-tab>
+        </mat-tab-group>
+          </mat-card>
       </mat-card>
     </mat-tab>
 
