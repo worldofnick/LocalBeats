@@ -51,7 +51,8 @@ export class RegisterComponent implements OnInit {
       spotifyID: null,
       genres: [],
       isArtist: true,
-      profilePicUrl: "https://www.vccircle.com/wp-content/uploads/2017/03/default-profile.png"
+      profilePicUrl: "https://www.vccircle.com/wp-content/uploads/2017/03/default-profile.png",
+      eventTypes: []
     };
     console.log(this.user);
 

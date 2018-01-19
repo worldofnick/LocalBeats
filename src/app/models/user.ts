@@ -8,4 +8,5 @@ export class User {
     public genres: string[]
     public isArtist: boolean
     public profilePicUrl: string
+    public eventTypes: string[]
   }

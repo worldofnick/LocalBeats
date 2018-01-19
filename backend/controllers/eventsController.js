@@ -137,7 +137,7 @@ exports.deleteUserEventsByUID = function (req, res) {
 // skip (int) how many records to skip
 // limit (int) how many records to return
 // event_types (array) ["wedding", "birthday"]
-// event_genres (array) []"rock"]
+// event_genres (array) ["rock"]
 // from_date & to_date (string) ISODate
 // min_budget & max_budget (int)
 // booked (boolean) defaults ot false. If true returns events that are currently booked
