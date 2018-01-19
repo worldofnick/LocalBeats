@@ -1,7 +1,7 @@
-<mat-card *ngIf="this.model" class="p-0">
+<mat-card *ngIf="this.model && this.userService" class="p-0">
   <mat-tab-group>
     <mat-tab label="{{this.model.eventName}}">
-      <mat-card  class="example-card">
+      <mat-card class="example-card">
         <mat-card-header>
           <div mat-card-avatar class="example-header-image"></div>
 
@@ -16,8 +16,11 @@
           </p>
         </mat-card-content>
         <mat-card-actions>
-          <button *ngIf="this.model.hostUser._id == this.user._id" (click)="onEditEvent()"mat-button>Edit</button>
-          <button *ngIf="this.model.hostUser._id == this.user._id" (click)="onDeleteEvent()"mat-button>Delete</button>
+          <button *ngIf="isCurrentUser  && userService.isAuthenticated()" (click)="onEditEvent()" mat-button>Edit Event</button>
+          <button *ngIf="isCurrentUser  && userService.isAuthenticated()" (click)="onDeleteEvent()" mat-button>Delete Event</button>
+          <button *ngIf="!isCurrentUser  && userService.isAuthenticated() && !hasApplied " (click)="onApplyEvent()" mat-button>Apply to Event</button>
+          <button *ngIf="!isCurrentUser  && userService.isAuthenticated() && hasApplied " (click)="onCancelApp()" mat-button>Cancel Application</button>
+          <button *ngIf="isCurrentUser  && userService.isAuthenticated()" (click)="onViewApplicants()" mat-button>View Applicants</button>
         </mat-card-actions>
       </mat-card>
     </mat-tab>

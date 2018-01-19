@@ -19,8 +19,8 @@ import { Booking } from '../../../models/booking';
 })
 export class EventSingletonComponent implements OnInit {
 
-  public model:Event;
-  public user:User;
+  public model:Event = new Event;
+  public user:User = new User;
   public userBooking: Booking;
   public isCurrentUser: boolean = null;
   public hasApplied: boolean = null;
@@ -81,6 +81,41 @@ export class EventSingletonComponent implements OnInit {
 
 
   }
+
+  /*
+<button *ngIf="isCurrentUser  && userSerivce.isAuthenticated()" (click)="onEditEvent()" mat-button>Edit Event</button>
+<button *ngIf="isCurrentUser  && userSerivce.isAuthenticated()" (click)="onDeleteEvent()" mat-button>Delete Event</button>
+<button *ngIf="!isCurrentUser  && userSerivce.isAuthenticated() && !hasApplied " (click)="onApplyEvent()" mat-button>Apply to Event</button>
+<button *ngIf="!isCurrentUser  && userSerivce.isAuthenticated() && hasApplied " (click)="onCancelEvent()" mat-button>Cancel Application</button>
+<button *ngIf="isCurrentUser  && userSerivce.isAuthenticated()" (click)="onViewApplicants()" mat-button>View Applicants</button>
+  */
+
+  //apply to the event
+  onApplyEvent(){
+    const booking = new Booking(undefined, 'artist-apply', this.model.hostUser, this.userService.user, this.model, false, false)
+    this.bookingService.createBooking(booking).then((booking: Booking) => {
+      this.hasApplied = true;
+      this.userBooking = booking;
+    })
+  }
+
+
+  //cancel your application
+  onCancelApp(){
+    console.log(this.userBooking)
+    this.bookingService.declineBooking(this.userBooking).then(() => {
+      this.hasApplied = false;
+      this.userBooking = null
+    })
+  }
+
+  onViewApplications(){
+
+  }
+
+
+
+
 
   onEditEvent(){
     console.log("editing event");

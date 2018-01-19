@@ -17,13 +17,14 @@ import { Booking } from '../../../models/booking';
   styleUrls: ['./profile-events.component.css']
 })
 export class ProfileEventsComponent implements OnInit {
-  user:User;
+  user:User = new User;
   events:any[];
   requestedArtistEvents: any[] = [];
   requestedArtistBookings: any[] = [];
   appliedEvents: Event[] = [];
   appliedBookings: any[] = [];
   deleteStatus:Number;
+  hasApplied:Boolean = true;
 
   constructor(private eventService: EventService, 
     private userService: UserService,
@@ -68,6 +69,29 @@ export class ProfileEventsComponent implements OnInit {
       this.getEvents();
     }
 
+  }
+
+
+  //TODO remove event from passses in params below...not used.
+    //cancel your application
+  onCancelApp(event:Event, index:number){
+
+    var bookingToCancel:Booking;
+
+    console.log(this.appliedEvents[index]);
+    var currentEvent = this.appliedEvents[index] ;
+
+    //now associate a booking with an event eid.
+    for(let booking of this.appliedBookings){
+      if(booking.eventEID == currentEvent._id){
+        bookingToCancel = booking;
+      }
+    }
+
+      this.bookingService.declineBooking(bookingToCancel).then(() => {
+        this.hasApplied = false;
+        // this.userBooking = null
+      })
   }
 
   onDeclineArtist(event:Event, index: number){
