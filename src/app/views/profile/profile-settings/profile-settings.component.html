@@ -35,6 +35,7 @@
         <div class="mb-1 mt-1">
           <p>Upload a profile picture</p>
           <input type="file" (change)="onChange($event)" accept=".jpg,.png"/>
+          <mat-progress-bar mode="determinate" class="session-progress"></mat-progress-bar>
         </div>
 
         <!-- <div class="mb-1">
