@@ -134,7 +134,7 @@
     </button>
     <!-- Top left user menu -->
     <button mat-icon-button [matMenuTriggerFor]="accountMenu" class="topbar-button-right img-button">
-      <img src="assets/images/face-7.jpg" alt="">
+      <img [src]="this.userService.user.profilePicUrl" alt="">
     </button>
     <mat-menu #accountMenu="matMenu">
       <button mat-menu-item [routerLink]="['/profile/overview']">

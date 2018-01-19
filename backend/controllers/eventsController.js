@@ -136,8 +136,8 @@ exports.deleteUserEventsByUID = function (req, res) {
 // params
 // skip (int) how many records to skip
 // limit (int) how many records to return
-// event_type (string) ("wedding", "birthday")
-// event_genre (string) ("rock", etc)
+// event_types (array) ["wedding", "birthday"]
+// event_genres (array) ["rock"]
 // from_date & to_date (string) ISODate
 // min_budget & max_budget (int)
 // booked (boolean) defaults ot false. If true returns events that are currently booked
@@ -159,11 +159,15 @@ exports.searchEvents = function(req, res) {
 
   var query = {};
   if (req.query.event_type != null && req.query.event_type != "all events") {
-    query.eventType = req.query.event_type;
+    query.eventType = {
+      "$in": req.query.event_type
+    }
   }
 
   if (req.query.event_genre != null && req.query.event_genre != "all genres") {
-    query.eventGenre = req.query.event_genre;
+    query.eventGenre = {
+      "$in": req.query.event_genre
+    }
   }
 
   if (req.query.from_date != null && req.query.to_date != null) {

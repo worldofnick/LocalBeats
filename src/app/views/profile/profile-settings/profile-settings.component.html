@@ -34,14 +34,15 @@
       <mat-card-content>
         <div class="mb-1 mt-1">
           <p>Upload a profile picture</p>
-          <input type="file" ng2FileSelect [uploader]="uploader" />
+          <input type="file" (change)="onChange($event)" accept=".jpg,.png"/>
+          <mat-progress-bar mode="determinate" class="session-progress"></mat-progress-bar>
         </div>
 
-        <div class="mb-1">
+        <!-- <div class="mb-1">
           <div ng2FileDrop
           [ngClass]="{'dz-file-over': hasBaseDropZoneOver}"
-          [uploader]="uploader"
           (fileOver)="fileOverBase($event)"
+
           class="fileupload-drop-zone">
           Drop png/jpeg file here
           </div>
@@ -77,18 +78,18 @@
                     <mat-icon *ngIf="item.isError" color="warn">error</mat-icon>
                 </td>
                 <td nowrap>
-                    <button 
+                    <button
                     mat-raised-button
                     class="mat-primary"
                     (click)="item.upload()"
                     [disabled]="item.isReady || item.isUploading || item.isSuccess">Upload</button>
-                    <button 
+                    <button
                     mat-raised-button
                     class="mat-accent"
                     (click)="item.cancel()"
                     [disabled]="!item.isUploading">Cancel</button>
 
-                    <button 
+                    <button
                     mat-raised-button
                     class="mat-warn"
                     (click)="item.remove()">Remove</button>
@@ -98,7 +99,7 @@
             <ng-template #tableNoData>
               <p [ngStyle]="{padding: '0 1.2rem'}">Queue is empty</p>
             </ng-template>
-        </table>
+        </table> -->
       </mat-card-content>
     </mat-tab>
     <mat-tab label="Privacy Settings">

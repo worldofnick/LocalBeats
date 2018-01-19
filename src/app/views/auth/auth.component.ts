@@ -36,7 +36,9 @@ export class AuthComponent implements OnInit {
       password: signinData.password,
       spotifyID: null,
       genres: [],
-      isArtist: true
+      isArtist: true,
+      profilePicUrl: "https://www.vccircle.com/wp-content/uploads/2017/03/default-profile.png",
+      eventTypes: []
     };
 
     this.submitButton.disabled = true;
