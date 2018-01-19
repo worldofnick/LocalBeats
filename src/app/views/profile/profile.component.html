@@ -131,5 +131,6 @@
 <!-- Profile Views -->
   <div fxFlex="100" fxFlex.gt-sm="50" fxFlex.gt-md="calc(100% - 300px)">
     <router-outlet></router-outlet>
+    <app-child [this.user]="user"></app-child>
   </div>
 </div>
