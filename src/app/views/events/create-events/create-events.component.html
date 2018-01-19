@@ -45,6 +45,7 @@
           <div class="propic text-center">
             <img *ngIf="!this.event.eventPicUrl" mat-card-image src="http://www.upalumni.ph/wp-content/themes/upaa/img/placeholder.png">
             <img *ngIf="this.event.eventPicUrl" mat-card-image [src]="this.event.eventPicUrl">
+            <mat-progress-bar mode="determinate" class="session-progress"></mat-progress-bar>
           </div>
           <div class="mb-1 mt-1">
             <p>Upload an event picture (optional)</p>

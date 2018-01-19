@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { MatProgressBar, MatButton } from '@angular/material';
 import { UserService } from '../../../services/auth/user.service';
 import { BookingService } from '../../../services/booking/booking.service';
 import { EventService } from '../../../services/event/event.service';
@@ -18,6 +19,7 @@ import { ImgurService } from 'app/services/image/imgur.service';
   styleUrls: ['./create-events.component.css']
 })
 export class CreateEventsComponent implements OnInit {
+  @ViewChild(MatProgressBar) progressBar: MatProgressBar;
   formData = {}
   console = console;
   basicForm: FormGroup;
@@ -93,6 +95,7 @@ export class CreateEventsComponent implements OnInit {
   }
 
   onChange(event: EventTarget) {
+      this.progressBar.mode = 'indeterminate';
       let eventObj: MSInputMethodContext = <MSInputMethodContext> event;
       let target: HTMLInputElement = <HTMLInputElement> eventObj.target;
       let files: FileList = target.files;
@@ -102,9 +105,11 @@ export class CreateEventsComponent implements OnInit {
       this.imgurService.uploadToImgur(file).then(link => {
         this.event.eventPicUrl = link as string;
       }).then(link => {
+          this.progressBar.mode = 'determinate';
           // update the image view
         }).catch(err => {
           console.log(err);
+          this.progressBar.mode = 'determinate';
           //this.router.navigate(['/profile']); //this will go back to my events.
       });
   }
