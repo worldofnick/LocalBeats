@@ -24,7 +24,7 @@
           </ng-template>
 
           <ng-template [ngIf]="!this.onOwnProfile">              
-              <mat-list-item [routerLink]="['/profile', 'overview']" routerLinkActive="list-item-active">
+              <mat-list-item [routerLink]="['/profile', 'overview', this.user._id]" routerLinkActive="list-item-active">
                 <mat-icon>home</mat-icon>
                 Overview
               </mat-list-item>

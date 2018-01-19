@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { ActivatedRoute } from "@angular/router";
 import { UserService } from '../../../services/auth/user.service';
 import { User } from '../../../models/user';
@@ -9,7 +9,10 @@ import { User } from '../../../models/user';
   styleUrls: ['./profile-overview.component.css']
 })
 export class ProfileOverviewComponent implements OnInit {
-  user:User;
+
+  @Input() user: User;  
+
+  // user:User;
 
   onOwnProfile: boolean = null;
   userID: any = null;
@@ -133,6 +136,7 @@ export class ProfileOverviewComponent implements OnInit {
       this.user = this.userService.user;
     } else {
       //on another perons profile.
+      console.log("ON ANOTHER PERSONS PROFILE");
       this.onOwnProfile = false;
       let ID:String = this.userID["id"];
       console.log("on another perosns profile");
