@@ -24,6 +24,7 @@ var EventsSchema = new Schema({
     deposit         : {type: Number},
     isBooked        : {type: Boolean, default: false},
     eventPicUrl     : {type: String},
+    cancellation    : {type: Number, default: 0},
     location: {
       type: [Number],  // [<longitude>, <latitude>]
       index: '2d'      // create the geospatial index
