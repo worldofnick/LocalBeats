@@ -66,6 +66,8 @@ exports.createEvent = function (req, res) {
                 if (err) {
                     return res.status(500).send("Failed to create event");
                 } else {
+                    console.log("PRINTING NEW EVENT");
+                    console.log(fetchedEvent)
                     return res.status(200).send({ "event": fetchedEvent });
                 }
             });
