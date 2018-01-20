@@ -29,6 +29,9 @@ export class EventSingletonComponent implements OnInit {
   public dateInBar:Date;
   public dateString:any;
   deleteStatus:Number;
+  title = 'Confirm dialog';
+  text = 'Just click a button!';
+  selectedOption;
   
 
   EID:any;
@@ -137,6 +140,13 @@ export class EventSingletonComponent implements OnInit {
         this.model = null;        
       }
     });
+  }
+
+  openDialog() {
+    this.bookingService.negotiate(this.title, this.text)
+      .subscribe((result) => {
+        this.selectedOption = result;
+      });
   }
 
 }
