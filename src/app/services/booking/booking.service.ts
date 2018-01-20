@@ -1,10 +1,12 @@
 // 'use strict';
 import { Injectable } from '@angular/core';
 import { Http, Headers, RequestOptions, Response, URLSearchParams } from '@angular/http';
+import { MatDialogRef, MatDialog, MatDialogConfig } from '@angular/material';
 import { Observable } from 'rxjs/Observable';
 import { Booking } from 'app/models/booking';
 import { Event } from 'app/models/event';
 import { User } from 'app/models/user';
+import { NegotiateDialogComponent } from '../../views/negotiate/negotiate-dialog/negotiate-dialog.component';
 
 
 @Injectable()
@@ -18,7 +20,17 @@ export class BookingService {
 
     private headers: Headers = new Headers({ 'Content-Type': 'application/json' });
 
-    constructor(private http: Http) { }
+    constructor(private http: Http, private dialog: MatDialog) { }
+
+    public negotiate(title: string, message: string): Observable<boolean> {
+        let dialogRef: MatDialogRef<NegotiateDialogComponent>;
+        dialogRef = this.dialog.open(NegotiateDialogComponent, {
+            width: '380px',
+            disableClose: true,
+            data: {title, message}
+        });
+        return dialogRef.afterClosed();
+    }
 
     // post("/api/events/create")
     public createBooking(newBooking: Booking): Promise<Booking> {
