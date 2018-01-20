@@ -92,7 +92,7 @@ export class EventSingletonComponent implements OnInit {
 
   //apply to the event
   onApplyEvent(){
-    const booking = new Booking(undefined, 'artist-apply', this.model.hostUser, this.userService.user, this.model, false, false)
+    const booking = new Booking(undefined, 'artist-apply', this.model.hostUser, this.userService.user, this.model, false, false, false, false, this.model.fixedPrice)
     this.bookingService.createBooking(booking).then((booking: Booking) => {
       this.hasApplied = true;
       this.userBooking = booking;

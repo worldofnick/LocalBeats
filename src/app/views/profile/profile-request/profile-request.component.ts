@@ -27,7 +27,7 @@ export class ProfileRequestComponent implements OnInit {
   }
 
   onRequestEvent(event:Event){
-    const booking = new Booking(undefined, 'host-request', event.hostUser, this.artist, event, false, false);
+    const booking = new Booking(undefined, 'host-request', event.hostUser, this.artist, event, false, false, false, false, event.fixedPrice);
     this.bookingService.createBooking(booking).then((booking: Booking) => this.getAvailableEvents());
   }
 

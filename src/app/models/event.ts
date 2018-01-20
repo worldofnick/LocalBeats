@@ -16,12 +16,13 @@ export class Event {
     public fromDate: Date
     public toDate: Date
     public description: string
-    public fixedPrice: string
+    public fixedPrice: number
     public hourlyRate: string
     public deposit: string
     public isBooked: string
     public location: number[]
     public eventPicUrl: string
+    public cancellation: number
 }
 
 
