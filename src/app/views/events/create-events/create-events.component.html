@@ -1,107 +1,104 @@
 <div fxLayout="row" fxLayoutWrap="wrap">
-  <div fxLayout="column" fxFlex="100" fxFlex.gt-md="50">
-
-    <mat-card class="p-0">
-      <mat-card-title class="">
-        <div class="card-title-text">Create Event</div>
-        <mat-divider></mat-divider>
-      </mat-card-title>
-      <mat-card-content>
-        <form [formGroup]="basicForm" (ngSubmit)="onCreateEvent()">
-          <div fxLayout="row" fxLayoutWrap="wrap">
-            <div fxFlex="100" fxFlex.gt-xs="50" class="pr-1">
-              <div class="pb-1">
-                <mat-form-field class="full-width">
-                  <input matInput [(ngModel)]="this.event.eventName" name="eventName" formControlName="eventName" placeholder="Event Name (Min Length: 4, Max Length: 40)"
-                    value="">
-                </mat-form-field>
-              </div>
-
-
-              <div class="pb-1">
-                <!-- <mat-form-field class="full-width"> -->
-                <mat-select formControlName="eventType" id="langToggle" placeholder="Event Type" [(ngModel)]="this.event.eventType" name="eventType"
-                  class="mb-1">
-                  <mat-option *ngFor="let event of eventTypes" [value]="event.value" ngDefaultControl>
-                    {{event.viewValue}}
-                  </mat-option>
-                </mat-select>
-                <!-- </mat-form-field> -->
-              </div>
-
-
-
-              <!-- img stuff iirc -->
-              <div *ngFor="let interest of interests; let i = index">
-                <mat-checkbox class="example-margin" (change)="onChange($event)" [checked]="interestFormGroup.get('interests').value.indexOf(interest) > -1"
-                  [value]="interest">{{interest}}</mat-checkbox>
-              </div>
-
-
-              <!-- event price input field. still needs to be formatted for numbers -->
-              <div class="pb-1">
-                <mat-form-field class="full-width">
-                  <input matInput [(ngModel)]="this.event.fixedPrice" name="fixedPrice" formControlName="fixedPrice" placeholder="Event Price"
-                    value="">
-                </mat-form-field>
-              </div>
-
-
-              <!-- event descriptoin rich text editor -->
-              <div class="pb-1">
-                <quill-editor theme="snow" [(ngModel)]="this.event.description" value=""
-                (onContentChanged)="onContentChanged()" onSelectionChanged="onSelectionChanged()"
-                name="eventDescription" formControlName="eventDescription"
-                ></quill-editor>
-              </div>
-
-
-              <!-- date picker. -->
-              <div class="pb-1">
-                <mat-form-field class="full-width">
-                  <input matInput [(ngModel)]="this.event.toDate" name="date" formControlName="date" placeholder="Date" [matDatepicker]="appDatepicker">
-
-                  <mat-datepicker-toggle matSuffix [for]="appDatepicker"></mat-datepicker-toggle>
-                </mat-form-field>
-                <mat-datepicker #appDatepicker></mat-datepicker>
-              </div>
-
-
-              <div class="pb-1">
-                <Label>Genre(s)</Label>
-                <div *ngFor="let genre of genres; let i = index">
-                  <mat-checkbox class="grid-center" (change)="onPickingGenre($event)" [value]="genre" [checked]="genre.checked">{{genre.genre}}</mat-checkbox>
-                </div>
-              </div>
-
-
-
-              <div class="pb-1 pt-05">
-                <mat-checkbox name="agreed" formControlName="agreed" class="pb-1">I have read and agree to the terms of service.</mat-checkbox>
-              </div>
-            </div>
+  <form [formGroup]="basicForm" (ngSubmit)="onCreateEvent()">
+    <div fxLayout="column" fxFlex="100" fxFlex.gt-md="40">
+      <mat-card class="p-0">
+        <mat-card-title class="">
+          <div class="card-title-text">Create Event</div>
+          <mat-divider></mat-divider>
+        </mat-card-title>
+        <mat-card-content>
+          <!-- <div fxLayout="row" fxLayoutWrap="wrap">
+            <div fxFlex="100" fxFlex.gt-xs="50" class="pr-1"> -->
+          <div class="pb-1">
+            <mat-form-field class="full-width">
+              <input matInput [(ngModel)]="this.event.eventName" name="eventName" formControlName="eventName" placeholder="Event Name (Min Length: 4, Max Length: 40)"
+                value="">
+            </mat-form-field>
           </div>
+
+
+          <div class="pb-1">
+            <mat-select formControlName="eventType" id="langToggle" placeholder="Event Type" [(ngModel)]="this.event.eventType" name="eventType"
+              class="mb-1">
+              <mat-option *ngFor="let event of eventTypes" [value]="event.value" ngDefaultControl>
+                {{event.viewValue}}
+              </mat-option>
+            </mat-select>
+
+
+          </div>
+
+
+
+          <!-- img stuff iirc -->
+          <div *ngFor="let interest of interests; let i = index">
+            <mat-checkbox class="example-margin" (change)="onChange($event)" [checked]="interestFormGroup.get('interests').value.indexOf(interest) > -1"
+              [value]="interest">{{interest}}</mat-checkbox>
+          </div>
+
+
+          <!-- event price input field. still needs to be formatted for numbers -->
+          <div class="pb-1">
+            <mat-form-field class="full-width">
+              <input matInput [(ngModel)]="this.event.fixedPrice" name="fixedPrice" formControlName="fixedPrice" placeholder="Event Price"
+                value="">
+            </mat-form-field>
+          </div>
+
+
+          <!-- date picker. -->
+          <div class="pb-1">
+            <mat-form-field class="full-width">
+              <input matInput [(ngModel)]="this.event.toDate" name="date" formControlName="date" placeholder="Date" [matDatepicker]="appDatepicker">
+
+              <mat-datepicker-toggle matSuffix [for]="appDatepicker"></mat-datepicker-toggle>
+            </mat-form-field>
+            <mat-datepicker #appDatepicker></mat-datepicker>
+          </div>
+
+          <!-- google maps widget -->
+          <div class="pb-1">
+          <mat-form-field class="full-width">
+              <input matInput placeholder="City, State" autocorrect="off" autocapitalize="off" 
+              spellcheck="off" type="text" #searchplaces [formControl]="basicForm.controls['location']">
+            </mat-form-field>
+            </div>
+
+          <div class="pb-1">
+
+            <Label>Genre(s)</Label>
+            <mat-grid-list cols="3" rows="genres.length/3" rowHeight="2:1">
+
+              <mat-grid-tile *ngFor="let genre of genres; let i = index">
+                <mat-checkbox class="grid-center" (change)="onPickingGenre($event)" [value]="genre" [checked]="genre.checked">{{genre.genre}}</mat-checkbox>
+              </mat-grid-tile>
+            </mat-grid-list>
+          </div>
+
+
+
+          <div class="pb-1 pt-05">
+            <mat-checkbox name="agreed" formControlName="agreed" class="pb-1">I have read and agree to the terms of service.</mat-checkbox>
+          </div>
+          <!-- </div>
+          </div> -->
           <button *ngIf="!this.updating" mat-raised-button color="primary">Create Event</button>
           <button *ngIf="this.updating" mat-raised-button color="primary">Update Event</button>
+        </mat-card-content>
+      </mat-card>
+    </div>
 
+    <!-- second column on the right now..inclulding picture uploading  -->
+    <div fxLayout="column" fxFlex="100" fxFlex.gt-md="50">
+      <mat-card class="p-0">
+        <mat-card-title class="">
+          <div class="card-title-text">Upload an Event Picture (optional)</div>
+          <mat-divider></mat-divider>
+        </mat-card-title>
+        <mat-card-content>
 
-
-        </form>
-      </mat-card-content>
-    </mat-card>
-  </div>
-
-  <!-- second column on the right now..inclulding picture uploading  -->
-  <div fxLayout="column" fxFlex="100" fxFlex.gt-md="50">
-    <mat-card class="p-0">
-      <mat-card-title class="">
-        <div class="card-title-text">Upload an Event Picture (optional)</div>
-        <mat-divider></mat-divider>
-      </mat-card-title>
-      <mat-card-content>
-
-        <div class="propic text-center">
-          <img *ngIf="!this.event.eventPicUrl" mat-card-image style="-webkit-user-select: none;
+          <div class="propic text-center">
+            <img *ngIf="!this.event.eventPicUrl" mat-card-image style="-webkit-user-select: none;
           background-position: 0px 0px, 10px 10px;
           background-size: 20px 20px;
           background-image:linear-gradient(45deg, #eee 25%, transparent 25%, transparent 75%, #eee 75%, #eee 100%),
@@ -112,7 +109,7 @@
           height:auto;" src="http://www.upalumni.ph/wp-content/themes/upaa/img/placeholder.png">
 
 
-          <img *ngIf="this.event.eventPicUrl" mat-card-image [src]="this.event.eventPicUrl" style="-webkit-user-select: none;
+            <img *ngIf="this.event.eventPicUrl" mat-card-image [src]="this.event.eventPicUrl" style="-webkit-user-select: none;
           background-position: 0px 0px, 10px 10px;
           background-size: 20px 20px;
           background-image:linear-gradient(45deg, #eee 25%, transparent 25%, transparent 75%, #eee 75%, #eee 100%),
@@ -121,13 +118,26 @@
           max-height:512px;
           width:auto;
           height:auto;">
-          <mat-progress-bar mode="determinate" class="session-progress"></mat-progress-bar>
-        </div>
-        <div class="mb-1 mt-1">
-          <!-- <p>Upload an event picture (optional)</p> -->
-          <input type="file" (change)="onChange($event)" accept=".jpg,.png" />
-        </div>
-      </mat-card-content>
-    </mat-card>
-  </div>
+            <mat-progress-bar mode="determinate" class="session-progress"></mat-progress-bar>
+          </div>
+          <div class="mb-1 mt-1">
+            <!-- <p>Upload an event picture (optional)</p> -->
+            <input formControlName="imageUploaded" type="file" (change)="onChange($event)" accept=".jpg,.png" />
+          </div>
+
+
+          <!-- event descriptoin rich text editor -->
+          <div class="pb-1">
+            <mat-card-title class="">
+              <mat-divider></mat-divider>
+              <div class="card-title-text">Describe your event</div>
+              <mat-divider></mat-divider>
+            </mat-card-title>
+            <quill-editor theme="snow" [(ngModel)]="this.event.description" value="" (onContentChanged)="onContentChanged()" onSelectionChanged="onSelectionChanged()"
+              name="eventDescription" formControlName="eventDescription"></quill-editor>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </form>
 </div>

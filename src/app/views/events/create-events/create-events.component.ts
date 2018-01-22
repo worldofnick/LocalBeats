@@ -1,5 +1,5 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatProgressBar, MatButton } from '@angular/material';
+import { Component, ElementRef,OnInit, ViewChild, NgZone } from '@angular/core';
+import { MatProgressBar, MatButton, MatSnackBar } from '@angular/material';
 import { UserService } from '../../../services/auth/user.service';
 import { BookingService } from '../../../services/booking/booking.service';
 import { EventService } from '../../../services/event/event.service';
@@ -11,7 +11,11 @@ import { CustomValidators } from 'ng2-validation';
 import { ActivatedRoute } from "@angular/router";
 import { Router } from "@angular/router";
 import { ImgurService } from 'app/services/image/imgur.service';
-
+import 'rxjs/add/operator/startWith';
+import 'rxjs/add/operator/map';
+import { } from 'googlemaps';
+import { MapsAPILoader } from '@agm/core';
+// import { NgZone } from '@angular/core/src/zone/ng_zone';
 
 @Component({
   selector: 'app-create-events',
@@ -41,6 +45,10 @@ export class CreateEventsComponent implements OnInit {
   galley of type and scrambled it to make a type specimen book. It has survived not only five centuries
   </span></p>`;
 
+  latitude: number;
+  longitude: number;
+  //searchControl: FormControl;
+  zoom: number;
 
   selectedEventType: string = 'wedding';
   eventTypes = [
@@ -62,19 +70,31 @@ export class CreateEventsComponent implements OnInit {
   // eventTypes: any = [{genre:'Wedding', checked:false}, {genre:'Birthday', checked:false}, {genre:'Business', checked:false}];
   genres: any = this.musicGenres;
 
+  @ViewChild("searchplaces") searchElementRef: ElementRef;
+
+
   constructor(private route: ActivatedRoute,
               private userService: UserService,
               private bookingService: BookingService,
               private eventService: EventService,
               private router: Router,
               private imgurService: ImgurService,
-              private formBuilder: FormBuilder
+              private formBuilder: FormBuilder,
+              public snackBar: MatSnackBar,
+              private mapsAPILoader: MapsAPILoader,
+              private ngZone: NgZone,
               ) { }
 
+              
   ngOnInit() {
-
-
+  
+    // this.openSnackBar();
+    this.zoom = 4;
+    this.latitude = 39.8282;
+    this.longitude = -98.5795;
     this.user = this.userService.user;
+    this.setCurrentPosition();
+    this.setupMap();
 
     this.event = new Event;
 
@@ -115,11 +135,9 @@ export class CreateEventsComponent implements OnInit {
       fixedPrice: new FormControl('', [
         // Validators.required,
       ]),
-      // eventGenre: new FormControl('', [
-      //   Validators.required,
-      // ]),
       date: new FormControl(),
       eventDescription: new FormControl(),
+      imageUploaded: new FormControl(),
       genres: this.formBuilder.array([]),
       location: new FormControl(),
       agreed: new FormControl('', (control: FormControl) => {
@@ -130,9 +148,42 @@ export class CreateEventsComponent implements OnInit {
         return null;
       })
     })
+  }
+  
+  
+  openSnackBar() {
+    console.log('test')
+    this.snackBar.open('Create Event','next', { duration: 2000 });
+  }
 
+  setupMap() {
+    // this.clickedSearch = true;
+    // this.isSearchOpen = true;
+    // this.changeDetector.detectChanges();
 
-
+    //load Places Autocomplete
+    this.mapsAPILoader.load().then(() => {
+      let autocomplete = new google.maps.places.Autocomplete(this.searchElementRef.nativeElement, {
+        types: ["(cities)"]
+      });
+      autocomplete.addListener("place_changed", () => {
+        this.ngZone.run(() => {
+          //get the place result
+          let place: google.maps.places.PlaceResult = autocomplete.getPlace();
+          // place.address_components
+          // place.formatted_address
+          this.basicForm.setControl('location', new FormControl(place.formatted_address))
+          //verify result
+          if (place.geometry === undefined || place.geometry === null) {
+            return;
+          }
+          //set latitude, longitude and zoom
+          this.latitude = place.geometry.location.lat();
+          this.longitude = place.geometry.location.lng();
+          this.zoom = 12;
+        });
+      });
+    });
   }
 
   onChange(event: EventTarget) {
@@ -155,6 +206,16 @@ export class CreateEventsComponent implements OnInit {
       });
   }
 
+  private setCurrentPosition() {
+    if ("geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        this.latitude = position.coords.latitude;
+        this.longitude = position.coords.longitude;
+        this.zoom = 12;
+      });
+    }
+  }
+
   onPickingGenre(event) {
     const genres = <FormArray>this.basicForm.get('genres') as FormArray;
 
@@ -174,6 +235,14 @@ export class CreateEventsComponent implements OnInit {
 
 
   onCreateEvent(form: NgForm) {
+
+    // Set location for submission
+    if (this.longitude != null) {
+      this.event.location = {
+        longitude: this.longitude,
+        latitude: this.latitude
+      };
+    }
     // console.log("creating this event: ")
     
     this.event.eventName = this.basicForm.controls.eventName.value;
