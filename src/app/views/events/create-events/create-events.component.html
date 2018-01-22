@@ -49,7 +49,9 @@
           <!-- date picker. -->
           <div class="pb-1">
             <mat-form-field class="full-width">
-              <input matInput [(ngModel)]="this.event.toDate" name="date" formControlName="date" placeholder="Date" [matDatepicker]="appDatepicker">
+              <input matInput [(ngModel)]="this.event.toDate" name="date" formControlName="date" 
+              placeholder="Date" [min]="minDate" [max]="maxDate"
+              [matDatepicker]="appDatepicker">
 
               <mat-datepicker-toggle matSuffix [for]="appDatepicker"></mat-datepicker-toggle>
             </mat-form-field>
@@ -59,7 +61,7 @@
           <!-- google maps widget -->
           <div class="pb-1">
           <mat-form-field class="full-width">
-              <input matInput placeholder="City, State" autocorrect="off" autocapitalize="off" 
+              <input [(ngModel)]="cityState" matInput placeholder="City, State" autocorrect="off" autocapitalize="off" 
               spellcheck="off" type="text" #searchplaces [formControl]="basicForm.controls['location']">
             </mat-form-field>
             </div>

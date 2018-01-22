@@ -34,6 +34,7 @@ export class CreateEventsComponent implements OnInit {
   up: any;
   submitButtonText:string
   updating:Boolean
+  cityState:string;
 
 
   eventDescription: string = `<h1>Your Event Description</h1>
@@ -47,7 +48,7 @@ export class CreateEventsComponent implements OnInit {
 
   latitude: number;
   longitude: number;
-  //searchControl: FormControl;
+  public place: google.maps.places.PlaceResult
   zoom: number;
 
   selectedEventType: string = 'wedding';
@@ -56,6 +57,7 @@ export class CreateEventsComponent implements OnInit {
     { value: 'birthday', viewValue: 'Birthday' },
     { value: 'business', viewValue: 'Business' }
   ];
+
 
 
   checkedValues:Boolean[]
@@ -71,7 +73,8 @@ export class CreateEventsComponent implements OnInit {
   genres: any = this.musicGenres;
 
   @ViewChild("searchplaces") searchElementRef: ElementRef;
-
+  minDate = new Date(Date.now());
+  maxDate = new Date(2020, 0, 1);
 
   constructor(private route: ActivatedRoute,
               private userService: UserService,
@@ -96,6 +99,7 @@ export class CreateEventsComponent implements OnInit {
     this.setCurrentPosition();
     this.setupMap();
 
+    
     this.event = new Event;
 
     this.EID = {
@@ -113,6 +117,10 @@ export class CreateEventsComponent implements OnInit {
     if (this.updating) {
       this.eventService.getEventByEID(this.EID).then((eventEdit: Event) => {
         this.event = eventEdit;
+
+        //pre load maps input box
+       this.cityState = this.event.city + ',' + this.event.state + ', USA' ;
+
         for(let genre of this.genres){
           for(let eventGenre of this.event.eventGenres){
             if(genre.genre == eventGenre){
@@ -139,7 +147,7 @@ export class CreateEventsComponent implements OnInit {
       eventDescription: new FormControl(),
       imageUploaded: new FormControl(),
       genres: this.formBuilder.array([]),
-      location: new FormControl(),
+      location: new FormControl('',[Validators.required]),
       agreed: new FormControl('', (control: FormControl) => {
         const agreed = control.value;
         if(!agreed) {
@@ -157,9 +165,6 @@ export class CreateEventsComponent implements OnInit {
   }
 
   setupMap() {
-    // this.clickedSearch = true;
-    // this.isSearchOpen = true;
-    // this.changeDetector.detectChanges();
 
     //load Places Autocomplete
     this.mapsAPILoader.load().then(() => {
@@ -169,6 +174,7 @@ export class CreateEventsComponent implements OnInit {
       autocomplete.addListener("place_changed", () => {
         this.ngZone.run(() => {
           //get the place result
+          this.place = autocomplete.getPlace();
           let place: google.maps.places.PlaceResult = autocomplete.getPlace();
           // place.address_components
           // place.formatted_address
@@ -236,12 +242,15 @@ export class CreateEventsComponent implements OnInit {
 
   onCreateEvent(form: NgForm) {
 
-    // Set location for submission
-    if (this.longitude != null) {
-      this.event.location = {
-        longitude: this.longitude,
-        latitude: this.latitude
-      };
+
+    this.event.location = [this.longitude, this.latitude]
+
+    if(this.place){
+
+      const city = this.place.address_components[0].long_name
+      const state = this.place.address_components[2].short_name
+      this.event.state = state;
+      this.event.city = city;
     }
     // console.log("creating this event: ")
     
