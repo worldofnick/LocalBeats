@@ -26,8 +26,8 @@
         </div>
         <mat-divider></mat-divider>
       </mat-card-title>
-      <img *ngIf="searchType == 'Event'" [routerLink]="['/events', result._id]" mat-card-image [src]="result.profilePicUrl">
-      <img *ngIf="searchType == 'Musician'" [routerLink]="['/profile', result._id]" mat-card-image [src]="result.eventPicUrl">
+      <img *ngIf="searchType == 'Event'" [routerLink]="['/events', result._id]" mat-card-image [src]="result.eventPicUrl">
+      <img *ngIf="searchType == 'Musician'" [routerLink]="['/profile', result._id]" mat-card-image [src]="result.profilePicUrl">
 
       <mat-card-content>
         <p>
