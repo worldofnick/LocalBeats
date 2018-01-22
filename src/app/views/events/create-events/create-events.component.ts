@@ -31,6 +31,15 @@ export class CreateEventsComponent implements OnInit {
   submitButtonText:string
   updating:Boolean
 
+
+  selectedEventType: string = 'wedding';
+  eventTypes = [
+    { value: 'wedding', viewValue: 'Wedding' },
+    { value: 'birthday', viewValue: 'Birthday' },
+    { value: 'business', viewValue: 'Business' }
+  ];
+
+
   checkedValues:Boolean[]
   
   // evenGenres:Array<string>;
@@ -38,9 +47,9 @@ export class CreateEventsComponent implements OnInit {
 
   musicGenres: any = [{genre:'Rock', checked:false}, {genre:'Country', checked:false}, {genre:'Jazz', checked:false}, {genre:'Blues', checked:false}, {genre:'Rap', checked:false}];
   
-  loadedEventGenres: any = [{genre:'Rock', checked:false}, {genre:'Country', checked:false}, {genre:'Jazz', checked:false}, {genre:'Blues', checked:false}, {genre:'Rap', checked:false}];
+  // loadedEventGenres: any = [{genre:'Rock', checked:false}, {genre:'Country', checked:false}, {genre:'Jazz', checked:false}, {genre:'Blues', checked:false}, {genre:'Rap', checked:false}];
 
-  eventTypes: any = [{genre:'Wedding', checked:false}, {genre:'Birthday', checked:false}, {genre:'Business', checked:false}];
+  // eventTypes: any = [{genre:'Wedding', checked:false}, {genre:'Birthday', checked:false}, {genre:'Business', checked:false}];
   genres: any = this.musicGenres;
 
   constructor(private route: ActivatedRoute,
