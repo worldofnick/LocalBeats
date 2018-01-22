@@ -32,6 +32,16 @@ export class CreateEventsComponent implements OnInit {
   updating:Boolean
 
 
+  eventDescription: string = `<h1>Your Event Description</h1>
+  <p><a href="http://mhrafi.com" target="_blank"><strong>MH Rafi</strong></a></p>
+  <p><br></p><p><strong >Lorem Ipsum</strong>
+  <span>
+  &nbsp;is simply dummy text of the printing and typesetting industry. 
+  Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a 
+  galley of type and scrambled it to make a type specimen book. It has survived not only five centuries
+  </span></p>`;
+
+
   selectedEventType: string = 'wedding';
   eventTypes = [
     { value: 'wedding', viewValue: 'Wedding' },
@@ -109,6 +119,7 @@ export class CreateEventsComponent implements OnInit {
       //   Validators.required,
       // ]),
       date: new FormControl(),
+      eventDescription: new FormControl(),
       genres: this.formBuilder.array([]),
       location: new FormControl(),
       agreed: new FormControl('', (control: FormControl) => {
@@ -156,6 +167,10 @@ export class CreateEventsComponent implements OnInit {
       genres.removeAt(i);
     }
   }
+
+
+  onContentChanged() { }
+  onSelectionChanged() { }
 
 
   onCreateEvent(form: NgForm) {
