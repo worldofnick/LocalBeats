@@ -16,17 +16,17 @@ var Schema = mongoose.Schema;
 
  */
 //TODO: add match() validator to email
-var NotificationScheme = new Schema({
+var NotificationSchema = new Schema({
     sender          : { type: Schema.Types.ObjectId, ref: 'User' },
     sreceived       : { type: Schema.Types.ObjectId, ref: 'User' },
     event           : { type: Schema.Types.ObjectId, ref: 'Events' },
-    message         : { type: String, required: true },
-    icon            : { type: String, required: true },
-    sentTime        : { type: Date, required: true },
+    message         : { type: String},
+    icon            : { type: String},
+    sentTime        : { type: Date},
     route           : { type: Array }, // Kept empty if the user is not an artist
     color           : { type: String }, // Kept empty if the user is not an artist
 
 }, { strict: true }, { versionKey: false });
 
 
-mongoose.model('User', UserSchema);
+mongoose.model('Notification', NotificationSchema);

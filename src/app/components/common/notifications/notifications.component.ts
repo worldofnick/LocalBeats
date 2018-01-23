@@ -1,6 +1,8 @@
 import { Component, OnInit, ViewChild, Input } from '@angular/core';
 import { MatSidenav } from '@angular/material';
 import { Router, NavigationEnd } from '@angular/router';
+import { Notification } from 'app/models/notification'
+import { NotificationService } from 'app/services/notification/notification.service';
 
 @Component({
   selector: 'app-notifications',
@@ -31,9 +33,14 @@ export class NotificationsComponent implements OnInit {
     color: 'warn'
   }]
 
-  constructor(private router: Router) {}
+  constructor(private router: Router,
+              private notificationService: NotificationService) {}
 
   ngOnInit() {
+
+    // this.notificationService.
+
+
     this.router.events.subscribe((routeChange) => {
         if (routeChange instanceof NavigationEnd) {
           this.notificPanel.close();
