@@ -12,6 +12,7 @@ var config = require('./config');                    // get our config file
 var User   = require('./backend/models/userModel');  // get our mongoose model
 var Events = require('./backend/models/eventsModel');  // get our mongoose model
 var Bookings = require('./backend/models/bookingsModel');
+var Notification = require('./backend/models/notificationModel');
 
 
 
@@ -53,11 +54,13 @@ var authenticationRoutes  = require('./backend/routes/authenticationRoutes.js');
 var eventsRoutes          = require('./backend/routes/eventsRoutes.js');
 var bookingsRoutes        = require('./backend/routes/bookingsRoutes.js');
 var spotifyRoutes 		    = require('./backend/routes/spotifyRoutes.js');
+var notificationRoutes 		= require('./backend/routes/notificationRoutes.js');
 userRoutes(app);
 authenticationRoutes(app);
 eventsRoutes(app);
 bookingsRoutes(app);
 spotifyRoutes(app);
+notificationRoutes(app);
 
 
 // basic route (http://localhost:8080)
