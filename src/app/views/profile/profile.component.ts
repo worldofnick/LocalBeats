@@ -2,10 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from "@angular/router";
 import { UserService } from '../../services/auth/user.service';
 import { BookingService } from '../../services/booking/booking.service';
+import { NotificationService } from '../../services/notification/notification.service';
 import { EventService } from '../../services/event/event.service';
 import { User } from '../../models/user';
 import { Booking } from '../../models/booking';
 import { Event } from '../../models/event';
+import { Notification } from '../../models/notification';
 
 @Component({
   selector: 'app-profile',
@@ -64,7 +66,8 @@ export class ProfileComponent implements OnInit {
   constructor(private route: ActivatedRoute,
     private userService: UserService,
     private bookingService: BookingService,
-    private eventService: EventService) {
+    private eventService: EventService,
+    private notificationService: NotificationService) {
     console.log("in profile component constructor");
   }
 
@@ -82,6 +85,16 @@ export class ProfileComponent implements OnInit {
       }
     });
   }
+
+  sendNotificationToUser(){
+    // this.socket.emit('create notification','Notification Test');
+    let notif:Notification = new Notification;
+    notif.sender = this.userService.user;
+    notif.receiver = this.userService.user;
+    notif.message = "test message" ;
+    this.notificationService.sendNotificationToUser(notif)
+ }
+
 
   onRequestArtist(ID:string){
     // this.router.navigate(['/pick-event', this.user._id]);

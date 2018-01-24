@@ -10,5 +10,4 @@ export class Notification {
     sentTime: Date;
     route: string[]
     color: string
-  
 }

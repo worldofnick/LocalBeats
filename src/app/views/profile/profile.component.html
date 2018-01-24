@@ -24,6 +24,10 @@
             <mat-icon>home</mat-icon>
             Overview
           </mat-list-item>
+          <mat-list-item (click)="sendNotificationToUser()">
+            <mat-icon>home</mat-icon>
+            Test Notification
+          </mat-list-item>
 
 
           <ng-template [ngIf]="!this.onOwnProfile && this.userService.isAuthenticated()">

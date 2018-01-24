@@ -1,6 +1,7 @@
 import { Component, OnInit, EventEmitter, Input, Output, ElementRef, NgZone, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { Validators, FormGroup, FormControl, FormArray, FormBuilder } from '@angular/forms';
+// import { Socket } from 'ng-socket-io';
 import 'rxjs/add/operator/startWith';
 import 'rxjs/add/operator/map';
 import { } from 'googlemaps';
@@ -9,6 +10,8 @@ import * as domHelper from '../../../helpers/dom.helper';
 import { ThemeService } from '../../../services/theme/theme.service';
 import { UserService } from '../../../services/auth/user.service';
 import { SearchService } from '../../../services/search/search.service';
+// import { Socket } from 'socket.io'
+import { NotificationService } from '../../../services/notification/notification.service';
 import { SearchTerms, Location } from '../../../models/search';
 import { User } from '../../../models/user';
 import { Event } from '../../../models/event';
@@ -21,7 +24,7 @@ import { Event } from '../../../models/event';
 export class TopbarComponent implements OnInit {
   searchForm: FormGroup;
   
-  
+  numNotifications = 0;
   isSearchOpen: boolean = false;
   clickedSearch: boolean = false;
 
@@ -44,7 +47,15 @@ export class TopbarComponent implements OnInit {
   //searchControl: FormControl;
   zoom: number;
 
-  constructor(private formBuilder: FormBuilder, private userService: UserService, private searchService: SearchService, private router: Router, private mapsAPILoader: MapsAPILoader, private ngZone: NgZone, private changeDetector: ChangeDetectorRef) {}
+  constructor(private formBuilder: FormBuilder, 
+    private userService: UserService, 
+    private searchService: SearchService, 
+    private NotificationService: NotificationService,
+    private router: Router, 
+    private mapsAPILoader: MapsAPILoader, 
+    private ngZone: NgZone, 
+    private changeDetector: ChangeDetectorRef) {
+         }
 
   ngOnInit() {
     domHelper.toggleClass(document.body, 'collapsed-menu');

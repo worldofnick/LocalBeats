@@ -17,6 +17,8 @@ import { BookingService } from './services/booking/booking.service';
 import { EventService } from './services/event/event.service';
 import { UserGuard } from './services/auth/user-guard.service';
 import { ImgurService } from './services/image/imgur.service';
+import { NotificationService} from './services/notification/notification.service';
+
 
 export function createTranslateLoader(http: Http) {
   return new TranslateStaticLoader(http, './assets/i18n', '.json');

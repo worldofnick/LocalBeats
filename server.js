@@ -6,14 +6,14 @@ var app         	= express();
 var bodyParser  	= require('body-parser');
 var morgan      	= require('morgan');
 var mongoose    	= require('mongoose');
-
+var http = require('http');
 var jwt    = require('jsonwebtoken');                // used to create, sign, and verify tokens
 var config = require('./config');                    // get our config file
 var User   = require('./backend/models/userModel');  // get our mongoose model
 var Events = require('./backend/models/eventsModel');  // get our mongoose model
 var Bookings = require('./backend/models/bookingsModel');
 var Notification = require('./backend/models/notificationModel');
-
+var io = require('socket.io')(server);
 
 
 var distDir = __dirname + "/dist/";
@@ -33,9 +33,26 @@ app.use(bodyParser.json());
 // use morgan to log requests to the console
 app.use(morgan('dev'));
 
-var server = app.listen(port, function () {
-  var port = server.address().port;
-  console.log("App now running on port", port);
+//original server instatiation
+// var server = app.listen(port, function () {
+//   var port = server.address().port;
+//   console.log("App now running on port", port);
+// });
+
+// var server = http.createServer(app);
+var server = require('http').Server(app);
+var io = require('socket.io')(server);
+server.listen(8080);
+//
+
+//set up socket
+
+//
+
+io.on('connection', function(socket){                
+  socket.on('create notification', function(data){   
+    socket.broadcast.emit('new notification',data);  
+  });
 });
 
 app.use(function(req, res, next) {
