@@ -1,4 +1,5 @@
 import { Notification } from 'app/models/notification';
+import * as io from 'socket.io';
 
 
 export class User {
@@ -12,4 +13,5 @@ export class User {
     public isArtist: boolean
     public profilePicUrl: string
     public eventTypes: string[]
+    public socket: io.socket
 }

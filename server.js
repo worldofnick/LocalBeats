@@ -49,7 +49,8 @@ server.listen(8080);
 
 //
 
-io.on('connection', function(socket){                
+io.on('connection', function(socket){  
+  console.log("user connected");              
   socket.on('create notification', function(data){   
     socket.broadcast.emit('new notification',data);  
   });

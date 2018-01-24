@@ -13,11 +13,11 @@ var config    = require('../../config.js');
 
 //getUserEventsByUID
 exports.getNotificationsForUser = function (req, res) {
-    Notifications.findById(req.params.eid).populate('hostUser').populate('performerUser').exec(function (err, event) {
+    Notifications.findById(req.params.eid).populate('hostUser').populate('performerUser').exec(function (err, notifications) {
         if (err) {
-            return res.status(500).send("Failed to get event");
+            return res.status(500).send("Failed to get notifications");
         } else {
-            return res.status(200).send({ "event": event });
+            return res.status(200).send({ "notifications": notifications });
         }
     });
 };
