@@ -7,6 +7,8 @@ import { Event } from 'app/models/event';
 import { User } from 'app/models/user';
 import { Notification } from 'app/models/notification';
 import * as io from 'socket.io';
+import * as Rx from 'rxjs/Rx';
+
 @Injectable()
 export class NotificationService {
     public connection: string = 'http://localhost:8080/api/notifications';
@@ -16,10 +18,35 @@ export class NotificationService {
     current:Notification
     notifications:Notification[];
 
-    constructor (private http: Http) {
-        
+    // Our socket connection
+    private socket;
 
+    constructor (private http: Http) {}
 
+    connect(): Rx.Subject<Notification> {
+
+      // Initalize our socket
+      this.socket = io('http://localhost:8000');
+
+      // We define our observable which will observe any incoming notifications from our server
+      let observable = new Observable(observer => {
+          this.socket.on('notification', (data) => {
+            console.log("Received notification from Websocket Server");
+            // observer.next(data);
+          })
+          return () => {
+            // this.socket.disconnect();
+          }
+      });
+
+      // Used to send to the server, probably won't use, we'll see.
+      let observer = {
+       next: (data: Object) => {
+           this.socket.emit('message', JSON.stringify(data));
+       },
+      };
+
+      return Rx.Subject.create(observer, observable);
     }
 
  

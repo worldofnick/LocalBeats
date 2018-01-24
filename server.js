@@ -47,12 +47,12 @@ server.listen(8080);
 
 //set up socket
 
-//
+app.set('socketio', io);
 
-io.on('connection', function(socket){  
-  console.log("user connected");              
-  socket.on('create notification', function(data){   
-    socket.broadcast.emit('new notification',data);  
+io.on('connection', function(socket){
+  console.log("user connected");
+  socket.on('notification', function(data) {
+    socket.broadcast.emit('new notification',data);
   });
 });
 
