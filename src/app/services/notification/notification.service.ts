@@ -28,6 +28,10 @@ export class NotificationService {
       // Initalize our socket
       this.socket = io('http://localhost:8000');
 
+      // Send up user uid
+      let uid = "help";
+      this.socket.emit('userConnect', uid);
+
       // We define our observable which will observe any incoming notifications from our server
       let observable = new Observable(observer => {
           this.socket.on('notification', (data) => {

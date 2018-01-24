@@ -51,6 +51,12 @@ app.set('socketio', io);
 
 io.on('connection', function(socket){
   console.log("user connected");
+
+  socket.on('userConnected', function(data) {
+    // var uid = socket.request.handshakeData.uid // This might work.. need to look at the data
+    // Save the session with the uid
+  });
+
   socket.on('notification', function(data) {
     socket.broadcast.emit('new notification',data);
   });
