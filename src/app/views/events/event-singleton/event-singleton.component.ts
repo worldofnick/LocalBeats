@@ -143,9 +143,10 @@ export class EventSingletonComponent implements OnInit {
   }
 
   openDialog() {
-    this.bookingService.negotiate(this.title, this.text)
+    this.bookingService.negotiate(this.model.fixedPrice, this.text)
       .subscribe((result) => {
         this.selectedOption = result;
+        console.log(this.selectedOption);
       });
   }
 

@@ -1,16 +1,20 @@
-<h1 matDialogTitle>{{ data.title }}</h1>
+<h1 matDialogTitle>Negotiate</h1>
     <div mat-dialog-content>{{ data.message }}</div>
+    <form mat-dialog-content [formGroup]="negotiationForm" (ngSubmit)="submit()">
+        <mat-icon role="img">attach_money</mat-icon>
+        <input [formControl]="negotiationForm.controls['price']" autofocus="true" placeholder="Price" type="text" (keyup)="onPriceChange()">
+    </form>
     <div mat-dialog-actions>
     <button 
     type="button" 
     mat-raised-button
     color="primary" 
-    (click)="dialogRef.close(true)">OK</button>
+    (click)="accept()">{{buttonText}}</button>
     &nbsp;
     <span fxFlex></span>
     <button 
     type="button"
     color="accent"
     mat-raised-button 
-    (click)="dialogRef.close(false)">Cancel</button>
+    (click)="decline()">Decline</button>
     </div>`

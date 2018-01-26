@@ -1,9 +1,11 @@
 import { 
   MatDialogModule,
+  MatIconModule,
   MatButtonModule
  } from '@angular/material';
 import { NgModule } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 
 import { NegotiateDialogComponent } from './negotiate-dialog/negotiate-dialog.component';
 
@@ -11,7 +13,10 @@ import { NegotiateDialogComponent } from './negotiate-dialog/negotiate-dialog.co
   imports: [
     MatDialogModule,
     MatButtonModule,
-    FlexLayoutModule
+    MatIconModule,
+    FlexLayoutModule,
+    FormsModule,
+    ReactiveFormsModule
   ],
   exports: [NegotiateDialogComponent],
   declarations: [NegotiateDialogComponent],

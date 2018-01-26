@@ -64,6 +64,8 @@
 
           <button *ngIf="!isCurrentUser  && userService.isAuthenticated() && requestedArtistBookings[i].approved" 
           (click)="onDeclineArtist(booking, i)"mat-button>Cancel Performance</button>
+
+          <button *ngIf="!isCurrentUser  && userService.isAuthenticated() && !requestedArtistBookings[i].approved" (click)="openDialog()" mat-button>Negotiate</button>
         
         </mat-card-actions>
       </mat-card>

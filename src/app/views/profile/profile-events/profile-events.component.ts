@@ -26,6 +26,11 @@ export class ProfileEventsComponent implements OnInit {
   deleteStatus:Number;
   hasApplied:Boolean = true;
 
+  // Negotiations
+  title = 'Confirm dialog';
+  text = 'Just click a button!';
+  selectedOption;
+
   constructor(private eventService: EventService, 
     private userService: UserService,
     private bookingService: BookingService,
@@ -160,6 +165,14 @@ export class ProfileEventsComponent implements OnInit {
   viewApplicants(event: Event) {
     this.eventService.event = event;
     this.router.navigate(['/applicant-list', event._id]);  
+  }
+
+  openDialog(booking:Booking) {
+    this.bookingService.negotiate(booking.currentPrice, "")
+      .subscribe((result) => {
+        this.selectedOption = result;
+        console.log(this.selectedOption);
+      });
   }
 
 }
