@@ -103,12 +103,7 @@ export class ProfileComponent implements OnInit {
       id: this.route.snapshot.params['id']
     }
 
-    console.log("id from url");
-    console.log(this.userID["id"]);
     if (this.userID["id"] == null) {
-      //nothing in url.
-      console.log('on own profile')
-      console.log(this.userService.user)
       this.onOwnProfile = true;
       this.user = this.userService.user;
     } else {
@@ -116,13 +111,9 @@ export class ProfileComponent implements OnInit {
 
       this.onOwnProfile = false;
       let ID: String = this.userID["id"];
-      console.log("on another perosns profile");
-      console.log(ID);
 
       this.userService.getUserByID(ID).then((gottenUser: User) => {
         this.user = gottenUser;
-        // console.log("other user")
-        // console.log(this.user)
       }).then(() => this.hasRequested());
     }
   }
