@@ -33,7 +33,6 @@ export class ProfileComponent implements OnInit {
     private userService: UserService,
     private bookingService: BookingService,
     private eventService: EventService) {
-    console.log("in profile component constructor");
   }
 
   hasRequested() {

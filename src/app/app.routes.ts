@@ -40,7 +40,7 @@ export const rootRouterConfig: Routes = [
       {
         path: 'events', 
         loadChildren: './views/events/events.module#EventsModule', 
-        canActivate: [UserGuard], 
+        //canActivate: [UserGuard], 
         data: { title: 'Events', breadcrumb: 'EVENTS'}
       },
       {

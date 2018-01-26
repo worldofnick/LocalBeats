@@ -37,6 +37,7 @@
       </a>
       <mat-nav-list class="sub-menu" role="list" *ngIf="item.type === 'dropDown'">
         <mat-list-item 
+        routerLinkActive="selected"
         *ngFor="let subItem of item.sub">
           <a routerLink="{{item.state ? '/'+item.state : ''}}/{{subItem.state}}">{{subItem.name | translate}}</a>
         </mat-list-item>

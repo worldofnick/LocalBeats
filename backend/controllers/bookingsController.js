@@ -47,7 +47,7 @@ exports.createBooking = function (req, res) {
                 description: "Failed to create a booking"
             });
         } else {
-            Bookings.findById(booking._id).populate('hostUser').populate('performerUser').populate('eventEID').populate('currentPrice').exec(function (err, booking) {
+            Bookings.findById(booking._id).populate('hostUser').populate('performerUser').populate('eventEID').exec(function (err, booking) {
                 if (err) {
                     return res.status(500).send("Failed to create booking");
                 } else {
