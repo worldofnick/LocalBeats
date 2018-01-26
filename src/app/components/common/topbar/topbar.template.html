@@ -122,6 +122,15 @@
     </mat-grid-list>
   </mat-menu> -->
   <div *ngIf="userService.isAuthenticated(); else login">
+    <button 
+    mat-icon-button
+    matTooltip="Create Event" 
+    (click)="toggleNotific()"
+    [style.overflow]="'visible'"
+    routerLink="/events"
+    class="topbar-button-right">
+      <mat-icon>event</mat-icon>
+    </button>
     <!-- Notification toggle button -->
     <button 
     mat-icon-button
@@ -143,11 +152,7 @@
       </button>
       <button mat-menu-item [routerLink]="['/profile/settings']">
         <mat-icon>settings</mat-icon>
-        <span>Account Settings</span>
-      </button>
-      <button mat-menu-item>
-        <mat-icon>notifications_off</mat-icon>
-        <span>Disable alerts</span>
+        <span>Edit Profile</span>
       </button>
       <button mat-menu-item (click)="logout()">
         <mat-icon>exit_to_app</mat-icon>
