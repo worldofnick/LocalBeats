@@ -15,52 +15,55 @@ export class NotificationService {
 
     private headers: Headers = new Headers({ 'Content-Type': 'application/json' });
 
-    current:Notification
-    notifications:Notification[];
+    current: Notification
+    notifications: Notification[];
 
     // Our socket connection
-    private socket;
+    private socket:io.socket;
 
-    constructor (private http: Http) {}
+    constructor(private http: Http) { }
 
-    connect(): Rx.Subject<Notification> {
+    // connect(): Rx.Subject<Notification> {
 
-      // Initalize our socket
-      this.socket = io('http://localhost:8000');
+    //     // Initalize our socket
 
-      // Send up user uid
-      let uid = "help";
-      this.socket.emit('userConnect', uid);
+    //     this.socket = io('http://localhost:8080');
 
-      // We define our observable which will observe any incoming notifications from our server
-      let observable = new Observable(observer => {
-          this.socket.on('notification', (data) => {
-            console.log("Received notification from Websocket Server");
-            // observer.next(data);
-          })
-          return () => {
-            // this.socket.disconnect();
-          }
-      });
 
-      // Used to send to the server, probably won't use, we'll see.
-      let observer = {
-       next: (data: Object) => {
-           this.socket.emit('message', JSON.stringify(data));
-       },
-      };
+    //     // Send up user uid
+    //     let uid = "help";
+    //     this.socket.emit('userConnect', uid);
 
-      return Rx.Subject.create(observer, observable);
-    }
 
- 
+    //     // We define our observable which will observe any incoming notifications from our server
+    //     let observable = new Observable(observer => {
+    //         this.socket.on('notification', (data) => {
+    //             console.log("Received notification from Websocket Server");
+    //             // observer.next(data);
+    //         })
+    //         return () => {
+    //             // this.socket.disconnect();
+    //         }
+    //     });
 
-     public getNotificationsForUser(user: User): Promise<any[]> {
+    //     // Used to send to the server, probably won't use, we'll see.
+    //     let observer = {
+    //         next: (data: Object) => {
+    //             this.socket.emit('message', JSON.stringify(data));
+    //         },
+    //     };
+
+    //     return Rx.Subject.create(observer, observable);
+    // }
+
+
+
+    public getNotificationsForUser(user: User): Promise<any[]> {
 
         let params: URLSearchParams = new URLSearchParams();
         params.set('id', user._id)
-        
-        return this.http.get(this.connection, { headers: this.headers, search: params  })
+
+        return this.http.get(this.connection, { headers: this.headers, search: params })
             .toPromise()
             .then((response: Response) => {
                 const data = response.json();
@@ -71,7 +74,7 @@ export class NotificationService {
     }
 
 
-     public sendNotificationToUser(notification: Notification): Promise<any> {
+    public sendNotificationToUser(notification: Notification): Promise<any> {
 
         let params: URLSearchParams = new URLSearchParams();
         params.set('uid', notification.receiver._id)

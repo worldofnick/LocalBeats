@@ -50,7 +50,7 @@ export class TopbarComponent implements OnInit {
   constructor(private formBuilder: FormBuilder, 
     private userService: UserService, 
     private searchService: SearchService, 
-    private NotificationService: NotificationService,
+    private notificationService: NotificationService,
     private router: Router, 
     private mapsAPILoader: MapsAPILoader, 
     private ngZone: NgZone, 
@@ -77,6 +77,8 @@ export class TopbarComponent implements OnInit {
       genres: this.formBuilder.array([]),
       location: new FormControl()
     });
+
+    // this.notificationService.connect();
   }
 
   private setCurrentPosition() {
