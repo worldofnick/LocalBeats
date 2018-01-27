@@ -28,20 +28,16 @@ export class NegotiateDialogComponent implements OnInit {
   }
 
   accept() {
-    if(this.negotiationForm.get('price').value != this.initialPrice) {
-      this.dialogRef.close(2);
-    } else {
-      this.dialogRef.close(0);
-    }
+    this.dialogRef.close({accepted: true, price: this.negotiationForm.get('price').value});
   }
 
   decline() {
-    this.dialogRef.close(1);
+    this.dialogRef.close({accepted: false});
   }
 
   onPriceChange(){
     if(this.negotiationForm.get('price').value != this.initialPrice) {
-      this.buttonText = "Propose New Price"
+      this.buttonText = "Bid"
     } else {
       this.buttonText = "Accept";
     }

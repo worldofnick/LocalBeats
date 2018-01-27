@@ -20,6 +20,7 @@ var EventsSchema = new Schema({
     toDate          : {type: Date},
     description     : {type: String},
     fixedPrice      : {type: Number},
+    negotiable      : {type: Boolean, required: true, default: false},
     hourlyRate      : {type: Number},
     deposit         : {type: Number},
     isBooked        : {type: Boolean, default: false},

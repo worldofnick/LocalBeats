@@ -18,18 +18,13 @@ import { Booking } from '../../../models/booking';
 })
 export class ProfileEventsComponent implements OnInit {
   user:User = new User;
-  events:any[];
+  events: any[] = [];
   requestedArtistEvents: any[] = [];
   requestedArtistBookings: any[] = [];
   appliedEvents: Event[] = [];
   appliedBookings: any[] = [];
   deleteStatus:Number;
   hasApplied:Boolean = true;
-
-  // Negotiations
-  title = 'Confirm dialog';
-  text = 'Just click a button!';
-  selectedOption;
 
   constructor(private eventService: EventService, 
     private userService: UserService,
@@ -49,9 +44,6 @@ export class ProfileEventsComponent implements OnInit {
       this.deleteStatus = status;
       console.log(this.deleteStatus);
       if(this.deleteStatus == 200){
-        //remove event from events[]
-        // console.log("printing events before deletion:");
-        // console.log(this.events);
         
         var newEvents:Event[] = [];
 
@@ -61,12 +53,7 @@ export class ProfileEventsComponent implements OnInit {
             newEvents.push(this.events[i]);
           }
         }
-
         this.events = newEvents;
-        
-        // console.log("printing events after deletion:");
-        // console.log(this.events);
-
       }
     });
 
@@ -85,15 +72,6 @@ export class ProfileEventsComponent implements OnInit {
     this.bookingService.declineBooking(bookingToCancel).then(() => {this.getEvents();})
   }
 
-  // <button *ngIf="isCurrentUser && userService.isAuthenticated() && !requestedArtistBookings[i].approved" 
-  // (click)="onAcceptArtist(booking, i)" mat-button>Accept </button>
-  
-  // <button *ngIf="!isCurrentUser  && userService.isAuthenticated() && !requestedArtistBookings[i].approved" 
-  // (click)="onDeclineArtist(booking, i)"mat-button>Reject</button>
-
-  // <button *ngIf="!isCurrentUser  && userService.isAuthenticated() && requestedArtistBookings[i].approved" 
-  // (click)="onDeclineArtist(booking, i)"mat-button>Cancel Performance</button>
-
   onDeclineArtist(booking:Booking, index: number){
     this.bookingService.declineBooking(this.requestedArtistBookings[index]).then(() => this.getEvents());
   }
@@ -108,20 +86,29 @@ export class ProfileEventsComponent implements OnInit {
 
   public getEvents() {
     this.eventService.getEventsByUID(this.user._id).then((events: Event[]) => {
-      this.events = events; 
+      for(let e of events) {
+        this.bookingService.getBooking(e).then((bookings: Booking[]) => {
+          let applicants: any[] = [];
+          let approved: any[] = [];
+          for(let booking of bookings) {
+            if(booking.approved) {
+              approved.push(booking);
+            } else {
+              applicants.push(booking);
+            }
+          }
+          this.events.push({event: e, applicants: applicants, approved: approved});
+        })
+      }
       this.requestedArtistBookings = [];
       this.requestedArtistEvents = [];
       this.appliedEvents = [];
-      this.appliedBookings = [];  
-      // this.eventService.events = this.events;   
+      this.appliedBookings = [];
+      // Then get the bookings where the current user is the artist 
     }).then(() => this.bookingService.getUserBookings(this.userService.user, 'artist').then((bookings: any[]) => {
-      console.log(bookings);
-      // Where the current user is the requested artist
       let tempappliedEventsId: string[] = []
       let tempRequestArtistEventId: string[] = []
       for (let result of bookings) {
-        console.log('user bookings:')
-        console.log(result)
         if (result.bookingType == 'host-request') {
           tempRequestArtistEventId.push(result.eventEID._id);
           this.requestedArtistBookings.push(result);
@@ -136,8 +123,6 @@ export class ProfileEventsComponent implements OnInit {
           this.appliedEvents.push(event);
         });
       }
-      console.log('Applied Events:')
-      console.log(this.appliedEvents)
 
       for (let id of tempRequestArtistEventId) {
         let temp = { 'id': id}
@@ -145,9 +130,6 @@ export class ProfileEventsComponent implements OnInit {
           this.requestedArtistEvents.push(event);
         });
       }
-
-      console.log('My Events');
-      console.log(this.events)
     }));
 
   }
@@ -168,10 +150,9 @@ export class ProfileEventsComponent implements OnInit {
   }
 
   openDialog(booking:Booking) {
-    this.bookingService.negotiate(booking.currentPrice, "")
+    this.bookingService.negotiate(booking.currentPrice)
       .subscribe((result) => {
-        this.selectedOption = result;
-        console.log(this.selectedOption);
+      
       });
   }
 

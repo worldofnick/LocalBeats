@@ -1,5 +1,5 @@
-<h1 matDialogTitle>Negotiate</h1>
-    <div mat-dialog-content>{{ data.message }}</div>
+<h1 matDialogTitle>Propose an Offer</h1>
+    <div mat-dialog-content>Please enter your proposed price below:</div>
     <form mat-dialog-content [formGroup]="negotiationForm" (ngSubmit)="submit()">
         <mat-icon role="img">attach_money</mat-icon>
         <input [formControl]="negotiationForm.controls['price']" autofocus="true" placeholder="Price" type="text" (keyup)="onPriceChange()">

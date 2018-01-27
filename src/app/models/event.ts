@@ -17,6 +17,7 @@ export class Event {
     public toDate: Date
     public description: string
     public fixedPrice: number
+    public negotiable: boolean
     public hourlyRate: string
     public deposit: string
     public isBooked: string

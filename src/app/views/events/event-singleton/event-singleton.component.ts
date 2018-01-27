@@ -29,11 +29,6 @@ export class EventSingletonComponent implements OnInit {
   public dateInBar:Date;
   public dateString:any;
   deleteStatus:Number;
-  title = 'Confirm dialog';
-  text = 'Just click a button!';
-  selectedOption;
-  
-
   EID:any;
 
   constructor(private eventService: EventService, 
@@ -85,17 +80,9 @@ export class EventSingletonComponent implements OnInit {
 
   }
 
-  /*
-<button *ngIf="isCurrentUser  && userSerivce.isAuthenticated()" (click)="onEditEvent()" mat-button>Edit Event</button>
-<button *ngIf="isCurrentUser  && userSerivce.isAuthenticated()" (click)="onDeleteEvent()" mat-button>Delete Event</button>
-<button *ngIf="!isCurrentUser  && userSerivce.isAuthenticated() && !hasApplied " (click)="onApplyEvent()" mat-button>Apply to Event</button>
-<button *ngIf="!isCurrentUser  && userSerivce.isAuthenticated() && hasApplied " (click)="onCancelEvent()" mat-button>Cancel Application</button>
-<button *ngIf="isCurrentUser  && userSerivce.isAuthenticated()" (click)="onViewApplicants()" mat-button>View Applicants</button>
-  */
-
   //apply to the event
   onApplyEvent(){
-    const booking = new Booking(undefined, 'artist-apply', this.model.hostUser, this.userService.user, this.model, false, false, false, false, this.model.fixedPrice)
+    const booking = new Booking(undefined, 'artist-apply', this.model.hostUser, this.userService.user, this.model, false, false, true, false, this.model.fixedPrice)
     this.bookingService.createBooking(booking).then((booking: Booking) => {
       this.hasApplied = true;
       this.userBooking = booking;
@@ -115,10 +102,6 @@ export class EventSingletonComponent implements OnInit {
   onViewApplications(){
 
   }
-
-
-
-
 
   onEditEvent(){
     console.log("editing event");
@@ -142,11 +125,16 @@ export class EventSingletonComponent implements OnInit {
     });
   }
 
-  openDialog() {
-    this.bookingService.negotiate(this.model.fixedPrice, this.text)
+  openNegotiationDialog() {
+    this.bookingService.negotiate(this.model.fixedPrice)
       .subscribe((result) => {
-        this.selectedOption = result;
-        console.log(this.selectedOption);
+        if(result.accepted) {
+          const booking = new Booking(undefined, 'artist-apply', this.model.hostUser, this.userService.user, this.model, false, false, true, false, result.price)
+          this.bookingService.createBooking(booking).then((booking: Booking) => {
+            this.hasApplied = true;
+            this.userBooking = booking;
+          });
+        }
       });
   }
 
