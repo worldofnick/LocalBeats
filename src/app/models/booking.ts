@@ -9,6 +9,9 @@ export class Booking {
     public performerUser: User,
     public eventEID: Event,
     public approved: boolean,
-    public completed: boolean
+    public completed: boolean,
+    public artistApproved: boolean,
+    public hostApproved: boolean, 
+    public currentPrice: number
     ) {  }
 }

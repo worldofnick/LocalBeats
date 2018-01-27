@@ -27,7 +27,7 @@ export class ProfileRequestComponent implements OnInit {
   }
 
   onRequestEvent(event:Event){
-    const booking = new Booking(undefined, 'host-request', event.hostUser, this.artist, event, false, false);
+    const booking = new Booking(undefined, 'host-request', event.hostUser, this.artist, event, false, false, false, true, event.fixedPrice);
     this.bookingService.createBooking(booking).then((booking: Booking) => this.getAvailableEvents());
   }
 
@@ -72,7 +72,20 @@ export class ProfileRequestComponent implements OnInit {
       this.events = tempEvents;
       this.requestedEvents = tempRequestedEvents
     }));
+  }
 
+  openNegotiationDialog(event: Event) {
+    let booking = new Booking(undefined, 'host-request', event.hostUser, this.artist, event, false, false, false, true, event.fixedPrice);
+    this.bookingService.negotiate(booking, 'host').subscribe((result) => {
+      if(result.accepted == 'accepted' || result.accepted == 'new') {
+        console.log('here')
+        console.log(result);
+        booking = new Booking(undefined, 'host-request', event.hostUser, this.artist, event, false, false, false, true, result.price);
+        this.bookingService.createBooking(booking).then((booking: Booking) => this.getAvailableEvents());
+      } else {
+        this.onCancelRequest(event);
+      }
+    });
   }
 
 }

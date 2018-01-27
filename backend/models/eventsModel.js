@@ -20,10 +20,12 @@ var EventsSchema = new Schema({
     toDate          : {type: Date},
     description     : {type: String},
     fixedPrice      : {type: Number},
+    negotiable      : {type: Boolean, required: true, default: false},
     hourlyRate      : {type: Number},
     deposit         : {type: Number},
     isBooked        : {type: Boolean, default: false},
     eventPicUrl     : {type: String},
+    cancellation    : {type: Number, default: 0},
     location: {
       type: [Number],  // [<longitude>, <latitude>]
       index: '2d'      // create the geospatial index

@@ -48,6 +48,14 @@
 
           <!-- date picker. -->
           <div class="pb-1">
+            <Label>Is price negotiable?</Label>
+            <mat-radio-group [(ngModel)]="this.event.negotiable" name="negotiable" formControlName="negotiable">
+              <mat-radio-button value="true">Negotiable</mat-radio-button>
+              <mat-radio-button value="false">Non-Negotiable</mat-radio-button>
+            </mat-radio-group>
+          </div>
+
+          <div class="pb-1">
             <mat-form-field class="full-width">
               <input matInput [(ngModel)]="this.event.toDate" name="date" formControlName="date" 
               placeholder="Date" [min]="minDate" [max]="maxDate"

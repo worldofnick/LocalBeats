@@ -111,6 +111,7 @@ export class CreateEventsComponent implements OnInit {
       // console.log("creating event");
       this.updating = false;
     } else {
+      // console.log(ID);
       this.updating = true;
     }
 
@@ -142,6 +143,12 @@ export class CreateEventsComponent implements OnInit {
       ]),
       fixedPrice: new FormControl('', [
         // Validators.required,
+      ]),
+      negotiable: new FormControl('', [
+        Validators.required
+      ]),
+      eventGenre: new FormControl('', [
+        Validators.required,
       ]),
       date: new FormControl(),
       eventDescription: new FormControl(),
@@ -259,7 +266,7 @@ export class CreateEventsComponent implements OnInit {
     this.event.eventType = this.basicForm.controls.eventType.value;
     this.event.fixedPrice = this.basicForm.controls.fixedPrice.value;
     this.event.toDate = this.basicForm.controls.date.value;
-    console.log(this.event.eventName);
+    this.event.negotiable = this.basicForm.controls.negotiable.value;
 
     this.event.hostUser = this.user;
     this.event.hostEmail = this.user.email;

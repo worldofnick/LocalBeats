@@ -18,7 +18,7 @@
           </p>
         </mat-card-content>
         <mat-card-actions>
-          <button (click)="onRequestEvent(event)" mat-button>Request Artist for this Event</button>
+            <button (click)="openNegotiationDialog(event)" mat-button>Request Artist for this Event</button>
         </mat-card-actions>
       </mat-card>
     </mat-tab>
@@ -37,9 +37,7 @@
           </p>
         </mat-card-content>
         <mat-card-actions>
-          
-          <button (click)="onCancelRequest(result)" mat-button>Cancel Artist for this Event </button>
-        
+          <button (click)="openNegotiationDialog(result)" mat-button>View Request</button>
         </mat-card-actions>
       </mat-card>
     </mat-tab>

@@ -6,7 +6,9 @@
           <!-- <div mat-card-avatar class="example-header-image"></div> -->
 
           <mat-card-title>Event type: {{this.model.eventType}}</mat-card-title>
-          <mat-card-subtitle>Event price: {{this.model.fixedPrice}}</mat-card-subtitle>
+          <mat-card-subtitle >Event price: {{this.model.fixedPrice}}</mat-card-subtitle>
+          <mat-card-subtitle *ngIf="this.model.negotiable">The event price is negotiable</mat-card-subtitle>
+          <mat-card-subtitle *ngIf="!this.model.negotiable">The event price is non-negotiable</mat-card-subtitle>
 
         </mat-card-header>
         <img mat-card-image [src]="model.eventPicUrl" style="
@@ -14,16 +16,15 @@
                   max-height:128px;
                   width:auto;
                   height:auto;">        
-                  <mat-card-content>
+        <mat-card-content>
           <!-- todo make this read only -->
             <quill-editor theme="snow" [(ngModel)]="this.model.description" value="" name="eventDescription"></quill-editor>
-        </mat-card-content>
+          </mat-card-content>
+        
         <mat-card-actions>
           <button *ngIf="isCurrentUser  && userService.isAuthenticated()" (click)="onEditEvent()" mat-button>Edit Event</button>
           <button *ngIf="isCurrentUser  && userService.isAuthenticated()" (click)="onDeleteEvent()" mat-button>Delete Event</button>
-          <button *ngIf="!isCurrentUser  && userService.isAuthenticated() && !hasApplied " (click)="onApplyEvent()" mat-button>Apply to Event</button>
-          <button *ngIf="!isCurrentUser  && userService.isAuthenticated() && hasApplied " (click)="onCancelApp()" mat-button>Cancel Application</button>
-          <button *ngIf="isCurrentUser  && userService.isAuthenticated()" (click)="onViewApplicants()" mat-button>View Applicants</button>
+          <button *ngIf="!isCurrentUser  && userService.isAuthenticated()" (click)="openNegotiationDialog()" mat-button>{{buttonText}}</button>
         </mat-card-actions>
       </mat-card>
     </mat-tab>

@@ -1,10 +1,12 @@
 // 'use strict';
 import { Injectable } from '@angular/core';
 import { Http, Headers, RequestOptions, Response, URLSearchParams } from '@angular/http';
+import { MatDialogRef, MatDialog, MatDialogConfig } from '@angular/material';
 import { Observable } from 'rxjs/Observable';
 import { Booking } from 'app/models/booking';
 import { Event } from 'app/models/event';
 import { User } from 'app/models/user';
+import { NegotiateDialogComponent } from '../../views/negotiate/negotiate-dialog/negotiate-dialog.component';
 
 
 @Injectable()
@@ -18,18 +20,25 @@ export class BookingService {
 
     private headers: Headers = new Headers({ 'Content-Type': 'application/json' });
 
-    constructor(private http: Http) { }
+    constructor(private http: Http, private dialog: MatDialog) { }
+
+    public negotiate(booking: Booking, user: string): Observable<any> {
+        let dialogRef: MatDialogRef<NegotiateDialogComponent>;
+        dialogRef = this.dialog.open(NegotiateDialogComponent, {
+            width: '380px',
+            disableClose: true,
+            data: {booking, user}
+        });
+        return dialogRef.afterClosed();
+    }
 
     // post("/api/events/create")
     public createBooking(newBooking: Booking): Promise<Booking> {
         const current = this.connection + '/create';
-        console.log(newBooking)
         return this.http.post(current, { booking: newBooking }, { headers: this.headers })
             .toPromise()
             .then((response: Response) => {
                 const data = response.json();
-                console.log("response data")
-                console.log(response)
                 const booking = data.booking as Booking;
                 return booking
             })
@@ -82,7 +91,6 @@ export class BookingService {
         return this.http.put(current, { headers: this.headers })
             .toPromise()
             .then((response: Response) => {
-                console.log(response)
                 const data = response.json();
                 const booking = data.booking as Booking;
                 return booking

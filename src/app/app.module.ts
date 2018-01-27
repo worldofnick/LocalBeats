@@ -7,6 +7,7 @@ import { TranslateModule, TranslateLoader, TranslateStaticLoader } from 'ng2-tra
 
 import { rootRouterConfig } from './app.routes';
 import { AppCommonModule } from "./components/common/app-common.module";
+import { NegotiateModule } from './views/negotiate/negotiate.module';
 import { AppComponent } from './app.component';
 
 import { RoutePartsService } from './services/route-parts/route-parts.service';
@@ -30,6 +31,7 @@ export function createTranslateLoader(http: Http) {
     BrowserAnimationsModule,
     HttpModule,
     AppCommonModule,
+    NegotiateModule,
     TranslateModule.forRoot({
       provide: TranslateLoader,
       useFactory: (createTranslateLoader),

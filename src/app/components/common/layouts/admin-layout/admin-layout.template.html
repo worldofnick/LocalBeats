@@ -6,16 +6,7 @@
       <div class="branding default-bg">
           <mat-icon>headset</mat-icon>
           <!-- Two different logos for dark and light themes -->
-          <img 
-          src="assets/images/logo-text-white.png" 
-          alt="" 
-          class="app-logo-text"
-          *ngIf="themeService.activatedThemeName.indexOf('dark') !== -1">
-          <img 
-          src="assets/images/logo-text.png" 
-          alt="" 
-          class="app-logo-text"
-          *ngIf="themeService.activatedThemeName.indexOf('dark') === -1">
+          <h1 class="app-logo-text">LocalBeats</h1>
       </div>
       <ng-template [ngIf]="userService.isAuthenticated()">
         <!-- Sidebar user -->

@@ -27,6 +27,13 @@ export class NotificationService {
         const io = socketIO('http://localhost:8080');
         io.on('fromServer', msg=>console.log(msg));
     }
+
+    sendToServer(){
+        const io = socketIO('http://localhost:8080');
+        io.on('connection', socket=>{
+            console.log
+        })
+    }
     // connect(): Rx.Subject<Notification> {
 
     //     console.log("calling connect");
