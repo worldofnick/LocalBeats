@@ -2,6 +2,8 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { Subscription } from "rxjs/Subscription";
 import { MediaChange, ObservableMedia } from "@angular/flex-layout";
 import { MatSidenav, MatDialog } from '@angular/material';
+import { UserService } from '../../services/auth/user.service';
+import { User } from '../../models/user';
 import * as SendBird from 'SendBird';
 
 @Component({
@@ -22,6 +24,8 @@ export class AppChatsComponent implements OnInit {
     isOnline: true,
     lastMsg: 'Hello!'
   };
+
+  user: User = new User();
 
   connectedUsers = [{
     name: 'Gevorg Spartak',
@@ -49,13 +53,16 @@ export class AppChatsComponent implements OnInit {
     isOnline: true,
     lastMsg: 'We\'ll talk later'
   }]
-  constructor(private media: ObservableMedia) { }
+  constructor(private media: ObservableMedia, private userService: UserService, ) { 
+
+  }
 
   ngOnInit() {
+    this.user = this.userService.user;
     this.chatSideBarInit();
 
-    this.startSendBird('Pikachu', 'Pikachu')    
-
+    this.startSendBird('Pikachu', 'Pikachu');
+    console.log('Current logged in user (chat): ' + JSON.stringify(this.user));
   }
   changeActiveUser(user) {
     this.activeChatUser = user;
@@ -63,7 +70,7 @@ export class AppChatsComponent implements OnInit {
 
 
   updateSidenav() {
-    var self = this;
+    let self = this;
     setTimeout(() => {
       self.isSidenavOpen = !self.isMobile;
       self.sideNave.mode = self.isMobile ? 'over' : 'side';
@@ -91,10 +98,10 @@ export class AppChatsComponent implements OnInit {
   
     this.sb.connect(userId, function(user, error){
       if (error) {
-        console.log('Failed to connect to the SendBird Servers: ' + error)
+        console.log('Failed to connect to the SendBird Servers: ' + JSON.stringify(error));
         return;
       } else {
-        console.log('Connected to the SendBird Servers: ' + user)
+        console.log('Connected to the SendBird Servers: ' + user);
       }
     });
   }
