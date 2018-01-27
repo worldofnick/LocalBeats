@@ -18,6 +18,9 @@ exports.listAllEvents = function (req, res) {
     });
   };
 
+
+  
+
 // app.get("/api/events/:eid",
 exports.getEventByID = function (req, res) {
     Events.findById(req.params.eid).populate('hostUser').populate('performerUser').exec(function (err, event) {
@@ -66,6 +69,8 @@ exports.createEvent = function (req, res) {
                 if (err) {
                     return res.status(500).send("Failed to create event");
                 } else {
+                    console.log("PRINTING NEW EVENT");
+                    console.log(fetchedEvent)
                     return res.status(200).send({ "event": fetchedEvent });
                 }
             });
@@ -120,6 +125,7 @@ exports.getUserEventsByUID = function (req, res) {
         skip = parseInt(req.query.skip);
     }
 
+    
     Events.find({hostUser: req.query.hostUID}).limit(limit).skip(skip).populate('hostUser').populate('performerUser').exec(function (err, doc) {
         if (err) {
             return res.status(500).send("Failed to get user events");

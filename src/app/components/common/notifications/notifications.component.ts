@@ -1,7 +1,9 @@
 import { Component, OnInit, ViewChild, Input } from '@angular/core';
 import { MatSidenav } from '@angular/material';
 import { Router, NavigationEnd } from '@angular/router';
-
+import { Notification } from 'app/models/notification'
+import { NotificationService } from '../../../services/notification/notification.service';
+import { UserService } from '../../../services/auth/user.service'
 @Component({
   selector: 'app-notifications',
   templateUrl: './notifications.component.html',
@@ -10,36 +12,36 @@ import { Router, NavigationEnd } from '@angular/router';
 export class NotificationsComponent implements OnInit {
   @Input() notificPanel;
 
+  //get notification data.
+
   // Dummy notifications
-  notifications = [{
-    message: 'New contact added',
-    icon: 'assignment_ind',
-    time: '1 min ago',
-    route: '/inbox',
-    color: 'primary'
-  }, {
-    message: 'New message',
-    icon: 'chat',
-    time: '4 min ago',
-    route: '/chat',
-    color: 'accent'
-  }, {
-    message: 'Server rebooted',
-    icon: 'settings_backup_restore',
-    time: '12 min ago',
-    route: '/charts',
-    color: 'warn'
-  }]
+  notifications:Notification[]
 
-  constructor(private router: Router) {}
 
-  ngOnInit() {
+  constructor(private router: Router,
+              private notificationService: NotificationService,
+              private userService: UserService) {}
+
+  ngOnInit
+  () {
+
+
+    if(this.userService.isAuthenticated()){
+
+      this.notificationService.getNotificationsForUser(this.userService.user).then((notificationsList: Notification[]) => {
+        this.notifications = notificationsList;
+      }); 
+    }
+
     this.router.events.subscribe((routeChange) => {
         if (routeChange instanceof NavigationEnd) {
           this.notificPanel.close();
         }
     });
   }
+
+
+  //add service call to delete those notifications.
   clearAll(e) {
     e.preventDefault();
     this.notifications = [];

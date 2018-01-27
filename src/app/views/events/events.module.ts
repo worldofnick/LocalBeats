@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { AgmCoreModule, MapsAPILoader } from '@agm/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { 
   MatInputModule,
@@ -50,6 +51,10 @@ import { EventSingletonComponent } from './event-singleton/event-singleton.compo
 @NgModule({
   imports: [
     CommonModule,
+    AgmCoreModule.forRoot({
+      apiKey: "AIzaSyBCko4eEq6azFCzCXVXAF4_jylVNw4ZM7Q",
+      libraries: ["places"]
+    }),
     FormsModule,
     ReactiveFormsModule,
     MatInputModule,

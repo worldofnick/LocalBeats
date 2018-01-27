@@ -3,24 +3,24 @@
     <mat-tab label="{{this.model.eventName}}">
       <mat-card class="example-card">
         <mat-card-header>
-          <div mat-card-avatar class="example-header-image"></div>
+          <!-- <div mat-card-avatar class="example-header-image"></div> -->
 
           <mat-card-title>Event type: {{this.model.eventType}}</mat-card-title>
-          <mat-card-subtitle>Event price: {{this.model.fixedPrice}}</mat-card-subtitle>
+          <mat-card-subtitle >Event price: {{this.model.fixedPrice}}</mat-card-subtitle>
+          <mat-card-subtitle *ngIf="this.model.negotiable">The event price is negotiable</mat-card-subtitle>
+          <mat-card-subtitle *ngIf="!this.model.negotiable">The event price is non-negotiable</mat-card-subtitle>
 
         </mat-card-header>
-        <!-- <img mat-card-image src="https://material.angular.io/assets/img/examples/shiba2.jpg" width="50px" heaight="50px"alt="Photo of a Shiba Inu"> -->
+        <img mat-card-image [src]="model.eventPicUrl" style="
+                  max-width:128px;
+                  max-height:128px;
+                  width:auto;
+                  height:auto;">        
         <mat-card-content>
-          <p>
-            The event is on {{this.model.toDate}}
-          </p>
-          <p *ngIf="this.model.negotiable">
-            The event price is negotiable.
-          </p>
-          <p *ngIf="!this.model.negotiable">
-            The event price is non-negotiable.
-          </p>
-        </mat-card-content>
+          <!-- todo make this read only -->
+            <quill-editor theme="snow" [(ngModel)]="this.model.description" value="" name="eventDescription"></quill-editor>
+          </mat-card-content>
+        
         <mat-card-actions>
           <button *ngIf="isCurrentUser  && userService.isAuthenticated()" (click)="onEditEvent()" mat-button>Edit Event</button>
           <button *ngIf="isCurrentUser  && userService.isAuthenticated()" (click)="onDeleteEvent()" mat-button>Delete Event</button>

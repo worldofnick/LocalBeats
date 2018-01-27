@@ -83,6 +83,9 @@ export class ProfileEventsComponent implements OnInit {
     this.bookingService.declineBooking(this.appliedBookings[index]).then(() => this.getEvents());
   }
 
+  onViewEvent(event:Event){
+    this.router.navigate(['/events', event._id]); //this will go to the page about the event
+  }
   public getEvents() {
     this.requestedArtistBookings = [];
     this.appliedBookings = [];
@@ -131,11 +134,6 @@ export class ProfileEventsComponent implements OnInit {
     this.router.navigate(['/events', 'update', event._id]); //this will go to the page about the event        
   }
 
-  onPickEvent(event:Event){
-    // this.model = event;      
-    this.eventService.event = event;
-    this.router.navigate(['/event-page', event._id]); //this will go to the page about the event    
-  }
 
   viewApplicants(event: Event) {
     this.eventService.event = event;

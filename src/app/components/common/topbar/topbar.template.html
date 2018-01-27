@@ -139,7 +139,7 @@
     [style.overflow]="'visible'" 
     class="topbar-button-right">
       <mat-icon>notifications</mat-icon>
-      <span class="notification-number mat-bg-warn">3</span>
+      <span class="notification-number mat-bg-warn">{{numNotifications}}</span>
     </button>
     <!-- Top left user menu -->
     <button mat-icon-button [matMenuTriggerFor]="accountMenu" class="topbar-button-right img-button">

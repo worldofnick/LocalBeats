@@ -35,6 +35,7 @@ import { AuthLayoutComponent } from './layouts/auth-layout/auth-layout.component
 import { CommonDirectivesModule } from '../../directives/common/common-directives.module';
 import { ThemeService } from '../../services/theme/theme.service';
 import { BreadcrumbComponent } from './breadcrumb/breadcrumb.component';
+import { NotificationService } from 'app/services/notification/notification.service';
 
 @NgModule({
   imports: [
@@ -77,7 +78,7 @@ import { BreadcrumbComponent } from './breadcrumb/breadcrumb.component';
     NavigationComponent, 
     NotificationsComponent, BreadcrumbComponent
   ],
-  providers: [ThemeService],
+  providers: [ThemeService, NotificationService],
   exports: []
 })
 export class AppCommonModule {}
