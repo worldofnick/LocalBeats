@@ -92,7 +92,8 @@ export class ProfileComponent implements OnInit {
     notif.sender = this.userService.user;
     notif.receiver = this.userService.user;
     notif.message = "test message" ;
-    this.notificationService.sendNotificationToUser(notif)
+    // this.notificationService.sendNotificationToUser(notif)
+    // this.notificationService.conn
  }
 
 

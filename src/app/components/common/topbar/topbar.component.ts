@@ -78,7 +78,7 @@ export class TopbarComponent implements OnInit {
       location: new FormControl()
     });
 
-    // this.notificationService.connect();
+    this.notificationService.connect();
   }
 
   private setCurrentPosition() {
