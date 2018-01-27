@@ -4,20 +4,19 @@
     <!-- my events -->
     <mat-tab label="My Hosted Events">
       <mat-card *ngFor="let event of this.events; let i = index" class="example-card">
-        <mat-card class="p-0">
-          <mat-tab-group>
-            <mat-tab label="Event Details">
+          <mat-card class="p-0">
+              <mat-tab-group>
+        <mat-tab label="Event Details">
+          <mat-card>
+        <mat-card-header>
+          <div mat-card-avatar class="example-header-image"></div>
 
           <mat-card-title>Event name: {{ event.event.eventName }}</mat-card-title>
           <mat-card-subtitle>Event type: {{event.event.eventType}}</mat-card-subtitle>
           <mat-card-subtitle>Event price: {{event.event.fixedPrice}}</mat-card-subtitle>
 
         </mat-card-header>
-        <img mat-card-image [src]="event.eventPicUrl" style="
-        max-width:128px;
-        max-height:128px;
-        width:auto;
-        height:auto;">
+        <!-- <img mat-card-image src="https://material.angular.io/assets/img/examples/shiba2.jpg" width="50px" heaight="50px"alt="Photo of a Shiba Inu"> -->
         <mat-card-content>
           <p>
             The event is on {{event.event.toDate}}
@@ -66,19 +65,15 @@
     <mat-tab label="Requested Events">
       <mat-card *ngFor="let booking of this.requestedArtistBookings; let i = index" class="example-card">
         <mat-card-header>
-          <!-- <div mat-card-avatar class="example-header-image"></div> -->
+          <div mat-card-avatar class="example-header-image"></div>
           <mat-card-title>Event name: {{ booking.eventEID.eventName }}</mat-card-title>
           <mat-card-subtitle>Event type: {{booking.eventEID.eventType}}</mat-card-subtitle>
           <mat-card-subtitle>Negotiated price: {{booking.currentPrice}}</mat-card-subtitle>
         </mat-card-header>
-        <img mat-card-image [src]="booking.eventEID.eventPicUrl" style="
-        max-width:128px;
-        max-height:128px;
-        width:auto;
-        height:auto;">        
+        <!-- <img mat-card-image src="https://material.angular.io/assets/img/examples/shiba2.jpg" width="50px" heaight="50px"alt="Photo of a Shiba Inu"> -->
         <mat-card-content>
           <p>
-            The event is on {{booking.eventEID.toDate}}
+              The event is on {{booking.eventEID.toDate}}
           </p>
         </mat-card-content>
         <mat-card-actions>
@@ -91,20 +86,16 @@
     <mat-tab label="Applied Events">
       <mat-card *ngFor="let booking of this.appliedBookings; let i = index" class="example-card">
         <mat-card-header>
-          <!-- <div mat-card-avatar class="example-header-image"></div> -->
+          <div mat-card-avatar class="example-header-image"></div>
           <mat-card-title>Event name: {{ booking.eventEID.eventName }}</mat-card-title>
           <mat-card-subtitle>Event type: {{booking.eventEID.eventType}}</mat-card-subtitle>
           <mat-card-subtitle>Negotiated price: {{booking.currentPrice}}</mat-card-subtitle>
         </mat-card-header>
-        <img mat-card-image [src]="booking.eventEID.eventPicUrl" style="
-        max-width:128px;
-        max-height:128px;
-        width:auto;
-        height:auto;"> 
-                <mat-card-content>
+        <!-- <img mat-card-image src="https://material.angular.io/assets/img/examples/shiba2.jpg" width="50px" heaight="50px"alt="Photo of a Shiba Inu"> -->
+        <mat-card-content>
           <p>
-            The event is on {{booking.eventEID.toDate}}
-          </p>
+              The event is on {{booking.eventEID.toDate}}
+            </p>
         </mat-card-content>
         <mat-card-actions>
             <button (click)="openNegotiationDialog(booking, 'artist')" mat-button>View Application</button>
