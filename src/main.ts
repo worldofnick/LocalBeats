@@ -1,4 +1,3 @@
-import './polyfills.ts';
 import { enableProdMode } from '@angular/core';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 
@@ -10,3 +9,5 @@ if (environment.production) {
 }
 
 platformBrowserDynamic().bootstrapModule(AppModule);
+
+// import '../node_modules/@angular/material/prebuilt-themes/indigo-pink.css';

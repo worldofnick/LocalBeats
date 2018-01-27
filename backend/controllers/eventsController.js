@@ -18,6 +18,9 @@ exports.listAllEvents = function (req, res) {
     });
   };
 
+
+  
+
 // app.get("/api/events/:eid",
 exports.getEventByID = function (req, res) {
     Events.findById(req.params.eid).populate('hostUser').populate('performerUser').exec(function (err, event) {
@@ -29,8 +32,32 @@ exports.getEventByID = function (req, res) {
     });
 };
 
+function getDefaultImage(eventType) {
+  eventType = eventType.toLowerCase(); // just in case
+  if (eventType == "birthday") {
+    return "http://downingtownplaydium.com/wp-content/uploads/2014/08/Birthday-Party-for-Kids.png";
+  } else if (eventType == "wedding") {
+    return "https://www.theknot.com/assets/topic_pages/wedding-vows-ceremony-de390170d87b481e073afef3e03a2c7b4a5d7e0b1de1036a40816f80fa85a6cd.jpg";
+  } else if (eventType == "party") {
+    return "http://themocracy.com/wp-content/uploads/2016/12/Parties.jpg";
+  } else if (eventType == "live music") {
+    return "https://media.timeout.com/images/101206597/image.jpg";
+  } else if (eventType == "business") {
+    return "http://biggromeo.com/wp-content/uploads/2017/12/59660399f9b09005a411905a.jpg";
+  } else if (eventType == "festival") {
+    return "https://www.nutickets.com/wp-content/uploads/2015/07/53da64d2740fb.jpg";
+  }
+
+  return "http://themocracy.com/wp-content/uploads/2016/12/Parties.jpg";
+}
+
 exports.createEvent = function (req, res) {
     var newEvent = new Events(req.body.event);
+
+    if (newEvent.eventPicUrl == null) {
+      newEvent.eventPicUrl = getDefaultImage(newEvent.eventType)
+    }
+
     newEvent.save(function (err, event) {  // callback function with err and success value
         if (err) {
             return res.status(400).send({
@@ -42,6 +69,8 @@ exports.createEvent = function (req, res) {
                 if (err) {
                     return res.status(500).send("Failed to create event");
                 } else {
+                    console.log("PRINTING NEW EVENT");
+                    console.log(fetchedEvent)
                     return res.status(200).send({ "event": fetchedEvent });
                 }
             });
@@ -96,6 +125,7 @@ exports.getUserEventsByUID = function (req, res) {
         skip = parseInt(req.query.skip);
     }
 
+    
     Events.find({hostUser: req.query.hostUID}).limit(limit).skip(skip).populate('hostUser').populate('performerUser').exec(function (err, doc) {
         if (err) {
             return res.status(500).send("Failed to get user events");
@@ -136,8 +166,8 @@ exports.deleteUserEventsByUID = function (req, res) {
 // params
 // skip (int) how many records to skip
 // limit (int) how many records to return
-// event_type (string) ("wedding", "birthday")
-// event_genre (string) ("rock", etc)
+// event_types (array) ["wedding", "birthday"]
+// event_genres (array) ["rock"]
 // from_date & to_date (string) ISODate
 // min_budget & max_budget (int)
 // booked (boolean) defaults ot false. If true returns events that are currently booked
@@ -159,11 +189,15 @@ exports.searchEvents = function(req, res) {
 
   var query = {};
   if (req.query.event_type != null && req.query.event_type != "all events") {
-    query.eventType = req.query.event_type;
+    query.eventType = {
+      "$in": req.query.event_type
+    }
   }
 
   if (req.query.event_genre != null && req.query.event_genre != "all genres") {
-    query.eventGenre = req.query.event_genre;
+    query.eventGenre = {
+      "$in": req.query.event_genre
+    }
   }
 
   if (req.query.from_date != null && req.query.to_date != null) {

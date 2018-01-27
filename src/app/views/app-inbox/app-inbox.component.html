@@ -1,0 +1,132 @@
+<mat-sidenav-container>
+  <!-- Inbox left side bar -->
+  <mat-sidenav #sidenav [opened]="isSidenavOpen" mode="side" class="inbox-sidenav">
+    <!-- Compose button -->
+    <button mat-raised-button class="mat-warn full-width" (click)="openComposeDialog()">Compose</button>
+    <!-- left side buttons -->
+    <mat-nav-list class="inbox-nav-list" role="list">
+      <mat-list-item class="primary-imenu-item" role="listitem" routerLinkActive="open">
+        <a fxLayout="row">
+          <mat-icon class="text-muted">inbox</mat-icon>
+          <span>Inbox</span>
+        </a>
+      </mat-list-item>
+      <mat-list-item class="primary-imenu-item" role="listitem" routerLinkActive="open">
+        <a fxLayout="row">
+          <mat-icon class="text-muted">folder_special</mat-icon>
+          <span>Starred</span>
+        </a>
+      </mat-list-item>
+      <mat-list-item class="primary-imenu-item" role="listitem" routerLinkActive="open">
+        <a fxLayout="row">
+          <mat-icon class="text-muted">send</mat-icon>
+          <span>Sent</span>
+        </a>
+      </mat-list-item>
+      <mat-list-item class="primary-imenu-item" role="listitem" routerLinkActive="open">
+        <a fxLayout="row">
+          <mat-icon class="text-muted">drafts</mat-icon>
+          <span>Draft</span>
+        </a>
+      </mat-list-item>
+      <mat-list-item class="primary-imenu-item" role="listitem" routerLinkActive="open">
+        <a fxLayout="row">
+          <mat-icon class="text-muted">error</mat-icon>
+          <span>Spam</span>
+        </a>
+      </mat-list-item>
+
+      <mat-divider></mat-divider>
+
+      <mat-list-item class="" role="listitem" routerLinkActive="open">
+        <a fxLayout="row">
+          <mat-icon color="primary">people</mat-icon>
+          <span>Social</span>
+        </a>
+      </mat-list-item>
+      <mat-list-item class="" role="listitem" routerLinkActive="open">
+        <a fxLayout="row">
+          <mat-icon color="warn">local_offer</mat-icon>
+          <span>Promotions</span>
+        </a>
+      </mat-list-item>
+      <mat-list-item class="" role="listitem" routerLinkActive="open">
+        <a fxLayout="row">
+          <mat-icon color="accent">forums</mat-icon>
+          <span>Forums</span>
+        </a>
+      </mat-list-item>
+    </mat-nav-list>
+  </mat-sidenav>
+
+  <div class="messages-wrap">
+    <!-- right side topbar -->
+    <mat-toolbar color="primary" class="inbox-toolbar">
+      <!-- Left sidebar toggle button -->
+      <button mat-icon-button (click)="sidenav.toggle()" fxShow [fxShow.gt-sm]="isMobile"><mat-icon>short_text</mat-icon></button>
+      <!-- multiple email select and control -->
+      <mat-checkbox (change)="selectToggleAll()" class="inbox-toggle-all mr-1"><small>All</small></mat-checkbox>
+      <button mat-icon-button matTooltip="Move to trash"><mat-icon>delete</mat-icon></button>
+      <button mat-icon-button matTooltip="Mark as important" class=""><mat-icon>folder_special</mat-icon></button>
+      <button mat-icon-button matTooltip="Move to archive"><mat-icon>archive</mat-icon></button>
+      <button mat-icon-button matTooltip="Report spam"><mat-icon>error</mat-icon></button>
+    </mat-toolbar>
+
+    <div class="inbox-hold">
+      <mat-list class="messages">
+        <mat-list-item *ngFor="let message of messages" class="message-item app-accordion">
+          <div fxLayout="row" fxLayoutAlign="start center" class="message-head">
+            <!-- Single email select and star (show on close) -->
+            <mat-checkbox [(ngModel)]="message.selected" class="hidden-on-open mail-check"></mat-checkbox>
+            <button 
+            mat-icon-button 
+            matTooltip="Mark as important" 
+            class="hidden-on-open text-muted mr-1"><mat-icon>star_border</mat-icon></button>
+            <!-- Single emial photo and date (show on open) -->
+            <div fxFlex="1 1 auto" fxLayout="row" class="show-on-open mr-1">
+              <img [src]="message.sender.photo" alt="" class="inbox-face mr-1">
+              <div fxLayout="column">
+                <span class="mat-card-title m-0">{{message.sender.name}}</span>
+                <small class="mat-card-subtitle m-0">{{message.date | date}}</small>
+              </div>
+            </div>
+            <!-- Single emial name and subject -->
+            <div appAccordion fxFlex="18 1 auto" fxLayout="row">
+              <!-- (show on close) -->
+              <div class="mr-1 hidden-on-open" [ngStyle]="{minWidth: '120px'}">{{message.sender.name}}</div>
+              <!-- (always show) -->
+              <div>{{message.subject}}</div>
+            </div>
+            <span fxFlex fxHide [fxHide.gt-sm]="isMobile"></span>
+            <!-- Single emial date (show on close) -->
+            <small class="hidden-on-open">{{message.date | date}}</small>
+            <!-- Single emial top Drop down (show on close) -->
+            <button mat-icon-button [matMenuTriggerFor]="msgMenu" class="hidden-on-open">
+                <mat-icon class="text-muted">more_vert</mat-icon>
+            </button>
+            <mat-menu #msgMenu="matMenu">
+              <button mat-menu-item>Reply</button>
+              <button mat-menu-item>Archive</button>
+              <button mat-menu-item>Delete</button>
+            </mat-menu>
+
+            <!-- Single emial top Icons (show on open) -->
+            <div class="show-on-open">
+              <button mat-icon-button matTooltip="Reply"><mat-icon class="text-muted">reply</mat-icon></button>
+              <button mat-icon-button matTooltip="Mark as important"><mat-icon class="text-muted">folder_special</mat-icon></button>
+              <button mat-icon-button matTooltip="Move to archive"><mat-icon class="text-muted">archive</mat-icon></button>
+              <button mat-icon-button matTooltip="Move to trash"><mat-icon class="text-muted">delete</mat-icon></button>
+            </div>
+          </div>
+
+          <!-- Single text (show on open) -->
+          <div class="message-content accordion-content">
+            <div class="message-text" [innerHTML]="message.message"></div>
+          </div>
+        </mat-list-item>
+      </mat-list>
+    </div>
+
+  </div>
+
+</mat-sidenav-container>

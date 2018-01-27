@@ -1,0 +1,39 @@
+<div fxLayout="row" fxLayoutWrap="wrap">
+  <div fxFlex="100" fxFlex.gt-xs="33" *ngFor="let result of results">
+    <mat-card class="p-0" *ngIf="searchType == 'Event'" [routerLink]="['/events', result._id]">
+      <mat-card-title class="mat-bg-primary m-0">
+        <div class="card-title-text">
+          <span *ngIf="searchType == 'Musician'">{{result.firstName}} {{result.lastName}}</span>
+          <span *ngIf="searchType == 'Event'">{{result.eventName}}</span>
+          <span fxFlex></span>
+        </div>
+        <mat-divider></mat-divider>
+      </mat-card-title>
+      <img mat-card-image [src]="result.eventPicUrl">
+      <img *ngIf="searchType == 'Musician'" [routerLink]="['/profile', result._id]" mat-card-image [src]="result.profilePicUrl">
+      <mat-card-content>
+        <p>
+          Adipisci quas repellat sed. Quasi quaerat aut nam possimus vitae dignissimos, sapiente est atque tenetur eveniet iste iusto
+          veritatis. Adipisci quas repellat sed. Quasi quaerat aut.
+        </p>
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="p-0" *ngIf="searchType == 'Musician'" [routerLink]="['/profile', result._id]">
+      <mat-card-title class="mat-bg-primary m-0">
+        <div class="card-title-text">
+          <span *ngIf="searchType == 'Musician'">{{result.firstName}} {{result.lastName}}</span>
+          <span *ngIf="searchType == 'Event'">{{result.eventName}}</span>
+          <span fxFlex></span>
+        </div>
+        <mat-divider></mat-divider>
+      </mat-card-title>
+      <img mat-card-image [src]="result.profilePicUrl">
+      <mat-card-content>
+        <p>
+          Adipisci quas repellat sed. Quasi quaerat aut nam possimus vitae dignissimos, sapiente est atque tenetur eveniet iste iusto
+          veritatis. Adipisci quas repellat sed. Quasi quaerat aut.
+        </p>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

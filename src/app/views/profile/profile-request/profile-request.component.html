@@ -1,0 +1,45 @@
+<mat-card class="p-0">
+  <mat-tab-group>
+    <!-- my events -->
+    <mat-tab label="Events You Can Request This Artist For">
+      <mat-card *ngFor="let event of this.events; let i = index" class="example-card">
+        <mat-card-header>
+          <div mat-card-avatar class="example-header-image"></div>
+
+          <mat-card-title>Event name: {{event.eventName}}</mat-card-title>
+          <mat-card-subtitle>Event type: {{event.eventType}}</mat-card-subtitle>
+          <mat-card-subtitle>Event price: {{event.fixedPrice}}</mat-card-subtitle>
+
+        </mat-card-header>
+        <!-- <img mat-card-image src="https://material.angular.io/assets/img/examples/shiba2.jpg" width="50px" heaight="50px"alt="Photo of a Shiba Inu"> -->
+        <mat-card-content>
+          <p>
+            The event is on {{event.toDate}}
+          </p>
+        </mat-card-content>
+        <mat-card-actions>
+            <button (click)="openNegotiationDialog(event)" mat-button>Request Artist for this Event</button>
+        </mat-card-actions>
+      </mat-card>
+    </mat-tab>
+    <mat-tab label="Events You've Requested This Artist For">
+      <mat-card *ngFor="let result of this.requestedEvents; let i = index" class="example-card">
+        <mat-card-header>
+          <div mat-card-avatar class="example-header-image"></div>
+          <mat-card-title>Event name: {{ result.eventName }}</mat-card-title>
+          <mat-card-subtitle>Event type: {{result.eventType}}</mat-card-subtitle>
+          <mat-card-subtitle>Event price: {{result.fixedPrice}}</mat-card-subtitle>
+        </mat-card-header>
+        <!-- <img mat-card-image src="https://material.angular.io/assets/img/examples/shiba2.jpg" width="50px" heaight="50px"alt="Photo of a Shiba Inu"> -->
+        <mat-card-content>
+          <p>
+              The event is on {{result.toDate}}
+          </p>
+        </mat-card-content>
+        <mat-card-actions>
+          <button (click)="openNegotiationDialog(result)" mat-button>View Request</button>
+        </mat-card-actions>
+      </mat-card>
+    </mat-tab>
+  </mat-tab-group>
+</mat-card>

@@ -1,0 +1,84 @@
+<div fxLayout="row" fxLayoutWrap="wrap">
+  <div *ngIf="this.user" fxFlex="100" fxFlex.gt-md="300px" fxFlex.gt-sm="50">
+    <mat-card class="profile-sidebar mb-1 pb-0">
+      <div class="propic text-center">
+        <img [src]="this.user.profilePicUrl" alt="">
+      </div>
+      <div class="profile-title text-center mb-1">
+        <div class="main-title">{{this.user.firstName}}
+          <b>{{this.user.lastName}}</b>
+        </div>
+        <!-- <div class="subtitle mb-05">Big Data Expert</div> -->
+        <div class="text-muted">Hello my name is {{this.user.firstName}}</div>
+      </div>
+      <div class="profile-actions text-center mb-1">
+        <button mat-raised-button color="primary">Message</button>
+        <button mat-raised-button color="accent">Follow</button>
+      </div>
+      <div class="profile-nav">
+        <mat-nav-list>
+          <!-- check here if to see if on another profile and go to profile/id/overview -->
+
+
+          <mat-list-item (click)="clickedOverview = true">
+            <mat-icon>home</mat-icon>
+            Overview
+          </mat-list-item>
+         
+
+
+          <ng-template [ngIf]="!this.onOwnProfile && this.userService.isAuthenticated()">
+            <mat-list-item (click)="clickedRequestArtist = true">
+              <mat-icon>music_note</mat-icon>
+              Request Artist
+            </mat-list-item>
+          </ng-template>
+
+          <ng-template [ngIf]="!this.onOwnProfile && this.requested && this.userService.isAuthenticated()">
+            <mat-list-item (click)="onCancelArtist(this.user._id)" routerLinkActive="list-item-active">
+              <mat-icon>music_note</mat-icon>
+              Cancel Artist
+            </mat-list-item>
+          </ng-template>
+
+
+          <ng-template [ngIf]="this.onOwnProfile">
+            <mat-list-item [routerLink]="['/profile', 'events']" routerLinkActive="list-item-active">
+              <mat-icon>events</mat-icon>
+              My Events
+            </mat-list-item>
+          </ng-template>
+
+          <ng-template [ngIf]="this.onOwnProfile">
+            <mat-divider></mat-divider>
+            <!-- if not on your own profile this doesnt show -->
+
+            <mat-list-item routerLink="/profile/settings" routerLinkActive="list-item-active">
+              <mat-icon>settings</mat-icon>
+              Edit Profile
+            </mat-list-item>
+          </ng-template>
+
+        </mat-nav-list>
+      </div>
+    </mat-card>
+
+    <!-- Contact Information -->
+    <mat-card class="default">
+      <mat-card-title>Contact Information</mat-card-title>
+      <mat-card-content class="pt-0">
+        <mat-list>
+            <mat-list-item><mat-icon class="mr-1">email</mat-icon> {{this.user.email}}</mat-list-item>
+        </mat-list>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- Profile Views -->
+  <div fxFlex="100" fxFlex.gt-sm="50" fxFlex.gt-md="calc(100% - 300px)">
+    <router-outlet></router-outlet>
+    <!-- //TODO DO THIS FOR THE REST OF THE CHILDREN -->
+    <app-profile-request *ngIf="clickedRequestArtist" [user]="userService.user" [artist]="user"></app-profile-request>
+    <app-profile-overview *ngIf="clickedOverview" [user]="user"></app-profile-overview>
+  </div>
+</div>

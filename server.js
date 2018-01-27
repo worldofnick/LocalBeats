@@ -6,13 +6,14 @@ var app         	= express();
 var bodyParser  	= require('body-parser');
 var morgan      	= require('morgan');
 var mongoose    	= require('mongoose');
-
+var http = require('http');
 var jwt    = require('jsonwebtoken');                // used to create, sign, and verify tokens
 var config = require('./config');                    // get our config file
 var User   = require('./backend/models/userModel');  // get our mongoose model
 var Events = require('./backend/models/eventsModel');  // get our mongoose model
 var Bookings = require('./backend/models/bookingsModel');
-
+var Notification = require('./backend/models/notificationModel');
+var io = require('socket.io')(server);
 
 
 var distDir = __dirname + "/dist/";
@@ -32,10 +33,49 @@ app.use(bodyParser.json());
 // use morgan to log requests to the console
 app.use(morgan('dev'));
 
-var server = app.listen(port, function () {
-  var port = server.address().port;
-  console.log("App now running on port", port);
-});
+//original server instatiation
+// var server = app.listen(port, function () {
+//   var port = server.address().port;
+//   console.log("App now running on port", port);
+// });
+
+// var server = http.createServer(app);
+var server = require('http').Server(app);
+var io = require('socket.io')(server);
+server.listen(8080);
+//
+
+//set up socket
+
+app.set('socketio', io);
+
+io.on('connection', socket=>{
+  console.log("connection from id:")
+  console.log(socket.id)
+
+  socket.emit('fromServer', 'hello from server!!!!!!!!')
+})
+
+// io.on('connection', function(socket){
+//   console.log("user connected");
+
+
+//   socket.on('connection', socket => {
+//     // socket.broadcast.emit('new notification',data);
+//     console.log("user connected");
+//   });
+  
+//   socket.on('userConnected', function(data) {
+//     console.log("user connected");
+//     // var uid = socket.request.handshakeData.uid // This might work.. need to look at the data
+//     // Save the session with the uid
+//   });
+
+//   socket.on('notification', function(data) {
+//     console.log("notiicioant received");
+//     socket.broadcast.emit('new notification',data);
+//   });
+// });
 
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
@@ -53,11 +93,13 @@ var authenticationRoutes  = require('./backend/routes/authenticationRoutes.js');
 var eventsRoutes          = require('./backend/routes/eventsRoutes.js');
 var bookingsRoutes        = require('./backend/routes/bookingsRoutes.js');
 var spotifyRoutes 		    = require('./backend/routes/spotifyRoutes.js');
+var notificationRoutes 		= require('./backend/routes/notificationRoutes.js');
 userRoutes(app);
 authenticationRoutes(app);
 eventsRoutes(app);
 bookingsRoutes(app);
 spotifyRoutes(app);
+notificationRoutes(app);
 
 
 // basic route (http://localhost:8080)
