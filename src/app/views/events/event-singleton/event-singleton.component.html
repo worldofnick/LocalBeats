@@ -24,9 +24,7 @@
         <mat-card-actions>
           <button *ngIf="isCurrentUser  && userService.isAuthenticated()" (click)="onEditEvent()" mat-button>Edit Event</button>
           <button *ngIf="isCurrentUser  && userService.isAuthenticated()" (click)="onDeleteEvent()" mat-button>Delete Event</button>
-          <button *ngIf="!isCurrentUser  && userService.isAuthenticated() && !hasApplied" (click)="openNegotiationDialog()" mat-button>{{buttonText}}</button>
-          <button *ngIf="!isCurrentUser  && userService.isAuthenticated() && hasApplied " (click)="onCancelApp()" mat-button>Cancel Application</button>
-          <button *ngIf="isCurrentUser  && userService.isAuthenticated()" (click)="onViewApplicants()" mat-button>View Applicants</button>
+          <button *ngIf="!isCurrentUser  && userService.isAuthenticated()" (click)="openNegotiationDialog()" mat-button>{{buttonText}}</button>
         </mat-card-actions>
       </mat-card>
     </mat-tab>

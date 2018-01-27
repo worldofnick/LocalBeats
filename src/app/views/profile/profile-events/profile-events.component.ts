@@ -18,11 +18,10 @@ import { Booking } from '../../../models/booking';
 })
 export class ProfileEventsComponent implements OnInit {
   user:User = new User;
-  events: any[] = [];
-  requestedArtistEvents: any[] = [];
-  requestedArtistBookings: any[] = [];
-  appliedEvents: Event[] = [];
-  appliedBookings: any[] = [];
+  events: any[];
+  requestedArtistBookings: Booking[];
+  appliedBookings: Booking[];
+  confirmedBookings: Booking[];
   deleteStatus:Number;
   hasApplied:Boolean = true;
 
@@ -85,6 +84,10 @@ export class ProfileEventsComponent implements OnInit {
   }
 
   public getEvents() {
+    this.requestedArtistBookings = [];
+    this.appliedBookings = [];
+    this.confirmedBookings = [];
+    this.events = [];
     this.eventService.getEventsByUID(this.user._id).then((events: Event[]) => {
       for(let e of events) {
         this.bookingService.getBooking(e).then((bookings: Booking[]) => {
@@ -100,35 +103,25 @@ export class ProfileEventsComponent implements OnInit {
           this.events.push({event: e, applicants: applicants, approved: approved});
         })
       }
-      this.requestedArtistBookings = [];
-      this.requestedArtistEvents = [];
-      this.appliedEvents = [];
-      this.appliedBookings = [];
       // Then get the bookings where the current user is the artist 
     }).then(() => this.bookingService.getUserBookings(this.userService.user, 'artist').then((bookings: any[]) => {
       let tempappliedEventsId: string[] = []
       let tempRequestArtistEventId: string[] = []
       for (let result of bookings) {
         if (result.bookingType == 'host-request') {
-          tempRequestArtistEventId.push(result.eventEID._id);
-          this.requestedArtistBookings.push(result);
-        } else if (result.bookingType == 'artist-apply') {
-          tempappliedEventsId.push(result.eventEID._id);
-          this.appliedBookings.push(result);
-        }
-      }
-      for (let id of tempappliedEventsId) {
-        let temp = { 'id': id}
-        this.eventService.getEventByEID(temp).then((event: Event) => {
-          this.appliedEvents.push(event);
-        });
-      }
+          if(!result.approved) {
+            this.requestedArtistBookings.push(result);
+          } else {
+            this.confirmedBookings.push(result);
+          }
 
-      for (let id of tempRequestArtistEventId) {
-        let temp = { 'id': id}
-        this.eventService.getEventByEID(temp).then((event: Event) => {
-          this.requestedArtistEvents.push(event);
-        });
+        } else if (result.bookingType == 'artist-apply') {
+          if(!result.approved){
+            this.appliedBookings.push(result);
+          } else {
+            this.confirmedBookings.push(result);
+          }
+        }
       }
     }));
 
@@ -149,10 +142,36 @@ export class ProfileEventsComponent implements OnInit {
     this.router.navigate(['/applicant-list', event._id]);  
   }
 
-  openDialog(booking:Booking) {
-    this.bookingService.negotiate(booking.currentPrice, booking.eventEID.negotiable)
+  openNegotiationDialog(booking: Booking, user:string) {
+    this.bookingService.negotiate(booking, user)
       .subscribe((result) => {
-      
+        if(result.accepted == 'accepted') {
+          if(user == 'host') {
+            booking.hostApproved = true;
+            if(booking.artistApproved == true) {
+              booking.approved = true;
+              this.bookingService.acceptBooking(booking).then(() => this.getEvents());
+            }
+          } else {
+            booking.artistApproved = true;
+            if(booking.hostApproved == true) {
+              booking.approved = true;
+              this.bookingService.acceptBooking(booking).then(() => this.getEvents());
+            }
+          }
+        } else if(result.accepted == 'new') {
+          if(user == 'host'){
+            booking.hostApproved = true;
+            booking.artistApproved = false;
+            this.bookingService.acceptBooking(booking).then(() => this.getEvents());
+          } else {
+            booking.hostApproved = false;
+            booking.artistApproved = true;
+            this.bookingService.acceptBooking(booking).then(() => this.getEvents());
+          }
+        } else if(result.accepted == 'cancel' || result.accepted == 'declined') {
+          this.bookingService.declineBooking(booking).then(() => this.getEvents());
+        }
       });
   }
 

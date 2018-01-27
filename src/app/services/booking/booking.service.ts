@@ -22,12 +22,12 @@ export class BookingService {
 
     constructor(private http: Http, private dialog: MatDialog) { }
 
-    public negotiate(currentPrice: number, negotiable: boolean): Observable<any> {
+    public negotiate(booking: Booking, user: string): Observable<any> {
         let dialogRef: MatDialogRef<NegotiateDialogComponent>;
         dialogRef = this.dialog.open(NegotiateDialogComponent, {
             width: '380px',
             disableClose: true,
-            data: {currentPrice, negotiable}
+            data: {booking, user}
         });
         return dialogRef.afterClosed();
     }
@@ -35,13 +35,10 @@ export class BookingService {
     // post("/api/events/create")
     public createBooking(newBooking: Booking): Promise<Booking> {
         const current = this.connection + '/create';
-        console.log(newBooking)
         return this.http.post(current, { booking: newBooking }, { headers: this.headers })
             .toPromise()
             .then((response: Response) => {
                 const data = response.json();
-                console.log("response data")
-                console.log(response)
                 const booking = data.booking as Booking;
                 return booking
             })
@@ -94,7 +91,6 @@ export class BookingService {
         return this.http.put(current, { headers: this.headers })
             .toPromise()
             .then((response: Response) => {
-                console.log(response)
                 const data = response.json();
                 const booking = data.booking as Booking;
                 return booking
