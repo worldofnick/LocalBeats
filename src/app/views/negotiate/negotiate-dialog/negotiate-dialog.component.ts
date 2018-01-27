@@ -9,9 +9,11 @@ import { Validators, FormGroup, FormControl, FormArray, FormBuilder } from '@ang
 })
 export class NegotiateDialogComponent implements OnInit {
   negotiationForm: FormGroup;
-  confirmationButton: string;
   buttonText: string = "Accept";
   initialPrice: number;
+  negotiable: boolean;
+  title: string = "Offer";
+  subtext: string = "Please enter your bid or accept the current price:";
 
   constructor(
     public dialogRef: MatDialogRef<NegotiateDialogComponent>,
@@ -20,19 +22,32 @@ export class NegotiateDialogComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.negotiable = this.data.negotiable;
     this.negotiationForm = this.formBuilder.group({
-      price: new FormControl(this.data.currentPrice, Validators.required)
+      price: new FormControl({value: this.data.currentPrice, disabled: !this.negotiable}, Validators.required)
     });
     this.initialPrice = this.data.currentPrice;
+
+    if(this.negotiable) {
+      this.title = "Offer";
+      this.subtext = "Please enter your bid or accept the current price:"
+    } else {
+      this.title = "Offer";
+      this.subtext = "Are you sure you want to apply?"
+    }
 
   }
 
   accept() {
-    this.dialogRef.close({accepted: true, price: this.negotiationForm.get('price').value});
+    if(this.negotiationForm.get('price').value != this.initialPrice) {
+      this.dialogRef.close({accepted: 'new', price: this.negotiationForm.get('price').value});
+    } else {
+      this.dialogRef.close({accepted: 'accepted', price: this.negotiationForm.get('price').value});
+    }
   }
 
   decline() {
-    this.dialogRef.close({accepted: false});
+    this.dialogRef.close({accepted: 'declined'});
   }
 
   onPriceChange(){

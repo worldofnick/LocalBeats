@@ -150,7 +150,7 @@ export class ProfileEventsComponent implements OnInit {
   }
 
   openDialog(booking:Booking) {
-    this.bookingService.negotiate(booking.currentPrice)
+    this.bookingService.negotiate(booking.currentPrice, booking.eventEID.negotiable)
       .subscribe((result) => {
       
       });

@@ -24,8 +24,7 @@
         <mat-card-actions>
           <button *ngIf="isCurrentUser  && userService.isAuthenticated()" (click)="onEditEvent()" mat-button>Edit Event</button>
           <button *ngIf="isCurrentUser  && userService.isAuthenticated()" (click)="onDeleteEvent()" mat-button>Delete Event</button>
-          <button *ngIf="!isCurrentUser  && userService.isAuthenticated() && !hasApplied && !this.model.negotiable" (click)="onApplyEvent()" mat-button>Apply to Event</button>
-          <button *ngIf="!isCurrentUser  && userService.isAuthenticated() && !hasApplied && this.model.negotiable" (click)="openNegotiationDialog()" mat-button>Bid</button>
+          <button *ngIf="!isCurrentUser  && userService.isAuthenticated() && !hasApplied" (click)="openNegotiationDialog()" mat-button>{{buttonText}}</button>
           <button *ngIf="!isCurrentUser  && userService.isAuthenticated() && hasApplied " (click)="onCancelApp()" mat-button>Cancel Application</button>
           <button *ngIf="isCurrentUser  && userService.isAuthenticated()" (click)="onViewApplicants()" mat-button>View Applicants</button>
         </mat-card-actions>

@@ -30,6 +30,7 @@ export class EventSingletonComponent implements OnInit {
   public dateString:any;
   deleteStatus:Number;
   EID:any;
+  buttonText: string = "Apply";
 
   constructor(private eventService: EventService, 
               private userService: UserService,
@@ -47,6 +48,11 @@ export class EventSingletonComponent implements OnInit {
 
     this.eventService.getEventByEID(this.EID).then((event: Event) => {
       this.model = event;
+      if(this.model.negotiable) {
+        this.buttonText = "Bid";
+      } else {
+        this.buttonText = "Apply";
+      }
       console.log(this.model);
       // this.dateString = this.model.fromDate.toDateString as string;
       // this.dateString =this.datepipe.transform(this.model.fromDate, 'MM-dd-yyyy');      // this.dateInBar = this.model.fromDate
@@ -104,9 +110,6 @@ export class EventSingletonComponent implements OnInit {
   }
 
   onEditEvent(){
-    console.log("editing event");
-    console.log(this.model._id);
-
     this.router.navigate(['/events', 'update', this.model._id]); //this will go to the page about the event
     
   }
@@ -126,9 +129,9 @@ export class EventSingletonComponent implements OnInit {
   }
 
   openNegotiationDialog() {
-    this.bookingService.negotiate(this.model.fixedPrice)
+    this.bookingService.negotiate(this.model.fixedPrice, this.model.negotiable)
       .subscribe((result) => {
-        if(result.accepted) {
+        if(result.accepted == 'accepted' || result.accepted == 'new') {
           const booking = new Booking(undefined, 'artist-apply', this.model.hostUser, this.userService.user, this.model, false, false, true, false, result.price)
           this.bookingService.createBooking(booking).then((booking: Booking) => {
             this.hasApplied = true;
