@@ -52,6 +52,7 @@
     "ngx-quill": "2.0.4",
     "perfect-scrollbar": "0.7.1",
     "rxjs": "5.5.2",
+    "sendbird": "^3.0.51",
     "socket.io": "^2.0.4",
     "spotify-web-api-node": "^2.5.0",
     "zone.js": "0.8.18"

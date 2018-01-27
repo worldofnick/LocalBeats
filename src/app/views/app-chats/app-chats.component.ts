@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { Subscription } from "rxjs/Subscription";
 import { MediaChange, ObservableMedia } from "@angular/flex-layout";
 import { MatSidenav, MatDialog } from '@angular/material';
+import * as SendBird from 'SendBird';
 
 @Component({
   selector: 'app-chats',
@@ -9,6 +10,7 @@ import { MatSidenav, MatDialog } from '@angular/material';
   styleUrls: ['./app-chats.component.css']
 })
 export class AppChatsComponent implements OnInit {
+
   isMobile;
   screenSizeWatcher: Subscription;
   isSidenavOpen: Boolean = true;
