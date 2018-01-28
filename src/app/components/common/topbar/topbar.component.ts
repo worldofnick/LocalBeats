@@ -79,6 +79,7 @@ export class TopbarComponent implements OnInit {
     });
 
     this.notificationService.connect();
+    this.notificationService.sendToServer();
   }
 
   private setCurrentPosition() {

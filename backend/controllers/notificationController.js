@@ -32,3 +32,16 @@ exports.sendNotificationToUser = function (req, res) {
         }
     });
 };
+
+// app.get("/api/events/:eid",
+exports.getNotificationsCount = function (req, res) {
+    // Notifications.findById(req.params.eid).populate('hostUser').populate('performerUser').exec(function (err, event) {
+    //     if (err) {
+    //         return res.status(500).send("Failed to get event");
+    //     } else {
+    //         return res.status(200).send({ "event": event });
+    //     }
+    // });
+    return 7;
+};
+

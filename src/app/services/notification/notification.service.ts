@@ -20,19 +20,19 @@ export class NotificationService {
 
     // Our socket connection
     private socket:socketIO.socket;
+    id:any;
 
     constructor(private http: Http) { }
 
     connect(){
         const io = socketIO('http://localhost:8080');
         io.on('fromServer', msg=>console.log(msg));
+        
     }
 
     sendToServer(){
         const io = socketIO('http://localhost:8080');
-        io.on('connection', socket=>{
-            console.log
-        })
+        io.emit('fromClient', 'getNotifications');
     }
     // connect(): Rx.Subject<Notification> {
 

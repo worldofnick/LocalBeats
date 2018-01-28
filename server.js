@@ -15,7 +15,7 @@ var Bookings = require('./backend/models/bookingsModel');
 var Notification = require('./backend/models/notificationModel');
 var io = require('socket.io')(server);
 
-
+const notificationController = require('./backend/controllers/notificationController');
 var distDir = __dirname + "/dist/";
 app.use(express.static(distDir));           // Create link to Angular build directory
 
@@ -54,6 +54,13 @@ io.on('connection', socket=>{
   console.log(socket.id)
 
   socket.emit('fromServer', 'hello from server!!!!!!!!')
+
+  socket.on('fromClient', () => {
+    var number = notificationController.getNotificationsCount();
+    console.log("getting number of notifs");
+    console.log(number);
+    socket.emit('fromServer', number);
+  });
 })
 
 // io.on('connection', function(socket){
