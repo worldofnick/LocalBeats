@@ -45,7 +45,7 @@ export class ProfileComponent implements OnInit {
     }
     this.bookingService.getUserBookings(this.userService.user, 'host').then((bookings: any[]) => {
       for (let result of bookings) {
-        if (result.booking.performerUser._id == this.userService._id && !this.onOwnProfile) {
+        if (result.booking.performerUser._id == this.userService.user._id && !this.onOwnProfile) {
           this.requested = true;
         } else {
           this.requested = false;
