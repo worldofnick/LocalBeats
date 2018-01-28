@@ -22,7 +22,7 @@ app.use(express.static(distDir));           // Create link to Angular build dire
 // =================================================================
 // Configuration
 // =================================================================
-var port = process.env.PORT || 8080;        // used to create, sign, and verify tokens
+var port = process.env.PORT || 8080;
 mongoose.Promise = global.Promise;
 mongoose.connect(config.database);          // connect to database
 app.set('superSecret', config.secret);      // secret variable
@@ -64,7 +64,7 @@ io.on('connection', socket=>{
 //     // socket.broadcast.emit('new notification',data);
 //     console.log("user connected");
 //   });
-  
+
 //   socket.on('userConnected', function(data) {
 //     console.log("user connected");
 //     // var uid = socket.request.handshakeData.uid // This might work.. need to look at the data
