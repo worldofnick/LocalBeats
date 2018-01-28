@@ -31,46 +31,30 @@ export class NotificationService {
     }
 
     sendToServer(){
-        const io = socketIO('http://localhost:8080');
-        io.emit('fromClient', 'getNotifications');
+       
     }
-    // connect(): Rx.Subject<Notification> {
-
-    //     console.log("calling connect");
-    //     // Initalize our socket
-
-    //     this.socket = io('http://localhost:8080');
 
 
-    //     // Send up user uid
-    //     let uid = "help";
-    //     this.socket.emit('connection', uid);
+    public getNotificationsCountForUser(id: any): Promise<Number>{
 
-    //     this.socket.emit('userConnect', uid);
+        const io = socketIO('http://localhost:8080');
+        io.emit('notificationsCount', id);
 
+        
 
-    //     // We define our observable which will observe any incoming notifications from our server
-    //     let observable = new Observable(observer => {
-    //         this.socket.on('notification', (data) => {
-    //             console.log("Received notification from Websocket Server");
-    //             // observer.next(data);
-    //         })
-    //         return () => {
-    //             // this.socket.disconnect();
-    //         }
-    //     });
-
-    //     // Used to send to the server, probably won't use, we'll see.
-    //     let observer = {
-    //         next: (data: Object) => {
-    //             this.socket.emit('message', JSON.stringify(data));
-    //         },
-    //     };
-
-    //     return Rx.Subject.create(observer, observable);
-    // }
-
-
+        return new Promise((resolve, reject) => {
+            io.on('fromServer', numberNotifs=>{
+                console.log("returning number of notifs from notifcation service")
+                console.log(numberNotifs);
+                // if (result.status === Office.AsyncResultStatus.Succeeded) {
+                    resolve(numberNotifs)
+                // } else {
+                //     reject(result.error);
+                // }
+            });
+        })
+        
+    }
 
     public getNotificationsForUser(user: User): Promise<any[]> {
 

@@ -53,9 +53,11 @@ io.on('connection', socket=>{
   console.log("connection from id:")
   console.log(socket.id)
 
-  socket.emit('fromServer', 'hello from server!!!!!!!!')
+  // socket.emit('fromServer', 'hello from server!!!!!!!!')
 
-  socket.on('fromClient', () => {
+  socket.on('notificationsCount', userID => {
+    console.log("user id");
+    console.log
     var number = notificationController.getNotificationsCount();
     console.log("getting number of notifs");
     console.log(number);
