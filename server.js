@@ -13,9 +13,7 @@ const User          = require('./backend/models/userModel');  // get our mongoos
 const Events        = require('./backend/models/eventsModel');  // get our mongoose model
 const Bookings      = require('./backend/models/bookingsModel');
 const Notification  = require('./backend/models/notificationModel');
-const io            = require('socket.io')(server);
 const async         = require('async')
-
 
 var distDir = __dirname + "/dist/";
 app.use(express.static(distDir));           // Create link to Angular build directory
@@ -41,8 +39,8 @@ app.use(morgan('dev'));
 // });
 
 // var server = http.createServer(app);
-var server = require('http').Server(app);
-var io = require('socket.io')(server);
+const server = require('http').Server(app);
+const io     = require('socket.io')(server);
 server.listen(8080);
 //
 
@@ -101,7 +99,6 @@ eventsRoutes(app);
 bookingsRoutes(app);
 spotifyRoutes(app);
 notificationRoutes(app);
-
 
 // basic route (http://localhost:8080)
 app.get('/', function(req, res) {
