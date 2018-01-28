@@ -45,7 +45,7 @@ export class ProfileComponent implements OnInit {
     }
     this.bookingService.getUserBookings(this.userService.user, 'host').then((bookings: any[]) => {
       for (let result of bookings) {
-        if (result.booking.performerUser._id == this.user._id && !this.onOwnProfile) {
+        if (result.booking.performerUser._id == this.userService._id && !this.onOwnProfile) {
           this.requested = true;
         } else {
           this.requested = false;
@@ -66,19 +66,19 @@ export class ProfileComponent implements OnInit {
 
 
   onRequestArtist(ID:string){
-    // this.router.navigate(['/pick-event', this.user._id]);
+    // this.router.navigate(['/pick-event', this.userService._id]);
     // this.clickedRequestArtist
   }
 
   onCancelArtist(ID:string) {
-    // this.router.navigate(['/pick-event', this.user._id]);
+    // this.router.navigate(['/pick-event', this.userService._id]);
   }
 
 
 
   ngOnInit() {
     this.activeView = this.route.snapshot.params['view']
-    this.user = this.userService.user;
+    //this.user = this.userService.user;
 
     //snapshot params returns a javascript object. index into it with the property field to get a property.
     this.userID = {
@@ -87,7 +87,7 @@ export class ProfileComponent implements OnInit {
 
     if (this.userID["id"] == null) {
       this.onOwnProfile = true;
-      this.user = this.userService.user;
+      //this.user = this.userService.user;
     } else {
       //on another perons profile.
 
@@ -95,7 +95,7 @@ export class ProfileComponent implements OnInit {
       let ID: String = this.userID["id"];
 
       this.userService.getUserByID(ID).then((gottenUser: User) => {
-        this.user = gottenUser;
+        this.userService.user = gottenUser;
       }).then(() => this.hasRequested());
     }
   }
