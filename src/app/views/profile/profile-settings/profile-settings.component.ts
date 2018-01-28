@@ -6,6 +6,7 @@ import { User } from '../../../models/user';
 import { ActivatedRoute } from "@angular/router";
 import { NgForm } from '@angular/forms/src/directives/ng_form';
 import { ImgurService } from 'app/services/image/imgur.service';
+import { MatTabChangeEvent } from '@angular/material';
 
 @Component({
   selector: 'app-profile-settings',
@@ -22,7 +23,7 @@ export class ProfileSettingsComponent implements OnInit {
 
 
   ngOnInit() {
-    this.user = this.userService.user;
+    this.user = Object.assign({}, this.userService.user); // deep copy
   }
 
   public fileOverBase(e: any): void {
@@ -32,12 +33,15 @@ export class ProfileSettingsComponent implements OnInit {
   onEditProfile(form: NgForm){
     console.log("sending \n" );
     console.log(this.user);
-
     this.userService.onEditProfile(this.user).then((user: User) => {
       this.user = user;
-      this.userService.user = this.user;
-      // this.router.navigate(['/profile']);
+      this.userService.user = Object.assign({}, this.user); // deep copy
+      //this.router.navigate(['/profile']);
     });
+  }
+
+  onTabChange(event: MatTabChangeEvent) {
+    this.user = Object.assign({}, this.userService.user);
   }
 
   onChange(event: EventTarget) {
@@ -54,7 +58,7 @@ export class ProfileSettingsComponent implements OnInit {
           // update the image view
           this.userService.onEditProfile(this.user).then((user: User) => {
             this.user = user;
-            this.userService.user = this.user;
+            this.userService.user = Object.assign({}, this.user); // deep copy
             this.progressBar.mode = 'determinate';
             // this.router.navigate(['/profile']);
           });
