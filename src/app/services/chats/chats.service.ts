@@ -1,12 +1,17 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import * as io from 'socket.io-client';
 
 import { User } from '../../models/user';
 import { ChatContactListUser } from '../../models/chatContactListUser';
 
 import { UserService } from '../../services/auth/user.service';
+
+const httpOptions = {
+  headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+};
 
 @Injectable()
 export class ChatsService {
@@ -15,38 +20,11 @@ export class ChatsService {
   private socket = io(this.url);
   private loggedInUser: User = new User();
 
-  constructor(private _userService: UserService) { }
+  constructor(private _userService: UserService, private http: HttpClient) { }
 
   getConnectionUsers() {
-    let users: ChatContactListUser[] = new Array();
-    let user1 = new ChatContactListUser();
-    let user2 = new ChatContactListUser();
-    let user3 = new ChatContactListUser();
-
-    this._userService.getUserByID('5a6f136cd9847106668772c1').then((gottenUser: User) => {
-      user1.name = gottenUser.firstName + ' ' + gottenUser.lastName;
-      user1.photo = gottenUser.profilePicUrl;
-      user1.isOnline = true;  // TODO: gottenUser.isOnline
-      user1.lastMsg = 'Catch em all!';
-      users.push(user1);
-    });
-    this._userService.getUserByID('5a6f1348d9847106668772c0').then((gottenUser: User) => {
-      user2.name = gottenUser.firstName + ' ' + gottenUser.lastName;
-      user2.photo = gottenUser.profilePicUrl;
-      user2.isOnline = true;  // TODO: gottenUser.isOnline
-      user2.lastMsg = 'Catch em all!';
-      users.push(user2);
-    });
-    this._userService.getUserByID('5a6cf410a502610f0771a16c').then((gottenUser: User) => {
-      user3.name = gottenUser.firstName + ' ' + gottenUser.lastName;
-      user3.photo = gottenUser.profilePicUrl;
-      user3.isOnline = true;  // TODO: gottenUser.isOnline
-      user3.lastMsg = 'Catch em all!';
-      users.push(user3);
-    });
-
-    console.log('Users:', users);
-    return users;
+    return this.http.get(this.url + '/api/users/');
+    
     //TODO: can just update the user model to have these fields
     // 
     // return [{

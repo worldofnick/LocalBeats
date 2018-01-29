@@ -5,7 +5,7 @@
       <!-- Left side topbar -->
       <mat-toolbar color="primary" class="chat-sidebar-toolbar">
         <a href="" class="toolbar-avatar online">
-          <img src="assets/images/face-3.jpg" alt="">
+          <img [src]="loggedInUser.profilePicUrl" alt="">
           <span class="status-dot"></span>
         </a>
       </mat-toolbar>
@@ -18,11 +18,12 @@
           mat-list-avatar 
           [ngClass]="{online: user.isOnline}"
           class="toolbar-avatar">
-            <img [src]="user.photo" alt="">
+            <img [src]="user.profilePicUrl" alt="">
             <span class="status-dot"></span>
           </a>
-          <h6 matLine>{{user.name}}</h6>
-          <p matLine class="text-muted">{{user.lastMsg}}</p>
+          <h6 matLine>{{user.firstName + ' ' + user.lastName}}</h6>
+          <!-- CHANGE TO INTERPOLATION ! <p matLine class="text-muted">{{user.lastMsg}}</p> -->
+          <p matLine class="text-muted">"Last Msg: Gotta catch em all!"</p>
         </mat-list-item>
         
       </mat-nav-list>
@@ -48,11 +49,11 @@
           <a 
           [ngClass]="{online: activeChatUser.isOnline}" 
           class="toolbar-avatar mr-1">
-            <img [src]="activeChatUser.photo" alt="">
+            <img [src]="activeChatUser.profilePicUrl" alt="">
             <span class="status-dot"></span>
           </a>
           <div fxLayout="column">
-            <h6 class="m-0 font-normal fz-1">{{activeChatUser.name}}</h6>
+            <h6 class="m-0 font-normal fz-1">{{activeChatUser.firstName + ' ' + activeChatUser.lastName}}</h6>
           </div>
         </div>
 
