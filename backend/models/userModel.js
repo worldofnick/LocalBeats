@@ -11,6 +11,7 @@ var UserSchema = new Schema({
     lastName      : {type: String, required: true},
     email         : {type: String, unique: true, lowercase: true, required: true},
     hashPassword  : {type: String, required: true},
+    stripeUserId  : {type: String}
     birthday      : {type: Date},
     joinDate      : {type: Date, default: Date.now},
     profilePicUrl : {type: String, default: 'https://www.vccircle.com/wp-content/uploads/2017/03/default-profile.png'},
