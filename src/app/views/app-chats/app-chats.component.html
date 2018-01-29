@@ -150,12 +150,12 @@
       <!-- Input box and send button -->
       <div class="chat-input-actions" fxLayout="row">
         <mat-form-field class="full-width mr-1">
-          <input
+          <input [(ngModel)]="messageEntered"
           matInput
           placeholder="Type your message"
           value="">
         </mat-form-field>
-        <button mat-fab color="primary"><mat-icon>send</mat-icon></button>
+        <button mat-fab color="primary" (click)="sendMessageClicked()"><mat-icon>send</mat-icon></button>
       </div>
 
     </div>

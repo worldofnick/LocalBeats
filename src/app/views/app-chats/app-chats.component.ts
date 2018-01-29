@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { Subscription } from "rxjs/Subscription";
 import { MediaChange, ObservableMedia } from "@angular/flex-layout";
 import { MatSidenav, MatDialog } from '@angular/material';
+import { ChatsService } from 'app/services/chats/chats.service';
 
 @Component({
   selector: 'app-chats',
@@ -13,6 +14,8 @@ export class AppChatsComponent implements OnInit {
   screenSizeWatcher: Subscription;
   isSidenavOpen: Boolean = true;
   @ViewChild(MatSidenav) private sideNave: MatSidenav;
+
+  messageEntered;
 
   activeChatUser = {
     name: 'Gevorg Spartak',
@@ -47,7 +50,7 @@ export class AppChatsComponent implements OnInit {
     isOnline: true,
     lastMsg: 'We\'ll talk later'
   }]
-  constructor(private media: ObservableMedia) { }
+  constructor(private media: ObservableMedia, private _chatsService: ChatsService) { }
 
   ngOnInit() {
     this.chatSideBarInit();
@@ -70,6 +73,18 @@ export class AppChatsComponent implements OnInit {
     this.screenSizeWatcher = this.media.subscribe((change: MediaChange) => {
       this.isMobile = (change.mqAlias == 'xs') || (change.mqAlias == 'sm');
       this.updateSidenav();
+    });
+  }
+
+  public connection;
+
+  sendMessageClicked() {
+    console.log('User entered the message: ', this.messageEntered);
+    this._chatsService.sendMessage(this.messageEntered);
+    this.messageEntered = '';
+
+    this.connection = this._chatsService.getServerMsgAcknowledge().subscribe(message => {
+      console.log('Acknowledge message from server : ', message);
     });
   }
 }
