@@ -19,14 +19,15 @@ export class NotificationService {
     notifications: Notification[];
 
     // Our socket connection
-    private socket:socketIO.socket;
+    // socket:any;
+    io = socketIO('http://localhost:8080');
     id:any;
 
     constructor(private http: Http) { }
 
     connect(){
-        const io = socketIO('http://localhost:8080');
-        io.on('fromServer', msg=>console.log(msg));
+        // const io = socketIO('http://localhost:8080');
+        // this.io.on('fromServer', msg=>console.log(msg));
         
     }
 
@@ -37,13 +38,13 @@ export class NotificationService {
 
     public getNotificationsCountForUser(id: any): Promise<Number>{
 
-        const io = socketIO('http://localhost:8080');
-        io.emit('notificationsCount', id);
+        // const io = socketIO('http://localhost:8080');
+        this.io.emit('notificationsCount', id);
 
         
 
         return new Promise((resolve, reject) => {
-            io.on('fromServer', numberNotifs=>{
+            this.io.on('fromServer', numberNotifs=>{
                 console.log("returning number of notifs from notifcation service")
                 console.log(numberNotifs);
                 // if (result.status === Office.AsyncResultStatus.Succeeded) {

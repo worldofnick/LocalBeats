@@ -10,7 +10,7 @@ import * as domHelper from '../../../helpers/dom.helper';
 import { ThemeService } from '../../../services/theme/theme.service';
 import { UserService } from '../../../services/auth/user.service';
 import { SearchService } from '../../../services/search/search.service';
-// import { Socket } from 'socket.io'
+import * as socketIO from 'socket.io-client';
 import { NotificationService } from '../../../services/notification/notification.service';
 import { SearchTerms, Location } from '../../../models/search';
 import { User } from '../../../models/user';
@@ -24,7 +24,7 @@ import { Event } from '../../../models/event';
 export class TopbarComponent implements OnInit {
   searchForm: FormGroup;
 
-  numNotifications:any = 0;
+  numNotifications: any = 0;
   isSearchOpen: boolean = false;
   clickedSearch: boolean = false;
 
@@ -46,6 +46,7 @@ export class TopbarComponent implements OnInit {
   longitude: number;
   //searchControl: FormControl;
   zoom: number;
+  io:any;
 
   constructor(private formBuilder: FormBuilder,
     private userService: UserService,
@@ -54,12 +55,19 @@ export class TopbarComponent implements OnInit {
     private router: Router,
     private mapsAPILoader: MapsAPILoader,
     private ngZone: NgZone,
-    private changeDetector: ChangeDetectorRef) {
+    private changeDetector: ChangeDetectorRef,
+    ) {
   }
 
   ngOnInit() {
     domHelper.toggleClass(document.body, 'collapsed-menu');
 
+
+    this.notificationService.io.on('notificationCount', count=>{
+      console.log(count)
+      this.numNotifications = count;
+    });
+    
     //set google maps defaults
     this.zoom = 4;
     this.latitude = 39.8282;
@@ -78,6 +86,10 @@ export class TopbarComponent implements OnInit {
       location: new FormControl()
     });
 
+
+  }
+
+  startSocket() {
     // this.notificationService.connect();
     this.notificationService.getNotificationsCountForUser(555).then((num) => {
       console.log(num);
@@ -85,120 +97,122 @@ export class TopbarComponent implements OnInit {
       console.log("printing number of notifs");
       console.log(this.numNotifications);
     });
-    // this.notificationService.getNotificationsCountForUser(555)
+  }
 
-    }
 
   private setCurrentPosition() {
-        if("geolocation" in navigator) {
-          navigator.geolocation.getCurrentPosition((position) => {
-            this.latitude = position.coords.latitude;
-            this.longitude = position.coords.longitude;
-            this.zoom = 12;
-          });
-        }
-      }
+    if ("geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        this.latitude = position.coords.latitude;
+        this.longitude = position.coords.longitude;
+        this.zoom = 12;
+      });
+    }
+  }
+
+
 
   logout() {
-        this.userService.logout();
-        this.router.navigate(['/']);
-      }
+    this.userService.logout();
+    this.router.navigate(['/']);
+  }
 
   clickedInsideSearch() {
-        this.clickedSearch = true;
-        this.isSearchOpen = true;
-        this.changeDetector.detectChanges();
+    this.clickedSearch = true;
+    this.isSearchOpen = true;
+    this.changeDetector.detectChanges();
 
-        //load Places Autocomplete
-        this.mapsAPILoader.load().then(() => {
-          let autocomplete = new google.maps.places.Autocomplete(this.searchElementRef.nativeElement, {
-            types: ["(cities)"]
-          });
-          autocomplete.addListener("place_changed", () => {
-            this.ngZone.run(() => {
-              //get the place result
-              let place: google.maps.places.PlaceResult = autocomplete.getPlace();
-              // place.address_components
-              // place.formatted_address
-              this.searchForm.setControl('location', new FormControl(place.formatted_address))
-              //verify result
-              if (place.geometry === undefined || place.geometry === null) {
-                return;
-              }
-              //set latitude, longitude and zoom
-              this.latitude = place.geometry.location.lat();
-              this.longitude = place.geometry.location.lng();
-              this.zoom = 12;
-            });
-          });
+    //load Places Autocomplete
+    this.mapsAPILoader.load().then(() => {
+      let autocomplete = new google.maps.places.Autocomplete(this.searchElementRef.nativeElement, {
+        types: ["(cities)"]
+      });
+      autocomplete.addListener("place_changed", () => {
+        this.ngZone.run(() => {
+          //get the place result
+          let place: google.maps.places.PlaceResult = autocomplete.getPlace();
+          // place.address_components
+          // place.formatted_address
+          this.searchForm.setControl('location', new FormControl(place.formatted_address))
+          //verify result
+          if (place.geometry === undefined || place.geometry === null) {
+            return;
+          }
+          //set latitude, longitude and zoom
+          this.latitude = place.geometry.location.lat();
+          this.longitude = place.geometry.location.lng();
+          this.zoom = 12;
         });
-      }
+      });
+    });
+  }
 
   clickedOutsideSearch() {
-        if(this.isSearchOpen && !this.clickedSearch) {
-          this.isSearchOpen = false;
-        } else {
-          this.clickedSearch = false;
-        }
-      }
+    if (this.isSearchOpen && !this.clickedSearch) {
+      this.isSearchOpen = false;
+    } else {
+      this.clickedSearch = false;
+    }
+  }
+
 
   submit() {
-        // Set location for submission
-        if(this.longitude != null) {
-          this.currentSearch.location = {
-            longitude: this.longitude,
-            latitude: this.latitude
-          };
-        }
+    // Set location for submission
+    if (this.longitude != null) {
+      this.currentSearch.location = {
+        longitude: this.longitude,
+        latitude: this.latitude
+      };
+    }
     // Set search type
     this.currentSearch.searchType = this.searchForm.get('type').value;
-        // Set text
-        this.currentSearch.text = this.searchForm.get('text').value;
-        console.log(typeof (this.currentSearch.text))
+    // Set text
+    this.currentSearch.text = this.searchForm.get('text').value;
+    console.log(typeof (this.currentSearch.text))
     // Set genre
     const genres = <FormArray>this.searchForm.get('genres') as FormArray;
-        if(genres.length == 0 && this.currentSearch.searchType == 'Musician') {
-          this.currentSearch.genre = 'All Genres';
-        } else {
-          this.currentSearch.genre = 'All Events'
-        }
+    if (genres.length == 0 && this.currentSearch.searchType == 'Musician') {
+      this.currentSearch.genre = 'All Genres';
+    } else {
+      this.currentSearch.genre = 'All Events'
+    }
 
-    if(this.currentSearch.searchType === 'Musician') {
-          this.searchService.userSearch(this.currentSearch).then((users: User[]) => {
-            this.results = users;
-            this.searchService.changeResult(this.results, this.currentSearch.searchType);
-            console.log(this.results);
-            this.router.navigate(['/search'])
-          });
-        } else {
-          this.searchService.eventSearch(this.currentSearch).then((events: Event[]) => {
-            this.results = events;
-            this.searchService.changeResult(this.results, this.currentSearch.searchType);
-            console.log(this.results)
-            this.router.navigate(['/search'])
-          });
-        }
-      }
+    if (this.currentSearch.searchType === 'Musician') {
+      this.searchService.userSearch(this.currentSearch).then((users: User[]) => {
+        this.results = users;
+        this.searchService.changeResult(this.results, this.currentSearch.searchType);
+        console.log(this.results);
+        this.router.navigate(['/search'])
+      });
+    } else {
+      this.searchService.eventSearch(this.currentSearch).then((events: Event[]) => {
+        this.results = events;
+        this.searchService.changeResult(this.results, this.currentSearch.searchType);
+        console.log(this.results)
+        this.router.navigate(['/search'])
+      });
+    }
+  }
 
   onPickingGenre(event) {
-        const genres = <FormArray>this.searchForm.get('genres') as FormArray;
+    const genres = <FormArray>this.searchForm.get('genres') as FormArray;
 
-        if(event.checked) {
-          event.source.value.checked = true;
-          genres.push(new FormControl(event.source.value))
-        } else {
-          event.source.value.checked = false;
-          const i = genres.controls.findIndex(x => x.value === event.source.value);
-          genres.removeAt(i);
-        }
-      }
+    if (event.checked) {
+      event.source.value.checked = true;
+      genres.push(new FormControl(event.source.value))
+    } else {
+      event.source.value.checked = false;
+      const i = genres.controls.findIndex(x => x.value === event.source.value);
+      genres.removeAt(i);
+    }
+  }
 
   onChange() {
-        const genres = <FormArray>this.searchForm.get('genres') as FormArray;
-        while(genres.length !== 0) {
-          genres.removeAt(0)
-        }
-    for(let i = 0; i< this.genres.length; i++) {
+    const genres = <FormArray>this.searchForm.get('genres') as FormArray;
+    while (genres.length !== 0) {
+      genres.removeAt(0)
+    }
+    for (let i = 0; i < this.genres.length; i++) {
       this.genres[i].checked = false;
     }
     this.results = null;

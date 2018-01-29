@@ -4,6 +4,11 @@ import { Validators, FormGroup, FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { UserService } from '../../services/auth/user.service';
 import { User } from '../../models/user';
+import { NotificationService } from '../../services/notification/notification.service';
+
+import * as socketIO from 'socket.io-client';
+import { Notification } from 'app/models/notification';
+
 
 @Component({
   selector: 'app-auth',
@@ -16,7 +21,9 @@ export class AuthComponent implements OnInit {
   signinForm: FormGroup;
   user: User;
 
-  constructor(private userService: UserService, private router: Router) { }
+  constructor(private userService: UserService, 
+    private router: Router,
+  private notificationService: NotificationService) { }
 
   ngOnInit() {
     this.signinForm = new FormGroup({
@@ -47,6 +54,9 @@ export class AuthComponent implements OnInit {
 
     this.userService.signinUser(this.user).then((user: User) => {
       this.user = user;
+
+      this.notificationService.getNotificationsCountForUser(555);
+
       this.router.navigate(['/']);
     });
 

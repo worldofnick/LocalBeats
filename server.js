@@ -44,6 +44,7 @@ var server = require('http').Server(app);
 var io = require('socket.io')(server);
 server.listen(8080);
 //
+var nCount = 1;
 
 //set up socket
 
@@ -55,13 +56,15 @@ io.on('connection', socket=>{
 
   // socket.emit('fromServer', 'hello from server!!!!!!!!')
 
+  //get number of notifs for user
+  
   socket.on('notificationsCount', userID => {
     console.log("user id");
-    console.log
+    // console.log
     var number = notificationController.getNotificationsCount();
     console.log("getting number of notifs");
     console.log(number);
-    socket.emit('fromServer', number);
+    socket.emit('notificationCount', number);
   });
 })
 
