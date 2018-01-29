@@ -15,7 +15,7 @@ export class AppChatsComponent implements OnInit {
   isSidenavOpen: Boolean = true;
   @ViewChild(MatSidenav) private sideNave: MatSidenav;
 
-  messageEntered;
+  messageEntered: string;
 
   activeChatUser = {
     name: 'Gevorg Spartak',
@@ -80,11 +80,15 @@ export class AppChatsComponent implements OnInit {
 
   sendMessageClicked() {
     console.log('User entered the message: ', this.messageEntered);
-    this._chatsService.sendMessage(this.messageEntered);
-    this.messageEntered = '';
+    
+    // If the user entered non-blank message and hit send, communicate with server
+    if (this.messageEntered.trim().length > 0) {
+      this._chatsService.sendMessage(this.messageEntered);
+      this.messageEntered = '';
 
-    this.connection = this._chatsService.getServerMsgAcknowledge().subscribe(message => {
-      console.log('Acknowledge message from server : ', message);
-    });
+      this.connection = this._chatsService.getServerMsgAcknowledge().subscribe(message => {
+        console.log('Acknowledge message from server : ', message);
+      });
+    }
   }
 }

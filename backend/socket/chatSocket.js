@@ -13,7 +13,7 @@ module.exports = function (io) {
         // TODO: modularize the code into respective socket/*.js files
         socket.on('chat-message-sent', (message) => {
             console.log('\n=====\nReceived chat message:', message);
-            io.emit('acknowledge-chat-message', { type: 'acknowledge-chat-message', text: message });
+            socket.emit('acknowledge-chat-message', { type: 'acknowledge-chat-message', text: message });
         });
     });
 }
