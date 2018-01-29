@@ -33,7 +33,7 @@
 - Basic Landing Page and Authentication in Angular
 - Navigation Bar with Search and Filtering of Events/Musicians in Angular
 - Base Searching with Near You Google Maps functionality in Angular
-- Designed UI for Landing Page, Booking Pages, and Search Reults
+- Designed UI for Landing Page, Booking Pages, and Search Results
 - Create TypeScript models for User, Booking, and Search
 - Angular Services to interact with backend API
 - Design the logic and UI for creating, accepting, and declining a booking request.
@@ -52,18 +52,20 @@
 - Configure initial project setup
 - Get Project building and hosted on Heroku
 - Created models for Users, Events, Bookings, and Reviews
-- All backend work excluding authenitcation and Spotify and refactorization
+- All backend work excluding authentication and Spotify and refactorization
 - Backend routes for Events, Bookings, Searching, Users, Profile, and Reviews
-- Searching and filtering with filters, location, and other parmeters for users and events
-- Backend REST API for revewing a user
+- Searching and filtering with filters, location, and other parameters for users and events
+- Backend REST API for reviewing a user
 - Backend REST API for creating and editing an event and accepting/declining booking
-- Reviews model and serviews in Angular TypeScript
+- Reviews model and review in Angular TypeScript
+- Image Uploading
+- Payments frontend and backend
 
 ### Adam Rosenberg
-- Profile page and profile editing form for the frontend in Angular 
+- Profile page and profile editing form for the frontend in Angular
 - Frontend for the events page / create events / edit events
 - Integrated Spotify widget for frontend use
-- Create TypeScript models for Event, Profile, and Biiking
+- Create TypeScript models for Event, Profile, and Booking
 - Designed UI for Profile, Event, and Bookings
 - Angular Services to interact with backend API
 - Help Brandon develop and design the logic and UI for creating, accepting, and declining a booking request.
