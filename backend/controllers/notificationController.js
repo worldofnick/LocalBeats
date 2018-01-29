@@ -13,7 +13,7 @@ var config    = require('../../config.js');
 
 //getUserEventsByUID
 exports.getNotificationsForUser = function (req, res) {
-    Notifications.findById(req.params.id).populate('hostUser').populate('performerUser').exec(function (err, notifications) {
+    Users.findById(req.params.id).populate('hostUser').populate('performerUser').exec(function (err, notifications) {
         if (err) {
             return res.status(500).send("Failed to get notifications");
         } else {
@@ -25,11 +25,38 @@ exports.getNotificationsForUser = function (req, res) {
 
 // app.get("/api/events/:eid",
 exports.sendNotificationToUser = function (req, res) {
-    Notifications.findById(req.params.eid).populate('hostUser').populate('performerUser').exec(function (err, event) {
+    Users.findById(req.params.eid).populate('hostUser').populate('performerUser').exec(function (err, event) {
         if (err) {
             return res.status(500).send("Failed to get event");
         } else {
             return res.status(200).send({ "event": event });
+        }
+    });
+};
+
+exports.createEvent = function (req, res) {
+    var newEvent = new Events(req.body.event);
+
+    if (newEvent.eventPicUrl == null) {
+      newEvent.eventPicUrl = getDefaultImage(newEvent.eventType)
+    }
+
+    newEvent.save(function (err, event) {  // callback function with err and success value
+        if (err) {
+            return res.status(400).send({
+                message: err,
+                description: "Failed to create an event"
+            });
+        } else {
+            Events.findById(event._id).populate('hostUser').populate('performerUser').exec(function (err, fetchedEvent) {
+                if (err) {
+                    return res.status(500).send("Failed to create event");
+                } else {
+                    console.log("PRINTING NEW EVENT");
+                    console.log(fetchedEvent)
+                    return res.status(200).send({ "event": fetchedEvent });
+                }
+            });
         }
     });
 };

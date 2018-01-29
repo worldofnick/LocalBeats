@@ -39,28 +39,57 @@ export class NotificationService {
     }
 
 
-    public getNotificationsCountForUser(id: any): Promise<Number>{
+    public getNotificationsCountForUser(ID: any): Promise<Number>{
+        let userConnection: string = 'http://localhost:8080/api/users';
+        const current = userConnection + '/' + ID;
+        //console.log("getting: ");
+        //console.log(current);
+        return this.http.get(current)
+            .toPromise()
+            .then((response: Response) => {
+                const data = response.json();
+                // this.accessToken = data.token;
+                // console.log(this.accessToken)
+                let temp = data.user as User;
+                console.log("number of notifications")
+                console.log(temp.notifications.length);
+                let not1:Notification = new Notification;
+                not1.icon = "home"
+                not1.message = "hello world"
+                temp.notifications.push(not1);
+                temp.notifications.push(not1);
 
-        console.log("getting notifs count for user:")
-        console.log(id);
-        // const io = socketIO('http://localhost:8080');
-        this.io.emit('notificationsCount', id);
-
-        
-
-        return new Promise((resolve, reject) => {
-            this.io.on('fromServer', numberNotifs=>{
-                console.log("returning number of notifs from notifcation service")
-                console.log(numberNotifs);
-                // if (result.status === Office.AsyncResultStatus.Succeeded) {
-                    resolve(numberNotifs)
-                // } else {
-                //     reject(result.error);
-                // }
-            });
-        })
-        
+                this.io.emit('tellTopBar', temp.notifications.length)
+                return temp.notifications.length;
+            })
+            .catch(this.handleError);
     }
+
+
+
+
+    // public getNotificationsCountForUser(id: any): Promise<Number>{
+
+    //     console.log("getting notifs count for user:")
+    //     console.log(id);
+    //     // const io = socketIO('http://localhost:8080');
+    //     this.io.emit('notificationsCount', id);
+
+        
+
+    //     return new Promise((resolve, reject) => {
+    //         this.io.on('fromServer', numberNotifs=>{
+    //             console.log("returning number of notifs from notifcation service")
+    //             console.log(numberNotifs);
+    //             // if (result.status === Office.AsyncResultStatus.Succeeded) {
+    //                 resolve(numberNotifs)
+    //             // } else {
+    //             //     reject(result.error);
+    //             // }
+    //         });
+    //     })
+        
+    // }
 
     public getNotificationsForUser(id: any): Promise<any[]> {
 

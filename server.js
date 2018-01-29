@@ -58,33 +58,18 @@ io.on('connection', socket=>{
     socket.emit('notificationCount', number);
   });
 
+  socket.on('tellTopBar', numberOfNotifications =>{
+    console.log("got top bar msg, number")
+    console.log(numberOfNotifications);
+    socket.emit('notificationCount', numberOfNotifications);
+  })
+
   socket.on('notificationsForUser', userID => {
     // var notifications = notificationController.getNotificationsForUser(userID)
     // console.log(notifications);
     socket.emit('notifications', 'test,test,test,test');
   });
 })
-
-// io.on('connection', function(socket){
-//   console.log("user connected");
-
-
-//   socket.on('connection', socket => {
-//     // socket.broadcast.emit('new notification',data);
-//     console.log("user connected");
-//   });
-  
-//   socket.on('userConnected', function(data) {
-//     console.log("user connected");
-//     // var uid = socket.request.handshakeData.uid // This might work.. need to look at the data
-//     // Save the session with the uid
-//   });
-
-//   socket.on('notification', function(data) {
-//     console.log("notiicioant received");
-//     socket.broadcast.emit('new notification',data);
-//   });
-// });
 
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");

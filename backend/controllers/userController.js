@@ -34,7 +34,6 @@ exports.updateUserByID = function (req, res, next) {
     if (err) {
       return res.status(520).send({ message: "Error finding the user from this UID...", error: err });
     }
-
     user.hashPassword = undefined;
     if(req.body.user.spotifyID != undefined) {
       console.log("Spotify ID: " + req.body.user.spotifyID);
@@ -42,7 +41,6 @@ exports.updateUserByID = function (req, res, next) {
     }else {
       return res.status(200).send({ user: user });
     }
-
   });
 };
 

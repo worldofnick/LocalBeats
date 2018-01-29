@@ -2,19 +2,7 @@ var mongoose = require('mongoose');
 var bcrypt = require('bcrypt');
 var Schema = mongoose.Schema;
 
-/**
- * Notifiation Schema
- * 
- * public sender: User
-    public receiver:User
-    public event:Event
-    message: string
-    icon: string
-    sentTime: Date;
-    route: string[]
-    color: string
 
- */
 //TODO: add match() validator to email
 var NotificationSchema = new Schema({
     sender          : { type: Schema.Types.ObjectId, ref: 'User' },
