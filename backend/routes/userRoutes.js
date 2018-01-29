@@ -12,7 +12,8 @@ module.exports = function(app) {
 	app.route('/api/users/:uid')
 		.get(userHandlers.getUserByID)
 		.put(userHandlers.updateUserByID, spotifyHandlers.getFirstPlaylistByUIDAfterProfileUpdate)
-		.delete(userHandlers.deleteUserByID);
+		.delete(userHandlers.deleteUserByID)
+		.put(userHandlers.updateOnlineStatus);
 
 	app.route('/api/searchUsers')
 		.get(userHandlers.searchUsers);

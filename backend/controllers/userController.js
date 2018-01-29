@@ -46,6 +46,18 @@ exports.updateUserByID = function (req, res, next) {
   });
 };
 
+exports.updateOnlineStatus = function (req, res, next) {
+  User.findByIdAndUpdate(req.params.uid, req.body.user.isOnline, { new: true }, function (err, user) {
+    if (err) {
+      return res.status(520).send({ message: "Error finding the user from this UID...", error: err });
+    }
+
+    user.hashPassword = undefined;
+
+    return res.status(200).send({ user: user });
+  });
+};
+
 exports.deleteUserByID = function (req, res) {
   User.findByIdAndRemove(req.params.uid, function (err, user) {
     if (err) {

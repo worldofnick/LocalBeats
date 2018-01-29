@@ -3,6 +3,12 @@ import { Injectable } from '@angular/core';
 import { Http, Headers, RequestOptions, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import { User } from 'app/models/user';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+
+// For Angular 5 HttpClient Module
+const httpOptions = {
+    headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+};
 
 @Injectable()
 export class UserService {
@@ -16,7 +22,7 @@ export class UserService {
 
     private headers: Headers = new Headers({ 'Content-Type': 'application/json' });
 
-    constructor(private http: Http) { }
+    constructor(private http: Http, private _httpClient: HttpClient) { }
 
     // post("api/auth/passwordChange/:uid')
     public signupUser(newUser: User): Promise<User> {
@@ -29,9 +35,31 @@ export class UserService {
                 this.accessToken = data.token;
                 sessionStorage.setItem('token', JSON.stringify({ accessToken: this.accessToken }))
                 this.user = data.user as User;
-                return this.user
+                this.user.isOnline = true;
+
+                this.changeOnlineStatusTo(true);
+
+                return this.user;
             })
             .catch(this.handleError);
+    }
+
+    public changeOnlineStatusTo(bool: boolean) {
+        let body = {
+            "user": {
+                "isOnline": bool
+            }
+        };
+        // Set the isOnline status to false in the DB
+        console.log('URL: ', 'http://localhost:8080/api/users/' + this.user._id);
+        console.log('UID: ', this.user._id);
+        this._httpClient.put('http://localhost:8080/api/users/' + this.user._id, body, httpOptions).subscribe(data => {
+            console.log('DATA: ', data);
+        },
+            error => {
+                console.error('Error changing status!');
+            }
+        );
     }
 
     // post("/api/users/uid")
@@ -59,6 +87,7 @@ export class UserService {
                 sessionStorage.setItem('token', JSON.stringify({ accessToken: this.accessToken }))
                 this.user = data.user as User;
                 this.user.isOnline = true;
+                this.changeOnlineStatusTo(true);
                 return this.user
             })
             .catch(this.handleError);
@@ -113,8 +142,10 @@ export class UserService {
     }
 
     public logout() {
+
+        this.changeOnlineStatusTo(false);
+
         this.accessToken = null;
-        this.user.isOnline = false; //TODO: make a REST call to set to offline in DB...
         this.user = null;
         sessionStorage.clear();
     }
