@@ -21,7 +21,7 @@ export class ProfileComponent implements OnInit {
   requested: boolean = null;
   clickedRequestArtist:boolean = null;
 
-  clickedOverview = false;
+  clickedOverview = true;
 
   events:any[];
   requestedArtistEvents: any[] = [];

@@ -20,7 +20,7 @@
           <!-- check here if to see if on another profile and go to profile/id/overview -->
 
 
-          <mat-list-item (click)="clickedOverview = true">
+          <mat-list-item (click)="clickedOverview = true" [routerLink]="['/profile', 'overview']" routerLinkActive="list-item-active">
             <mat-icon>home</mat-icon>
             Overview
           </mat-list-item>
@@ -43,7 +43,7 @@
 
 
           <ng-template [ngIf]="this.onOwnProfile">
-            <mat-list-item [routerLink]="['/profile', 'events']" routerLinkActive="list-item-active">
+            <mat-list-item (click)="clickedOverview = false" [routerLink]="['/profile', 'events']" routerLinkActive="list-item-active">
               <mat-icon>events</mat-icon>
               My Events
             </mat-list-item>
