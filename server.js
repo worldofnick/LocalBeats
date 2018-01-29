@@ -7,14 +7,15 @@ const bodyParser  	= require('body-parser');
 const morgan      	= require('morgan');
 const mongoose    	= require('mongoose');
 const http          = require('http');
-const jwt           = require('jsonwebtoken');                // used to create, sign, and verify tokens
-const config        = require('./config');                    // get our config file
-const User          = require('./backend/models/userModel');  // get our mongoose model
-const Events        = require('./backend/models/eventsModel');  // get our mongoose model
-const Bookings      = require('./backend/models/bookingsModel');
-const Notification  = require('./backend/models/notificationModel');
 const async         = require('async');
 const socketIO      = require('socket.io');
+const jwt           = require('jsonwebtoken');                // used to create, sign, and verify tokens
+
+const config        = require('./config');                    // get the config file
+const User          = require('./backend/models/userModel');  
+const Events        = require('./backend/models/eventsModel');
+const Bookings      = require('./backend/models/bookingsModel');
+const Notification  = require('./backend/models/notificationModel');
 
 var distDir = __dirname + "/dist/";
 app.use(express.static(distDir));           // Create link to Angular build directory
@@ -43,24 +44,6 @@ server.listen(port, function () {
 });
 app.set('io', io);
 
-// Listen for connection and other events...
-
-// Default 'connection' event listerner
-io.on('connection', (socket) => {
-  console.log("Connection from Socket ID:",socket.id);
-  
-  // Default 'disconnect' event listerner
-  socket.on('disconnect', function(){
-    console.log('User disconnected at Socket ID:', socket.id);
-  });
-  
-  // TODO: modularize the code into respective socket/*.js files
-  socket.on('chat-message-sent', (message) => {
-    console.log('\n=====\nReceived chat message:', message);
-    io.emit('acknowledge-chat-message', { type: 'acknowledge-chat-message', text: message });
-  });
-});
-
 // =================================================================
 // Compatibility fix
 // =================================================================
@@ -72,7 +55,7 @@ app.use(function(req, res, next) {
 });
 
 // =================================================================
-// API Routes
+// API Routes and Socket Handlers
 // =================================================================
 
 var userRoutes            = require('./backend/routes/userRoutes.js');
@@ -88,7 +71,12 @@ bookingsRoutes(app);
 spotifyRoutes(app);
 notificationRoutes(app);
 
-// basic route (http://localhost:8080)
+var privateChatSocket     = require('./backend/socket/chatSocket.js');
+privateChatSocket(io);
+
+// =================================================================
+// Basic route (http://localhost:8080)
+// =================================================================
 app.get('/', function(req, res) {
   res.send('Welcome the EXPRESS Server! This API is at http://localhost:' + port + '/api');
 });
