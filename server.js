@@ -59,9 +59,13 @@ io.on('connection', socket=>{
   });
 
   socket.on('tellTopBar', numberOfNotifications =>{
-    console.log("got top bar msg, number")
-    console.log(numberOfNotifications);
     socket.emit('notificationCount', numberOfNotifications);
+  })
+
+  socket.on('tellNotificationPanel', notifications=>{
+    
+    console.log(notifications);
+    socket.emit('notifications', notifications)
   })
 
   socket.on('notificationsForUser', userID => {
