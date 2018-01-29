@@ -25,13 +25,19 @@ export class NotificationsComponent implements OnInit {
   ngOnInit
   () {
 
+    this.notificationService.io.on('notifications', notificationsList=>{
+      console.log(notificationsList)
+      this.notifications = notificationsList;
+    });
+    
 
-    if(this.userService.isAuthenticated()){
+    // if(this.userService.isAuthenticated()){
 
-      this.notificationService.getNotificationsForUser(this.userService.user).then((notificationsList: Notification[]) => {
-        this.notifications = notificationsList;
-      }); 
-    }
+    //   this.notificationService.getNotificationsForUser(this.userService.user).then((
+    //     notificationsList: Notification[]) => {
+    //     this.notifications = notificationsList;
+    //   }); 
+    // }
 
     this.router.events.subscribe((routeChange) => {
         if (routeChange instanceof NavigationEnd) {

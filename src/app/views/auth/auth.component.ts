@@ -54,9 +54,8 @@ export class AuthComponent implements OnInit {
 
     this.userService.signinUser(this.user).then((user: User) => {
       this.user = user;
-
-      this.notificationService.getNotificationsCountForUser(555);
-
+      this.notificationService.getNotificationsCountForUser(user._id);
+      this.notificationService.getNotificationsForUser(user._id);
       this.router.navigate(['/']);
     });
 

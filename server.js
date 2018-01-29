@@ -14,7 +14,7 @@ var Events = require('./backend/models/eventsModel');  // get our mongoose model
 var Bookings = require('./backend/models/bookingsModel');
 var Notification = require('./backend/models/notificationModel');
 var io = require('socket.io')(server);
-
+var notificationService = require('./src/app/services/notification/notification.service');
 const notificationController = require('./backend/controllers/notificationController');
 var distDir = __dirname + "/dist/";
 app.use(express.static(distDir));           // Create link to Angular build directory
@@ -53,18 +53,22 @@ app.set('socketio', io);
 io.on('connection', socket=>{
   console.log("connection from id:")
   console.log(socket.id)
-
-  // socket.emit('fromServer', 'hello from server!!!!!!!!')
-
-  //get number of notifs for user
   
   socket.on('notificationsCount', userID => {
-    console.log("user id");
-    // console.log
     var number = notificationController.getNotificationsCount();
     console.log("getting number of notifs");
     console.log(number);
     socket.emit('notificationCount', number);
+  });
+
+  socket.on('notificationsForUser', userID => {
+    console.log("user id");
+    // console.log
+    var number;
+    this.notificationService.getNotificationsForUser(userID).then((notifications)=>{
+      console.log(notifications);
+      socket.emit('notifications', notifications);
+    });
   });
 })
 

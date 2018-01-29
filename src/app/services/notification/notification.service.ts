@@ -16,14 +16,21 @@ export class NotificationService {
     private headers: Headers = new Headers({ 'Content-Type': 'application/json' });
 
     current: Notification
-    notifications: Notification[];
+    notifications: Notification[] = [];
 
     // Our socket connection
     // socket:any;
     io = socketIO('http://localhost:8080');
     id:any;
 
-    constructor(private http: Http) { }
+    constructor(private http: Http) { 
+
+        let test1:Notification = new Notification;
+        test1.message = "hello world";
+        this.notifications.push(test1);
+        this.notifications.push(test1);
+
+    }
 
     connect(){
         // const io = socketIO('http://localhost:8080');
@@ -38,6 +45,8 @@ export class NotificationService {
 
     public getNotificationsCountForUser(id: any): Promise<Number>{
 
+        console.log("getting notifs count for user:")
+        console.log(id);
         // const io = socketIO('http://localhost:8080');
         this.io.emit('notificationsCount', id);
 
@@ -57,19 +66,17 @@ export class NotificationService {
         
     }
 
-    public getNotificationsForUser(user: User): Promise<any[]> {
+    public getNotificationsForUser(id: any): Promise<any[]> {
 
-        let params: URLSearchParams = new URLSearchParams();
-        params.set('id', user._id)
+        console.log("getting notifs for user:")
+        console.log(id);
+        // const io = socketIO('http://localhost:8080');
+        this.io.emit('notificationsForUser', id);
 
-        return this.http.get(this.connection, { headers: this.headers, search: params })
-            .toPromise()
-            .then((response: Response) => {
-                const data = response.json();
-                const notificationsList = data.notifications as any[];
-                return notificationsList
-            })
-            .catch(this.handleError);
+
+        return new Promise((resolve, reject) => {
+            resolve(this.notifications);
+        })
     }
 
 
