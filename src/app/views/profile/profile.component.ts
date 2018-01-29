@@ -8,6 +8,7 @@ import { User } from '../../models/user';
 import { Booking } from '../../models/booking';
 import { Event } from '../../models/event';
 import { Notification } from '../../models/notification';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-profile',
@@ -21,7 +22,7 @@ export class ProfileComponent implements OnInit {
   requested: boolean = null;
   clickedRequestArtist:boolean = null;
 
-  clickedOverview = true;
+  clickedOverview = false;
 
   events:any[];
   requestedArtistEvents: any[] = [];
@@ -32,11 +33,15 @@ export class ProfileComponent implements OnInit {
   hasApplied:Boolean = true;
 
   constructor(private route: ActivatedRoute,
+    private router : Router,
     private userService: UserService,
     private bookingService: BookingService,
     private eventService: EventService,
     private notificationService: NotificationService) {
     console.log("in profile component constructor");
+
+     router.events.subscribe((url:any) => this.clickedOverview = router.url == "/profile/overview";
+
   }
 
   hasRequested() {
