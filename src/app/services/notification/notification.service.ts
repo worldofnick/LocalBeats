@@ -25,10 +25,6 @@ export class NotificationService {
 
     constructor(private http: Http) { 
 
-        let test1:Notification = new Notification;
-        test1.message = "hello world";
-        this.notifications.push(test1);
-        this.notifications.push(test1);
 
     }
 
