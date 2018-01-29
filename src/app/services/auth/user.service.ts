@@ -58,6 +58,7 @@ export class UserService {
                 this.accessToken = data.token;
                 sessionStorage.setItem('token', JSON.stringify({ accessToken: this.accessToken }))
                 this.user = data.user as User;
+                this.user.isOnline = true;
                 return this.user
             })
             .catch(this.handleError);
@@ -113,6 +114,7 @@ export class UserService {
 
     public logout() {
         this.accessToken = null;
+        this.user.isOnline = false; //TODO: make a REST call to set to offline in DB...
         this.user = null;
         sessionStorage.clear();
     }
