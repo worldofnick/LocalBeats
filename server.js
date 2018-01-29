@@ -13,7 +13,8 @@ const User          = require('./backend/models/userModel');  // get our mongoos
 const Events        = require('./backend/models/eventsModel');  // get our mongoose model
 const Bookings      = require('./backend/models/bookingsModel');
 const Notification  = require('./backend/models/notificationModel');
-const async         = require('async')
+const async         = require('async');
+const socketIO      = require('socket.io');
 
 var distDir = __dirname + "/dist/";
 app.use(express.static(distDir));           // Create link to Angular build directory
@@ -32,49 +33,30 @@ app.use(bodyParser.json());
 // use morgan to log requests to the console
 app.use(morgan('dev'));
 
-//original server instatiation
-// var server = app.listen(port, function () {
-//   var port = server.address().port;
-//   console.log("App now running on port", port);
-// });
+// Set up the http server and socket.io
+const server = http.Server(app);
+const io     = socketIO(server);
+server.listen(port, function () {
+  console.log('\n=========\nBackend HTTP server and socket listening on port: ', port, '\n=========\n')
+});
+app.set('io', io);
 
-// var server = http.createServer(app);
-const server = require('http').Server(app);
-const io     = require('socket.io')(server);
-server.listen(8080);
-//
-
-//set up socket
-
-app.set('socketio', io);
-
-io.on('connection', socket=>{
-  console.log("connection from id:")
+// Listen for connection and other events...
+// TODO: modularize the code into respective socket/*.js files
+io.on('connection', (socket) => {
+  console.log("Connection from Socket ID: ")
   console.log(socket.id)
-
-  socket.emit('fromServer', 'hello from server!!!!!!!!')
-})
-
-// io.on('connection', function(socket){
-//   console.log("user connected");
-
-
-//   socket.on('connection', socket => {
-//     // socket.broadcast.emit('new notification',data);
-//     console.log("user connected");
-//   });
-
-//   socket.on('userConnected', function(data) {
-//     console.log("user connected");
-//     // var uid = socket.request.handshakeData.uid // This might work.. need to look at the data
-//     // Save the session with the uid
-//   });
-
-//   socket.on('notification', function(data) {
-//     console.log("notiicioant received");
-//     socket.broadcast.emit('new notification',data);
-//   });
-// });
+  
+  socket.on('disconnect', function(){
+    console.log('User disconnected');
+  });
+  
+  socket.on('chat-message-sent', (message) => {
+    console.log("\n=====\nReceived chat message: ")
+    console.log(message)
+    io.emit('acknowledge-chat-message', { type: 'acknowledge-chat-message', text: message });
+  });
+});
 
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
