@@ -24,39 +24,16 @@ export class AppChatsComponent implements OnInit {
     lastMsg: 'Hello!'
   };
 
-  connectedUsers = [{
-    name: 'Gevorg Spartak',
-    photo: 'assets/images/face-2.jpg',
-    isOnline: true,
-    lastMsg: 'What\'s going!'
-  }, {
-    name: 'Petros Toros',
-    photo: 'assets/images/face-4.jpg',
-    isOnline: true,
-    lastMsg: 'Send me the stories.'
-  }, {
-    name: 'Henrik Gevorg',
-    photo: 'assets/images/face-5.jpg',
-    isOnline: false,
-    lastMsg: 'Great work!!'
-  }, {
-    name: 'Gevorg Spartak',
-    photo: 'assets/images/face-6.jpg',
-    isOnline: false,
-    lastMsg: 'Bye'
-  }, {
-    name: 'Petros Toros',
-    photo: 'assets/images/face-7.jpg',
-    isOnline: true,
-    lastMsg: 'We\'ll talk later'
-  }]
+  connectedUsers = []
   constructor(private media: ObservableMedia, private _chatsService: ChatsService) { }
 
   ngOnInit() {
     this.chatSideBarInit();
+    this.connectedUsers = this._chatsService.getConnectionUsers();
   }
   changeActiveUser(user) {
     this.activeChatUser = user;
+    console.log('New User clicked:', this.activeChatUser);
   }
 
 
