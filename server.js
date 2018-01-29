@@ -33,31 +33,37 @@ app.use(bodyParser.json());
 // use morgan to log requests to the console
 app.use(morgan('dev'));
 
-// Set up the http server and socket.io
+// =================================================================
+// HTTP Server and SOCKET.io setup
+// =================================================================
 const server = http.Server(app);
 const io     = socketIO(server);
 server.listen(port, function () {
-  console.log('\n=========\nBackend HTTP server and socket listening on port: ', port, '\n=========\n')
+  console.log('\n=========\nBackend HTTP server and socket listening on port: ', port, '\n=========\n');
 });
 app.set('io', io);
 
 // Listen for connection and other events...
-// TODO: modularize the code into respective socket/*.js files
+
+// Default 'connection' event listerner
 io.on('connection', (socket) => {
-  console.log("Connection from Socket ID: ")
-  console.log(socket.id)
+  console.log("Connection from Socket ID:",socket.id);
   
+  // Default 'disconnect' event listerner
   socket.on('disconnect', function(){
-    console.log('User disconnected');
+    console.log('User disconnected at Socket ID:', socket.id);
   });
   
+  // TODO: modularize the code into respective socket/*.js files
   socket.on('chat-message-sent', (message) => {
-    console.log("\n=====\nReceived chat message: ")
-    console.log(message)
+    console.log('\n=====\nReceived chat message:', message);
     io.emit('acknowledge-chat-message', { type: 'acknowledge-chat-message', text: message });
   });
 });
 
+// =================================================================
+// Compatibility fix
+// =================================================================
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Cache-Control");
