@@ -19,6 +19,7 @@ import { EventService } from './services/event/event.service';
 import { UserGuard } from './services/auth/user-guard.service';
 import { ImgurService } from './services/image/imgur.service';
 import { NotificationService} from './services/notification/notification.service';
+import { ChatsService} from './services/chats/chats.service';
 
 
 export function createTranslateLoader(http: Http) {
@@ -44,7 +45,8 @@ export function createTranslateLoader(http: Http) {
     RoutePartsService, 
     NavigationService,
     SearchService,
-    UserService, 
+    UserService,
+    ChatsService, 
     BookingService,
     EventService,
     UserGuard,
