@@ -3,6 +3,7 @@ import { Subscription } from "rxjs/Subscription";
 import { MediaChange, ObservableMedia } from "@angular/flex-layout";
 import { MatSidenav, MatDialog } from '@angular/material';
 import { ChatsService } from 'app/services/chats/chats.service';
+import { User } from '../../models/user';
 
 @Component({
   selector: 'app-chats',
@@ -16,7 +17,9 @@ export class AppChatsComponent implements OnInit {
   @ViewChild(MatSidenav) private sideNave: MatSidenav;
 
   messageEntered: string;
+  loggedInUser: User = new User();
 
+  //TODO: set to first user in connectedUsers list or one with highest unread count
   activeChatUser = {
     name: 'Gevorg Spartak',
     photo: 'assets/images/face-2.jpg',
@@ -24,18 +27,19 @@ export class AppChatsComponent implements OnInit {
     lastMsg: 'Hello!'
   };
 
-  connectedUsers = []
+  connectedUsers = [];
   constructor(private media: ObservableMedia, private _chatsService: ChatsService) { }
 
   ngOnInit() {
     this.chatSideBarInit();
+    this.loggedInUser = this._chatsService.getCurrentLoggedInUser();
     this.connectedUsers = this._chatsService.getConnectionUsers();
+    console.log('Logged in User:', this._chatsService.getCurrentLoggedInUser());
   }
   changeActiveUser(user) {
     this.activeChatUser = user;
     console.log('New User clicked:', this.activeChatUser);
   }
-
 
   updateSidenav() {
     var self = this;
