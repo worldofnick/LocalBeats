@@ -81,7 +81,11 @@ export class AppChatsComponent implements OnInit {
   public connection;
 
   sendMessageClicked() {
+    console.log('---------------------');
     console.log('User entered the message: ', this.messageEntered);
+    console.log('Sender: ', this.loggedInUser.firstName + ' ' + this.loggedInUser.lastName);
+    console.log('Receiver: ', this.activeChatUser.firstName + ' ' + this.activeChatUser.lastName);
+    console.log('---------------------');
 
     // If the user entered non-blank message and hit send, communicate with server
     if (this.messageEntered.trim().length > 0) {
