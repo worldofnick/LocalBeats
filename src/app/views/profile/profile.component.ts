@@ -77,6 +77,7 @@ export class ProfileComponent implements OnInit {
 
 
   ngOnInit() {
+    this.user = this.userService.user;
     this.activeView = this.route.snapshot.params['view']
     //this.user = this.userService.user;
 
@@ -96,6 +97,7 @@ export class ProfileComponent implements OnInit {
 
       this.userService.getUserByID(ID).then((gottenUser: User) => {
         this.userService.user = gottenUser;
+        this.user = this.userService.user;
       }).then(() => this.hasRequested());
     }
   }

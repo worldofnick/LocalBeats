@@ -79,6 +79,6 @@
     <router-outlet></router-outlet>
     <!-- //TODO DO THIS FOR THE REST OF THE CHILDREN -->
     <app-profile-request *ngIf="clickedRequestArtist" [user]="userService.user" [artist]="user"></app-profile-request>
-    <app-profile-overview *ngIf="clickedOverview" [user]="user"></app-profile-overview>
+    <app-profile-overview *ngIf="clickedOverview" [user]="this.user"></app-profile-overview>
   </div>
 </div>
