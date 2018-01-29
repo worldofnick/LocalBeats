@@ -2,7 +2,10 @@ import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
 import * as io from 'socket.io-client';
+
 import { User } from '../../models/user';
+import { ChatContactListUser } from '../../models/chatContactListUser';
+
 import { UserService } from '../../services/auth/user.service';
 
 @Injectable()
@@ -15,51 +18,63 @@ export class ChatsService {
   constructor(private _userService: UserService) { }
 
   getConnectionUsers() {
-    let users: User[] = new Array();
-    let user1 = new User();
-    let user2 = new User();
-    let user3 = new User();
+    let users: ChatContactListUser[] = new Array();
+    let user1 = new ChatContactListUser();
+    let user2 = new ChatContactListUser();
+    let user3 = new ChatContactListUser();
 
     this._userService.getUserByID('5a6f136cd9847106668772c1').then((gottenUser: User) => {
-      user1 = gottenUser;
+      user1.name = gottenUser.firstName + ' ' + gottenUser.lastName;
+      user1.photo = gottenUser.profilePicUrl;
+      user1.isOnline = true;  // TODO: gottenUser.isOnline
+      user1.lastMsg = 'Catch em all!';
       users.push(user1);
     });
     this._userService.getUserByID('5a6f1348d9847106668772c0').then((gottenUser: User) => {
-      user2 = gottenUser;
+      user2.name = gottenUser.firstName + ' ' + gottenUser.lastName;
+      user2.photo = gottenUser.profilePicUrl;
+      user2.isOnline = true;  // TODO: gottenUser.isOnline
+      user2.lastMsg = 'Catch em all!';
       users.push(user2);
     });
     this._userService.getUserByID('5a6cf410a502610f0771a16c').then((gottenUser: User) => {
-      user3 = gottenUser;
+      user3.name = gottenUser.firstName + ' ' + gottenUser.lastName;
+      user3.photo = gottenUser.profilePicUrl;
+      user3.isOnline = true;  // TODO: gottenUser.isOnline
+      user3.lastMsg = 'Catch em all!';
       users.push(user3);
     });
 
-    // return users;
-    return [{
-      name: 'Gevorg Spartak',
-      photo: 'assets/images/face-2.jpg',
-      isOnline: true,
-      lastMsg: 'What\'s going!'
-    }, {
-      name: 'Petros Toros',
-      photo: 'assets/images/face-4.jpg',
-      isOnline: true,
-      lastMsg: 'Send me the stories.'
-    }, {
-      name: 'Henrik Gevorg',
-      photo: 'assets/images/face-5.jpg',
-      isOnline: false,
-      lastMsg: 'Great work!!'
-    }, {
-      name: 'Gevorg Spartak',
-      photo: 'assets/images/face-6.jpg',
-      isOnline: false,
-      lastMsg: 'Bye'
-    }, {
-      name: 'Petros Toros',
-      photo: 'assets/images/face-7.jpg',
-      isOnline: true,
-      lastMsg: 'We\'ll talk later'
-    }];
+    console.log('Users:', users);
+    return users;
+    //TODO: can just update the user model to have these fields
+    // 
+    // return [{
+    //   name: 'Gevorg Spartak',
+    //   photo: 'assets/images/face-2.jpg',
+    //   isOnline: true,
+    //   lastMsg: 'What\'s going!'
+    // }, {
+    //   name: 'Petros Toros',
+    //   photo: 'assets/images/face-4.jpg',
+    //   isOnline: true,
+    //   lastMsg: 'Send me the stories.'
+    // }, {
+    //   name: 'Henrik Gevorg',
+    //   photo: 'assets/images/face-5.jpg',
+    //   isOnline: false,
+    //   lastMsg: 'Great work!!'
+    // }, {
+    //   name: 'Gevorg Spartak',
+    //   photo: 'assets/images/face-6.jpg',
+    //   isOnline: false,
+    //   lastMsg: 'Bye'
+    // }, {
+    //   name: 'Petros Toros',
+    //   photo: 'assets/images/face-7.jpg',
+    //   isOnline: true,
+    //   lastMsg: 'We\'ll talk later'
+    // }];
   }
 
   getCurrentLoggedInUser() {
