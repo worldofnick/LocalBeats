@@ -54,6 +54,11 @@ export class AppChatsComponent implements OnInit {
   private initIoConnection(): void {
     this._socketService.initSocket();
 
+    // TODO: add:
+    // this._socketService.socket.on('connect', () => {
+    //        listen to all events inside it
+    //});
+    
     // Every time there is a new login/out, it reloads the chat side Bar.
     this._socketService.onEvent(Event.NEW_LOG_IN)                       // TODO: optimize to reload only online status and new, deleted users
       .subscribe((message: Message) => {
