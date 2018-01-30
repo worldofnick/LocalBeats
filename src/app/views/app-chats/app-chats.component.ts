@@ -76,6 +76,7 @@ export class AppChatsComponent implements OnInit {
     this._socketService.onEvent(Event.SEND_PRIVATE_MSG)
       .subscribe((message: Message) => {
         // Add response message[] to the activeChatMessages[]
+        this.activeChatMessages = new Array();      // Reset the array
         for (let temp of message as Message[]) {
           this.activeChatMessages.push(temp as Message);
         };
