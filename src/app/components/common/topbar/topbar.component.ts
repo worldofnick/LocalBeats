@@ -63,7 +63,7 @@ export class TopbarComponent implements OnInit {
     domHelper.toggleClass(document.body, 'collapsed-menu');
 
 
-    this.notificationService.io.on('notificationCount', count=>{
+    this.userService.io.on('notificationCount', count=>{
       console.log(count)
       this.numNotifications = count;
     });
@@ -91,7 +91,7 @@ export class TopbarComponent implements OnInit {
 
   startSocket() {
     // this.notificationService.connect();
-    this.notificationService.getNotificationsCountForUser(555).then((num) => {
+    this.userService.getNotificationsCountForUser(555).then((num) => {
       console.log(num);
       this.numNotifications = num;
       console.log("printing number of notifs");

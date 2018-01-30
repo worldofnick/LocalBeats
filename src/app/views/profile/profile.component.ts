@@ -36,7 +36,6 @@ export class ProfileComponent implements OnInit {
     private bookingService: BookingService,
     private eventService: EventService,
     private notificationService: NotificationService) {
-    console.log("in profile component constructor");
   }
 
   hasRequested() {
@@ -54,14 +53,14 @@ export class ProfileComponent implements OnInit {
     });
   }
 
-  sendNotificationToUser(){
+  sendNotification(){
     // this.socket.emit('create notification','Notification Test');
     let notif:Notification = new Notification;
-    notif.sender = this.userService.user;
-    notif.receiver = this.userService.user;
+    // notif.sender = this.userService.user;
+    notif.receiverID = this.userService.user._id;
     notif.message = "test message" ;
-    // this.notificationService.sendNotificationToUser(notif)
-    // this.notificationService.conn
+    
+    this.userService.sendNotificationToUser(notif);
  }
 
 

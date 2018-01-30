@@ -5,8 +5,8 @@ var Schema = mongoose.Schema;
 
 //TODO: add match() validator to email
 var NotificationSchema = new Schema({
-    sender          : { type: Schema.Types.ObjectId, ref: 'User' },
-    received        : { type: Schema.Types.ObjectId, ref: 'User' },
+    senderID        : { type: String },
+    receiverID      : { type: String },
     event           : { type: Schema.Types.ObjectId, ref: 'Events' },
     message         : { type: String},
     icon            : { type: String},

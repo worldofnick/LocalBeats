@@ -63,8 +63,9 @@ io.on('connection', socket=>{
   })
 
   socket.on('tellNotificationPanel', notifications=>{
-    
+
     console.log(notifications);
+    // io.sockets.connected[socket.id].emit('notifications', notifications);
     socket.emit('notifications', notifications)
   })
 

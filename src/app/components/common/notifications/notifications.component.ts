@@ -25,9 +25,10 @@ export class NotificationsComponent implements OnInit {
   ngOnInit
   () {
 
-    this.notificationService.io.on('notifications', notificationsList=>{
+    this.userService.io.on('notifications', notificationsList=>{
       console.log("getting notifications..");
       this.notifications = notificationsList;
+      console.log(notificationsList);
     });
     
 
