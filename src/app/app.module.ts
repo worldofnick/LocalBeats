@@ -21,7 +21,7 @@ import { UserGuard } from './services/auth/user-guard.service';
 import { ImgurService } from './services/image/imgur.service';
 import { NotificationService} from './services/notification/notification.service';
 import { ChatsService} from './services/chats/chats.service';
-
+import { SocketService } from './services/chats/socket.service';
 
 export function createTranslateLoader(http: Http) {
   return new TranslateStaticLoader(http, './assets/i18n', '.json');
@@ -47,6 +47,7 @@ export function createTranslateLoader(http: Http) {
     RoutePartsService, 
     NavigationService,
     SearchService,
+    SocketService,
     UserService,
     ChatsService, 
     BookingService,
