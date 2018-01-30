@@ -17,17 +17,11 @@ module.exports = function (io) {
         });
 
         socket.on('newUserLoggedIn', (payload) => {
-            console.log('\n-----');
-            socketsHash[payload.from.email] = socket.id;
-            console.log('\n---------\nSockets Hash: ', socketsHash);
             // Notify all clients that a new client logged in
             io.emit('newUserLoggedIn', {serverMessage: payload.from.firstName+' logged in', serverPayload: payload.from});
         });
 
         socket.on('someUserLoggedOut', (payload) => {
-            console.log('\n-----');
-            delete socketsHash[payload.from.email];
-            console.log('\n---------\nSockets Hash: ', socketsHash);
             // Notify all clients that a client logged out
             io.emit('someUserLoggedOut', {serverMessage: payload.from.firstName+' logged out', serverPayload: payload.from});
         });

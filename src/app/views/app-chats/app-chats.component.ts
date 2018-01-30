@@ -54,25 +54,8 @@ export class AppChatsComponent implements OnInit {
   private initIoConnection(): void {
     this._socketService.initSocket();
 
-    // this.ioConnection = this._socketService.onMessage()
-    //   .subscribe((message: Message) => {
-    //     this.messages.push(message);
-    //     console.log('Server msg (to chat): ', message);
-    // });
-
-    // this._socketService.onEvent(Event.CONNECT)
-    //   .subscribe((message: Message) => {
-    //     console.log('Connected (chat event): ', message);
-    // });
-    
-    // this._socketService.onEvent(Event.DISCONNECT)
-    //   .subscribe((message: Message) => {
-    //     console.log('Disconnected (chat event): ', message);
-    // });
-
     // Every time there is a new login/out, it reloads the chat side Bar.
-    // TODO: optimize to reload only online status and new, deleted users
-    this._socketService.onEvent(Event.NEW_LOG_IN)
+    this._socketService.onEvent(Event.NEW_LOG_IN)                       // TODO: optimize to reload only online status and new, deleted users
       .subscribe((message: Message) => {
         console.log('New user logged in (chat event): ', message);
         this.reloadChatSideBarWithNewConnectedUsers();                   // reload the connectedUsers navBar
@@ -93,11 +76,15 @@ export class AppChatsComponent implements OnInit {
       .subscribe((message: Message) => {
         console.log('Socket Request (chat event): ', message);
         console.log(' to == logged in? : ', message.serverPayload.email === this.loggedInUser.email);
-        if (message.serverPayload.email === this.loggedInUser.email) {
-          console.log('Sending socket: ', this._socketService.socket.id);
-          this._socketService.send(Action.REQUEST_PM_SOCKET_ID, this._socketService.socket.id);
-        }
+        this.respondToIsItYouPMSocketRequest(message);
     });
+  }
+
+  respondToIsItYouPMSocketRequest(message) {
+    if (message.serverPayload.email === this.loggedInUser.email) {
+      console.log('Sending socket: ', this._socketService.socket.id);
+      this._socketService.send(Action.REQUEST_PM_SOCKET_ID, this._socketService.socket.id);
+    }
   }
 
   // SUbscribe takes 3 event handlers:
