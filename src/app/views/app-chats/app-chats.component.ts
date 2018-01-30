@@ -79,6 +79,11 @@ export class AppChatsComponent implements OnInit {
       .subscribe((message: Message) => {
         console.log('Some user logged out (chat event): ', message);
     });
+
+    this._socketService.onEvent(Event.SEND_MSG)
+      .subscribe((message: Message) => {
+        console.log('Private Chat message from server (chat event): ', message);
+    });
   }
 
   // SUbscribe takes 3 event handlers:
@@ -107,6 +112,15 @@ export class AppChatsComponent implements OnInit {
     let connection;
     this.activeChatUser = user;
     console.log('New User clicked:', this.activeChatUser);
+
+    // ALGORITHM:
+    // retrieve getUserByID. 
+        // if the receiverUser is online:
+            // ask server to add to private chat room
+        // else
+            // REST api store messages to DB as unread for receiver user
+
+
     // this._chatsService.sendPrivateJoinMessage(this.activeChatUser);
 
     // connection = this._chatsService.getServerJoinPrivateChatAcknowledge().subscribe(message => {
@@ -132,21 +146,22 @@ export class AppChatsComponent implements OnInit {
   }
 
   sendMessageClicked() {
-    let connection;
-    console.log('---------------------');
+    console.log('-------CHAT UI---------');
     console.log('User entered the message: ', this.messageEntered);
     console.log('Sender: ', this.loggedInUser.firstName + ' ' + this.loggedInUser.lastName);
     console.log('Receiver: ', this.activeChatUser.firstName + ' ' + this.activeChatUser.lastName);
     console.log('---------------------');
 
+    let message: Message = {
+      from: this.loggedInUser,
+      to: this.activeChatUser,
+      content: this.messageEntered,
+      action: Action.SEND_MSG
+    };
     // If the user entered non-blank message and hit send, communicate with server
-    // if (this.messageEntered.trim().length > 0) {
-    //   this._chatsService.sendMessage(this.messageEntered);
-    //   this.messageEntered = '';
-
-    //   connection = this._chatsService.getServerMsgAcknowledge().subscribe(message => {
-    //     console.log('Acknowledge message from server : ', message);
-    //   });
-    // }
+    if (this.messageEntered.trim().length > 0) {
+      this._socketService.send(message);
+      this.messageEntered = '';
+    }
   }
 }

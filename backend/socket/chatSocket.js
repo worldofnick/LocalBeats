@@ -22,6 +22,11 @@ module.exports = function (io) {
             else if(message.action == 'someUserLoggedOut') {
                 io.emit('someUserLoggedOut', {content: 'User disconnected', user: message.from});
             }
+            else if(message.action == 'sendPrivateMessage') {
+                let msg = message.content;
+                message.content = 'PM Received: ' + msg;
+                io.emit('sendPrivateMessage', {message});   // chnage to socket later
+            }
             else {
                 console.log('Message from Client: ', message);
             }  
