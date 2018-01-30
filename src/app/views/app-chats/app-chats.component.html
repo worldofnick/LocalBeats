@@ -76,47 +76,28 @@
       <!-- Main chat body -->
       <div class="conversations-hold">
         <!-- single chat item -->
-        <div class="single-conversation sender" fxLayout="row">
+        <div *ngFor="let message of activeChatMessages" 
+        class="single-conversation {{ !!(message.from._id == this.loggedInUser._id) ? 
+                                      ('me') : 
+                                      ('sender')}}" fxLayout="row">
           <a href="" class="toolbar-avatar online">
-            <img src="assets/images/face-2.jpg" alt="">
+            <img [src]= "!!(message.from._id == this.loggedInUser._id) ? 
+                        (this.loggedInUser.profilePicUrl) : 
+                        (message.from.profilePicUrl)" alt="">
             <span class="status-dot"></span>
           </a>
           <div>
-            <h5 class="chat-username text-muted">Gevorg Spartak</h5>
+            <h5 class="chat-username text-muted">{{ !!(message.from._id === this.loggedInUser._id) ? 
+                                                    (message.from.firstName + ' ' + message.from.lastName) : 
+                                                    (message.to.firstName + ' ' + message.to.lastName) }}</h5>
             <div class="conversation-msg">
-              Hello, How are you
+              {{message.content}}
             </div>
-            <p class="chat-date text-muted">10 min ago</p>
+            <p class="chat-date text-muted">{{message.sentAt}}</p>
           </div>
         </div>
-        <!-- single chat item -->
-        <div class="single-conversation me" fxLayout="row">
-          <a href="" class="toolbar-avatar online">
-            <img src="assets/images/face-3.jpg" alt="">
-            <span class="status-dot"></span>
-          </a>
-          <div>
-            <h5 class="chat-username text-muted">Dave Wolf</h5>
-            <div class="conversation-msg">
-              I'm good, Thanks
-            </div>
-            <p class="chat-date text-muted">10 min ago</p>
-          </div>
-        </div>
-        <!-- single chat item -->
-        <div class="single-conversation sender" fxLayout="row">
-          <a href="" class="toolbar-avatar online">
-            <img src="assets/images/face-2.jpg" alt="">
-            <span class="status-dot"></span>
-          </a>
-          <div>
-            <h5 class="chat-username text-muted">Gevorg Spartak</h5>
-            <div class="conversation-msg">
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Delectus, obcaecati!
-            </div>
-            <p class="chat-date text-muted">10 min ago</p>
-          </div>
-        </div>
+
+        
         
       </div>
       
