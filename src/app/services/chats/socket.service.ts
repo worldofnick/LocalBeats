@@ -13,13 +13,12 @@ import * as io from 'socket.io-client';
 //   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
 // };
 
-const SERVER_URL = 'http://localhost:8080';
+const SERVER_URL = 'http://localhost:8080'; //TODO: or env.url + port (heroku)
 
 @Injectable()
 export class SocketService {
 
   private socket;
-  
   constructor() { }
 
   // ==============================================

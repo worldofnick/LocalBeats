@@ -49,12 +49,6 @@ export class AppChatsComponent implements OnInit {
   ngOnInit() {
     this.initIoConnection();
     this.chatSideBarInit();
-    // this.changeActiveUser(this.activeChatUser); // sed join message
-
-    // let connection;
-    // connection = this._chatsService.getServerOnlineStatusOpdateMessage().subscribe(message => {
-    //   console.log('Status message from server : ', message);
-    // });
   }
 
   private initIoConnection(): void {
