@@ -60,32 +60,28 @@ export class AppChatsComponent implements OnInit {
         console.log('Server msg (to chat): ', message);
     });
 
-    this._socketService.onEvent(Event.CONNECT)
-      .subscribe((message: Message) => {
-        console.log('Connected (chat event): ', message);
-    });
+    // this._socketService.onEvent(Event.CONNECT)
+    //   .subscribe((message: Message) => {
+    //     console.log('Connected (chat event): ', message);
+    // });
     
-    this._socketService.onEvent(Event.DISCONNECT)
-      .subscribe((message: Message) => {
-        console.log('Disconnected (chat event): ', message);
-    });
+    // this._socketService.onEvent(Event.DISCONNECT)
+    //   .subscribe((message: Message) => {
+    //     console.log('Disconnected (chat event): ', message);
+    // });
 
-    // Every time there is a new login, it reloads the chat side Bar.
+    // Every time there is a new login/out, it reloads the chat side Bar.
     // TODO: optimize to reload only online status and new, deleted users
     this._socketService.onEvent(Event.NEW_LOG_IN)
       .subscribe((message: Message) => {
         console.log('New user logged in (chat event): ', message);
-        
-        // reload the connectedUsers navBar
-        this.reloadChatSideBarWithNewConnectedUsers();
+        this.reloadChatSideBarWithNewConnectedUsers();                   // reload the connectedUsers navBar
     });
 
     this._socketService.onEvent(Event.SMN_LOGGED_OUT)
       .subscribe((message: Message) => {
         console.log('Some user logged out (chat event): ', message);
-
-        // reload the connectedUsers navBar
-        this.reloadChatSideBarWithNewConnectedUsers();
+        this.reloadChatSideBarWithNewConnectedUsers();                   // reload the connectedUsers navBar
     });
 
     this._socketService.onEvent(Event.SEND_MSG)
