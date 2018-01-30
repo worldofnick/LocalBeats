@@ -83,6 +83,9 @@ export class AppChatsComponent implements OnInit {
     this._socketService.onEvent(Event.SMN_LOGGED_OUT)
       .subscribe((message: Message) => {
         console.log('Some user logged out (chat event): ', message);
+
+        // reload the connectedUsers navBar
+        this.reloadChatSideBarWithNewConnectedUsers();
     });
 
     this._socketService.onEvent(Event.SEND_MSG)
