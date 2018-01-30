@@ -42,7 +42,7 @@ export class AppChatsComponent implements OnInit {
 
   constructor(private media: ObservableMedia, private _socketService: SocketService, private _chatsService: ChatsService) {
     this.loggedInUser = this._chatsService.getCurrentLoggedInUser();
-    this.getAllUsers();
+    this.initChatSideBarWithWithNewUsers();
     console.log('Logged in User:', this._chatsService.getCurrentLoggedInUser());
   }
 
@@ -70,9 +70,14 @@ export class AppChatsComponent implements OnInit {
         console.log('Disconnected (chat event): ', message);
     });
 
+    // Every time there is a new login, it reloads the chat side Bar.
+    // TODO: optimize to reload only online status and new, deleted users
     this._socketService.onEvent(Event.NEW_LOG_IN)
       .subscribe((message: Message) => {
         console.log('New user logged in (chat event): ', message);
+        
+        // reload the connectedUsers navBar
+        this.reloadChatSideBarWithNewConnectedUsers();
     });
 
     this._socketService.onEvent(Event.SMN_LOGGED_OUT)
@@ -88,23 +93,45 @@ export class AppChatsComponent implements OnInit {
 
   // SUbscribe takes 3 event handlers:
   // onNext, onError, onCompleted
-  getAllUsers() {
+  reloadChatSideBarWithNewConnectedUsers() {
     this._chatsService.getConnectionUsers().subscribe(
       data => {
-        console.log('User DATA: ', data);
+        // console.log('User DATA: ', data);
         const temp = data as { users: User[] };
-        console.log('Cast: ', temp.users);
+        // console.log('Full response: ', temp.users);
+        
+        // Reset the users
+        this.connectedUsers = new Array();    //TODO: expect the current chat ones (active user)?
+
         // TODO: add only if users not in connectedUsers
         this.connectedUsers.push(temp.users[3]);
         this.connectedUsers.push(temp.users[5]);
         this.connectedUsers.push(temp.users[6]);
-        for (let i = 0; i < this.connectedUsers.length; i++) {
-          console.log('Temp Connected:', this.connectedUsers[i]);
-        }
-        this.activeChatUser = this.connectedUsers[0];
+        console.log('Side Bar Connected Users:', this.connectedUsers);
       },
       err => console.error(err),
-      () => console.log('Done loading users')
+      () => { 
+        console.log('Done reloading users in chat side bar');
+        // this.chatSideBarInit();
+      }
+    );
+  }
+
+  initChatSideBarWithWithNewUsers() {
+    this._chatsService.getConnectionUsers().subscribe(
+      data => {
+        // console.log('User DATA: ', data);
+        const temp = data as { users: User[] };
+        // console.log('Full response: ', temp.users);
+
+        this.connectedUsers.push(temp.users[3]);          // TODO: add only if users not in connectedUsers
+        this.connectedUsers.push(temp.users[5]);
+        this.connectedUsers.push(temp.users[6]);
+        console.log('(Init) Side Bar Connected Users:', this.connectedUsers);
+        this.activeChatUser = this.connectedUsers[0]; // TODO: change to whatever filter applied later
+      },
+      err => console.error(err),
+      () => console.log('Done initializing users in chat side bar')
     );
   }
 
