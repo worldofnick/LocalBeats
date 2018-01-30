@@ -84,7 +84,7 @@ export class AppChatsComponent implements OnInit {
         this.reloadChatSideBarWithNewConnectedUsers();                   // reload the connectedUsers navBar
     });
 
-    this._socketService.onEvent(Event.SEND_MSG)
+    this._socketService.onEvent(Event.SEND_PRIVATE_MSG)
       .subscribe((message: Message) => {
         console.log('Private Chat message from server (chat event): ', message);
     });
@@ -182,7 +182,7 @@ export class AppChatsComponent implements OnInit {
       from: this.loggedInUser,
       to: this.activeChatUser,
       content: this.messageEntered,
-      action: Action.SEND_MSG
+      action: Action.SEND_PRIVATE_MSG
     };
     // If the user entered non-blank message and hit send, communicate with server
     if (this.messageEntered.trim().length > 0) {

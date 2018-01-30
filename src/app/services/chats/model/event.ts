@@ -3,5 +3,6 @@ export enum Event {
     DISCONNECT = 'disconnect',
     NEW_LOG_IN = 'newUserLoggedIn',
     SMN_LOGGED_OUT = 'someUserLoggedOut',
-    SEND_MSG = 'sendPrivateMessage'
+    SEND_PRIVATE_MSG = 'sendPrivateMessage',
+    SEND_MSG = 'sendMessage'
 }
