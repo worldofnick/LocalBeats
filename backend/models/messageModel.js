@@ -12,7 +12,7 @@ var MessageSchema = new Schema({
     isRead          :   { type: Boolean, default: false },
     sentAt          :   { type: Date, default: Date.now },
     typeIsAttachment:   { type: Boolean, default: false},
-    attachmentURL   :   { type: String, default: ""}
+    attachmentURL   :   { type: String}
 }, {strict: true});
 
 mongoose.model('Message', MessageSchema);

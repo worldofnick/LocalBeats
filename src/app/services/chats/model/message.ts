@@ -6,6 +6,10 @@ export interface Message {
     to?: User;
     content?: any;
     action?: Action;
+    isRead?: boolean;
+    sentAt?: Date;
+    typeIsAttachment?: boolean;
+    attachmentURL?: string;
     serverMessage?: any;
     serverPayload?: any;
 }
