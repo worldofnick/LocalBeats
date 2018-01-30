@@ -88,6 +88,16 @@ export class AppChatsComponent implements OnInit {
       .subscribe((message: Message) => {
         console.log('Private Chat message from server (chat event): ', message);
     });
+
+    this._socketService.onEvent(Event.REQUEST_PM_SOCKET_ID)
+      .subscribe((message: Message) => {
+        console.log('Socket Request (chat event): ', message);
+        console.log(' to == logged in? : ', message.serverPayload.email === this.loggedInUser.email);
+        if (message.serverPayload.email === this.loggedInUser.email) {
+          console.log('Sending socket: ', this._socketService.socket.id);
+          this._socketService.send(Action.REQUEST_PM_SOCKET_ID, this._socketService.socket.id);
+        }
+    });
   }
 
   // SUbscribe takes 3 event handlers:

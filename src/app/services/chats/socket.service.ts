@@ -19,7 +19,7 @@ const SERVER_URL = 'http://localhost:8080'; //TODO: or env.url + port (heroku)
 @Injectable()
 export class SocketService {
 
-  private socket;
+  public socket;
   constructor() { }
 
   // ==============================================
