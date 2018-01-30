@@ -204,7 +204,7 @@ export class UserService {
             .toPromise()
             .then((response: Response) => {
                 const data = response.json();
-                console.log(data);
+                console.log("received");
                 this.user = data.user as User;
                 console.log(this.user)
                 return this.user;

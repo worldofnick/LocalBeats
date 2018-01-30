@@ -1,10 +1,10 @@
 'use strict';
 
-var mongoose  = require('mongoose');
-var jwt       = require('jsonwebtoken');
-var bcrypt    = require('bcrypt');
-var User      = mongoose.model('User');
-var config    = require('../../config.js');
+var mongoose = require('mongoose');
+var jwt = require('jsonwebtoken');
+var bcrypt = require('bcrypt');
+var User = mongoose.model('User');
+var config = require('../../config.js');
 var Notifications = mongoose.model('Notification');
 
 // ====== USER ROUTES ======
@@ -18,7 +18,7 @@ exports.listAllUsers = function (req, res) {
     // users.forEach(function(user) {
     //   usrs.push({"user": user});
     // });
-    return res.status(200).send({"users": users});
+    return res.status(200).send({ "users": users });
   });
 };
 
@@ -27,23 +27,43 @@ exports.getUserByID = function (req, res) {
     if (err)
       return res.send(err);
     return res.json({ user: user });
-  });
+  }).populate('notifications');
 };
+
+// exports.updateUserByID = function (req, res, next) {
+//   User.findByIdAndUpdate(req.params.uid, req.body.user, { new: true }, function (err, user) {
+//     if (err) {
+//       return res.status(520).send({ message: "Error finding the user from this UID...", error: err });
+//     }
+//     user.hashPassword = undefined;
+//     if(req.body.user.spotifyID != undefined) {
+//       console.log("Spotify ID: " + req.body.user.spotifyID);
+//       next();
+//     }else {
+//       return res.status(200).send({ user: user });
+//     }
+//   });
+// };
+
 
 exports.updateUserByID = function (req, res, next) {
   User.findByIdAndUpdate(req.params.uid, req.body.user, { new: true }, function (err, user) {
     if (err) {
       return res.status(520).send({ message: "Error finding the user from this UID...", error: err });
     }
-    user.hashPassword = undefined;
-    if(req.body.user.spotifyID != undefined) {
-      console.log("Spotify ID: " + req.body.user.spotifyID);
-      next();
-    }else {
-      return res.status(200).send({ user: user });
-    }
+
+    User.findById(req.params.uid).populate('notifications').exec(function (err, event) {
+      user.hashPassword = undefined;
+      if (req.body.user.spotifyID != undefined) {
+        console.log("Spotify ID: " + req.body.user.spotifyID);
+        next();
+      } else {
+        return res.status(200).send({ user: user });
+      }
+    })
   });
 };
+
 
 exports.deleteUserByID = function (req, res) {
   User.findByIdAndRemove(req.params.uid, function (err, user) {
@@ -94,7 +114,7 @@ exports.searchUsers = function (req, res) {
 
   if (req.query.genres != null && req.query.genres != "all genres") {
     query.genres = {
-        "$in": req.query.genres
+      "$in": req.query.genres
     }
   }
 
@@ -107,27 +127,27 @@ exports.searchUsers = function (req, res) {
   if (req.query.lat != null && req.query.lon != null) {
     query.location = {
       "$near": [
-          parseFloat(req.query.lat),
-          parseFloat(req.query.lon)
+        parseFloat(req.query.lat),
+        parseFloat(req.query.lon)
       ]
     }
   }
 
   User.find(query).limit(limit).skip(skip).exec(function (err, doc) {
     if (err) {
-        return res.status(500).send(err);
+      return res.status(500).send(err);
     } else {
-          var users = [];
-          doc.forEach(function(user) {
-              users.push({"user": user});
-          });
+      var users = [];
+      doc.forEach(function (user) {
+        users.push({ "user": user });
+      });
 
-          return res.status(200).send({"users": doc});
+      return res.status(200).send({ "users": doc });
     }
   });
 };
 
 exports.getGenres = function (req, res) {
   var genres = ["All Genres", "Rock", "Classical", "Electronic", "Jazz", "Blues", "Hip-Hop", "Rap", "Alternative", "Country"];
-  return res.status(200).send( {"genres": genres} );
+  return res.status(200).send({ "genres": genres });
 };
