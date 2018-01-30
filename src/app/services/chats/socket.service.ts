@@ -3,8 +3,6 @@ import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
 import { Observer } from 'rxjs/Observer';
 // import { HttpClient, HttpHeaders } from '@angular/common/http';
-
-import { UserService } from '../../services/auth/user.service';
 import { User } from '../../models/user';
 import { Message } from './model/Message';
 import { Event } from './model/event';
@@ -22,7 +20,7 @@ export class SocketService {
 
   private socket;
   
-  constructor(private _userService: UserService) { }
+  constructor() { }
 
   // ==============================================
   // SHARED HELPER METHODS
