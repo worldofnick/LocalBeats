@@ -23,11 +23,14 @@ exports.listAllUsers = function (req, res) {
 };
 
 exports.getUserByID = function (req, res) {
-  User.findById(req.params.uid, { hashPassword: 0 }, function (err, user) {
-    if (err)
-      return res.send(err);
-    return res.json({ user: user });
-  }).populate('notifications');
+  User.findById(req.params.uid, { hashPassword: 0 }).populate('notifications').exec(function (err, user) {
+      if (err) {
+          return res.status(500).send("Failed to get user");
+      } else {
+          return res.status(200).send({ user: user });
+      }
+  });
+
 };
 
 // exports.updateUserByID = function (req, res, next) {
