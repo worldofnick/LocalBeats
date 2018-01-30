@@ -8,7 +8,7 @@ export interface Message {
     action?: Action;
     isRead?: boolean;
     sentAt?: Date;
-    typeIsAttachment?: boolean;
+    messageType?: string;
     attachmentURL?: string;
     serverMessage?: any;
     serverPayload?: any;

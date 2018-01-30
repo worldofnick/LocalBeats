@@ -11,7 +11,7 @@ var MessageSchema = new Schema({
     to              :   { type: Schema.Types.ObjectId, ref: 'User' },
     isRead          :   { type: Boolean, default: false },
     sentAt          :   { type: Date, default: Date.now },
-    typeIsAttachment:   { type: Boolean, default: false},
+    messageType     :   { type: String, default: 'MSG'},        // Others include: ADMIN, FILE, OTHER (see messageTypes.ts)
     attachmentURL   :   { type: String}
 }, {strict: true});
 
