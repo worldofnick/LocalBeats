@@ -55,7 +55,7 @@ exports.updateUserByID = function (req, res, next) {
       return res.status(520).send({ message: "Error finding the user from this UID...", error: err });
     }
 
-    User.findById(req.params.uid).populate('notifications').exec(function (err, event) {
+    User.findById(req.params.uid).populate('notifications').exec(function (err, user) {
       user.hashPassword = undefined;
       if (req.body.user.spotifyID != undefined) {
         console.log("Spotify ID: " + req.body.user.spotifyID);
