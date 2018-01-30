@@ -52,9 +52,9 @@ export class UserService {
                 this.accessToken = data.token;
                 sessionStorage.setItem('token', JSON.stringify({ accessToken: this.accessToken }))
                 this.user = data.user as User;
-                this.user.isOnline = true;
+                // this.user.isOnline = true;
 
-                this.changeOnlineStatusTo(true);
+                // this.changeOnlineStatusTo(true);
 
                 // Notify server that a new user user logged in
                 this._socketService.send({
@@ -102,6 +102,7 @@ export class UserService {
     public signinUser(returningUser: User): Promise<User> {
         // this.connection = 'http://localhost:8080/api/auth/authenticate';
         const current = this.connection + '/authenticate';
+        // console.log('Returning User in auth: ', returningUser);
         return this.http.post(current, returningUser, { headers: this.headers })
             .toPromise()
             .then((response: Response) => {
@@ -109,8 +110,8 @@ export class UserService {
                 this.accessToken = data.token;
                 sessionStorage.setItem('token', JSON.stringify({ accessToken: this.accessToken }))
                 this.user = data.user as User;
-                this.user.isOnline = true;
-                this.changeOnlineStatusTo(true);
+                // this.user.isOnline = true;
+                // this.changeOnlineStatusTo(true);
 
                 // Notify server that a new user user logged in
                 this._socketService.send({

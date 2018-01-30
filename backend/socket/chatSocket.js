@@ -17,10 +17,10 @@ module.exports = function (io) {
             console.log('\n-----');
             if( message.action == 'newUserLoggedIn' ) {          //TODO: chaneg to action enum?
                 // Notify all clients that a new client joined
-                io.emit('newUserLoggedIn', {content: 'New User connected', user: message.from});
+                io.emit('newUserLoggedIn', {content: message.from.firstName+' logged in', user: message.from});
             }
             else if(message.action == 'someUserLoggedOut') {
-                io.emit('someUserLoggedOut', {content: 'User disconnected', user: message.from});
+                io.emit('someUserLoggedOut', {content: message.from.firstName+' logged out', user: message.from});
             }
             else if(message.action == 'sendPrivateMessage') {
                 let msg = message.content;

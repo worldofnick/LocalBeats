@@ -15,6 +15,7 @@ exports.register = function (req, res) {
     if(newUser.spotifyID == null) {
       newUser.spotifyID = undefined;
     }
+    newUser.isOnline = true;
     
     newUser.save(function (err, user) {  // callback function with err and success value
       if (err) {
@@ -39,6 +40,15 @@ exports.register = function (req, res) {
             expiresIn: 86400 // expires in 24 hours
           }
         );
+
+        User.findByIdAndUpdate(user._id, {isOnline: true}, {new: true}, function (err, authUser) {
+          if (err) {
+            console.log('Cant chnage online status (sign up)...');
+          }
+          authUser.hashPassword = undefined;
+          console.log('Authenticated user: ', authUser);
+        });
+
         return res.status(200).send({ auth: true, token: token, user: user });
       }
     });
@@ -95,6 +105,15 @@ exports.register = function (req, res) {
         expiresIn: 86400 // expires in 24 hours
       });
       user.hashPassword = undefined;
+
+      User.findByIdAndUpdate(user._id, {isOnline: true}, {new: true}, function (err, authUser) {
+        if (err) {
+          console.log('Cant chnage online status (auth controller)...');
+        }
+        authUser.hashPassword = undefined;
+        console.log('Authenticated user: ', authUser);
+      });
+
       res.status(200).send({ auth: true, token: token, user: user });
     });
   };
