@@ -93,7 +93,7 @@
             <div class="conversation-msg">
               {{message.content}}
             </div>
-            <p class="chat-date text-muted">{{message.sentAt}}</p>
+            <p class="chat-date text-muted">{{message.sentAt | date:'EEEE, MMM d, y, h:mm a'}}</p>
           </div>
         </div>
 
