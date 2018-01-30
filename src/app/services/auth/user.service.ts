@@ -118,7 +118,7 @@ export class UserService {
                     action: Action.NEW_LOG_IN
                 });
 
-                return this.user
+                return this.user;
             })
             .catch(this.handleError);
     }
@@ -133,7 +133,7 @@ export class UserService {
     // /api/auth/passwordChange/:uid')
     public updatePassword(user: User): Promise<User> {
         const current = this.connection + '/passwordChange/' + user._id;
-        let newPassword:string = user.password;
+        let newPassword: string = user.password;
         return this.http.put(current, {'newPassword': newPassword}, { headers: this.headers })
             .toPromise()
             .then((response: Response) => {
@@ -141,7 +141,7 @@ export class UserService {
                 // this.accessToken = data.token;
                 // sessionStorage.setItem('token', JSON.stringify({ accessToken: this.accessToken }))
                 this.user = data.user as User;
-                return this.user
+                return this.user;
             })
             .catch(this.handleError);
     }
