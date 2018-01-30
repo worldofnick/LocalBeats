@@ -75,13 +75,13 @@ export class AppChatsComponent implements OnInit {
     this._socketService.onEvent(Event.REQUEST_PM_SOCKET_ID)
       .subscribe((message: Message) => {
         console.log('Socket Request (chat event): ', message);
-        console.log(' to == logged in? : ', message.serverPayload.email === this.loggedInUser.email);
+        console.log(' to == logged in? : ', message.serverPayload._id === this.loggedInUser._id);
         this.respondToIsItYouPMSocketRequest(message);
     });
   }
 
   respondToIsItYouPMSocketRequest(message) {
-    if (message.serverPayload.email === this.loggedInUser.email) {
+    if (message.serverPayload._id === this.loggedInUser._id) {
       console.log('Sending socket: ', this._socketService.socket.id);
       this._socketService.send(Action.REQUEST_PM_SOCKET_ID, this._socketService.socket.id);
     }
