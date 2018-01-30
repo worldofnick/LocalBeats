@@ -1,3 +1,62 @@
-<p>
-  home works!
-</p>
+<mat-card>
+  <mat-card-title class="m-0">
+      <div class="card-title-text text-center fz-2">LocalBeats<mat-icon>music_note</mat-icon></div>
+    </mat-card-title>
+</mat-card>
+<mat-card class="p-0">
+    <mat-card-title class="m-0">
+      <div class="card-title-text">Nearby Musicians</div>
+      <mat-divider></mat-divider>
+    </mat-card-title>
+    <mat-card-content class="p-0">
+      <mat-grid-list cols="3" rowHeight="1:1" class="app-gallery">
+        <!-- Gallery item -->
+        <mat-grid-tile *ngFor="let artist of artists">
+          <img [src]="artist.url" alt="">
+          <!-- item detail, show on hover -->
+          <div class="gallery-control-wrap">
+            <div class="gallery-control">
+              <h4 class="photo-detail fz-1">{{artist.name}}</h4>
+              <span fxFlex></span>
+              <button mat-icon-button [matMenuTriggerFor]="photoMenu" class="">
+                  <mat-icon>more_vert</mat-icon>
+              </button>
+              <mat-menu #photoMenu="matMenu">
+                  <button mat-menu-item><mat-icon>send</mat-icon>View</button>
+                  <button mat-menu-item><mat-icon>favorite</mat-icon>Favorite</button>
+              </mat-menu>
+            </div>
+          </div>
+        </mat-grid-tile>
+      </mat-grid-list>
+    </mat-card-content>
+  </mat-card>
+  <mat-card class="p-0">
+    <mat-card-title class="m-0">
+      <div class="card-title-text">Trending Events</div>
+      <mat-divider></mat-divider>
+    </mat-card-title>
+    <mat-card-content class="p-0">
+      <mat-grid-list cols="3" rowHeight="1:1" class="app-gallery">
+        <!-- Gallery item -->
+        <mat-grid-tile *ngFor="let event of events">
+          <img [src]="event.url" alt="">
+          <!-- item detail, show on hover -->
+          <div class="gallery-control-wrap">
+            <div class="gallery-control">
+              <h4 class="photo-detail fz-1">{{event.name}}</h4>
+              <span fxFlex></span>
+              <button mat-icon-button [matMenuTriggerFor]="photoMenu" class="">
+                  <mat-icon>more_vert</mat-icon>
+              </button>
+              <mat-menu #photoMenu="matMenu">
+                  <button mat-menu-item><mat-icon>send</mat-icon>View</button>
+                  <button mat-menu-item><mat-icon>favorite</mat-icon>Favorite</button>
+              </mat-menu>
+            </div>
+          </div>
+        </mat-grid-tile>
+      </mat-grid-list>
+    </mat-card-content>
+  </mat-card>
+  
