@@ -54,11 +54,11 @@ export class AppChatsComponent implements OnInit {
   private initIoConnection(): void {
     this._socketService.initSocket();
 
-    this.ioConnection = this._socketService.onMessage()
-      .subscribe((message: Message) => {
-        this.messages.push(message);
-        console.log('Server msg (to chat): ', message);
-    });
+    // this.ioConnection = this._socketService.onMessage()
+    //   .subscribe((message: Message) => {
+    //     this.messages.push(message);
+    //     console.log('Server msg (to chat): ', message);
+    // });
 
     // this._socketService.onEvent(Event.CONNECT)
     //   .subscribe((message: Message) => {
@@ -173,21 +173,33 @@ export class AppChatsComponent implements OnInit {
 
   sendMessageClicked() {
     console.log('-------CHAT UI---------');
-    console.log('User entered the message: ', this.messageEntered);
+    console.log('%s entered the message: %s', this.loggedInUser.firstName, this.messageEntered);
     console.log('Sender: ', this.loggedInUser.firstName + ' ' + this.loggedInUser.lastName);
     console.log('Receiver: ', this.activeChatUser.firstName + ' ' + this.activeChatUser.lastName);
     console.log('---------------------');
 
-    let message: Message = {
-      from: this.loggedInUser,
-      to: this.activeChatUser,
-      content: this.messageEntered,
-      action: Action.SEND_PRIVATE_MSG
-    };
+    // Message model
+    // from?: User;
+    // to?: User;
+    // content?: any;
+    // action?: Action;
+    // serverMessage?: any;
+    // serverPayload?: any;
+
     // If the user entered non-blank message and hit send, communicate with server
     if (this.messageEntered.trim().length > 0) {
-      this._socketService.send(message);
-      this.messageEntered = '';
+      let privateMessage: Message = {
+        from: this.loggedInUser,
+        to: this.activeChatUser,
+        content: this.messageEntered,
+        action: Action.SEND_PRIVATE_MSG
+      };
+      this._socketService.send(Action.SEND_PRIVATE_MSG, privateMessage);
+      this.resetMessageInputBox();
     }
+  }
+
+  resetMessageInputBox() {
+    this.messageEntered = '';                   // Reset the message input box 
   }
 }

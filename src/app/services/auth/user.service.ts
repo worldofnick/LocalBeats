@@ -54,7 +54,7 @@ export class UserService {
                 this.user = data.user as User;
 
                 // Notify server that a new user user logged in
-                this._socketService.send({
+                this._socketService.send(Action.NEW_LOG_IN, {
                     from: this.user,
                     action: Action.NEW_LOG_IN
                 });
@@ -91,7 +91,7 @@ export class UserService {
                 this.user = data.user as User;
 
                 // Notify server that a new user user logged in
-                this._socketService.send({
+                this._socketService.send(Action.NEW_LOG_IN, {
                     from: this.user,
                     action: Action.NEW_LOG_IN
                 });
@@ -159,7 +159,7 @@ export class UserService {
                 sessionStorage.clear();
 
                 // Notify server that a new user user logged in
-                this._socketService.send({
+                this._socketService.send(Action.SMN_LOGGED_OUT, {
                     from: from,
                     action: Action.SMN_LOGGED_OUT
                 });

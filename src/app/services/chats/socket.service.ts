@@ -6,6 +6,7 @@ import { Observer } from 'rxjs/Observer';
 import { User } from '../../models/user';
 import { Message } from './model/Message';
 import { Event } from './model/event';
+import { Action } from './model/action';
 
 import * as io from 'socket.io-client';
 
@@ -29,15 +30,16 @@ export class SocketService {
     this.socket = io(SERVER_URL);
   }
 
-  public send(message: Message): void {
-    this.socket.emit('message', message);
+  // default event name: message
+  public send(eventName: string, message: Message): void {
+    this.socket.emit(eventName, message);
   }
 
-  public onMessage(): Observable<Message> {
-    return new Observable<Message>(observer => {
-        this.socket.on('message', (data: Message) => observer.next(data));
-    });
-  }
+  // public onMessage(): Observable<Message> {
+  //   return new Observable<Message>(observer => {
+  //       this.socket.on('message', (data: Message) => observer.next(data));
+  //   });
+  // }
 
   public onEvent(event: Event): Observable<any> {
     return new Observable<Event>(observer => {
