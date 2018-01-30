@@ -5,6 +5,7 @@ var jwt       = require('jsonwebtoken');
 var bcrypt    = require('bcrypt');
 var User      = mongoose.model('User');
 var config    = require('../../config.js');
+var Notifications = mongoose.model('Notification');
 
 // ====== USER ROUTES ======
 

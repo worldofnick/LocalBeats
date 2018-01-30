@@ -117,9 +117,9 @@ export class ProfileOverviewComponent implements OnInit {
   constructor(private route: ActivatedRoute, private userService: UserService) { }
   
   ngOnInit() {
-    console.log("in profile overview..user = ");
+    // console.log("in profile overview..user = ");
     // this.user = this.userService.user;
-    console.log(this.user);
+    // console.log(this.user);
 
      //snapshot params returns a javascript object. index into it with the property field to get a property.
     //  this.userID = {

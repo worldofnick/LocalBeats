@@ -4,7 +4,7 @@ import { Event } from 'app/models/event';
 export class Notification {
     senderID: string
     receiverID:string
-    event:Event
+    eventID:string
     message: string
     icon: string
     sentTime: Date;

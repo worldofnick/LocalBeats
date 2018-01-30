@@ -7,7 +7,7 @@ var Schema = mongoose.Schema;
 var NotificationSchema = new Schema({
     senderID        : { type: String },
     receiverID      : { type: String },
-    event           : { type: Schema.Types.ObjectId, ref: 'Events' },
+    eventID         : { type: String},
     message         : { type: String},
     icon            : { type: String},
     sentTime        : { type: Date},

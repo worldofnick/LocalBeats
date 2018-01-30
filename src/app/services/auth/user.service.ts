@@ -68,7 +68,6 @@ export class UserService {
             .catch(this.handleError);
     }
 
-
     /**
      * 
      * @param user 
@@ -130,7 +129,7 @@ export class UserService {
     /***********************
      * 
      * 
-     * N O T I F I C A T O N S
+     * N O T I F I C A T I O N S
      * 
      * 
      *************************/
@@ -172,6 +171,7 @@ export class UserService {
                 const data = response.json();
                 // this.accessToken = data.token;
                 // console.log(this.accessToken)
+                //inserting test notifications until i can actually send them.
                 let temp = data.user as User;
                 let not1:Notification = new Notification;
                 not1.icon = "chat"
@@ -187,7 +187,7 @@ export class UserService {
 
 
 
-    public sendNotificationToUser(notification: any): Promise<any> {
+    public sendNotificationToUser(notification: Notification): Promise<any> {
 
 
         this.getUserByID(notification.receiverID).then((receiver:User) =>{
@@ -196,19 +196,18 @@ export class UserService {
         let userConnection: string = 'http://localhost:8080/api/users';
         const current = userConnection + '/' + receiver._id;        
         receiver.notifications.push(notification);
-        receiver.notifications.push(notification);
-        receiver.notifications.push(notification);
 
-        console.log(receiver.notifications);
-        console.log(receiver);
+        console.log("sending:");
+        console.log(JSON.stringify(receiver));
 
-        return this.http.put(current, { user: receiver }, { headers: this.headers })
+        return this.http.put(current, { user: JSON.stringify(receiver) }, { headers: this.headers })
             .toPromise()
             .then((response: Response) => {
                 const data = response.json();
+                console.log(data);
                 this.user = data.user as User;
+                console.log(this.user)
                 return this.user;
-                // return
             })
             .catch(this.handleError); 
         })
