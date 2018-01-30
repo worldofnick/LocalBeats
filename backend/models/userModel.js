@@ -18,8 +18,7 @@ var UserSchema = new Schema({
     spotifyID     : {type: String},
     genres        : {type: Array}, // Kept empty if the user is not an artist
     eventTypes    : {type: Array}, // Kept empty if the user is not an artist
-    isArtist      : {type: Boolean, default: false},
-    notifications : [{type: Schema.Types.ObjectId, ref: 'Notification'}],    
+    isArtist      : {type: Boolean, default: false},   
     location: {
         type: [Number],  // [<longitude>, <latitude>]
         index: '2d'      // create the geospatial index
