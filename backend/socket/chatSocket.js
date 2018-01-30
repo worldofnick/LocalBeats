@@ -30,6 +30,7 @@ module.exports = function (io) {
         // Private Messaging Event Handlers - P2P
         // ============================================
 
+        // Request to send a private message
         socket.on('sendPrivateMessage', (payload) => {
             console.log('\n-----\nPM received from socket: ', socket.id);
 

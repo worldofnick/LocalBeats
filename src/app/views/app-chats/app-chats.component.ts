@@ -9,6 +9,7 @@ import { User } from '../../models/user';
 import { Message } from '../../services/chats/model/message';
 import { Event } from '../../services/chats/model/event';
 import { Action } from '../../services/chats/model/action';
+import { MessageTypes } from '../../services/chats/model/messageTypes';
 
 @Component({
   selector: 'app-chats',
@@ -58,7 +59,7 @@ export class AppChatsComponent implements OnInit {
     // this._socketService.socket.on('connect', () => {
     //        listen to all events inside it
     //});
-    
+
     // Every time there is a new login/out, it reloads the chat side Bar.
     this._socketService.onEvent(Event.NEW_LOG_IN)                       // TODO: optimize to reload only online status and new, deleted users
       .subscribe((message: Message) => {
@@ -180,28 +181,47 @@ export class AppChatsComponent implements OnInit {
     console.log('Receiver: ', this.activeChatUser.firstName + ' ' + this.activeChatUser.lastName);
     console.log('---------------------');
 
-    // Message model
-    // from?: User;
-    // to?: User;
-    // content?: any;
-    // action?: Action;
-    // serverMessage?: any;
-    // serverPayload?: any;
-
+    /**
+     * isRead?: boolean;
+    sentAt?: Date;
+    messageType?: string;
+    attachmentURL?: string;
+    serverMessage?: any;
+    serverPayload?: any;
+     */
     // If the user entered non-blank message and hit send, communicate with server
+
     if (this.messageEntered.trim().length > 0) {
-      let privateMessage: Message = {
-        from: this.loggedInUser,
-        to: this.activeChatUser,
-        content: this.messageEntered,
-        action: Action.SEND_PRIVATE_MSG
-      };
-      this._socketService.send(Action.SEND_PRIVATE_MSG, privateMessage);
+
+      // CASE 1: Both users online. So do a socket event
+      if (this.activeChatUser.isOnline) {
+        let privateMessage: Message = this.createPMObject(true, MessageTypes.MSG);
+        this._socketService.send(Action.SEND_PRIVATE_MSG, privateMessage);
+      }
+      // CASE 2: The recipient is offline. So an HTTP request instead of socket event
+      else {
+        let privateMessage: Message = this.createPMObject(false, MessageTypes.MSG);
+
+        // TODO: <<<<<< REPALCE WITH HTTP PUT/POST >>>>>>>>>>>
+        this._socketService.send(Action.SEND_PRIVATE_MSG, privateMessage);
+      }
       this.resetMessageInputBox();
     }
   }
 
   resetMessageInputBox() {
     this.messageEntered = '';                   // Reset the message input box 
+  }
+
+  createPMObject(hasRead: boolean, messageType: MessageTypes): Message {
+    return {
+      from: this.loggedInUser,
+      to: this.activeChatUser,
+      content: this.messageEntered,
+      action: Action.SEND_PRIVATE_MSG,
+      isRead: hasRead,                       // TODO: it needs to be true only when user read it! Show up in notification by default
+      sentAt: new Date(Date.now()),
+      messageType: messageType
+    };
   }
 }
