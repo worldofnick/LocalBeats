@@ -4,6 +4,10 @@ import { Http, Headers, RequestOptions, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import { User } from 'app/models/user';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { SocketService } from '../../services/chats/socket.service';
+import { Message } from '../../services/chats/model/message';
+import { Event } from '../../services/chats/model/event';
+import { Action } from '../../services/chats/model/action';
 
 // For Angular 5 HttpClient Module
 const httpOptions = {
@@ -19,10 +23,23 @@ export class UserService {
     // public getUserConnection: string = 'https://localbeats.herokuapp.com/api/user';
     public accessToken: string = null;
     public user: User = null;
+    ioConnection: any;
+    action = Action;
 
     private headers: Headers = new Headers({ 'Content-Type': 'application/json' });
 
-    constructor(private http: Http, private _httpClient: HttpClient) { }
+    constructor(private http: Http, private _socketService: SocketService, private _httpClient: HttpClient) { this.initIoConnection(); }
+
+    private initIoConnection(): void {
+        this._socketService.initSocket();
+    
+        // TODO: can remove
+        this.ioConnection = this._socketService.onEvent(Event.NEW_LOG_IN)
+          .subscribe((message: Message) => {
+            // this.messages.push(message);
+            console.log('Server Msg to auth.component ', message);
+        });
+      }
 
     // post("api/auth/passwordChange/:uid')
     public signupUser(newUser: User): Promise<User> {
@@ -38,6 +55,12 @@ export class UserService {
                 this.user.isOnline = true;
 
                 this.changeOnlineStatusTo(true);
+
+                // Notify server that a new user user logged in
+                this._socketService.send({
+                    from: this.user,
+                    action: Action.NEW_LOG_IN
+                });
 
                 return this.user;
             })
@@ -88,6 +111,13 @@ export class UserService {
                 this.user = data.user as User;
                 this.user.isOnline = true;
                 this.changeOnlineStatusTo(true);
+
+                // Notify server that a new user user logged in
+                this._socketService.send({
+                    from: this.user,
+                    action: Action.NEW_LOG_IN
+                });
+
                 return this.user
             })
             .catch(this.handleError);
@@ -144,6 +174,12 @@ export class UserService {
     public logout() {
 
         this.changeOnlineStatusTo(false);
+
+        // Notify server that a new user user logged in
+        this._socketService.send({
+            from: this.user,
+            action: Action.SMN_LOGGED_OUT
+        });
 
         this.accessToken = null;
         this.user = null;
