@@ -40,9 +40,6 @@ exports.updateUserByID = function (req, res, next) {
       console.log("Spotify ID: " + req.body.user.spotifyID);
       next();
     }else {
-      console.log('Emitting chnageStatus to all chat clients... ');
-      let io = req.app.get('io');
-      io.emit('refreshChatOnlineStatuses', 'Refresh it');
       return res.status(200).send({ user: user });
     }
   });
