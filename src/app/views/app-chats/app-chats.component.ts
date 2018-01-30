@@ -30,7 +30,7 @@ export class AppChatsComponent implements OnInit {
   // Chat Variables
   // ==============================================
   action = Action;
-  messages: Message[] = [];
+  activeChatMessages: Message[] = new Array();
   ioConnection: any;
   messageEntered: string;
   loggedInUser: User = new User();
@@ -75,19 +75,28 @@ export class AppChatsComponent implements OnInit {
 
     this._socketService.onEvent(Event.SEND_PRIVATE_MSG)
       .subscribe((message: Message) => {
+        // Add response message[] to the activeChatMessages[]
+        for (let temp of message as Message[]) {
+          this.activeChatMessages.push(temp as Message);
+        };
         console.log('Private Chat message from server (chat event): ', message);
+        // console.log('Active Chat Messages var (chat event): ', this.activeChatMessages);
+        
+        // TODO: refresh UI?
     });
 
     this._socketService.onEvent(Event.REQUEST_PM_SOCKET_ID)
       .subscribe((message: Message) => {
         console.log('Socket Request (chat event): ', message);
-        console.log(' to == logged in? : ', message.serverPayload._id === this.loggedInUser._id);
+        console.log(' to == logged in? : ', (message.serverPayload.from._id === this.loggedInUser._id) ||
+                                            (message.serverPayload.to._id === this.loggedInUser._id)) ;
         this.respondToIsItYouPMSocketRequest(message);
     });
   }
 
   respondToIsItYouPMSocketRequest(message) {
-    if (message.serverPayload._id === this.loggedInUser._id) {
+    if ( (message.serverPayload.from._id === this.loggedInUser._id) ||
+        (message.serverPayload.to._id === this.loggedInUser._id)) {
       console.log('Sending socket: ', this._socketService.socket.id);
       this._socketService.send(Action.REQUEST_PM_SOCKET_ID, this._socketService.socket.id);
     }

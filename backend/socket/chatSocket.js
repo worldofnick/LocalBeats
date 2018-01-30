@@ -37,7 +37,8 @@ module.exports = function (io) {
             // TODO: SAVE THE DATA TO DB
             pendingMessages.push(payload);
             console.log("\n----\nPending Messages: ", pendingMessages);
-            io.emit('requestSocketIdForPM', {serverMessage: payload.to.firstName + ' ping me', serverPayload: payload.to});
+            io.emit('requestSocketIdForPM', {serverMessage: payload.to.firstName + 
+                'and ' + payload.from.firstName + ' ping me', serverPayload: payload});
             
         });
 
