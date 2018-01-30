@@ -174,17 +174,40 @@ export class UserService {
 
     public logout() {
 
-        this.changeOnlineStatusTo(false);
+        let from: User = this.user;
 
-        // Notify server that a new user user logged in
-        this._socketService.send({
-            from: this.user,
-            action: Action.SMN_LOGGED_OUT
-        });
+        const current = this.connection + '/logout';
+        // console.log('Returning User in auth: ', returningUser);
+        console.log('LOGOUT USER: ', this.user);
+        return this.http.post(current, this.user, { headers: this.headers })
+            .toPromise()
+            .then((response: Response) => {
 
-        this.accessToken = null;
-        this.user = null;
-        sessionStorage.clear();
+                this.accessToken = null;
+                this.user = null;
+                sessionStorage.clear();
+
+                // Notify server that a new user user logged in
+                this._socketService.send({
+                    from: from,
+                    action: Action.SMN_LOGGED_OUT
+                });
+            })
+            .catch(this.handleError);
+
+
+
+        // this.changeOnlineStatusTo(false);
+
+        // // Notify server that a new user user logged in
+        // this._socketService.send({
+        //     from: this.user,
+        //     action: Action.SMN_LOGGED_OUT
+        // });
+
+        // this.accessToken = null;
+        // this.user = null;
+        // sessionStorage.clear();
     }
 
     public isAuthenticated() {

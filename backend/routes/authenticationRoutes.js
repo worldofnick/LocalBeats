@@ -18,7 +18,7 @@ module.exports = function(app) {
 		.put(autheticationHandler.changePassword);
 
 	app.route('/api/auth/logout')
-		.get(autheticationHandler.logout);
+		.post(autheticationHandler.logout);
 
 	/**
 	 * Authorization - the act of verifying the access rights of a user to 

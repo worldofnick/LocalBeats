@@ -137,6 +137,17 @@ exports.register = function (req, res) {
    * @param {*} res 
    */
   exports.logout = function (req, res) {
+    
+    console.log(req.body);
+
+    User.findByIdAndUpdate(req.body._id, {isOnline: false}, {new: true}, function (err, authUser) {
+      if (err) {
+        console.log('Cant chnage online status (logout controller)...');
+      }
+      authUser.hashPassword = undefined;
+      console.log('Logged out user: ', authUser);
+    });
+
     res.status(200).send({ auth: false, token: null });
   };
   
