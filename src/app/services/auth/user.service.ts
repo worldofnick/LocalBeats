@@ -52,9 +52,6 @@ export class UserService {
                 this.accessToken = data.token;
                 sessionStorage.setItem('token', JSON.stringify({ accessToken: this.accessToken }))
                 this.user = data.user as User;
-                // this.user.isOnline = true;
-
-                // this.changeOnlineStatusTo(true);
 
                 // Notify server that a new user user logged in
                 this._socketService.send({
@@ -65,24 +62,6 @@ export class UserService {
                 return this.user;
             })
             .catch(this.handleError);
-    }
-
-    public changeOnlineStatusTo(bool: boolean) {
-        let body = {
-            "user": {
-                "isOnline": bool
-            }
-        };
-        // Set the isOnline status to false in the DB
-        console.log('URL: ', 'http://localhost:8080/api/users/' + this.user._id);
-        console.log('UID: ', this.user._id);
-        this._httpClient.put('http://localhost:8080/api/users/' + this.user._id, body, httpOptions).subscribe(data => {
-            console.log('DATA: ', data);
-        },
-            error => {
-                console.error('Error changing status!');
-            }
-        );
     }
 
     // post("/api/users/uid")
@@ -110,8 +89,6 @@ export class UserService {
                 this.accessToken = data.token;
                 sessionStorage.setItem('token', JSON.stringify({ accessToken: this.accessToken }))
                 this.user = data.user as User;
-                // this.user.isOnline = true;
-                // this.changeOnlineStatusTo(true);
 
                 // Notify server that a new user user logged in
                 this._socketService.send({
@@ -156,10 +133,7 @@ export class UserService {
      * 
      */
     public getUserByID(ID: String): Promise<User> {
-        // const num = ID["id"];
         const current = this.userConnection + '/' + ID;
-        //console.log("getting: ");
-        //console.log(current);
         return this.http.get(current)
             .toPromise()
             .then((response: Response) => {
@@ -173,11 +147,8 @@ export class UserService {
     }
 
     public logout() {
-
         let from: User = this.user;
-
         const current = this.connection + '/logout';
-        // console.log('Returning User in auth: ', returningUser);
         console.log('LOGOUT USER: ', this.user);
         return this.http.post(current, this.user, { headers: this.headers })
             .toPromise()
@@ -194,20 +165,6 @@ export class UserService {
                 });
             })
             .catch(this.handleError);
-
-
-
-        // this.changeOnlineStatusTo(false);
-
-        // // Notify server that a new user user logged in
-        // this._socketService.send({
-        //     from: this.user,
-        //     action: Action.SMN_LOGGED_OUT
-        // });
-
-        // this.accessToken = null;
-        // this.user = null;
-        // sessionStorage.clear();
     }
 
     public isAuthenticated() {
