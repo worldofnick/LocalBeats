@@ -44,6 +44,11 @@ export class ChatsService {
     return this.http.get(SERVER_URL + '/api/messages/' + from._id + '/' + to._id);
   }
 
+  savePrivateMessageToDB(message: Message) {
+    let body = JSON.stringify(message);
+    return this.http.post(SERVER_URL + '/api/messages/', body, httpOptions);
+  }
+
   // getServerOnlineStatusOpdateMessage() {
   //   let observable = new Observable( observer => {
   //     this.socket.on('refreshChatOnlineStatuses', (message) => {

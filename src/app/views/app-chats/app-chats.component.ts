@@ -99,8 +99,22 @@ export class AppChatsComponent implements OnInit {
   respondToIsItYouPMSocketRequest(message) {
     if ( (message.serverPayload.from._id === this.loggedInUser._id) ||
         (message.serverPayload.to._id === this.loggedInUser._id)) {
-      console.log('Sending socket: ', this._socketService.socket.id);
-      this._socketService.send(Action.REQUEST_PM_SOCKET_ID, this._socketService.socket.id);
+
+          this._chatsService.getPMsBetweenActiveAndLoggedInUser(this.loggedInUser, this.activeChatUser).subscribe(
+            data => {
+              // console.log('\n====\nUser PMs from Server DB: ', JSON.stringify(data));
+              // console.log('\n====\nUser PMs from Server DB: ', data as {messages: Message[]} );
+              this.activeChatMessages = new Array();
+              let temp = data as {messages: Message[]};
+              this.activeChatMessages = temp.messages;
+            },
+            err => console.error('Error fetching PMs between 2 users: ', err),
+            () => { 
+              console.log('Done fetching PMs from the server DB');
+              console.log('Sending myself with messages[]: ', this.activeChatMessages);
+              this._socketService.send(Action.REQUEST_PM_SOCKET_ID, {serverPayload: this.activeChatMessages} );
+            }
+        );
     }
   }
 
@@ -216,21 +230,40 @@ export class AppChatsComponent implements OnInit {
 
     if (this.messageEntered.trim().length > 0) {
 
+      
+      let privateMessage: Message;
       // CASE 1: Both users online. So do a socket event
       if (this.activeChatUser.isOnline) {
-        let privateMessage: Message = this.createPMObject(true, MessageTypes.MSG);
-        console.log("MSG JSON: ", JSON.stringify(privateMessage));
-        this._socketService.send(Action.SEND_PRIVATE_MSG, privateMessage);
+
+        // Save the message in the DB
+        privateMessage = this.createPMObject(true, MessageTypes.MSG);
       }
       // CASE 2: The recipient is offline. So an HTTP request instead of socket event
       else {
-        let privateMessage: Message = this.createPMObject(false, MessageTypes.MSG);
-
-        // TODO: <<<<<< REPALCE WITH HTTP PUT/POST >>>>>>>>>>>
-        this._socketService.send(Action.SEND_PRIVATE_MSG, privateMessage);
+        privateMessage = this.createPMObject(false, MessageTypes.MSG);
+        
       }
+      this.awaitMessageSaveResponse(privateMessage);
       this.resetMessageInputBox();
     }
+  }
+
+  awaitMessageSaveResponse(privateMessage: Message) {
+    //TODO: change to promise, then?
+    this._chatsService.savePrivateMessageToDB(privateMessage).subscribe(
+      data => {
+        console.log('\n====\nMessage save response from server: ', JSON.stringify(data));
+        // console.log('\n====\nUser PMs from Server DB: ', data as {messages: Message[]} );
+        // this.activeChatMessages = new Array();
+        // let temp = data as {messages: Message[]};
+        // this.activeChatMessages = temp.messages;
+      },
+      err => console.error('Error saving the message: ', err),
+      () => { 
+        console.log('Done saving the message to server DB. Sending socket request.');
+        this._socketService.send(Action.SEND_PRIVATE_MSG, privateMessage);
+      }
+    );
   }
 
   resetMessageInputBox() {
