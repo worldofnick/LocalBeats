@@ -8,6 +8,7 @@ module.exports = function(app) {
 		.get(messageHandlers.getAllFromToMessages);     // Get all messages from a user to a user
 
 	app.route('/api/messages/')
+		.get(messageHandlers.getAllMessages)
 		.put(messageHandlers.saveMessage)               // save message to DB
         .delete(messageHandlers.clearMessagesDB);       // remove all messages from DB
     

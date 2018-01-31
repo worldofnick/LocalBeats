@@ -16,6 +16,7 @@ const User          = require('./backend/models/userModel');
 const Events        = require('./backend/models/eventsModel');
 const Bookings      = require('./backend/models/bookingsModel');
 const Notification  = require('./backend/models/notificationModel');
+const Message       = require('./backend/models/messageModel');
 
 var distDir = __dirname + "/dist/";
 app.use(express.static(distDir));           // Create link to Angular build directory
@@ -64,12 +65,14 @@ var eventsRoutes          = require('./backend/routes/eventsRoutes.js');
 var bookingsRoutes        = require('./backend/routes/bookingsRoutes.js');
 var spotifyRoutes 		    = require('./backend/routes/spotifyRoutes.js');
 var notificationRoutes 		= require('./backend/routes/notificationRoutes.js');
+var messagesRoutes 		    = require('./backend/routes/messageRoutes.js');
 userRoutes(app);
 authenticationRoutes(app);
 eventsRoutes(app);
 bookingsRoutes(app);
 spotifyRoutes(app);
 notificationRoutes(app);
+messagesRoutes(app);
 
 var privateChatSocket     = require('./backend/socket/chatSocket.js');
 privateChatSocket(io);
