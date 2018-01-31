@@ -6,7 +6,7 @@ module.exports = function(app) {
 		app.route('/api/stripe/authorize')
 			.get(stripeHandlers.stripeAuthorize);
 
-    app.route('/api/stripe/authorize')
+    app.route('/api/stripe/link')
 			.get(stripeHandlers.linkStripe);
 
 		app.route('/api/stripe/transfers')
