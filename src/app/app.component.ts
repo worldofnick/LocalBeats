@@ -5,6 +5,7 @@ import { MatSnackBar } from '@angular/material';
 import * as hopscotch from 'hopscotch';
 import 'rxjs/add/operator/filter';
 import { RoutePartsService } from "./services/route-parts/route-parts.service";
+import { SocketService } from 'app/services/chats/socket.service';
 
 @Component({
   selector: 'app-root',
@@ -19,10 +20,12 @@ export class AppComponent implements OnInit {
     private router: Router, 
     private activeRoute: ActivatedRoute,
     private routePartsService: RoutePartsService,
-    public snackBar: MatSnackBar) { }
+    public snackBar: MatSnackBar,
+    private _socketService: SocketService) { }
 
   ngOnInit() {
     this.changePageTitle();
+    this._socketService.initSocket();
     // Init User Tour
     setTimeout(() => {
       hopscotch.startTour(this.tourSteps());

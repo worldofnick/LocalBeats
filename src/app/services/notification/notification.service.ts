@@ -6,7 +6,7 @@ import { SearchTerms } from 'app/models/search';
 import { Event } from 'app/models/event';
 import { User } from 'app/models/user';
 import { Notification } from 'app/models/notification';
-import * as socketIO from 'socket.io-client';
+// import * as socketIO from 'socket.io-client';
 import * as Rx from 'rxjs/Rx';
 
 @Injectable()
@@ -19,20 +19,20 @@ export class NotificationService {
     notifications: Notification[];
 
     // Our socket connection
-    private socket:socketIO.socket;
+    // private socket:socketIO.socket;
 
     constructor(private http: Http) { }
 
     connect(){
-        const io = socketIO('http://localhost:8080');
-        io.on('fromServer', msg=>console.log(msg));
+        // const io = socketIO('http://localhost:8080');
+        // io.on('fromServer', msg=>console.log(msg));
     }
 
     sendToServer(){
-        const io = socketIO('http://localhost:8080');
-        io.on('connection', socket=>{
-            console.log
-        })
+        // const io = socketIO('http://localhost:8080');
+        // io.on('connection', socket=>{
+        //     console.log
+        // })
     }
     // connect(): Rx.Subject<Notification> {
 

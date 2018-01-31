@@ -10,7 +10,7 @@ import { Message } from './model/Message';
 import { Event } from './model/event';
 import { SocketService} from './socket.service';
 
-import * as io from 'socket.io-client';
+// import * as io from 'socket.io-client';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -21,7 +21,7 @@ const SERVER_URL = 'http://localhost:8080';
 @Injectable()
 export class ChatsService {
 
-  private socket;
+  // private socket;
   private loggedInUser: User = new User();
 
   constructor(private _userService: UserService, private _socketService: SocketService, private http: HttpClient) { }

@@ -36,6 +36,7 @@ import { CommonDirectivesModule } from '../../directives/common/common-directive
 import { ThemeService } from '../../services/theme/theme.service';
 import { BreadcrumbComponent } from './breadcrumb/breadcrumb.component';
 import { NotificationService } from 'app/services/notification/notification.service';
+import { SocketService } from 'app/services/chats/socket.service';
 
 @NgModule({
   imports: [
@@ -78,7 +79,7 @@ import { NotificationService } from 'app/services/notification/notification.serv
     NavigationComponent, 
     NotificationsComponent, BreadcrumbComponent
   ],
-  providers: [ThemeService, NotificationService],
+  providers: [ThemeService, NotificationService, SocketService],
   exports: []
 })
 export class AppCommonModule {}
