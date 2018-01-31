@@ -14,5 +14,5 @@ export class User {
     public profilePicUrl: string
     public eventTypes: string[]
     public socket: io.socket
-    public stripeUserId: string
+    public stripeAccountId: string
 }
