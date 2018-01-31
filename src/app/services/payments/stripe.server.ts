@@ -10,4 +10,9 @@ import { NegotiateDialogComponent } from '../../views/negotiate/negotiate-dialog
 
 @Injectable()
 export class StripeService {
+
+  public connection: string = 'http://localhost:8080/api/stripe';
+  private headers: Headers = new Headers({ 'Content-Type': 'application/json' });
+
+  constructor(private http: Http) { }
 }
