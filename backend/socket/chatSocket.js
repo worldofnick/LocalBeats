@@ -54,41 +54,12 @@ module.exports = function (io) {
         // ============================================
         // Private Messaging Event Handlers - P2P
         // ============================================
-
-        // Request to send a private message 
-        // (old ping clients for identity, then redirect message apparoach)
-        // socket.on('sendPrivateMessage', (payload) => {
-        //     console.log('\n-----\nPM received from socket: ', socket.id);
-        //     console.log('\n-----\nPM payload: ', payload);
-            
-        //     // let newMessage = new Message();
-        //     // newMessage.from = payload.from._id;
-        //     // newMessage.to = payload.to._id;
-        //     // newMessage.isRead = payload.isRead;
-        //     // newMessage.sentAt = payload.sentAt;
-        //     // newMessage.messageType = payload.messageType;
-        //     // newMessage.attachmentURL = payload.attachmentURL;
-        //     // newMessage.content = payload.content;
-        //     // // TODO: SAVE THE DATA TO DB
-        //     // newMessage.save(function (err, message) {
-        //     //     if (err) {
-        //     //         console.log("Unable to save the message...");
-        //     //     } 
-        //     //     console.log("Save successful: ", message);
-        //     // });
-
-        //     // pendingMessages.push(payload);
-        //     // console.log("\n----\nPending Messages: ", pendingMessages);
-        //     io.emit('requestSocketIdForPM', {serverMessage: payload.to.firstName + 
-        //         'and ' + payload.from.firstName + ' ping me', serverPayload: payload});
-        // });
-
-        // Request to send a private message 
-        // (old ping clients for identity, then redirect message apparoach)
+        
         socket.on('sendPrivateMessage', (payload) => {
             console.log('\n-----\nPM received from socket: ', socket.id);
             console.log('\n-----\nPM payload: ', payload);
             
+            // Svae the message to DB
             let newMessage = new Message();
             newMessage.from = payload.from._id;
             newMessage.to = payload.to._id;
@@ -105,11 +76,7 @@ module.exports = function (io) {
                 console.log("Save successful: ", message);
             });
 
-            // pendingMessages.push(payload);
-            // console.log("\n----\nPending Messages: ", pendingMessages);
-            // io.emit('requestSocketIdForPM', {serverMessage: payload.to.firstName + 
-                // 'and ' + payload.from.firstName + ' ping me', serverPayload: payload});
-
+            // Send the message to all the recipients (currently also the sender)
             let recipients = [socketsHash[payload.from._id], socketsHash[payload.to._id]];
             console.log('>> Receipeitns: ',recipients);
             for(let i = 0; i < recipients.length; i++) {
