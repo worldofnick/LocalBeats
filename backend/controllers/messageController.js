@@ -31,7 +31,7 @@ exports.getAllFromToMessages = function (req, res) {
 
   let ids = [req.params.fromUID, req.params.toUID];
   Message.find({}).where('from').in(ids).where('to').in(ids)
-  .populate('from to')
+  .populate('from to').sort({sentAt: 1})
   .exec(function(err, messages) {
       if (err) {
         console.log('Error getting messages (from , to): ', err);
