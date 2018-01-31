@@ -1,6 +1,7 @@
 'use strict';
 
 // var pendingMessages = new Array();  // why not just send the whole 
+let socketsHash = new Array();
 var mongoose  = require('mongoose');
 var User      = mongoose.model('User');
 var Message   = mongoose.model('Message');
@@ -8,7 +9,8 @@ var Message   = mongoose.model('Message');
 module.exports = function (io) {
     // Default 'connection' event listerner
     io.on('connect', (socket) => {
-        console.log("Connection client with Socket ID:", socket.id);
+        console.log("\n=======================\nConnection client with Socket ID:", socket.id);
+        console.log('=======================');
 
         // ============================================
         // Authentication Event Handlers
@@ -16,15 +18,34 @@ module.exports = function (io) {
         
         // Default 'disconnect' event listerner
         socket.on('disconnect', function () {
-            console.log('User disconnected at Socket ID:', socket.id);
+            console.log('\n=======================\nUser disconnected at Socket ID:', 
+                            socket.id, '\nRemoving it from the socket hashTable');
+            console.log('=======================');
         });
 
         socket.on('newUserLoggedIn', (payload) => {
+            
+            console.log('\n=======================\n',payload.from.firstName, 
+                        'logged in.\nAdding', payload.from.firstName, ' UID to socket hashTable');
+
+            // Add user socket to hash table
+            socketsHash[payload.from._id] = socket.id;
+            console.log('Added', payload.from.firstName, 'UID to hash table with SID:', socketsHash[payload.from._id]);
+            console.log('Socket Hash Table:', socketsHash);
+            console.log('=======================');
+
             // Notify all clients that a new client logged in
             io.emit('newUserLoggedIn', {serverMessage: payload.from.firstName+' logged in', serverPayload: payload.from});
         });
 
         socket.on('someUserLoggedOut', (payload) => {
+            console.log('\n=======================\n',payload.from.firstName, 
+                        'logged out.\nRemoving', payload.from.firstName, 'from socket hashTable');
+
+            // Delete user socket from hash table
+            delete socketsHash[payload.from._id];
+            console.log('Removed', payload.from.firstName, 'from hash table:', socketsHash);
+            console.log('=======================');
             // Notify all clients that a client logged out
             io.emit('someUserLoggedOut', {serverMessage: payload.from.firstName+' logged out', serverPayload: payload.from});
         });
