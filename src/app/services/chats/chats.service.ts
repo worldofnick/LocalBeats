@@ -40,6 +40,10 @@ export class ChatsService {
     return this.loggedInUser;
   }
 
+  getPMsBetweenActiveAndLoggedInUser(from: User, to: User) {
+    return this.http.get(SERVER_URL + '/api/messages/' + from._id + '/' + to._id);
+  }
+
   // getServerOnlineStatusOpdateMessage() {
   //   let observable = new Observable( observer => {
   //     this.socket.on('refreshChatOnlineStatuses', (message) => {
