@@ -26,11 +26,7 @@ var config    = require('../../config.js');
 
 // params eid
 exports.getNotificationsForUser = function (req, res) {
-    Notifications.find({receiverID: req.query.uid}).
-    populate('receiverID').
-    populate('senderID').
-    populate('eventEID').
-    exec(function (err, notifications) {
+    Notifications.find({receiverID: req.params.uid}).populate('senderID').populate('receiverID').exec(function (err, notifications) {
       if (err)
         return res.send(err);
 
