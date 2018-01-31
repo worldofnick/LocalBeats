@@ -128,7 +128,6 @@ export class TopbarComponent implements OnInit {
   }
 
   onKey(event: any) {
-    console.log(event.keyCode);
     if(event.keyCode != 13){
       this.clickedInsideSearch()
     }
