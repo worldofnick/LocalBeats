@@ -34,6 +34,8 @@ export class NotificationsComponent implements OnInit {
         console.log(this.notifications.length);
         let newNotification:Notification = new Notification();
         newNotification.message = notification.message;
+        newNotification.color = "blue";
+        newNotification.icon = notification.icon;
         this.notifications.push(newNotification);
       }
       console.log(notificationsList);
