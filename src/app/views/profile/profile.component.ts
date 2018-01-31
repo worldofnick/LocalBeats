@@ -50,7 +50,7 @@ export class ProfileComponent implements OnInit {
     }
     this.bookingService.getUserBookings(this.userService.user, 'host').then((bookings: any[]) => {
       for (let result of bookings) {
-        if (result.booking.performerUser._id == this.userService.user._id && !this.onOwnProfile) {
+        if (result.booking.performerUser._id == this.user._id && !this.onOwnProfile) {
           this.requested = true;
         } else {
           this.requested = false;
@@ -84,7 +84,6 @@ export class ProfileComponent implements OnInit {
   ngOnInit() {
     this.user = this.userService.user;
     this.activeView = this.route.snapshot.params['view']
-    //this.user = this.userService.user;
 
     //snapshot params returns a javascript object. index into it with the property field to get a property.
     this.userID = {
@@ -101,8 +100,7 @@ export class ProfileComponent implements OnInit {
       let ID: String = this.userID["id"];
 
       this.userService.getUserByID(ID).then((gottenUser: User) => {
-        this.userService.user = gottenUser;
-        this.user = this.userService.user;
+        this.user = gottenUser;
       }).then(() => this.hasRequested());
     }
   }

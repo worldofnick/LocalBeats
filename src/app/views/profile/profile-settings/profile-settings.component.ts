@@ -23,7 +23,7 @@ export class ProfileSettingsComponent implements OnInit {
 
 
   ngOnInit() {
-    this.user = Object.assign({}, this.userService.user); // deep copy
+    this.user = this.userService.user;
   }
 
   public fileOverBase(e: any): void {
@@ -35,13 +35,14 @@ export class ProfileSettingsComponent implements OnInit {
     console.log(this.user);
     this.userService.onEditProfile(this.user).then((user: User) => {
       this.user = user;
-      this.userService.user = Object.assign({}, this.user); // deep copy
+      this.userService.user = user;
       //this.router.navigate(['/profile']);
     });
   }
 
   onTabChange(event: MatTabChangeEvent) {
-    this.user = Object.assign({}, this.userService.user);
+    // TODO fix editing bug, leftover from then
+    // this.user = Object.assign({}, this.userService.user);
   }
 
   onChange(event: EventTarget) {
@@ -58,7 +59,7 @@ export class ProfileSettingsComponent implements OnInit {
           // update the image view
           this.userService.onEditProfile(this.user).then((user: User) => {
             this.user = user;
-            this.userService.user = Object.assign({}, this.user); // deep copy
+            this.userService.user = this.user;
             this.progressBar.mode = 'determinate';
             // this.router.navigate(['/profile']);
           });
