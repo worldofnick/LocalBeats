@@ -207,6 +207,7 @@ export class AppChatsComponent implements OnInit {
       // CASE 1: Both users online. So do a socket event
       if (this.activeChatUser.isOnline) {
         let privateMessage: Message = this.createPMObject(true, MessageTypes.MSG);
+        console.log("MSG JSON: ", JSON.stringify(privateMessage));
         this._socketService.send(Action.SEND_PRIVATE_MSG, privateMessage);
       }
       // CASE 2: The recipient is offline. So an HTTP request instead of socket event

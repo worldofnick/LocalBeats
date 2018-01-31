@@ -9,13 +9,16 @@ var Message   = mongoose.model('Message');
 exports.getAllMessages = function (req, res) {
     // console.log('(Not Yet Implemented (getAllMessages)');
 
-    Message.find({}).populate('from').exec(function(err, messages){
+    Message.find({}).populate('from').populate('to').exec(function(err, messages){
         if (err) {
             console.log('Error getting all messages: ', err);
-            return res.status(500).send(err);
+            return res.status(400).send({
+                reason: "Unable to save the user...",
+                error: err
+            });
         }
         console.log('Messages: ', messages);
-        return res.status(200).send({"messages": messages});
+        return res.status(200).send({messages: messages});
     });
 
     // Message.find({}, { hashPassword: 0 }, function (err, users) {
@@ -35,7 +38,26 @@ exports.getAllFromToMessages = function (req, res) {
 };
 
 exports.saveMessage = function (req, res) {
-    console.log('(Not Yet Implemented (saveMessage)');
+    // console.log('(Not Yet Implemented (saveMessage)');
+
+    let newMessage = new Message();
+    newMessage.from = req.body.from._id;
+    newMessage.to = req.body.to._id;
+    newMessage.isRead = req.body.isRead;
+    newMessage.sentAt = req.body.sentAt;
+    newMessage.messageType = req.body.messageType;
+    newMessage.attachmentURL = req.body.attachmentURL;
+    newMessage.content = req.body.content;
+    
+    newMessage.save(function (err, message) {
+        if (err) {
+            return res.status(400).send({
+                message: "Unable to save the user...",
+                error: err
+            });
+        } 
+        return res.status(200).send({ response: "Save successful!", message: message});
+    });
 };
 
 exports.clearMessagesDB = function (req, res) {

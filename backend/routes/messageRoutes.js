@@ -9,7 +9,7 @@ module.exports = function(app) {
 
 	app.route('/api/messages/')
 		.get(messageHandlers.getAllMessages)
-		.put(messageHandlers.saveMessage)               // save message to DB
+		.post(messageHandlers.saveMessage)               // save message to DB
         .delete(messageHandlers.clearMessagesDB);       // remove all messages from DB
     
     app.route('/api/messages/:uid')
