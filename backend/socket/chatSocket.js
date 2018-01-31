@@ -54,7 +54,36 @@ module.exports = function (io) {
         // Private Messaging Event Handlers - P2P
         // ============================================
 
-        // Request to send a private message
+        // Request to send a private message 
+        // (old ping clients for identity, then redirect message apparoach)
+        // socket.on('sendPrivateMessage', (payload) => {
+        //     console.log('\n-----\nPM received from socket: ', socket.id);
+        //     console.log('\n-----\nPM payload: ', payload);
+            
+        //     // let newMessage = new Message();
+        //     // newMessage.from = payload.from._id;
+        //     // newMessage.to = payload.to._id;
+        //     // newMessage.isRead = payload.isRead;
+        //     // newMessage.sentAt = payload.sentAt;
+        //     // newMessage.messageType = payload.messageType;
+        //     // newMessage.attachmentURL = payload.attachmentURL;
+        //     // newMessage.content = payload.content;
+        //     // // TODO: SAVE THE DATA TO DB
+        //     // newMessage.save(function (err, message) {
+        //     //     if (err) {
+        //     //         console.log("Unable to save the message...");
+        //     //     } 
+        //     //     console.log("Save successful: ", message);
+        //     // });
+
+        //     // pendingMessages.push(payload);
+        //     // console.log("\n----\nPending Messages: ", pendingMessages);
+        //     io.emit('requestSocketIdForPM', {serverMessage: payload.to.firstName + 
+        //         'and ' + payload.from.firstName + ' ping me', serverPayload: payload});
+        // });
+
+        // Request to send a private message 
+        // (old ping clients for identity, then redirect message apparoach)
         socket.on('sendPrivateMessage', (payload) => {
             console.log('\n-----\nPM received from socket: ', socket.id);
             console.log('\n-----\nPM payload: ', payload);
@@ -77,20 +106,25 @@ module.exports = function (io) {
 
             // pendingMessages.push(payload);
             // console.log("\n----\nPending Messages: ", pendingMessages);
-            io.emit('requestSocketIdForPM', {serverMessage: payload.to.firstName + 
-                'and ' + payload.from.firstName + ' ping me', serverPayload: payload});
+            // io.emit('requestSocketIdForPM', {serverMessage: payload.to.firstName + 
+                // 'and ' + payload.from.firstName + ' ping me', serverPayload: payload});
+
+            let recipients = [socketsHash[payload.from_id], socketsHash[payload.to_id]];
+            for (let memberSocketID in recipients) {
+                io.to(memberSocketID).emit('sendPrivateMessage', payload);
+            };
         });
 
         // Send a request to every client asking for the PM recipient to pind server back 
         // with its socket ID. When it does, it sends it the PMs received.
-        socket.on('requestSocketIdForPM', (messagePayload) => {           //TODO: can remove the need to send socketID at the client.
-            console.log('PM forwarding to: ', socket.id);
+        // socket.on('requestSocketIdForPM', (messagePayload) => {           //TODO: can remove the need to send socketID at the client.
+        //     console.log('PM forwarding to: ', socket.id);
             
-            // SEND ALL THE DATA FROM DB TO RECEIVER
-            console.log("\n----\nSending Messages: ", messagePayload.serverPayload);
-            // for(let message in pendingMessages) {
-                socket.emit('sendPrivateMessage', messagePayload.serverPayload);
-            // } 
-        });
+        //     // SEND ALL THE DATA FROM DB TO RECEIVER
+        //     console.log("\n----\nSending Messages: ", messagePayload.serverPayload);
+        //     // for(let message in pendingMessages) {
+        //         socket.emit('sendPrivateMessage', messagePayload.serverPayload);
+        //     // } 
+        // });
     });
 }
