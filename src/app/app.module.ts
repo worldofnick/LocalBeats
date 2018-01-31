@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { BrowserModule } from '@angular/platform-browser';
 import { Http, HttpModule } from '@angular/http';
+import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TranslateModule, TranslateLoader, TranslateStaticLoader } from 'ng2-translate/ng2-translate';
 
@@ -19,7 +20,8 @@ import { EventService } from './services/event/event.service';
 import { UserGuard } from './services/auth/user-guard.service';
 import { ImgurService } from './services/image/imgur.service';
 import { NotificationService} from './services/notification/notification.service';
-
+import { ChatsService} from './services/chats/chats.service';
+import { SocketService } from './services/chats/socket.service';
 
 export function createTranslateLoader(http: Http) {
   return new TranslateStaticLoader(http, './assets/i18n', '.json');
@@ -29,6 +31,7 @@ export function createTranslateLoader(http: Http) {
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
+    HttpClientModule,
     HttpModule,
     AppCommonModule,
     NegotiateModule,
@@ -44,7 +47,9 @@ export function createTranslateLoader(http: Http) {
     RoutePartsService, 
     NavigationService,
     SearchService,
-    UserService, 
+    SocketService,
+    UserService,
+    ChatsService, 
     BookingService,
     EventService,
     UserGuard,

@@ -3,6 +3,16 @@ import { Injectable } from '@angular/core';
 import { Http, Headers, RequestOptions, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import { User } from 'app/models/user';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { SocketService } from '../../services/chats/socket.service';
+import { Message } from '../../services/chats/model/message';
+import { Event } from '../../services/chats/model/event';
+import { Action } from '../../services/chats/model/action';
+
+// For Angular 5 HttpClient Module
+const httpOptions = {
+    headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+};
 
 @Injectable()
 export class UserService {
@@ -13,10 +23,23 @@ export class UserService {
     // public getUserConnection: string = 'https://localbeats.herokuapp.com/api/user';
     public accessToken: string = null;
     public user: User = null;
+    ioConnection: any;
+    action = Action;
 
     private headers: Headers = new Headers({ 'Content-Type': 'application/json' });
 
-    constructor(private http: Http) { }
+    constructor(private http: Http, private _socketService: SocketService, private _httpClient: HttpClient) { this.initIoConnection(); }
+
+    private initIoConnection(): void {
+        // this._socketService.initSocket();
+    
+        // TODO: can remove
+        this.ioConnection = this._socketService.onEvent(Event.NEW_LOG_IN)
+          .subscribe((message: Message) => {
+            // this.messages.push(message);
+            console.log('Server Msg to auth.component ', message);
+        });
+      }
 
     // post("api/auth/passwordChange/:uid')
     public signupUser(newUser: User): Promise<User> {
@@ -29,7 +52,14 @@ export class UserService {
                 this.accessToken = data.token;
                 sessionStorage.setItem('token', JSON.stringify({ accessToken: this.accessToken }))
                 this.user = data.user as User;
-                return this.user
+
+                // Notify server that a new user user logged in
+                this._socketService.send(Action.NEW_LOG_IN, {
+                    from: this.user,
+                    action: Action.NEW_LOG_IN
+                });
+
+                return this.user;
             })
             .catch(this.handleError);
     }
@@ -51,6 +81,7 @@ export class UserService {
     public signinUser(returningUser: User): Promise<User> {
         // this.connection = 'http://localhost:8080/api/auth/authenticate';
         const current = this.connection + '/authenticate';
+        // console.log('Returning User in auth: ', returningUser);
         return this.http.post(current, returningUser, { headers: this.headers })
             .toPromise()
             .then((response: Response) => {
@@ -58,7 +89,14 @@ export class UserService {
                 this.accessToken = data.token;
                 sessionStorage.setItem('token', JSON.stringify({ accessToken: this.accessToken }))
                 this.user = data.user as User;
-                return this.user
+
+                // Notify server that a new user user logged in
+                this._socketService.send(Action.NEW_LOG_IN, {
+                    from: this.user,
+                    action: Action.NEW_LOG_IN
+                });
+
+                return this.user;
             })
             .catch(this.handleError);
     }
@@ -73,7 +111,7 @@ export class UserService {
     // /api/auth/passwordChange/:uid')
     public updatePassword(user: User): Promise<User> {
         const current = this.connection + '/passwordChange/' + user._id;
-        let newPassword:string = user.password;
+        let newPassword: string = user.password;
         return this.http.put(current, {'newPassword': newPassword}, { headers: this.headers })
             .toPromise()
             .then((response: Response) => {
@@ -81,7 +119,7 @@ export class UserService {
                 // this.accessToken = data.token;
                 // sessionStorage.setItem('token', JSON.stringify({ accessToken: this.accessToken }))
                 this.user = data.user as User;
-                return this.user
+                return this.user;
             })
             .catch(this.handleError);
     }
@@ -95,10 +133,7 @@ export class UserService {
      * 
      */
     public getUserByID(ID: String): Promise<User> {
-        // const num = ID["id"];
         const current = this.userConnection + '/' + ID;
-        //console.log("getting: ");
-        //console.log(current);
         return this.http.get(current)
             .toPromise()
             .then((response: Response) => {
@@ -112,9 +147,24 @@ export class UserService {
     }
 
     public logout() {
-        this.accessToken = null;
-        this.user = null;
-        sessionStorage.clear();
+        let from: User = this.user;
+        const current = this.connection + '/logout';
+        console.log('LOGOUT USER: ', this.user);
+        return this.http.post(current, this.user, { headers: this.headers })
+            .toPromise()
+            .then((response: Response) => {
+
+                this.accessToken = null;
+                this.user = null;
+                sessionStorage.clear();
+
+                // Notify server that a new user user logged in
+                this._socketService.send(Action.SMN_LOGGED_OUT, {
+                    from: from,
+                    action: Action.SMN_LOGGED_OUT
+                });
+            })
+            .catch(this.handleError);
     }
 
     public isAuthenticated() {

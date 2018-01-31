@@ -23,7 +23,7 @@ export class AuthComponent implements OnInit {
       username: new FormControl('', Validators.required),
       password: new FormControl('', Validators.required),
       rememberMe: new FormControl(false)
-    })
+    });
   }
 
   signin() {
@@ -39,7 +39,8 @@ export class AuthComponent implements OnInit {
       isArtist: true,
       profilePicUrl: "https://www.vccircle.com/wp-content/uploads/2017/03/default-profile.png",
       eventTypes: [],
-      socket: null
+      socket: null,
+      isOnline: true
     };
 
     this.submitButton.disabled = true;
