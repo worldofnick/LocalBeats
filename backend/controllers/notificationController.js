@@ -11,7 +11,7 @@ var config    = require('../../config.js');
 
 // ====== NOTIFICATION ROUTES ======
 
-//getNotificationsForUser
+// getNotificationsForUser
 // exports.getNotificationsForUser = function (req, res) {
 //     Notifications.findById(req.params.uid).populate('senderID').populate('receiverID').exec(function (err, notifications) {
 //         if (err) {
