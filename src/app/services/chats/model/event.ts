@@ -5,5 +5,6 @@ export enum Event {
     SMN_LOGGED_OUT = 'someUserLoggedOut',
     SEND_PRIVATE_MSG = 'sendPrivateMessage',
     SEND_MSG = 'sendMessage',
-    REQUEST_PM_SOCKET_ID = 'requestSocketIdForPM'
+    REQUEST_PM_SOCKET_ID = 'requestSocketIdForPM',
+    REQUEST_NOTIFICATIONS = 'notifications'
 }

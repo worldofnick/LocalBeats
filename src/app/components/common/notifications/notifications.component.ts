@@ -3,7 +3,9 @@ import { MatSidenav } from '@angular/material';
 import { Router, NavigationEnd } from '@angular/router';
 import { Notification } from 'app/models/notification'
 import { NotificationService } from '../../../services/notification/notification.service';
-import { UserService } from '../../../services/auth/user.service'
+import { UserService } from '../../../services/auth/user.service';
+import { SocketService } from '../../../services/chats/socket.service';
+import { Event } from         '../../../services/chats/model/event';
 @Component({
   selector: 'app-notifications',
   templateUrl: './notifications.component.html',
@@ -20,12 +22,13 @@ export class NotificationsComponent implements OnInit {
 
   constructor(private router: Router,
               private notificationService: NotificationService,
-              private userService: UserService) {}
+              private userService: UserService,
+              private _socketService: SocketService) {}
 
   ngOnInit
   () {
 
-    this.userService.io.on('notifications', notificationsList=>{
+    this._socketService.onEvent(Event.REQUEST_NOTIFICATIONS).subscribe((notificationsList: Notification[])=>{
       console.log("getting notifications..");
       // this.notifications = notificationsList;
 
