@@ -23,10 +23,10 @@ export class ProfileSettingsComponent implements OnInit {
   public hasBaseDropZoneOver: boolean = false;
   constructor(private route: ActivatedRoute, private router : Router, private userService: UserService, private imgurService: ImgurService, public snackBar: MatSnackBar) {
 
-    showSnackBarIfNeeded();
+    // showSnackBarIfNeeded();
   }
 
-  showSnackBarIfNeeded() {
+  private showSnackBarIfNeeded() {
     if (router.url.indexOf('success=true') >= 0) {
       let snackBarRef = this.snackBar.open('Stripe Account Linked!', "", {
         duration: 1500,

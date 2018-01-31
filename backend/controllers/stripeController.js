@@ -1,6 +1,7 @@
 'use strict';
 
 var mongoose    = require('mongoose');
+var stripe = require('stripe')("sk_live_m5pb2VOgwuecNyE0IASsLuzG");
 var querystring = require('querystring');
 var request     = require('request');
 var jwt         = require('jsonwebtoken');
@@ -67,5 +68,56 @@ exports.stripeAuthorize = function (req, res) {
      res.redirect('http://localhost:4200/profile/settings/success=true');
    });
 
+ };
 
+ /**
+ * GET /api/stripe/transfers
+ *
+ * Redirect to Stripe to view transfers and edit payment details.
+ */
+exports.stripeTransfers = function (req, res) {
+
+  const user = req.user;
+  if (!user.stripeAccountId) {
+    return res.redirect('http://localhost:4200/auth');
+  }
+  try {
+    // Generate a unique login link for the associated Stripe account.
+    const loginLink = await stripe.accounts.createLoginLink(user.stripeAccountId);
+    // Retrieve the URL from the response and redirect the user to Stripe.
+    return res.redirect(loginLink.url);
+  } catch (err) {
+    console.log('Failed to create a Stripe login link.');
+    return res.redirect('http://localhost:4200/auth');
+  }
+
+};
+
+
+ /**
+ * POST /api/stripe/payout
+ *
+ * Generate an instant payout with Stripe for the available balance.
+ */
+ exports.stripePayout = function (req, res) {
+    const user = req.user;
+    try {
+      // Fetch the account balance for find available funds.
+      const balance = await stripe.balance.retrieve({ stripe_account: user.stripeAccountId });
+
+      const { amount, currency } = balance.available[0]; // USD only
+      // Create the instant payout.
+      const payout = await stripe.payouts.create({
+        method: 'instant',
+        amount: amount,
+        currency: currency,
+        statement_descriptor: "Localbeats"
+      }, {
+        stripe_account: user.stripeAccountId
+      });
+    } catch (err) {
+      console.log(err);
+    }
+    // Redirect to the user settings.
+    return res.redirect('http://localhost:4200/profile/settings/payout=true');
  };

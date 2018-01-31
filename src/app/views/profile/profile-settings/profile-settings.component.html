@@ -44,6 +44,7 @@
         <p>If you plan on performing at an event you'll need to setup a payout method.</p>
         <div class="button-row">
         <a [disabled]="this.user.stripeAccountId" mat-raised-button href="https://connect.stripe.com/express/oauth/authorize?response_type=code&client_id=ca_CE9KYxkI16Id3WqO6ypCkgnZsEqzLtWY&scope=read_write" color="primary">Connect with Stripe</a>
+        <a *ngIf="this.user.stripeAccountId" mat-raised-button (click)="unlinkStripe()" color="accent">Request Payout</a>
         <a *ngIf="this.user.stripeAccountId" mat-raised-button (click)="unlinkStripe()" color="white">Manage Stripe Account</a>
         <a *ngIf="this.user.stripeAccountId" mat-raised-button (click)="unlinkStripe()" color="warn">Unlink Stripe Account</a>
       </div>
