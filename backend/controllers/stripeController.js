@@ -42,7 +42,7 @@ exports.stripeAuthorize = function (req, res) {
  *
  * Connect the new Stripe account to the platform account.
  */
- exports.linkStripe = function (req, res) {
+ exports.stripeLink = function (req, res) {
   if (req.session.state != req.query.state) {
      res.redirect('http://localhost:4200');
    }
