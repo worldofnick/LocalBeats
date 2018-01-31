@@ -1,4 +1,4 @@
-<mat-card class="p-0">
+<mat-card class="p-0" style="background-color: rgb(255, 255, 255); border-radius: 25px; margin: 10px 10px 15px; box-shadow: rgba(150, 150, 150, 0.2) 0px 10px 6px -6px; border-style: solid; border-color: rgba(245, 245, 245, 0.9); border-width: 1px; padding: 10px;">
   <mat-sidenav-container class="chat-container" style="background-color: rgba(245,245,245, 0.9);">
     <!-- Left sidebar -->
     <mat-sidenav class="chat-sidenav" #chatSidebar [opened]="isSidenavOpen" mode="side">
@@ -32,7 +32,7 @@
     <!-- Right side -->
     <div class="chats-wrap" style="min-height: 550px; max-height:650px">
       <!-- Right side topbar -->
-      <mat-toolbar color="primary" class="chat-toolbar mb-1" style="position: sticky; top: 0">
+      <mat-toolbar color="primary" class="chat-toolbar mb-1" style="position: sticky; top: 0px; flex-direction: row; box-sizing: border-box; display: flex;">
         <!-- sidebar toggle button -->
         <button 
         mat-icon-button
@@ -104,11 +104,11 @@
       <!-- <mat-divider style="position:sticky; bottom: 11.65%;"></mat-divider> -->
 
       <!-- Input box and send button -->
-      <div class="chat-input-actions" fxLayout="row" style="position: sticky; bottom: 20px; background-color: rgba(255,255,255,1); flex-direction: row; box-sizing: border-box; display: flex; border-radius: 5px; margin: 10px 10px 15px; box-shadow: 0px 10px 6px -6px rgba(150,150,150,0.2); border-style:solid; border-color:rgba(245,245,245,0.9); border-width:1px; padding: 10px 10px">
+      <div class="chat-input-actions" fxLayout="row" style="position: sticky; bottom: 20px; background-color: rgb(255, 255, 255); flex-direction: row; box-sizing: border-box; display: flex; border-radius: 25px; margin: 10px 10px 15px; box-shadow: rgba(150, 150, 150, 0.2) 0px 10px 6px -6px; border-style: solid; border-color: rgba(245, 245, 245, 0.9); border-width: 1px; padding: 10px;">
         <mat-form-field class="full-width mr-1">
           <input [(ngModel)]="messageEntered"
           matInput
-          placeholder="Type your message"
+          placeholder="Compose your beat ♥ ..."
           value="">
         </mat-form-field>
         <button mat-fab color="primary" (click)="sendMessageClicked()"><mat-icon>send</mat-icon></button>
