@@ -156,7 +156,10 @@ export class AppChatsComponent implements OnInit {
     this._chatsService.getPMsBetweenActiveAndLoggedInUser(this.loggedInUser, this.activeChatUser).subscribe(
       data => {
         // console.log('\n====\nUser PMs from Server DB: ', JSON.stringify(data));
-        console.log('\n====\nUser PMs from Server DB: ', data as {messages: Message[]} );
+        // console.log('\n====\nUser PMs from Server DB: ', data as {messages: Message[]} );
+        this.activeChatMessages = new Array();
+        let temp = data as {messages: Message[]};
+        this.activeChatMessages = temp.messages;
       },
       err => console.error('Error fetching PMs between 2 users: ', err),
       () => console.log('Done fetching PMs from the server DB')
