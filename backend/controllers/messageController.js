@@ -13,24 +13,17 @@ exports.getAllMessages = function (req, res) {
         if (err) {
             console.log('Error getting all messages: ', err);
             return res.status(400).send({
-                reason: "Unable to save the user...",
+                reason: "Unable to get all the messages...",
                 error: err
             });
         }
-        console.log('Messages: ', messages);
+        // console.log('Messages: ', messages);
+        for( let i = 0; i < messages.length; i++ ) {
+            messages[i].from.hashPassword = undefined;
+            messages[i].to.hashPassword = undefined;
+        }
         return res.status(200).send({messages: messages});
     });
-
-    // Message.find({}, { hashPassword: 0 }, function (err, users) {
-    //     if (err)
-    //       return res.send(err);
-    //     users.hashPassword = undefined;
-    //     // var usrs = [];
-    //     // users.forEach(function(user) {
-    //     //   usrs.push({"user": user});
-    //     // });
-    //     return res.status(200).send({"users": users});
-    //   });
 };
 
 exports.getAllFromToMessages = function (req, res) {
@@ -52,7 +45,7 @@ exports.saveMessage = function (req, res) {
     newMessage.save(function (err, message) {
         if (err) {
             return res.status(400).send({
-                message: "Unable to save the user...",
+                message: "Unable to save the message...",
                 error: err
             });
         } 
@@ -61,7 +54,17 @@ exports.saveMessage = function (req, res) {
 };
 
 exports.clearMessagesDB = function (req, res) {
-    console.log('(Not Yet Implemented (clearMessagesDB)');
+    // console.log('(Not Yet Implemented (clearMessagesDB)');
+    Message.remove({}).exec(function(err, messages){
+        if (err) {
+            console.log('Error deleting all messages: ', err);
+            return res.status(400).send({
+                reason: "Unable to delete all messages...",
+                error: err
+            });
+        }
+        return res.status(200).send( {response: "All messages removed!"} );
+    });
 };
 
 exports.removeAllConversationsWithAUser = function (req, res) {
