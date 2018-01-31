@@ -116,10 +116,10 @@ exports.stripeTransfers = function (req, res) {
         stripe_account: user.stripeAccountId
       });
     } catch (err) {
-      console.log(err);
+      res.sendStatus(500)
     }
-    // Redirect to the user settings.
-    return res.redirect('http://localhost:4200/profile/settings/payout=true');
+    // Give the OK
+    res.sendStatus(200);
  };
 
 

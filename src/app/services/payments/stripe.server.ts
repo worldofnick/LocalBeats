@@ -28,8 +28,19 @@ export class StripeService {
   }
 
   // Makes a request to our backend to request the Stripe API to payout the user
-  public payoutUser(user: User) {
-
+  // Returns true if the payout was good, false otherwise
+  public payoutUser(user: User): boolean {
+    const current = this.connection + '/payout';
+    return this.http.post(current, { user: user }, { headers: this.headers })
+        .toPromise()
+        .then((response: Response) => {
+            if (response.status == 200) {
+              return true;
+            } else {
+              return false;
+            }
+        })
+        .catch(this.handleError);
   }
 
   // Makes a request to our backend to request the Stripe API to charge the event host
