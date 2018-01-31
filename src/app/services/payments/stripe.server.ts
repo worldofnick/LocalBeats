@@ -6,6 +6,7 @@ import { Observable } from 'rxjs/Observable';
 import { Booking } from 'app/models/booking';
 import { Event } from 'app/models/event';
 import { User } from 'app/models/user';
+import { Payment } from 'app/models/payment';
 import { NegotiateDialogComponent } from '../../views/negotiate/negotiate-dialog/negotiate-dialog.component';
 
 @Injectable()
@@ -15,4 +16,31 @@ export class StripeService {
   private headers: Headers = new Headers({ 'Content-Type': 'application/json' });
 
   constructor(private http: Http) { }
+
+  // Send the user to the Stripe website
+  public authorizeStripe(user: User) {
+
+  }
+
+  // Sends the user to the Stripe website to view their account into
+  public viewTransfers(user: User) {
+
+  }
+
+  // Makes a request to our backend to request the Stripe API to payout the user
+  public payoutUser(user: User) {
+
+  }
+
+  // Makes a request to our backend to request the Stripe API to charge the event host
+  // This will need an extra visa parameter for event host stripe charge info
+  public charge(event: Event) {
+
+  }
+
+  // Make a request to our backend to request the Stripe API to refund this payment
+  public refund(payment: Payment) {
+
+  }
+
 }
