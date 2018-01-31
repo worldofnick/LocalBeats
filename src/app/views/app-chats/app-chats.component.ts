@@ -54,7 +54,7 @@ export class AppChatsComponent implements OnInit {
   }
 
   private initIoConnection(): void {
-    this._socketService.initSocket();
+    // this._socketService.initSocket();
 
     // TODO: add:
     // this._socketService.socket.on('connect', () => {
@@ -77,23 +77,25 @@ export class AppChatsComponent implements OnInit {
     this._socketService.onEvent(Event.SEND_PRIVATE_MSG)
       .subscribe((message: Message) => {
         // Add response message[] to the activeChatMessages[]
-        this.activeChatMessages = new Array();      // Reset the array
-        for (let temp of message as Message[]) {
-          this.activeChatMessages.push(temp as Message);
-        };
+        // this.activeChatMessages = new Array();      // Reset the array
+        // for (let temp of message as Message[]) {
+          // this.activeChatMessages.push(temp as Message);
+        // };
         console.log('Private Chat message from server (chat event): ', message);
+        const temp: Message = message as Message;
+        this.activeChatMessages.push(temp);
         // console.log('Active Chat Messages var (chat event): ', this.activeChatMessages);
         
         // TODO: refresh UI?
     });
 
-    this._socketService.onEvent(Event.REQUEST_PM_SOCKET_ID)
-      .subscribe((message: Message) => {
-        console.log('Socket Request (chat event): ', message);
-        console.log(' to == logged in? : ', (message.serverPayload.from._id === this.loggedInUser._id) ||
-                                            (message.serverPayload.to._id === this.loggedInUser._id)) ;
-        this.respondToIsItYouPMSocketRequest(message);
-    });
+    // this._socketService.onEvent(Event.REQUEST_PM_SOCKET_ID)
+    //   .subscribe((message: Message) => {
+    //     console.log('Socket Request (chat event): ', message);
+    //     console.log(' to == logged in? : ', (message.serverPayload.from._id === this.loggedInUser._id) ||
+    //                                         (message.serverPayload.to._id === this.loggedInUser._id)) ;
+    //     this.respondToIsItYouPMSocketRequest(message);
+    // });
   }
 
   respondToIsItYouPMSocketRequest(message) {
@@ -243,28 +245,29 @@ export class AppChatsComponent implements OnInit {
         privateMessage = this.createPMObject(false, MessageTypes.MSG);
         
       }
-      this.awaitMessageSaveResponse(privateMessage);
+      // this.awaitMessageSaveResponse(privateMessage);
+      this._socketService.send(Action.SEND_PRIVATE_MSG, privateMessage);
       this.resetMessageInputBox();
     }
   }
 
-  awaitMessageSaveResponse(privateMessage: Message) {
-    //TODO: change to promise, then?
-    this._chatsService.savePrivateMessageToDB(privateMessage).subscribe(
-      data => {
-        console.log('\n====\nMessage save response from server: ', JSON.stringify(data));
-        // console.log('\n====\nUser PMs from Server DB: ', data as {messages: Message[]} );
-        // this.activeChatMessages = new Array();
-        // let temp = data as {messages: Message[]};
-        // this.activeChatMessages = temp.messages;
-      },
-      err => console.error('Error saving the message: ', err),
-      () => { 
-        console.log('Done saving the message to server DB. Sending socket request.');
-        this._socketService.send(Action.SEND_PRIVATE_MSG, privateMessage);
-      }
-    );
-  }
+  // awaitMessageSaveResponse(privateMessage: Message) {
+  //   //TODO: change to promise, then?
+  //   this._chatsService.savePrivateMessageToDB(privateMessage).subscribe(
+  //     data => {
+  //       console.log('\n====\nMessage save response from server: ', JSON.stringify(data));
+  //       // console.log('\n====\nUser PMs from Server DB: ', data as {messages: Message[]} );
+  //       // this.activeChatMessages = new Array();
+  //       // let temp = data as {messages: Message[]};
+  //       // this.activeChatMessages = temp.messages;
+  //     },
+  //     err => console.error('Error saving the message: ', err),
+  //     () => { 
+  //       console.log('Done saving the message to server DB. Sending socket request.');
+  //       this._socketService.send(Action.SEND_PRIVATE_MSG, privateMessage);
+  //     }
+  //   );
+  // }
 
   resetMessageInputBox() {
     this.messageEntered = '';                   // Reset the message input box 
