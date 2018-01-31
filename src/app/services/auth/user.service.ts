@@ -136,33 +136,37 @@ export class UserService {
 
 
     public getNotificationsCountForUser(ID: any): Promise<Number>{
-        let userConnection: string = 'http://localhost:8080/api/users';
+        let userConnection: string = 'http://localhost:8080/api/notification';
+        // app.route('/api/notification/:uid')
         const current = userConnection + '/' + ID;
+        // const current = userConnection + '/5a7113ac9d89a873c89fe5ff';
         //console.log("getting: ");
         //console.log(current);
         return this.http.get(current)
             .toPromise()
             .then((response: Response) => {
                 const data = response.json();
+                console.log(data)
                 // this.accessToken = data.token;
                 // console.log(this.accessToken)
-                let temp = data.user as User;
-                let not1:Notification = new Notification;
-                not1.icon = "home"
-                not1.message = "hello world"
-                temp.notifications.push(not1);
-                temp.notifications.push(not1);
+                let temp = data.notifications as Notification[];
+                if(temp == null){
+                    return 0;
+                }
 
-                this.io.emit('tellTopBar', temp.notifications.length)
-                return temp.notifications.length;
+                this.io.emit('tellTopBar', temp.length)
+
+                return temp.length;
             })
             .catch(this.handleError);
     }
 
 
     public getNotificationsForUser(ID: any): Promise<Notification[]>{
-        let userConnection: string = 'http://localhost:8080/api/users';
+        let userConnection: string = 'http://localhost:8080/api/notification';
         const current = userConnection + '/' + ID;
+        // const current = userConnection + '/5a7113ac9d89a873c89fe5ff';
+
         //console.log("getting: ");
         //console.log(current);
         return this.http.get(current)
@@ -172,15 +176,17 @@ export class UserService {
                 // this.accessToken = data.token;
                 // console.log(this.accessToken)
                 //inserting test notifications until i can actually send them.
-                let temp = data.user as User;
-                let not1:Notification = new Notification;
-                not1.icon = "chat"
-                not1.message = "helloo world"
-                temp.notifications.push(not1);
-                temp.notifications.push(not1);
+                let temp = data.notifications as Notification[];
+                console.log(data);
+                let t:Notification[] = [];
+ 
+                if(temp == null){
+                    this.io.emit('tellNotificationPanel', t)
+                    return t;
+                }
 
-                this.io.emit('tellNotificationPanel', temp.notifications)
-                return temp.notifications;
+                this.io.emit('tellNotificationPanel', temp)
+                return temp;
             })
             .catch(this.handleError);
     }
@@ -195,7 +201,7 @@ export class UserService {
         //update the receiving user object w/ an additional notification in the list.
         let userConnection: string = 'http://localhost:8080/api/users';
         const current = userConnection + '/' + receiver._id;        
-        receiver.notifications.push(notification);
+        // receiver.notifications.push(notification);
 
         console.log("sending:");
         console.log(JSON.stringify(receiver));

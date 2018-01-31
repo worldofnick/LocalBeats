@@ -25,11 +25,11 @@ export class NotificationsComponent implements OnInit {
   ngOnInit
   () {
 
-    this.userService.io.on('notifications', notificationsList=>{
-      console.log("getting notifications..");
-      this.notifications = notificationsList;
-      console.log(notificationsList);
-    });
+    // this.userService.io.on('notifications', notificationsList=>{
+    //   console.log("getting notifications..");
+    //   this.notifications = notificationsList;
+    //   console.log(notificationsList);
+    // });
     
 
     // if(this.userService.isAuthenticated()){

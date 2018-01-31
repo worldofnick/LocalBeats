@@ -224,6 +224,7 @@ export class TopbarComponent implements OnInit {
   }
 
   toggleNotific() {
+    // this.notificationService.
     this.notificPanel.toggle();
   }
   toggleSidenav() {

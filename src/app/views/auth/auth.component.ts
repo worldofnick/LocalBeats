@@ -50,7 +50,6 @@ export class AuthComponent implements OnInit {
       isArtist: true,
       profilePicUrl: "https://www.vccircle.com/wp-content/uploads/2017/03/default-profile.png",
       eventTypes: [],
-      notifications: []
     };
 
     this.submitButton.disabled = true;

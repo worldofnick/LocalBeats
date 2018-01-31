@@ -2,8 +2,8 @@ import { User } from 'app/models/user';
 import { Event } from 'app/models/event';
 
 export class Notification {
-    senderID: string
-    receiverID:string
+    senderID: User
+    receiverID: User
     eventID:string
     message: string
     icon: string

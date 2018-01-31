@@ -13,5 +13,4 @@ export class User {
     public isArtist: boolean
     public profilePicUrl: string
     public eventTypes: string[]
-    public notifications: Notification[]    
 }

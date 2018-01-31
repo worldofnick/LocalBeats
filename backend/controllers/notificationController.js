@@ -12,15 +12,30 @@ var config    = require('../../config.js');
 // ====== NOTIFICATION ROUTES ======
 
 //getNotificationsForUser
-exports.getNotificationsForUser = function (req, res) {
-    Notifications.findById(req.params.uid).populate('senderID').populate('receiverID').exec(function (err, notifications) {
-        if (err) {
-            return res.status(500).send("Failed to get notifications");
-        } else {
-            return res.status(200).send({ "notifications": notifications });
-        }
-    });
+// exports.getNotificationsForUser = function (req, res) {
+//     Notifications.findById(req.params.uid).populate('senderID').populate('receiverID').exec(function (err, notifications) {
+//         if (err) {
+//             return res.status(500).send("Failed to get notifications");
+//         } else {
+//             return res.status(200).send({ "notifications": notifications });
+//         }
+//     });
 
+// };
+
+
+// params eid
+exports.getNotificationsForUser = function (req, res) {
+    Notifications.find({receiverID: req.query.uid}).
+    populate('receiverID').
+    populate('senderID').
+    populate('eventEID').
+    exec(function (err, notifications) {
+      if (err)
+        return res.send(err);
+
+        return res.status(200).send({"notifications": notifications});
+    });
 };
 
 // app.get("/api/events/:eid",
