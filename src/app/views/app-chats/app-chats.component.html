@@ -88,8 +88,8 @@
           </a>
           <div>
             <h5 class="chat-username text-muted">{{ !!(message.from._id === this.loggedInUser._id) ? 
-                                                    (message.from.firstName + ' ' + message.from.lastName) : 
-                                                    (message.to.firstName + ' ' + message.to.lastName) }}</h5>
+                                                    (this.loggedInUser.firstName + ' ' + this.loggedInUser.lastName) : 
+                                                    (message.from.firstName + ' ' + message.from.lastName) }}</h5>
             <div class="conversation-msg">
               {{message.content}}
             </div>
