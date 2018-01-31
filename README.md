@@ -37,6 +37,7 @@
 - Create TypeScript models for User, Booking, and Search
 - Angular Services to interact with backend API
 - Design the logic and UI for creating, accepting, and declining a booking request.
+- Host and Artist agreement contracts
 
 ### Snehashish Mishra
 - Modified Server to run locally, added MongoDB via Mongoose
@@ -47,6 +48,7 @@
 - REST API to interface Spotify API for authentication, authorization and the retrieval of playlists.
 - Made a messaging prototype _(unused in the demo)_
 - Documentation
+- Real time chat
 
 ### Nick Porter
 - Configure initial project setup
@@ -69,6 +71,7 @@
 - Designed UI for Profile, Event, and Bookings
 - Angular Services to interact with backend API
 - Help Brandon develop and design the logic and UI for creating, accepting, and declining a booking request.
+- Frontend and Backend Notifications
 
 ## Future Features Backlog
 1. Advanced Authentication
