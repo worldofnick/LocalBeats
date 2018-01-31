@@ -7,7 +7,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { UserService } from '../../services/auth/user.service';
 import { User } from '../../models/user';
 import { Message } from './model/message';
-import { Event } from './model/event';
+import { SocketEvent } from './model/event';
 import { SocketService} from './socket.service';
 
 // import * as io from 'socket.io-client';

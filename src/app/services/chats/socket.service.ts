@@ -5,7 +5,7 @@ import { Observer } from 'rxjs/Observer';
 // import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { User } from '../../models/user';
 import { Message } from './model/message';
-import { Event } from './model/event';
+import { SocketEvent } from './model/event';
 import { Action } from './model/action';
 
 import * as io from 'socket.io-client';
@@ -41,8 +41,8 @@ export class SocketService {
   //   });
   // }
 
-  public onEvent(event: Event): Observable<any> {
-    return new Observable<Event>(observer => {
+  public onEvent(event: SocketEvent): Observable<any> {
+    return new Observable<SocketEvent>(observer => {
         this.socket.on(event, (data) => observer.next(data));
     });
   }
