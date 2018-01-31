@@ -4,7 +4,7 @@ module.exports = function(app) {
 	var messageHandlers = require('../controllers/messageController.js');
     
     // Message routes
-	app.route('/api/messages/from/:uid/to/:uid')        // SAME AS (to, from) == (from, to)
+	app.route('/api/messages/:fromUID/:toUID')        	// SAME AS (to, from) == (from, to)
 		.get(messageHandlers.getAllFromToMessages);     // Get all messages from a user to a user
 
 	app.route('/api/messages/')
