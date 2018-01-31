@@ -69,4 +69,13 @@ export class ProfileSettingsComponent implements OnInit {
       });
   }
 
+  unlinkStripe() {
+    console.log("unlink stripe");
+    this.user.stripeUserId = null;
+    this.userService.onEditProfile(this.user).then((user: User) => {
+      this.user = user;
+      this.userService.user = this.user
+    });
+  }
+
 }
