@@ -23,6 +23,7 @@ import { Event } from '../../../models/event';
 })
 export class TopbarComponent implements OnInit {
   searchForm: FormGroup;
+  values = '';
   
   numNotifications = 0;
   isSearchOpen: boolean = false;
@@ -124,6 +125,13 @@ export class TopbarComponent implements OnInit {
         });
       });
     });
+  }
+
+  onKey(event: any) {
+    console.log(event.keyCode);
+    if(event.keyCode != 13){
+      this.clickedInsideSearch()
+    }
   }
 
   clickedOutsideSearch() {
