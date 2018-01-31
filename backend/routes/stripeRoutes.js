@@ -15,4 +15,10 @@ module.exports = function(app) {
 		app.route('/api/stripe/payout')
 			.post(stripeHandlers.stripePayout);
 
+		app.route('/api/stripe/charge')
+			.post(stripeHandlers.stripeCharge);
+
+		app.route('/api/stripe/refund')
+			.post(stripeHandlers.stripeRefund);
+
 };

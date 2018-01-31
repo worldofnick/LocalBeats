@@ -1,7 +1,7 @@
 'use strict';
 
 var mongoose    = require('mongoose');
-var stripe = require('stripe')("sk_live_m5pb2VOgwuecNyE0IASsLuzG");
+var stripe = require("stripe")("sk_test_XnYNA52kavV92IkcJyh1dQBw");
 var querystring = require('querystring');
 var request     = require('request');
 var jwt         = require('jsonwebtoken');
@@ -51,7 +51,7 @@ exports.stripeAuthorize = function (req, res) {
      form: {
        grant_type: 'authorization_code',
        client_id: "ca_CE9KYxkI16Id3WqO6ypCkgnZsEqzLtWY",
-       client_secret: "sk_live_m5pb2VOgwuecNyE0IASsLuzG",
+       client_secret: "sk_test_XnYNA52kavV92IkcJyh1dQBw",
        code: req.query.code
      },
      json: true
@@ -120,4 +120,38 @@ exports.stripeTransfers = function (req, res) {
     }
     // Redirect to the user settings.
     return res.redirect('http://localhost:4200/profile/settings/payout=true');
+ };
+
+
+ /**
+ * POST /api/stripe/charge
+ * TODO
+ * Creates a Stripe charge
+ */
+ exports.stripeCharge = function (req, res) {
+   // TODO
+  stripe.charges.create({
+    amount: 1000,
+    currency: "usd",
+    source: "tok_visa",
+    destination: {
+      account: "{CONNECTED_STRIPE_ACCOUNT_ID}",
+    },
+  }).then(function(charge) {
+    // asynchronously called
+  });
+ };
+
+ /**
+ * POST /api/stripe/refund
+ * TODO
+ * Issues a refund for the given transaction
+ */
+ exports.stripeRefund = function (req, res) {
+   stripe.refunds.create({
+    charge: req.body.payment.stripeChargeId,
+    reverse_transfer: true,
+  }).then(function(refund) {
+    // asynchronously called
+  });
  };
