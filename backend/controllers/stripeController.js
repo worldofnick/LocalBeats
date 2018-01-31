@@ -40,7 +40,7 @@ exports.stripeAuthorize = function (req, res) {
 /**
  * GET /api/stripe/token
  *
- * Connect the new Stripe account to the platform account.
+ * Connect the new Stripe account to the Localbeats account.
  */
  exports.stripeLink = function (req, res) {
   if (req.session.state != req.query.state) {
