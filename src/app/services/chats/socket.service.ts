@@ -4,7 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import { Observer } from 'rxjs/Observer';
 // import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { User } from '../../models/user';
-import { Message } from './model/Message';
+import { Message } from './model/message';
 import { Event } from './model/event';
 import { Action } from './model/action';
 
