@@ -2,14 +2,14 @@
   <div *ngIf="this.user" fxFlex="100" fxFlex.gt-md="300px" fxFlex.gt-sm="50">
     <mat-card class="profile-sidebar mb-1 pb-0">
       <div class="propic text-center">
-        <img [src]="this.userService.user.profilePicUrl" alt="">
+        <img [src]="this.user.profilePicUrl" alt="">
       </div>
       <div class="profile-title text-center mb-1">
-        <div class="main-title">{{this.userService.user.firstName}}
-          <b>{{this.userService.user.lastName}}</b>
+        <div class="main-title">{{this.user.firstName}}
+          <b>{{this.user.lastName}}</b>
         </div>
         <!-- <div class="subtitle mb-05">Big Data Expert</div> -->
-        <div class="text-muted">Hello my name is {{this.userService.user.firstName}}</div>
+        <div class="text-muted">Hello my name is {{this.user.firstName}}</div>
       </div>
       <div class="profile-actions text-center mb-1">
         <button mat-raised-button color="primary">Message</button>
@@ -24,7 +24,7 @@
             <mat-icon>home</mat-icon>
             Overview
           </mat-list-item>
-         
+
 
 
           <ng-template [ngIf]="!this.onOwnProfile && this.userService.isAuthenticated()">
@@ -35,7 +35,7 @@
           </ng-template>
 
           <ng-template [ngIf]="!this.onOwnProfile && this.requested && this.userService.isAuthenticated()">
-            <mat-list-item (click)="onCancelArtist(this.userService.user._id)" routerLinkActive="list-item-active">
+            <mat-list-item (click)="onCancelArtist(this.user._id)" routerLinkActive="list-item-active">
               <mat-icon>music_note</mat-icon>
               Cancel Artist
             </mat-list-item>
@@ -68,7 +68,7 @@
       <mat-card-title>Contact Information</mat-card-title>
       <mat-card-content class="pt-0">
         <mat-list>
-            <mat-list-item><mat-icon class="mr-1">email</mat-icon> {{this.userService.user.email}}</mat-list-item>
+            <mat-list-item><mat-icon class="mr-1">email</mat-icon> {{this.user.email}}</mat-list-item>
         </mat-list>
       </mat-card-content>
     </mat-card>
