@@ -8,7 +8,7 @@ import { ChatsService } from 'app/services/chats/chats.service';
 import { SocketService } from 'app/services/chats/socket.service';
 import { User } from '../../models/user';
 import { Message } from '../../services/chats/model/message';
-import { Event } from '../../services/chats/model/event';
+import { SocketEvent } from '../../services/chats/model/event';
 import { Action } from '../../services/chats/model/action';
 import { MessageTypes } from '../../services/chats/model/messageTypes';
 
@@ -62,19 +62,19 @@ export class AppChatsComponent implements OnInit {
     //});
 
     // Every time there is a new login/out, it reloads the chat side Bar.
-    this._socketService.onEvent(Event.NEW_LOG_IN)                       // TODO: optimize to reload only online status and new, deleted users
+    this._socketService.onEvent(SocketEvent.NEW_LOG_IN)                       // TODO: optimize to reload only online status and new, deleted users
       .subscribe((message: Message) => {
         console.log('New user logged in (chat event): ', message);
         this.reloadChatSideBarWithNewConnectedUsers();                   // reload the connectedUsers navBar
     });
 
-    this._socketService.onEvent(Event.SMN_LOGGED_OUT)
-      .subscribe((message: Message) => {
+    this._socketService.onEvent(SocketEvent.SMN_LOGGED_OUT)
+      .subscribe( (message: Message) => {
         console.log('Some user logged out (chat event): ', message);
         this.reloadChatSideBarWithNewConnectedUsers();                   // reload the connectedUsers navBar
     });
 
-    this._socketService.onEvent(Event.SEND_PRIVATE_MSG)
+    this._socketService.onEvent(SocketEvent.SEND_PRIVATE_MSG)
       .subscribe((message: Message) => {
         // Add response message[] to the activeChatMessages[]
         // this.activeChatMessages = new Array();      // Reset the array

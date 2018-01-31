@@ -6,7 +6,7 @@ import { User } from 'app/models/user';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { SocketService } from '../../services/chats/socket.service';
 import { Message } from '../../services/chats/model/message';
-import { Event } from '../../services/chats/model/event';
+import { SocketEvent } from '../../services/chats/model/event';
 import { Action } from '../../services/chats/model/action';
 
 // For Angular 5 HttpClient Module
@@ -34,7 +34,7 @@ export class UserService {
         // this._socketService.initSocket();
     
         // TODO: can remove
-        this.ioConnection = this._socketService.onEvent(Event.NEW_LOG_IN)
+        this.ioConnection = this._socketService.onEvent(SocketEvent.NEW_LOG_IN)
           .subscribe((message: Message) => {
             // this.messages.push(message);
             console.log('Server Msg to auth.component ', message);

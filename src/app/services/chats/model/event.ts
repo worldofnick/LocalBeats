@@ -1,4 +1,4 @@
-export enum Event {
+export enum SocketEvent {
     CONNECT = 'connect',
     DISCONNECT = 'disconnect',
     NEW_LOG_IN = 'newUserLoggedIn',
