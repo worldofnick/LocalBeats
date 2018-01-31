@@ -160,7 +160,11 @@ export class AppChatsComponent implements OnInit {
         this.activeChatUser = this.connectedUsers[0]; // TODO: change to whatever filter applied later
       },
       err => console.error(err),
-      () => console.log('Done initializing users in chat side bar')
+      () => {
+        console.log('Done initializing users in chat side bar');
+        // Reload the active user's messages
+        this.changeActiveUser(this.activeChatUser);
+      }
     );
   }
 
