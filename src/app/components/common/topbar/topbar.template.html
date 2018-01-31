@@ -26,7 +26,7 @@
     <form [formGroup]="searchForm" (ngSubmit)="submit()">
       <div class="top-search-form">
         <mat-icon role="img">search</mat-icon>
-        <input [formControl]="searchForm.controls['text']" autofocus="true" placeholder="Search" type="text" (click)="clickedInsideSearch()">
+        <input [formControl]="searchForm.controls['text']" autofocus="true" placeholder="Search" type="text" (keyup)="onKey($event)" (click)="clickedInsideSearch()">
       </div>
       <div class="app-search" (offClick)="clickedOutsideSearch()">
         <mat-card class="no-shadow" *ngIf="isSearchOpen">
