@@ -90,7 +90,7 @@ exports.updateBookingByID = function (req, res) {
             } else {
 
                 // Send notification for booking request
-                var io = req.app.get('socketio');
+                // var io = req.app.get('socketio');
                 var notification = new Notifications(); // build notification "someone has requested you to play blah"
                 notification.message = "updated booking"
                 notification.save(function (err, notification) {
@@ -234,14 +234,14 @@ exports.acceptBooking = function(req, res) {
                     return res.status(500).send("Failed to accept booking.");
                 }
                 // Send notification for booking request
-                var io = req.app.get('socketio');
+                // var io = req.app.get('socketio');
                 var notification = new Notifications(); // build notification "someone has requested you to play blah"
                 notification.message = 'Booking has been accepted'
                 notification.save(function (err, notification) {
                   if (err) {
                     return res.status(500).send("Failed to create booking notification");
                   }
-                  io.emit("notification", { notification: notification });
+                //   io.emit("notification", { notification: notification });
                 });
 
                 return res.status(200).send({"message": "Accepted booking."});
@@ -263,13 +263,13 @@ exports.declineBooking = function(req, res) {
           } else {
 
             // Send notification for booking request
-            var io = req.app.get('socketio');
+            // var io = req.app.get('socketio');
             var notification = new Notifications(); // build notification "someone has requested you to play blah"
             notification.save(function (err, notification) {
               if (err) {
                 return res.status(500).send("Failed to create booking notification");
               }
-              io.emit("notification", { notification: notification });
+            //   io.emit("notification", { notification: notification });
             });
 
             return res.status(200).send("Booking declined");

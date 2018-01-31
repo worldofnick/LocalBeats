@@ -10,12 +10,28 @@ import * as socketIO from 'socket.io-client';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
+  artists = [{
+    name: 'Featured Drummer',
+    url: 'assets/images/drums-image.png'
+  }, {
+    name: 'Featured Trumpet',
+    url: 'assets/images/trumpet-pic.png'
+  }, {
+    name: 'Featured Guitarist',
+    url: 'assets/images/guitar-pic.jpg'
+  }]
 
-  constructor(    private notificationService: NotificationService,
-                  private userService: UserService,
-  ) { }
-
-  io:any;
+  events = [{
+    name: 'Featured Restaurant',
+    url: 'assets/images/coffee-shop-pic.jpg'
+  }, {
+    name: 'Featured Concert',
+    url: 'assets/images/concert-pic.jpeg'
+  }, {
+    name: 'Featured Wedding',
+    url: 'assets/images/wedding-pic.jpg'
+  }]
+  constructor() { }
 
   ngOnInit() {
       //connect and listen w/ socket

@@ -9,7 +9,6 @@
           <b>{{this.user.lastName}}</b>
         </div>
         <!-- <div class="subtitle mb-05">Big Data Expert</div> -->
-        <div class="text-muted">Hello my name is {{this.user.firstName}}</div>
       </div>
       <div class="profile-actions text-center mb-1">
         <button mat-raised-button color="primary">Message</button>
@@ -20,10 +19,11 @@
           <!-- check here if to see if on another profile and go to profile/id/overview -->
 
 
-          <mat-list-item (click)="clickedOverview = true">
+          <mat-list-item (click)="clickedOverview = true" [routerLink]="['/profile', 'overview']" routerLinkActive="list-item-active">
             <mat-icon>home</mat-icon>
             Overview
-          </mat-list-item>      
+          </mat-list-item>
+
 
 
           <ng-template [ngIf]="!this.onOwnProfile && this.userService.isAuthenticated()">
@@ -42,7 +42,7 @@
 
 
           <ng-template [ngIf]="this.onOwnProfile">
-            <mat-list-item [routerLink]="['/profile', 'events']" routerLinkActive="list-item-active">
+            <mat-list-item (click)="clickedOverview = false" [routerLink]="['/profile', 'events']" routerLinkActive="list-item-active">
               <mat-icon>events</mat-icon>
               My Events
             </mat-list-item>
@@ -78,6 +78,6 @@
     <router-outlet></router-outlet>
     <!-- //TODO DO THIS FOR THE REST OF THE CHILDREN -->
     <app-profile-request *ngIf="clickedRequestArtist" [user]="userService.user" [artist]="user"></app-profile-request>
-    <app-profile-overview *ngIf="clickedOverview" [user]="user"></app-profile-overview>
+    <app-profile-overview *ngIf="clickedOverview" [user]="this.user"></app-profile-overview>
   </div>
 </div>

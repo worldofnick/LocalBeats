@@ -192,6 +192,7 @@ export class TopbarComponent implements OnInit {
         this.router.navigate(['/search'])
       });
     }
+    this.isSearchOpen = false;
   }
 
   onPickingGenre(event) {

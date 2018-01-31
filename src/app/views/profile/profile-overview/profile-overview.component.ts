@@ -45,109 +45,46 @@ export class ProfileOverviewComponent implements OnInit {
     closed: 60
   }];
 
-  tasks = [{
-    text: 'Lorem, ipsum dolor sit amet',
-    status: 0
-  }, {
-    text: 'Lorem, ipsum dolor sit amet',
-    status: 0
-  }, {
-    text: 'Lorem, ipsum dolor sit amet',
-    status: 1
-  }, {
-    text: 'Lorem, ipsum dolor sit amet',
-    status: 1
-  }, {
-    text: 'Lorem, ipsum dolor sit amet',
-    status: 1
-  }]
-
   tickets = [{
     img: 'assets/images/face-1.jpg',
-    name: 'Mike Dake',
-    text: 'Excerpt pipe is used.',
+    name: 'Brad Pitt',
+    text: 'Amazing artist!.',
     date: new Date('07/12/2017'),
     isOpen: true
   }, {
     img: 'assets/images/face-5.jpg',
-    name: 'Jhone Doe',
-    text: 'My dashboard is not working.',
+    name: 'Angelina Jolie',
+    text: 'Would book again!',
     date: new Date('07/7/2017'),
     isOpen: false
   }, {
     img: 'assets/images/face-3.jpg',
-    name: 'Jhonson lee',
-    text: 'Fix stock issue',
+    name: 'Will Ferrell',
+    text: 'Worst guitarist.',
     date: new Date('04/10/2017'),
     isOpen: false
   }, {
     img: 'assets/images/face-4.jpg',
-    name: 'Mikie Jyni',
-    text: 'Renew my subscription.',
+    name: 'Chris Pratt',
+    text: 'They should call this guy starlord.',
     date: new Date('07/7/2017'),
-    isOpen: false
-  }, {
-    img: 'assets/images/face-5.jpg',
-    name: 'Jhone Dake',
-    text: 'Payment confirmation.',
-    date: new Date('04/10/2017'),
     isOpen: false
   }]
 
   photos = [{
-    name: 'Photo 1',
-    url: 'assets/images/sq-15.jpg'
+    name: 'Featured Restaurant',
+    url: 'assets/images/coffee-shop-pic.jpg'
   }, {
-    name: 'Photo 2',
-    url: 'assets/images/sq-8.jpg'
+    name: 'Featured Concert',
+    url: 'assets/images/concert-pic.jpeg'
   }, {
-    name: 'Photo 3',
-    url: 'assets/images/sq-9.jpg'
-  }, {
-    name: 'Photo 4',
-    url: 'assets/images/sq-10.jpg'
-  }, {
-    name: 'Photo 5',
-    url: 'assets/images/sq-11.jpg'
-  }, {
-    name: 'Photo 6',
-    url: 'assets/images/sq-12.jpg'
+    name: 'Featured Wedding',
+    url: 'assets/images/wedding-pic.jpg'
   }]
 
   constructor(private route: ActivatedRoute, private userService: UserService) { }
   
   ngOnInit() {
-    // console.log("in profile overview..user = ");
-    // this.user = this.userService.user;
-    // console.log(this.user);
-
-     //snapshot params returns a javascript object. index into it with the property field to get a property.
-    //  this.userID = {
-    //   id: this.route.snapshot.params['id']
-    // }
-
-    // console.log("id from url");
-    // console.log(this.userID["id"]);
-    // if (this.userID["id"] == null) {
-    //   //nothing in url.
-    //   console.log('on own profile')
-    //   console.log(this.userService.user)
-    //   this.onOwnProfile = true;
-    //   this.user = this.userService.user;
-    // } else {
-    //   //on another perons profile.
-    //   console.log("ON ANOTHER PERSONS PROFILE");
-    //   this.onOwnProfile = false;
-    //   let ID:String = this.userID["id"];
-    //   console.log("on another perosns profile");
-    //   console.log(ID);
-    //   this.userService.getUserByID(ID).then((gottenUser: User) => {
-    //     this.user = gottenUser;
-    //     // console.log("other user")
-    //     // console.log(this.user)
-    //     // }).then(() => this.hasRequested());
-    //   })
-    // }
   }
 
 }

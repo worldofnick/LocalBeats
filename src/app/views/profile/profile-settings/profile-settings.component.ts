@@ -6,6 +6,7 @@ import { User } from '../../../models/user';
 import { ActivatedRoute } from "@angular/router";
 import { NgForm } from '@angular/forms/src/directives/ng_form';
 import { ImgurService } from 'app/services/image/imgur.service';
+import { MatTabChangeEvent } from '@angular/material';
 
 @Component({
   selector: 'app-profile-settings',
@@ -32,12 +33,16 @@ export class ProfileSettingsComponent implements OnInit {
   onEditProfile(form: NgForm){
     console.log("sending \n" );
     console.log(this.user);
-
     this.userService.onEditProfile(this.user).then((user: User) => {
       this.user = user;
-      this.userService.user = this.user;
-      // this.router.navigate(['/profile']);
+      this.userService.user = user;
+      //this.router.navigate(['/profile']);
     });
+  }
+
+  onTabChange(event: MatTabChangeEvent) {
+    // TODO fix editing bug, leftover from then
+    // this.user = Object.assign({}, this.userService.user);
   }
 
   onChange(event: EventTarget) {

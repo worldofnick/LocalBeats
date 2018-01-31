@@ -53,6 +53,8 @@ export class RegisterComponent implements OnInit {
       isArtist: true,
       profilePicUrl: "https://www.vccircle.com/wp-content/uploads/2017/03/default-profile.png",
       eventTypes: [],
+      socket: null,
+      isOnline: true
     };
     console.log(this.user);
 

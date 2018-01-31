@@ -4,7 +4,6 @@
     <div id="scroll-area" class="navigation-hold" fxLayout="column">
       <!-- App Logo -->
       <div class="branding default-bg">
-          <mat-icon>headset</mat-icon>
           <!-- Two different logos for dark and light themes -->
           <h1 class="app-logo-text">LocalBeats</h1>
       </div>
@@ -76,7 +75,7 @@
   [sidenav]="sidenav" 
   [notificPanel]="notificationPanel"
   (onLangChange)="translate.use($event)"></topbar>
-  <app-breadcrumb #breadcrumb></app-breadcrumb>
+  <!-- <app-breadcrumb #breadcrumb></app-breadcrumb> -->
 
   <!-- App content -->
   <div class="rightside-content-hold">
