@@ -64,7 +64,7 @@ export class TopbarComponent implements OnInit {
 
 
     this.userService.io.on('notificationCount', count=>{
-      console.log(count)
+      // console.log(count)
       this.numNotifications = count;
     });
     

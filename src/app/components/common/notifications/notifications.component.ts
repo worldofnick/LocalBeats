@@ -15,7 +15,7 @@ export class NotificationsComponent implements OnInit {
   //get notification data.
 
   // Dummy notifications
-  notifications:Notification[] = []
+  notifications:Notification[] = [];
 
 
   constructor(private router: Router,
@@ -25,11 +25,20 @@ export class NotificationsComponent implements OnInit {
   ngOnInit
   () {
 
-    // this.userService.io.on('notifications', notificationsList=>{
-    //   console.log("getting notifications..");
-    //   this.notifications = notificationsList;
-    //   console.log(notificationsList);
-    // });
+    this.userService.io.on('notifications', notificationsList=>{
+      console.log("getting notifications..");
+      // this.notifications = notificationsList;
+
+      this.notifications = [];
+      for(let notification of notificationsList){
+        console.log(this.notifications.length);
+        let newNotification:Notification = new Notification();
+        newNotification.message = notification.message;
+        this.notifications.push(newNotification);
+      }
+      console.log(notificationsList);
+      console.log(this.notifications);
+    });
     
 
     // if(this.userService.isAuthenticated()){
