@@ -193,34 +193,34 @@ export class UserService {
 
 
 
-    public sendNotificationToUser(notification: Notification): Promise<any> {
+    // public sendNotificationToUser(notification: Notification): Promise<any> {
 
 
-        this.getUserByID(notification.receiverID).then((receiver:User) =>{
+    //     this.getUserByID(notification.receiverID).then((receiver:User) =>{
 
-        //update the receiving user object w/ an additional notification in the list.
-        let userConnection: string = 'http://localhost:8080/api/users';
-        const current = userConnection + '/' + receiver._id;        
-        // receiver.notifications.push(notification);
+    //     //update the receiving user object w/ an additional notification in the list.
+    //     let userConnection: string = 'http://localhost:8080/api/users';
+    //     const current = userConnection + '/' + receiver._id;        
+    //     // receiver.notifications.push(notification);
 
-        console.log("sending:");
-        console.log(JSON.stringify(receiver));
+    //     console.log("sending:");
+    //     console.log(JSON.stringify(receiver));
 
-        return this.http.put(current, { user: JSON.stringify(receiver) }, { headers: this.headers })
-            .toPromise()
-            .then((response: Response) => {
-                const data = response.json();
-                console.log("received");
-                this.user = data.user as User;
-                console.log(this.user)
-                return this.user;
-            })
-            .catch(this.handleError); 
-        })
+    //     return this.http.put(current, { user: JSON.stringify(receiver) }, { headers: this.headers })
+    //         .toPromise()
+    //         .then((response: Response) => {
+    //             const data = response.json();
+    //             console.log("received");
+    //             this.user = data.user as User;
+    //             console.log(this.user)
+    //             return this.user;
+    //         })
+    //         .catch(this.handleError); 
+    //     })
 
-        return;
+    //     return;
 
-    }
+    // }
 
     private handleError(error: any): Promise<any> {
         let errMsg = (error.message) ? error.message :
