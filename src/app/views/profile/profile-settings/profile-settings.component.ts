@@ -29,7 +29,7 @@ export class ProfileSettingsComponent implements OnInit {
       let snackBarRef = this.snackBar.open('Stripe Account Linked!', "", {
         duration: 1500,
       });
-    } else {
+    } else (router.url.indexOf('success=false') >= 0) {
       // failure
       let snackBarRef = this.snackBar.open("Failed to Link Account", "", {
         duration: 1500,
@@ -88,7 +88,7 @@ export class ProfileSettingsComponent implements OnInit {
 
   unlinkStripe() {
     console.log("unlink stripe");
-    this.user.stripeUserId = null;
+    this.user.stripeAccountId = null;
     this.userService.onEditProfile(this.user).then((user: User) => {
       this.user = user;
       this.userService.user = this.user

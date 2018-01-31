@@ -43,7 +43,7 @@ exports.stripeAuthorize = function (req, res) {
  */
  exports.linkStripe = function (req, res) {
   if (req.session.state != req.query.state) {
-     res.redirect('http://localhost:8080');
+     res.redirect('http://localhost:4200');
    }
 
    request.post('https://connect.stripe.com/express/oauth/authorize', {
@@ -57,14 +57,14 @@ exports.stripeAuthorize = function (req, res) {
    }, (err, response, body) => {
      if (err || body.error) {
        console.log('The Stripe onboarding process has not succeeded.');
-       res.redirect('http://localhost:8080/profile/settings/success=false');
+       res.redirect('http://localhost:4200/profile/settings/success=false');
      } else {
        // Update the model and store the Stripe account ID in the DB.
        req.user.stripeAccountId = body.stripe_user_id;
        req.user.save();
      }
      // Redirect to the final stage.
-     res.redirect('http://localhost:8080/profile/settings/success=true');
+     res.redirect('http://localhost:4200/profile/settings/success=true');
    });
 
 
