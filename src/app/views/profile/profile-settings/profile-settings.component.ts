@@ -7,6 +7,7 @@ import { ActivatedRoute } from "@angular/router";
 import { NgForm } from '@angular/forms/src/directives/ng_form';
 import { ImgurService } from 'app/services/image/imgur.service';
 import { MatTabChangeEvent } from '@angular/material';
+import { MatSnackBar } from '@angular/material';
 
 @Component({
   selector: 'app-profile-settings',
@@ -19,7 +20,7 @@ export class ProfileSettingsComponent implements OnInit {
 
   public uploader: FileUploader = new FileUploader({ url: 'upload_url' });
   public hasBaseDropZoneOver: boolean = false;
-  constructor(private router: ActivatedRoute, private userService: UserService, private imgurService: ImgurService) { }
+  constructor(private router: ActivatedRoute, private userService: UserService, private imgurService: ImgurService, public snackBar: MatSnackBar) { }
 
 
   ngOnInit() {
@@ -75,6 +76,9 @@ export class ProfileSettingsComponent implements OnInit {
     this.userService.onEditProfile(this.user).then((user: User) => {
       this.user = user;
       this.userService.user = this.user
+      let snackBarRef = this.snackBar.open('Stripe Account Unlinked', "", {
+        duration: 1500,
+      });
     });
   }
 
