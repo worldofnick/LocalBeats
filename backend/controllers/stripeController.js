@@ -1,7 +1,7 @@
 'use strict';
 
 var mongoose    = require('mongoose');
-var stripe = require("stripe")("sk_test_XnYNA52kavV92IkcJyh1dQBw");
+var stripe      = require("stripe")("sk_test_XnYNA52kavV92IkcJyh1dQBw");
 var querystring = require('querystring');
 var request     = require('request');
 var jwt         = require('jsonwebtoken');
@@ -9,7 +9,7 @@ var bcrypt      = require('bcrypt');
 var User        = mongoose.model('User');
 var config      = require('../../config.js');
 
-// ====== USER ROUTES ======
+// ====== STRIPE ROUTES ======
 
 /**
  * GET /api/stripe/authorize
@@ -20,8 +20,8 @@ exports.stripeAuthorize = function (req, res) {
   req.session.state = Math.random().toString(36).slice(2);
   // Prepare the mandatory Stripe parameters.
   let parameters = {
-  client_id: "ca_CE9KYxkI16Id3WqO6ypCkgnZsEqzLtWY",
-  state: req.session.state
+    client_id: "ca_CE9KYxkI16Id3WqO6ypCkgnZsEqzLtWY",
+    state: req.session.state
   };
 
   // Optionally, Stripe Connect accepts `first_name`, `last_name`, `email`,

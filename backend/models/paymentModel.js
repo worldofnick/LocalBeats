@@ -10,6 +10,7 @@ var Schema = mongoose.Schema;
      performerUser   : {type: Schema.Types.ObjectId, ref: 'User' },
      event           : {type: Schema.Types.ObjectId, ref: 'Events' },
      amount          : {type: Number},
+     date:           : {type : Date},
      stripeChargeId  : {type: String},
      type            : {type: String} // {"payment", "refund"}
  }, {strict: true});
