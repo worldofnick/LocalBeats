@@ -4,13 +4,13 @@ module.exports = function(app) {
 	var stripeHandlers = require('../controllers/stripeController.js');
 
 		app.route('/api/stripe/authorize')
-			.get(stripeHandlers.stripeAuthorize);
+			.post(stripeHandlers.stripeAuthorize);
 
     app.route('/api/stripe/link')
 			.get(stripeHandlers.stripeLink);
 
 		app.route('/api/stripe/transfers')
-			.get(stripeHandlers.stripeTransfers);
+			.post(stripeHandlers.stripeTransfers);
 
 		app.route('/api/stripe/payout')
 			.post(stripeHandlers.stripePayout);
