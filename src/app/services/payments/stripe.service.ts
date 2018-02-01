@@ -38,7 +38,7 @@ export class StripeService {
 
   // Makes a request to our backend to request the Stripe API to payout the user
   // Returns true if the payout was good, false otherwise
-  public payoutUser(user: User): boolean {
+  public payoutUser(user: User): Promise<boolean> {
     const current = this.connection + '/payout';
     return this.http.post(current, { user: user }, { headers: this.headers })
         .toPromise()

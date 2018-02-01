@@ -27,26 +27,27 @@ export class ProfileSettingsComponent implements OnInit {
   }
 
   private showSnackBarIfNeeded() {
-    if (router.url.indexOf('success=true') >= 0) {
+    if (this.router.url.indexOf('success=true') >= 0) {
       let snackBarRef = this.snackBar.open('Stripe Account Linked!', "", {
         duration: 1500,
       });
-    } else (router.url.indexOf('success=false') >= 0) {
+    } else if (this.router.url.indexOf('success=false') >= 0) {
       // failure
       let snackBarRef = this.snackBar.open("Failed to Link Account", "", {
         duration: 1500,
       });
-    } else (router.url.indexOf('updated=true') >= 0) {
+    } else if (this.router.url.indexOf('updated=true') >= 0) {
       // failure
       let snackBarRef = this.snackBar.open("Stripe Details Updated", "", {
         duration: 1500,
       });
-    } else (router.url.indexOf('updated=false') >= 0) {
+    } else if (this.router.url.indexOf('updated=false') >= 0) {
       // failure
       let snackBarRef = this.snackBar.open("Failed to Update Stripe Details", "", {
         duration: 1500,
       });
   }
+}
 
   ngOnInit() {
     this.user = Object.assign({}, this.userService.user); // deep copy
