@@ -15,7 +15,7 @@ export class StripeService {
   constructor(private http: Http) { }
 
   // Send the user to the Stripe website
-  public authorizeStripe(user: User): String {
+  public authorizeStripe(user: User): Promise<string> {
     const current = this.connection + '/authorize';
     return this.http.post(current, { user: user }, { headers: this.headers })
         .toPromise()

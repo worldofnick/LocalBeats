@@ -100,7 +100,7 @@ export class ProfileSettingsComponent implements OnInit {
   // STRIPE
   authorizeStripe() {
 
-    this.stripeService.authorizeStripe(this.user).then((url: String) => {
+    this.stripeService.authorizeStripe(this.user).then((url: string) => {
       window.location.href = url;
     });
 
