@@ -1,13 +1,13 @@
 'use strict';
 
 var mongoose    = require('mongoose');
-var stripe      = require("stripe")("sk_test_XnYNA52kavV92IkcJyh1dQBw");
+var config      = require('../../config.js');
+var stripe      = require("stripe")(config.stripe.secretKey);
 var querystring = require('querystring');
 var request     = require('request');
 var jwt         = require('jsonwebtoken');
 var bcrypt      = require('bcrypt');
 var User        = mongoose.model('User');
-var config      = require('../../config.js');
 
 // ====== STRIPE ROUTES ======
 
@@ -20,7 +20,7 @@ exports.stripeAuthorize = function (req, res) {
   req.session.state = Math.random().toString(36).slice(2);
   // Prepare the mandatory Stripe parameters.
   let parameters = {
-    client_id: "ca_CE9KYxkI16Id3WqO6ypCkgnZsEqzLtWY",
+    client_id: config.stripe.clientId,
     state: req.session.state
   };
 
@@ -34,7 +34,7 @@ exports.stripeAuthorize = function (req, res) {
   });
 
   // Redirect to Stripe to start the Connect onboarding.
-  res.redirect('https://connect.stripe.com/express/oauth/authorize' + '?' + querystring.stringify(parameters));
+  res.redirect(config.stripe.authorizeUri + '?' + querystring.stringify(parameters));
 };
 
 /**
@@ -47,11 +47,11 @@ exports.stripeAuthorize = function (req, res) {
      res.redirect('http://localhost:4200');
    }
 
-   request.post('https://connect.stripe.com/express/oauth/authorize', {
+   request.post(config.stripe.authorizeUri, {
      form: {
        grant_type: 'authorization_code',
-       client_id: "ca_CE9KYxkI16Id3WqO6ypCkgnZsEqzLtWY",
-       client_secret: "sk_test_XnYNA52kavV92IkcJyh1dQBw",
+       client_id: config.stripe.clientId,
+       client_secret: config.stripe.secretKey,
        code: req.query.code
      },
      json: true
