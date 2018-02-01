@@ -26,7 +26,7 @@ export class StripeService {
   }
 
   // Sends the user to the Stripe website to view their account into
-  public viewTransfers(user: User) {
+  public viewStripeTransfers(user: User) {
     const current = this.connection + '/transfers';
     return this.http.post(current, { user: user }, { headers: this.headers })
         .toPromise()
