@@ -18,6 +18,7 @@ import { BookingService } from './services/booking/booking.service';
 import { EventService } from './services/event/event.service';
 import { UserGuard } from './services/auth/user-guard.service';
 import { ImgurService } from './services/image/imgur.service';
+import { StripeService } from './services/payments/stripe.service';
 import { NotificationService} from './services/notification/notification.service';
 
 
@@ -41,14 +42,15 @@ export function createTranslateLoader(http: Http) {
   ],
   declarations: [AppComponent],
   providers: [
-    RoutePartsService, 
+    RoutePartsService,
     NavigationService,
     SearchService,
-    UserService, 
+    UserService,
     BookingService,
     EventService,
     UserGuard,
-    ImgurService
+    ImgurService,
+    StripeService
   ],
   bootstrap: [AppComponent]
 })

@@ -94,12 +94,14 @@ var eventsRoutes          = require('./backend/routes/eventsRoutes.js');
 var bookingsRoutes        = require('./backend/routes/bookingsRoutes.js');
 var spotifyRoutes 		    = require('./backend/routes/spotifyRoutes.js');
 var notificationRoutes 		= require('./backend/routes/notificationRoutes.js');
+var stripeRoutes 		= require('./backend/routes/stripeRoutes.js');
 userRoutes(app);
 authenticationRoutes(app);
 eventsRoutes(app);
 bookingsRoutes(app);
 spotifyRoutes(app);
 notificationRoutes(app);
+stripeRoutes(app);
 
 
 // basic route (http://localhost:8080)

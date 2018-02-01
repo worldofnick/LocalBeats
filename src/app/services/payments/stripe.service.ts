@@ -15,12 +15,13 @@ export class StripeService {
   constructor(private http: Http) { }
 
   // Send the user to the Stripe website
-  public authorizeStripe(user: User) {
+  public authorizeStripe(user: User): String {
     const current = this.connection + '/authorize';
     return this.http.post(current, { user: user }, { headers: this.headers })
         .toPromise()
         .then((response: Response) => {
-          console.log(response);
+          const data = response.json();
+          return data.redirect_url;
         })
         .catch(this.handleError);
   }

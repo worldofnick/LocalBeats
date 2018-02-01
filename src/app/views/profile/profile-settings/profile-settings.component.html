@@ -43,7 +43,7 @@
       <mat-card-content class="mt-1">
         <p>If you plan on performing at an event you'll need to setup a payout method.</p>
         <div class="button-row">
-        <a [disabled]="this.user.stripeAccountId" mat-raised-button (click)="authorizeStripe" color="primary">Connect with Stripe</a>
+        <a [disabled]="this.user.stripeAccountId" mat-raised-button (click)="authorizeStripe()" color="primary">Connect with Stripe</a>
         <a *ngIf="this.user.stripeAccountId" mat-raised-button (click)="requestPayout()" color="accent">Request Payout</a>
         <a *ngIf="this.user.stripeAccountId" mat-raised-button (click)="viewStripeTransfers()" color="white">Manage Stripe Account</a>
         <a *ngIf="this.user.stripeAccountId" mat-raised-button (click)="unlinkStripe()" color="warn">Unlink Stripe Account</a>

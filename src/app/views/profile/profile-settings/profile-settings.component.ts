@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatProgressBar, MatButton } from '@angular/material';
 import { FileUploader } from 'ng2-file-upload';
 import { UserService } from '../../../services/auth/user.service';
-import { StripeService } from '../../../services/auth/stripe.service';
+import { StripeService } from '../../../services/payments/stripe.service';
 import { User } from '../../../models/user';
 import { ActivatedRoute } from "@angular/router";
 import { NgForm } from '@angular/forms/src/directives/ng_form';
@@ -22,9 +22,9 @@ export class ProfileSettingsComponent implements OnInit {
 
   public uploader: FileUploader = new FileUploader({ url: 'upload_url' });
   public hasBaseDropZoneOver: boolean = false;
-  constructor(private route: ActivatedRoute, private router : Router, private userService: UserService, private imgurService: ImgurService, private stripeService: StripeService, public snackBar: MatSnackBar) {
+  constructor(private route: ActivatedRoute, private router : Router, private userService: UserService, private imgurService: ImgurService, public snackBar: MatSnackBar, private stripeService: StripeService) {
 
-    showSnackBarIfNeeded();
+    this.showSnackBarIfNeeded();
   }
 
   private showSnackBarIfNeeded() {
@@ -99,7 +99,11 @@ export class ProfileSettingsComponent implements OnInit {
 
   // STRIPE
   authorizeStripe() {
-    this.stripeService.authorizeStripe(this.user);
+
+    this.stripeService.authorizeStripe(this.user).then((url: String) => {
+      window.location.href = url;
+    });
+
   }
 
   viewStripeTransfers() {

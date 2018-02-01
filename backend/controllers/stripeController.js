@@ -17,24 +17,23 @@ var User        = mongoose.model('User');
  * Redirect to Stripe to set up payments.
  */
 exports.stripeAuthorize = function (req, res) {
-  req.session.state = Math.random().toString(36).slice(2);
   // Prepare the mandatory Stripe parameters.
   let parameters = {
     client_id: config.stripe.clientId,
-    state: req.session.state
+    state: Math.random().toString(36).slice(2)
   };
 
   // Optionally, Stripe Connect accepts `first_name`, `last_name`, `email`,
   // and `phone` in the query parameters for them to be autofilled.
   parameters = Object.assign(parameters, {
     'stripe_user[business_type]': 'individual',
-    'stripe_user[first_name]': req.user.firstName || undefined,
-    'stripe_user[last_name]': req.user.lastName || undefined,
-    'stripe_user[email]': req.user.email,
+    'stripe_user[first_name]': req.body.user.firstName || undefined,
+    'stripe_user[last_name]': req.body.user.lastName || undefined,
+    'stripe_user[email]': req.body.user.email,
   });
 
   // Redirect to Stripe to start the Connect onboarding.
-  res.redirect(config.stripe.authorizeUri + '?' + querystring.stringify(parameters));
+  res.send({"redirect_url": config.stripe.authorizeUri + '?' + querystring.stringify(parameters)});
 };
 
 /**
@@ -83,7 +82,7 @@ exports.stripeTransfers = function (req, res) {
   }
   try {
     // Generate a unique login link for the associated Stripe account.
-    const loginLink = await stripe.accounts.createLoginLink(user.stripeAccountId);
+    const loginLink = stripe.accounts.createLoginLink(user.stripeAccountId);
     // Retrieve the URL from the response and redirect the user to Stripe.
     return res.redirect(loginLink.url);
   } catch (err) {
@@ -103,11 +102,11 @@ exports.stripeTransfers = function (req, res) {
     const user = req.user;
     try {
       // Fetch the account balance for find available funds.
-      const balance = await stripe.balance.retrieve({ stripe_account: user.stripeAccountId });
+      const balance = stripe.balance.retrieve({ stripe_account: user.stripeAccountId });
 
       const { amount, currency } = balance.available[0]; // USD only
       // Create the instant payout.
-      const payout = await stripe.payouts.create({
+      const payout = stripe.payouts.create({
         method: 'instant',
         amount: amount,
         currency: currency,
