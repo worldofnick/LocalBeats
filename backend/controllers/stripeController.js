@@ -60,8 +60,10 @@ exports.stripeAuthorize = function (req, res) {
        res.redirect('http://localhost:4200/profile/settings/success=false');
      } else {
        // Update the model and store the Stripe account ID in the DB.
-       console.log("user");
-       console.log(user);
+       console.log("req");
+       console.log(req);
+       console.log("body");
+       console.log(body);
        User.update({email: req.user.email}), {
             stripeAccountId: body.stripe_user_id
         }, function(err, numberAffected, rawResponse) {
