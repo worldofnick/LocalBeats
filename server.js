@@ -11,6 +11,7 @@ const async         = require('async');
 const socketIO      = require('socket.io');
 const jwt           = require('jsonwebtoken');                // used to create, sign, and verify tokens
 
+const config = require('./config')
 var User   = require('./backend/models/userModel');  // get our mongoose model
 var Events = require('./backend/models/eventsModel');  // get our mongoose model
 var Bookings = require('./backend/models/bookingsModel');
