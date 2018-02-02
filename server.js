@@ -14,7 +14,6 @@ var Events = require('./backend/models/eventsModel');  // get our mongoose model
 var Bookings = require('./backend/models/bookingsModel');
 var Notification = require('./backend/models/notificationModel');
 var Payments = require('./backend/models/paymentModel');
-var io = require('socket.io')(server);
 
 
 var distDir = __dirname + "/dist/";
