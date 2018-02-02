@@ -1,14 +1,16 @@
 // =================================================================
 // Get the packages we need
 // =================================================================
-var express 		= require('express');
-var app         	= express();
-var bodyParser  	= require('body-parser');
-var morgan      	= require('morgan');
-var mongoose    	= require('mongoose');
-var http = require('http');
-var jwt    = require('jsonwebtoken');                // used to create, sign, and verify tokens
-var config = require('./config');                    // get our config file
+const express 		  = require('express');
+const app         	= express();
+const bodyParser  	= require('body-parser');
+const morgan      	= require('morgan');
+const mongoose    	= require('mongoose');
+const http          = require('http');
+const async         = require('async');
+const socketIO      = require('socket.io');
+const jwt           = require('jsonwebtoken');                // used to create, sign, and verify tokens
+
 var User   = require('./backend/models/userModel');  // get our mongoose model
 var Events = require('./backend/models/eventsModel');  // get our mongoose model
 var Bookings = require('./backend/models/bookingsModel');
