@@ -59,7 +59,7 @@ export class AppModule {
 
   constructor() {
     if (window.location.hostname != "localhost") {
-      AppModule.currentHost = "http://" + window.location.hostname + "/";
+      AppModule.currentHost = "https://" + window.location.hostname + "/";
     }
   }
 
