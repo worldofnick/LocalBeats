@@ -13,6 +13,7 @@ var User   = require('./backend/models/userModel');  // get our mongoose model
 var Events = require('./backend/models/eventsModel');  // get our mongoose model
 var Bookings = require('./backend/models/bookingsModel');
 var Notification = require('./backend/models/notificationModel');
+var Payments = require('./backend/models/paymentModel');
 var io = require('socket.io')(server);
 
 
@@ -94,14 +95,14 @@ var eventsRoutes          = require('./backend/routes/eventsRoutes.js');
 var bookingsRoutes        = require('./backend/routes/bookingsRoutes.js');
 var spotifyRoutes 		    = require('./backend/routes/spotifyRoutes.js');
 var notificationRoutes 		= require('./backend/routes/notificationRoutes.js');
-// var stripeRoutes 		  = require('./backend/routes/stripeRoutes.js');
+var stripeRoutes 		      = require('./backend/routes/stripeRoutes.js');
 userRoutes(app);
 authenticationRoutes(app);
 eventsRoutes(app);
 bookingsRoutes(app);
 spotifyRoutes(app);
 notificationRoutes(app);
-// stripeRoutes(app);
+stripeRoutes(app);
 
 
 // basic route (http://localhost:8080)
