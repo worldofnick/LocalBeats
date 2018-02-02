@@ -55,7 +55,7 @@ exports.stripeAuthorize = function (req, res) {
      },
      json: true
    }, (err, response, body) => {
-     consoel.log("BODY");
+     console.log("BODY");
      consoel.log(body);
      if (err || body.error) {
        console.log('The Stripe onboarding process has not succeeded.');
