@@ -126,5 +126,15 @@ module.exports = function (io) {
             // console.log(notifications);
             socket.emit('notifications', 'test,test,test,test');
           });
+
+          socket.on('sendNotification', (payload) => {
+            console.log('\n-----\N Notification received from socket: ', socket.id);
+            console.log('\n-----\N Notif payload: ', payload);
+
+            // Send the message to all the recipients (currently also the sender)
+            let recipient = socketsHash[payload.receiverID._id];
+            console.log('> Sending notification to', recipient);
+            io.to(recipient).emit('sendNotification', payload);
+          });
     });
 }

@@ -23,7 +23,26 @@ var config    = require('../../config.js');
 
 // };
 
+// exports.sendNotificationToUser = function (req, res) {
 
+// var notification = new Notifications(); // build notification "someone has requested you to play blah"
+//                     notification.receiverID = newBooking.performerUser;
+//                     notification.senderID = newBooking.hostUser;
+//                     notification.message = notification.senderID['firstName'] + " has requested you for an event";
+
+//                     notification.icon = 'queue_music';
+//                     notification.eventID = newBooking._id;
+//                     // add timestamp to notification.sentTime of type date.
+//                     console.log("printing notification");
+//                     console.log(notification);
+//                     notification.save(function (err, notification) {
+//                       if (err) {
+//                         return res.status(500).send("Failed to create booking notification");
+//                       }
+//                     //   io.emit("notification", { notification: notification });
+//                     });
+
+//                 }
 // params eid
 exports.getNotificationsForUser = function (req, res) {
     Notifications.find({receiverID: req.params.uid}).populate('senderID').populate('receiverID').exec(function (err, notifications) {

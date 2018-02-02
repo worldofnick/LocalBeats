@@ -37,6 +37,8 @@ export class SocketService {
   }
 
   public sendNotification(eventName: SocketEvent, notificationPayload: SocketNotification): void {
+    console.log("emitting a send notification event for :")
+    console.log(notificationPayload);
     this.socket.emit(eventName, notificationPayload);
   }
 

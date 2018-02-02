@@ -28,6 +28,20 @@ export class NotificationsComponent implements OnInit {
   ngOnInit
   () {
 
+    //listening for real time notification
+    this._socketService.onEvent(SocketEvent.SEND_NOTIFICATION)
+      .subscribe((notification: Notification) => {
+        console.log('Notification form servre: ', notification);
+        const temp: Notification = notification as Notification;
+
+        let newNotification:Notification = new Notification();
+        newNotification.message = temp.message;
+        newNotification.color = "blue";
+        newNotification.icon = temp.icon;
+        this.notifications.push(newNotification);
+    });
+
+    //initial getting of notifications
     this._socketService.onEvent(SocketEvent.REQUEST_NOTIFICATIONS).subscribe((notificationsList: Notification[])=>{
       console.log("getting notifications..");
       // this.notifications = notificationsList;

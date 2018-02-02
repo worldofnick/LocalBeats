@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Http, Headers, RequestOptions, Response, URLSearchParams } from '@angular/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+
 import { Observable } from 'rxjs/Observable';
 import { SearchTerms } from 'app/models/search';
 import { Event } from 'app/models/event';
@@ -8,6 +10,11 @@ import { User } from 'app/models/user';
 import { Notification } from 'app/models/notification';
 // import * as socketIO from 'socket.io-client';
 import * as Rx from 'rxjs/Rx';
+
+const SERVER_URL = 'http://localhost:8080';
+const httpOptions = {
+    headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+  };
 
 @Injectable()
 export class NotificationService {
@@ -21,9 +28,14 @@ export class NotificationService {
     // Our socket connection
     // private socket:socketIO.socket;
 
-    constructor(private http: Http) { 
+    constructor(private http: Http, private httpClient: HttpClient) { 
 
 
+    }
+
+    saveNotificationToDB(notification: Notification) {
+        let body = JSON.stringify(notification);
+        return this.httpClient.put(SERVER_URL + '/api/notifications/', body, httpOptions);
     }
 
     connect(){

@@ -7,5 +7,6 @@ module.exports = function(app) {
     // TODO: restrict access via user log in??
 
 	app.route('/api/notification/:uid')
-        .get(notificationHandlers.getNotificationsForUser)
+		.get(notificationHandlers.getNotificationsForUser)
+		// .put(notificationHandlers.sendNotificationToUser)
 };

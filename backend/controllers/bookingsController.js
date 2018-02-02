@@ -56,6 +56,8 @@ exports.createBooking = function (req, res) {
 
                     // Send notification for booking request
                     // var io = req.app.get('socketio');
+
+
                     var notification = new Notifications(); // build notification "someone has requested you to play blah"
                     notification.receiverID = newBooking.performerUser;
                     notification.senderID = newBooking.hostUser;
