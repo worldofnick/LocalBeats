@@ -14,7 +14,8 @@ var config    = require('../../config.js');
  * continue to the next function waiting in line.
  */
 exports.verifyToken = function (req, res, next) {
-    var token = req.headers['x-access-token'];
+    var token = JSON.parse(req.headers['x-access-token'])['accessToken'];
+
     if (!token)
       return res.status(403).send({ auth: false, message: 'No token provided.' });
     jwt.verify(token, config.secret, function(err, decoded) {

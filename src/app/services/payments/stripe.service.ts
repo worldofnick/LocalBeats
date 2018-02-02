@@ -11,7 +11,7 @@ import { AppModule } from 'app/app.module';
 export class StripeService {
 
   public connection: string = AppModule.currentHost + 'api/stripe';
-  private headers: Headers = new Headers({ 'Content-Type': 'application/json' });
+  private headers: Headers = new Headers({ 'Content-Type': 'application/json', 'x-access-token': sessionStorage.getItem('token')});
 
   constructor(private http: Http) { }
 
