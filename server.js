@@ -35,15 +35,15 @@ app.use(bodyParser.json());
 app.use(morgan('dev'));
 
 //original server instatiation
-// var server = app.listen(port, function () {
-//   var port = server.address().port;
-//   console.log("App now running on port", port);
-// });
+var server = app.listen(port, function () {
+  var port = server.address().port;
+  console.log("App now running on port", port);
+});
 
 // var server = http.createServer(app);
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
-server.listen(8080);
+// server.listen(port);
 //
 
 //set up socket
@@ -56,27 +56,6 @@ io.on('connection', socket=>{
 
   socket.emit('fromServer', 'hello from server!!!!!!!!')
 })
-
-// io.on('connection', function(socket){
-//   console.log("user connected");
-
-
-//   socket.on('connection', socket => {
-//     // socket.broadcast.emit('new notification',data);
-//     console.log("user connected");
-//   });
-  
-//   socket.on('userConnected', function(data) {
-//     console.log("user connected");
-//     // var uid = socket.request.handshakeData.uid // This might work.. need to look at the data
-//     // Save the session with the uid
-//   });
-
-//   socket.on('notification', function(data) {
-//     console.log("notiicioant received");
-//     socket.broadcast.emit('new notification',data);
-//   });
-// });
 
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
