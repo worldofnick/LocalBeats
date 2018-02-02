@@ -99,4 +99,4 @@ export class SearchService {
         console.error(errMsg); // log to console
         return Promise.reject(errMsg);
     }
-}}
+}

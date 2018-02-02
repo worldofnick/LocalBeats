@@ -104,4 +104,4 @@ export class BookingService {
         console.error(errMsg); // log to console
         return Promise.reject(errMsg);
     }
-}}
+}

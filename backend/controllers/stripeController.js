@@ -60,7 +60,6 @@ exports.stripeAuthorize = function (req, res) {
        res.redirect('http://localhost:4200/profile/settings/success=false');
      } else {
        // Update the model and store the Stripe account ID in the DB.
-
        User.update({email: req.user.email}), {
             stripeAccountId: body.stripe_user_id
         }, function(err, numberAffected, rawResponse) {
@@ -79,7 +78,6 @@ exports.stripeAuthorize = function (req, res) {
  * Redirect to Stripe to view transfers and edit payment details.
  */
 exports.stripeTransfers = function (req, res) {
-
   const user = req.user;
   if (!user.stripeAccountId) {
     return res.redirect('http://localhost:4200/auth');
