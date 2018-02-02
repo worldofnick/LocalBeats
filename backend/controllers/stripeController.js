@@ -56,7 +56,7 @@ exports.stripeAuthorize = function (req, res) {
      json: true
    }, (err, response, body) => {
      console.log("BODY");
-     consoel.log(body);
+     console.log(body);
      if (err || body.error) {
        console.log('The Stripe onboarding process has not succeeded.');
        res.redirect('http://localhost:4200/profile/settings/success=false');
