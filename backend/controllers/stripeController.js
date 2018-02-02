@@ -42,9 +42,9 @@ exports.stripeAuthorize = function (req, res) {
  * Connect the new Stripe account to the Localbeats account.
  */
  exports.stripeLink = function (req, res) {
-  if (req.session.state != req.query.state) {
-     res.redirect('http://localhost:4200');
-   }
+  // if (req.session.state != req.query.state) {
+  //    res.redirect('http://localhost:4200');
+  //  }
 
    request.post(config.stripe.authorizeUri, {
      form: {
