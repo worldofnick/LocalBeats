@@ -63,7 +63,7 @@ exports.stripeAuthorize = function (req, res) {
        User.update({email: req.user.email}), {
             stripeAccountId: body.stripe_user_id
         }, function(err, numberAffected, rawResponse) {
-      })
+      }
 
      }
      // Redirect to the final stage.
