@@ -5,6 +5,8 @@ let socketsHash = new Array();
 var mongoose  = require('mongoose');
 var User      = mongoose.model('User');
 var Message   = mongoose.model('Message');
+let notificationController = require('../controllers/notificationController.js');
+
 
 module.exports = function (io) {
     // Default 'connection' event listerner
@@ -55,6 +57,7 @@ module.exports = function (io) {
         // Private Messaging Event Handlers - P2P
         // ============================================
         
+        //TODO look at this for sending live notifications
         socket.on('sendPrivateMessage', (payload) => {
             console.log('\n-----\nPM received from socket: ', socket.id);
             console.log('\n-----\nPM payload: ', payload);
@@ -96,5 +99,32 @@ module.exports = function (io) {
         //         socket.emit('sendPrivateMessage', messagePayload.serverPayload);
         //     // } 
         // });
+
+        // ============================================
+        // Notifications Socket Controls
+        // ============================================
+
+        socket.on('notificationsCount', (userID) => {
+            let number = notificationController.getNotificationsCount();
+            socket.emit('notificationCount', number);
+          });
+        
+          // TODO add parans for function
+          socket.on('tellTopBar', numberOfNotifications =>{
+            socket.emit('notificationCount', numberOfNotifications);
+          })
+        
+          socket.on('tellNotificationPanel', notifications=>{
+        
+            console.log(notifications);
+            // io.sockets.connected[socket.id].emit('notifications', notifications);
+            socket.emit('notifications', notifications)
+          })
+        
+          socket.on('notificationsForUser', userID => {
+            // var notifications = notificationController.getNotificationsForUser(userID)
+            // console.log(notifications);
+            socket.emit('notifications', 'test,test,test,test');
+          });
     });
 }

@@ -57,9 +57,10 @@ exports.createBooking = function (req, res) {
                     // Send notification for booking request
                     // var io = req.app.get('socketio');
                     var notification = new Notifications(); // build notification "someone has requested you to play blah"
-                    notification.message = "You have been requested for an event";
                     notification.receiverID = newBooking.performerUser;
                     notification.senderID = newBooking.hostUser;
+                    notification.message = notification.senderID['firstName'] + " has requested you for an event";
+
                     notification.icon = 'queue_music';
                     notification.eventID = newBooking._id;
                     // add timestamp to notification.sentTime of type date.

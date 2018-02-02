@@ -15,6 +15,10 @@ import { NotificationService } from '../../../services/notification/notification
 import { SearchTerms, Location } from '../../../models/search';
 import { User } from '../../../models/user';
 import { Event } from '../../../models/event';
+import { SocketService } from '../../../services/chats/socket.service';
+import { SocketEvent } from         '../../../services/chats/model/event';
+
+
 
 @Component({
   selector: 'topbar',
@@ -56,6 +60,7 @@ export class TopbarComponent implements OnInit {
     private mapsAPILoader: MapsAPILoader,
     private ngZone: NgZone,
     private changeDetector: ChangeDetectorRef,
+    private _socketService: SocketService
     ) {
   }
 
@@ -63,7 +68,7 @@ export class TopbarComponent implements OnInit {
     domHelper.toggleClass(document.body, 'collapsed-menu');
 
 
-    this.userService.io.on('notificationCount', count=>{
+    this._socketService.onEvent(SocketEvent.REQUEST_NOTIFICATION_COUNT).subscribe((count: Number)=>{
       // console.log(count)
       this.numNotifications = count;
     });

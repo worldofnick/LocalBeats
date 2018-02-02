@@ -5,7 +5,7 @@ import { Notification } from 'app/models/notification'
 import { NotificationService } from '../../../services/notification/notification.service';
 import { UserService } from '../../../services/auth/user.service';
 import { SocketService } from '../../../services/chats/socket.service';
-import { Event } from         '../../../services/chats/model/event';
+import { SocketEvent } from         '../../../services/chats/model/event';
 @Component({
   selector: 'app-notifications',
   templateUrl: './notifications.component.html',
@@ -28,7 +28,7 @@ export class NotificationsComponent implements OnInit {
   ngOnInit
   () {
 
-    this._socketService.onEvent(Event.REQUEST_NOTIFICATIONS).subscribe((notificationsList: Notification[])=>{
+    this._socketService.onEvent(SocketEvent.REQUEST_NOTIFICATIONS).subscribe((notificationsList: Notification[])=>{
       console.log("getting notifications..");
       // this.notifications = notificationsList;
 

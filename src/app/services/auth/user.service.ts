@@ -203,7 +203,11 @@ export class UserService {
                     return 0;
                 }
 
-                // this.io.emit('tellTopBar', temp.length)
+                this._socketService.socket.emit('tellTopBar', temp.length)
+                // this._socketService.send(Action.REQUEST_NOTIFICATION_COUNT, {
+                //     from: 'tellTopBar',
+                //     action: Action.SMN_LOGGED_OUT
+                // });
 
                 return temp.length;
             })
@@ -234,7 +238,9 @@ export class UserService {
                     return t;
                 }
 
-                // this.io.emit('tellNotificationPanel', temp)
+                this._socketService.socket.emit('tellNotificationPanel', temp)
+                // this._socketService.socket.emit('tellTopBar', temp.length)
+
                 return temp;
             })
             .catch(this.handleError);

@@ -6,5 +6,8 @@ export enum SocketEvent {
     SEND_PRIVATE_MSG = 'sendPrivateMessage',
     SEND_MSG = 'sendMessage',
     REQUEST_PM_SOCKET_ID = 'requestSocketIdForPM',
-    REQUEST_NOTIFICATIONS = 'notifications'
+    //notifications
+    REQUEST_NOTIFICATIONS = 'notifications',
+    REQUEST_NOTIFICATION_COUNT = 'notificationCount',
+    SEND_NOTIFICATION = 'sendNotification'
 }

@@ -7,6 +7,7 @@ import { User } from '../../models/user';
 import { Message } from './model/message';
 import { SocketEvent } from './model/event';
 import { Action } from './model/action';
+import { SocketNotification } from './model/socketNotification';
 
 import * as io from 'socket.io-client';
 
@@ -35,6 +36,11 @@ export class SocketService {
     this.socket.emit(eventName, message);
   }
 
+  public sendNotification(eventName: SocketEvent, notificationPayload: SocketNotification): void {
+    this.socket.emit(eventName, notificationPayload);
+  }
+
+
   // public onMessage(): Observable<Message> {
   //   return new Observable<Message>(observer => {
   //       this.socket.on('message', (data: Message) => observer.next(data));
@@ -47,3 +53,5 @@ export class SocketService {
     });
   }
 }
+
+
