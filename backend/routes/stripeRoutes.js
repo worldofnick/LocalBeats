@@ -7,7 +7,7 @@ module.exports = function(app) {
 			.post(stripeHandlers.stripeAuthorize);
 
     app.route('/api/stripe/link')
-			.post(stripeHandlers.stripeLink);
+			.get(stripeHandlers.stripeLink);
 
 		app.route('/api/stripe/transfers')
 			.post(stripeHandlers.stripeTransfers);

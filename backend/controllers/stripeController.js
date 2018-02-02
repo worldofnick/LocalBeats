@@ -42,10 +42,15 @@ exports.stripeAuthorize = function (req, res) {
  * Connect the new Stripe account to the Localbeats account.
  */
  exports.stripeLink = function (req, res) {
-  if (req.session.state != req.query.state) {
-     res.redirect('http://localhost:4200');
-   }
+  // if (req.session.state != req.query.state) {
+  //    res.redirect('http://localhost:4200');
+  //  }
 
+  console.log("**req**");
+  console.log(req);
+  console.log("**res**");
+  console.log(res);
+  
    request.post(config.stripe.tokenUri, {
      form: {
        grant_type: 'authorization_code',
@@ -61,9 +66,7 @@ exports.stripeAuthorize = function (req, res) {
      } else {
        // Update the model and store the Stripe account ID in the DB.
        console.log("req");
-       console.log(req);
-       console.log("body");
-       console.log(body);
+
        User.update({email: req.user.email}), {
             stripeAccountId: body.stripe_user_id
         }, function(err, numberAffected, rawResponse) {
