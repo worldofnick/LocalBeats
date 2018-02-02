@@ -23,7 +23,7 @@ app.use(express.static(distDir));           // Create link to Angular build dire
 // =================================================================
 // Configuration
 // =================================================================
-var port = process.env.PORT || 8080;        // used to create, sign, and verify tokens
+var port = process.env.PORT || 8080;
 mongoose.Promise = global.Promise;
 mongoose.connect(config.database);          // connect to database
 app.set('superSecret', config.secret);      // secret variable
@@ -34,29 +34,19 @@ app.use(bodyParser.json());
 // use morgan to log requests to the console
 app.use(morgan('dev'));
 
-//original server instatiation
-var server = app.listen(port, function () {
-  var port = server.address().port;
-  console.log("App now running on port", port);
+// =================================================================
+// HTTP Server and SOCKET.io setup
+// =================================================================
+const server = http.Server(app);
+const io     = socketIO(server);
+server.listen(port, function () {
+  console.log('\n=========\nBackend HTTP server and socket listening on port: ', port, '\n=========\n');
 });
+app.set('io', io);
 
-// var server = http.createServer(app);
-var server = require('http').Server(app);
-var io = require('socket.io')(server);
-// server.listen(port);
-//
-
-//set up socket
-
-app.set('socketio', io);
-
-io.on('connection', socket=>{
-  console.log("connection from id:")
-  console.log(socket.id)
-
-  socket.emit('fromServer', 'hello from server!!!!!!!!')
-})
-
+// =================================================================
+// Compatibility fix
+// =================================================================
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Cache-Control");
