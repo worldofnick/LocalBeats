@@ -46,7 +46,7 @@ exports.stripeAuthorize = function (req, res) {
   //    res.redirect('http://localhost:4200');
   //  }
 
-   request.post(config.stripe.authorizeUri, {
+   request.post(config.stripe.tokenUri, {
      form: {
        grant_type: 'authorization_code',
        client_id: config.stripe.clientId,
@@ -55,10 +55,6 @@ exports.stripeAuthorize = function (req, res) {
      },
      json: true
    }, (err, response, body) => {
-     console.log("BODY");
-     console.log(body);
-     console.log("req");
-     console.log(response);
      if (err || body.error) {
        console.log('The Stripe onboarding process has not succeeded.');
        res.redirect('http://localhost:4200/profile/settings/success=false');
