@@ -8,10 +8,11 @@ import { User } from 'app/models/user';
 import { Notification } from 'app/models/notification';
 import * as socketIO from 'socket.io-client';
 import * as Rx from 'rxjs/Rx';
+import { AppModule } from 'app/app.module';
 
 @Injectable()
 export class NotificationService {
-    public connection: string = 'http://localhost:8080/api/notifications';
+    public connection: string = AppModule.currentHost + 'api/notifications';
 
     private headers: Headers = new Headers({ 'Content-Type': 'application/json' });
 

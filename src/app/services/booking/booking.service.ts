@@ -7,15 +7,15 @@ import { Booking } from 'app/models/booking';
 import { Event } from 'app/models/event';
 import { User } from 'app/models/user';
 import { NegotiateDialogComponent } from '../../views/negotiate/negotiate-dialog/negotiate-dialog.component';
-
+import { AppModule } from 'app/app.module';
 
 @Injectable()
 export class BookingService {
-    public connection: string = 'http://localhost:8080/api/bookings';
-    public eventBooking: string = 'http://localhost:8080/api/eventBooking/'
-    public userBooking: string = 'http://localhost:8080/api/userBookings/'
-    public acceptBookingConnection: string = 'http://localhost:8080/api/acceptBooking'
-    public declineBookingConnection: string = 'http://localhost:8080/api/declineBooking'
+    public connection: string = AppModule.currentHost + 'api/bookings';
+    public eventBooking: string = AppModule.currentHost + 'api/eventBooking/'
+    public userBooking: string = AppModule.currentHost + 'api/userBookings/'
+    public acceptBookingConnection: string = AppModule.currentHost + 'api/acceptBooking'
+    public declineBookingConnection: string = AppModule.currentHost + 'api/declineBooking'
     // public connection: string = 'https://localbeats.herokuapp.com/api/bookings';
 
     private headers: Headers = new Headers({ 'Content-Type': 'application/json' });
@@ -104,4 +104,4 @@ export class BookingService {
         console.error(errMsg); // log to console
         return Promise.reject(errMsg);
     }
-}
+}}

@@ -5,10 +5,11 @@ import { Observable } from 'rxjs/Observable';
 import { SearchTerms } from 'app/models/search';
 import { Event } from 'app/models/event';
 import { User } from 'app/models/user';
+import { AppModule } from 'app/app.module';
 
 @Injectable()
 export class SearchService {
-    public connection: string = 'http://localhost:8080/api/';
+    public connection: string = AppModule.currentHost + 'api/';
 
     private headers: Headers = new Headers({ 'Content-Type': 'application/json' });
 
@@ -98,4 +99,4 @@ export class SearchService {
         console.error(errMsg); // log to console
         return Promise.reject(errMsg);
     }
-}
+}}

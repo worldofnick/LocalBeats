@@ -3,11 +3,12 @@ import { Injectable } from '@angular/core';
 import { Http, Headers, RequestOptions, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import { User } from 'app/models/user';
+import { AppModule } from 'app/app.module';
 
 @Injectable()
 export class UserService {
-    public connection: string = 'http://localhost:8080/api/auth';
-    public userConnection: string = 'http://localhost:8080/api/users';
+    public connection: string = AppModule.currentHost + 'api/auth';
+    public userConnection: string = AppModule.currentHost + 'api/users';
     // public connection: string = 'https://localbeats.herokuapp.com/api/auth';
     // public userConnection: string = 'https://localbeats.herokuapp.com/api/users';
     // public getUserConnection: string = 'https://localbeats.herokuapp.com/api/user';

@@ -5,11 +5,12 @@ import { Observable } from 'rxjs/Observable';
 import { User } from 'app/models/user';
 import { Event } from 'app/models/event';
 import { Payment } from 'app/models/payment';
+import { AppModule } from 'app/app.module';
 
 @Injectable()
 export class StripeService {
 
-  public connection: string = 'http://localhost:8080/api/stripe';
+  public connection: string = AppModule.currentHost + 'api/stripe';
   private headers: Headers = new Headers({ 'Content-Type': 'application/json' });
 
   constructor(private http: Http) { }

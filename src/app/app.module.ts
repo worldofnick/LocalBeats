@@ -54,4 +54,13 @@ export function createTranslateLoader(http: Http) {
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+  public static currentHost = 'http://localhost:8080/';
+
+  constructor() {
+    if (window.location.hostname != "localhost") {
+      AppModule.currentHost = "http://" + window.location.hostname + "/";
+    }
+  }
+
+}
