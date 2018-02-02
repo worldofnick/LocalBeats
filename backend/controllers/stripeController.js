@@ -46,11 +46,9 @@ exports.stripeAuthorize = function (req, res) {
   //    res.redirect('http://localhost:4200');
   //  }
 
-  console.log("**req**");
-  console.log(req);
-  console.log("**res**");
-  console.log(res);
-  
+  console.log("**UID**");
+  console.log(req.uid);
+
    request.post(config.stripe.tokenUri, {
      form: {
        grant_type: 'authorization_code',
