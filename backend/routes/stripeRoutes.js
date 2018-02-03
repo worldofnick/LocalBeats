@@ -8,7 +8,7 @@ module.exports = function(app) {
 			.post(tokenVerificationHandler.verifyToken, stripeHandlers.stripeAuthorize);
 
     app.route('/api/stripe/link')
-			.get(tokenVerificationHandler.verifyToken, stripeHandlers.stripeLink);
+			.get(stripeHandlers.stripeLink);
 
 		app.route('/api/stripe/transfers')
 			.post(stripeHandlers.stripeTransfers);
