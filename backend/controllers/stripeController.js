@@ -56,15 +56,18 @@ exports.stripeAuthorize = function (req, res) {
        res.redirect('/profile/settings/success=false');
      } else {
        // Update the model and store the Stripe account ID in the DB.
+       console.log("DID POST TO STRIPE");
        stripe.accounts.retrieve(
          body.stripe_user_id,
          function(err, account) {
+           console.log("DID FETCH ACCOUNT FROM STRIPE");
            if (error) {
              res.redirect('/profile/settings/success=false');
            }
            User.update({email: account.email}), {
                 stripeAccountId: body.stripe_user_id
             }, function(err, numberAffected, rawResponse) {
+              console.log("ADDED STRIPE ID TO USER");
           }
          }
        );
