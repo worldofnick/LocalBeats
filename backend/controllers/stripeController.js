@@ -53,7 +53,6 @@ exports.stripeAuthorize = function (req, res) {
    }, (err, response, body) => {
      if (err || body.error) {
        console.log('The Stripe onboarding process has not succeeded.');
-       res.redirect('/profile/settings/success=false');
        res.redirect('localbeats.herokuapp.com/profile/settings/success=false');
      } else {
        // Update the model and store the Stripe account ID in the DB.
