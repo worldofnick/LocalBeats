@@ -42,13 +42,6 @@ exports.stripeAuthorize = function (req, res) {
  * Connect the new Stripe account to the Localbeats account.
  */
  exports.stripeLink = function (req, res) {
-  // if (req.session.state != req.query.state) {
-  //    res.redirect('http://localhost:4200');
-  //  }
-
-  console.log("**UID**");
-  console.log(req.uid);
-
    request.post(config.stripe.tokenUri, {
      form: {
        grant_type: 'authorization_code',
@@ -60,19 +53,24 @@ exports.stripeAuthorize = function (req, res) {
    }, (err, response, body) => {
      if (err || body.error) {
        console.log('The Stripe onboarding process has not succeeded.');
-       res.redirect('http://localhost:4200/profile/settings/success=false');
+       res.redirect('/profile/settings/success=false');
      } else {
        // Update the model and store the Stripe account ID in the DB.
-       console.log("req");
-
-       User.update({email: req.user.email}), {
-            stripeAccountId: body.stripe_user_id
-        }, function(err, numberAffected, rawResponse) {
-      }
-
+       stripe.accounts.retrieve(
+         body.stripe_user_id,
+         function(err, account) {
+           if (error) {
+             res.redirect('/profile/settings/success=false');
+           }
+           User.update({email: account.email}), {
+                stripeAccountId: body.stripe_user_id
+            }, function(err, numberAffected, rawResponse) {
+          }
+         }
+       );
      }
      // Redirect to the final stage.
-     res.redirect('http://localhost:4200/profile/settings/success=true');
+     res.redirect('/profile/settings/success=true');
    });
 
  };
