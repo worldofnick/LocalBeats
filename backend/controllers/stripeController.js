@@ -64,13 +64,17 @@ exports.stripeAuthorize = function (req, res) {
            }
            console.log(account.email);
            console.log(body.stripe_user_id);
-           User.update({"email": account.email}), {
-                stripeAccountId: body.stripe_user_id
-            }, function(err, numberAffected, rawResponse) {
-              console.log("in update handler");
-              console.log(err);
-              res.redirect('/profile/settings/success=true');
-          }
+           User.findOne({username: oldUsername}, function (err, user) {
+            user.stripeAccountId = body.stripe_user_id;
+            user.save(function (err) {
+              if(err) {
+                console.error('ERROR!');
+              } else {
+                res.redirect('/profile/settings/success=true');
+              }
+            });
+          });
+          
          }
        );
      }
