@@ -62,15 +62,14 @@ exports.stripeAuthorize = function (req, res) {
            if (err) {
              res.redirect('/profile/settings/success=false');
            }
+
            console.log(account.email);
            console.log(body.stripe_user_id);
            User.findOne({email: account.email}, function (err, user) {
             user.stripeAccountId = body.stripe_user_id;
             user.save(function (err) {
               if(err) {
-                console.error('ERROR!');
-              } else {
-                res.redirect('/profile/settings/success=true');
+                console.error('error saving stripe id to account');
               }
             });
           });
@@ -79,7 +78,7 @@ exports.stripeAuthorize = function (req, res) {
        );
      }
      // Redirect to the final stage.
-     res.redirect('/profile/settings/success=false');
+     res.redirect('/profile/settings/success=true');
    });
 
  };
