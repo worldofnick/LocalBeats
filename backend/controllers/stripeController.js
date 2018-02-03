@@ -64,7 +64,7 @@ exports.stripeAuthorize = function (req, res) {
            }
            console.log(account.email);
            console.log(body.stripe_user_id);
-           User.findOne({username: oldUsername}, function (err, user) {
+           User.findOne({email: account.email}, function (err, user) {
             user.stripeAccountId = body.stripe_user_id;
             user.save(function (err) {
               if(err) {
@@ -74,7 +74,7 @@ exports.stripeAuthorize = function (req, res) {
               }
             });
           });
-          
+
          }
        );
      }
