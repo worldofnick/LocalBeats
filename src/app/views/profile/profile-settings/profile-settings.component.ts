@@ -99,7 +99,6 @@ export class ProfileSettingsComponent implements OnInit {
 
   // STRIPE
   authorizeStripe() {
-
     this.stripeService.authorizeStripe(this.user).then((url: string) => {
       window.location.href = url;
     });
@@ -107,11 +106,23 @@ export class ProfileSettingsComponent implements OnInit {
   }
 
   viewStripeTransfers() {
-
+    this.stripeService.authorizeStripe(this.user).then((url: string) => {
+      window.open(url);
+    });
   }
 
   requestPayout() {
-
+    this.StripeService.payoutUser(this.user).then((success: boolean) => {
+      if (success) {
+        let snackBarRef = this.snackBar.open('Payout Request Successful!', "", {
+          duration: 1500,
+        });
+      } else {
+        let snackBarRef = this.snackBar.open('Payout Request Failed.', "", {
+          duration: 1500,
+        });
+      }
+    });
   }
 
   unlinkStripe() {
