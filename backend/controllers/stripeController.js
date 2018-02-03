@@ -54,18 +54,20 @@ exports.stripeAuthorize = function (req, res) {
      if (err || body.error) {
        console.log('The Stripe onboarding process has not succeeded.');
        res.redirect('/profile/settings/success=false');
+       res.redirect('localbeats.herokuapp.com/profile/settings/success=false');
      } else {
        // Update the model and store the Stripe account ID in the DB.
        stripe.accounts.retrieve(
          body.stripe_user_id,
          function(err, account) {
            if (err) {
-             res.redirect('/profile/settings/success=false');
+             res.redirect('localbeats.herokuapp.com/profile/settings/success=false');
            }
 
            console.log(account.email);
            console.log(body.stripe_user_id);
            User.findOne({email: account.email}, function (err, user) {
+             console.log("found user");
             user.stripeAccountId = body.stripe_user_id;
             user.save(function (err) {
               if(err) {
@@ -78,7 +80,7 @@ exports.stripeAuthorize = function (req, res) {
        );
      }
      // Redirect to the final stage.
-     res.redirect('/profile/settings/success=true');
+     res.redirect('localbeats.herokuapp.com/profile/settings/success=true');
    });
 
  };
@@ -91,7 +93,7 @@ exports.stripeAuthorize = function (req, res) {
 exports.stripeTransfers = function (req, res) {
   const user = req.body.user;
   if (!user.stripeAccountId) {
-    res.send({"redirect_url": 'http://localhost:4200/auth'});
+    res.send({"redirect_url": 'http://localbeats.herokuapp.com/auth'});
   }
   try {
     // Generate a unique login link for the associated Stripe account.
@@ -100,7 +102,7 @@ exports.stripeTransfers = function (req, res) {
     res.send({"redirect_url": loginLink.url});
   } catch (err) {
     console.log('Failed to create a Stripe login link.');
-    res.send({"redirect_url": 'http://localhost:4200/auth'});
+    res.send({"redirect_url": 'http://localbeats.herokuapp.com/auth'});
   }
 
 };
@@ -112,7 +114,7 @@ exports.stripeTransfers = function (req, res) {
  * Generate an instant payout with Stripe for the available balance.
  */
  exports.stripePayout = function (req, res) {
-    const user = req.user;
+    const user = req.body.user;
     try {
       // Fetch the account balance for find available funds.
       const balance = stripe.balance.retrieve({ stripe_account: user.stripeAccountId });
@@ -128,7 +130,7 @@ exports.stripeTransfers = function (req, res) {
         stripe_account: user.stripeAccountId
       });
     } catch (err) {
-      res.sendStatus(500)
+      res.sendStatus(500);
     }
     // Give the OK
     res.sendStatus(200);
@@ -137,26 +139,27 @@ exports.stripeTransfers = function (req, res) {
 
  /**
  * POST /api/stripe/charge
- * TODO
+ *
  * Creates a Stripe charge
  */
  exports.stripeCharge = function (req, res) {
-   // TODO
   stripe.charges.create({
-    amount: 1000,
+    amount: req.body.event.fixedPrice,
     currency: "usd",
     source: "tok_visa",
     destination: {
-      account: "{CONNECTED_STRIPE_ACCOUNT_ID}",
+      account: req.body.event.hostUser,
     },
   }).then(function(charge) {
     // asynchronously called
+    res.sendStatus(200);
   });
+  res.sendStatus(500);
  };
 
  /**
  * POST /api/stripe/refund
- * TODO
+ *
  * Issues a refund for the given transaction
  */
  exports.stripeRefund = function (req, res) {
@@ -165,5 +168,7 @@ exports.stripeTransfers = function (req, res) {
     reverse_transfer: true,
   }).then(function(refund) {
     // asynchronously called
+    res.sendStatus(200);
   });
+  res.sendStatus(500);
  };
