@@ -59,7 +59,7 @@ exports.stripeAuthorize = function (req, res) {
        stripe.accounts.retrieve(
          body.stripe_user_id,
          function(err, account) {
-           if (error) {
+           if (err) {
              res.redirect('/profile/settings/success=false');
            }
            User.update({email: account.email}), {
