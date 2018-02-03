@@ -8,6 +8,7 @@ var request     = require('request');
 var jwt         = require('jsonwebtoken');
 var bcrypt      = require('bcrypt');
 var User        = mongoose.model('User');
+var Payments        = mongoose.model('Payments');
 
 // ====== STRIPE ROUTES ======
 
@@ -142,15 +143,34 @@ exports.stripeTransfers = function (req, res) {
  * Creates a Stripe charge
  */
  exports.stripeCharge = function (req, res) {
+   const booking = req.body.booking;
+
+   if (!booking.approved) {
+     res.sendStatus(403);
+   }
+
   stripe.charges.create({
-    amount: req.body.event.fixedPrice,
+    amount: booking.currentPrice,
     currency: "usd",
     source: "tok_visa",
     destination: {
-      account: req.body.event.hostUser,
+      account: booking.hostUser.stripeAccountId,
     },
   }).then(function(charge) {
     // asynchronously called
+
+    // Create new payment
+    var payment = new Payments();
+    payment.hostUser = booking.hostUser;
+    payment.performerUser = booking.performerUser;
+    payment.booking =  booking;
+    payment.amount =  booking.currentPrice;
+    payment.date = new Date();
+    payment.stripeChargeId = charge.id; // check if this is right
+    payment.type = "charge";
+
+    payment.save();
+
     res.sendStatus(200);
   });
   res.sendStatus(500);
@@ -162,11 +182,24 @@ exports.stripeTransfers = function (req, res) {
  * Issues a refund for the given transaction
  */
  exports.stripeRefund = function (req, res) {
+   const payment = req.body.payment;
+   const booking = payment.booking;
+
    stripe.refunds.create({
-    charge: req.body.payment.stripeChargeId,
+    charge: payment.stripeChargeId,
     reverse_transfer: true,
   }).then(function(refund) {
     // asynchronously called
+    var payment = new Payments();
+    payment.hostUser = booking.hostUser;
+    payment.performerUser = booking.performerUser;
+    payment.booking =  booking;
+    payment.amount =  booking.currentPrice;
+    payment.date = new Date();
+    payment.stripeChargeId = charge.id; // check if this is right
+    payment.type = "refund";
+
+    payment.save();
     res.sendStatus(200);
   });
   res.sendStatus(500);
