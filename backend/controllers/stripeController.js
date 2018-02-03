@@ -89,18 +89,18 @@ exports.stripeAuthorize = function (req, res) {
  * Redirect to Stripe to view transfers and edit payment details.
  */
 exports.stripeTransfers = function (req, res) {
-  const user = req.user;
+  const user = req.body.user;
   if (!user.stripeAccountId) {
-    return res.redirect('http://localhost:4200/auth');
+    res.send({"redirect_url": 'http://localhost:4200/auth'});
   }
   try {
     // Generate a unique login link for the associated Stripe account.
     const loginLink = stripe.accounts.createLoginLink(user.stripeAccountId);
     // Retrieve the URL from the response and redirect the user to Stripe.
-    return res.redirect(loginLink.url);
+    res.send({"redirect_url": loginLink.url});
   } catch (err) {
     console.log('Failed to create a Stripe login link.');
-    return res.redirect('http://localhost:4200/auth');
+    res.send({"redirect_url": 'http://localhost:4200/auth'});
   }
 
 };
