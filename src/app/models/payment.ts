@@ -1,10 +1,11 @@
 import { User } from 'app/models/user';
-import { Event } from 'app/models/event';
+import { Booking } from 'app/models/booking';
 
 export class Payment {
   public _id: string
   public hostUser: User
   public performerUser: User
+  public booking: Booking
   public date: Date
   public amount: number
   public stripeChargeId: string
