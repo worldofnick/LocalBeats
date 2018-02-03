@@ -4,6 +4,7 @@ import { Http, Headers, RequestOptions, Response, URLSearchParams } from '@angul
 import { Observable } from 'rxjs/Observable';
 import { User } from 'app/models/user';
 import { Event } from 'app/models/event';
+import { Booking } from 'app/models/booking';
 import { Payment } from 'app/models/payment';
 import { AppModule } from 'app/app.module';
 
@@ -28,12 +29,13 @@ export class StripeService {
   }
 
   // Sends the user to the Stripe website to view their account into
-  public viewStripeTransfers(user: User) {
+  public viewStripeTransfers(user: User): Promise<string> {
     const current = this.connection + '/transfers';
     return this.http.post(current, { user: user }, { headers: this.headers })
         .toPromise()
         .then((response: Response) => {
-          console.log(response);
+          const data = response.json();
+          return data.redirect_url;
         })
         .catch(this.handleError);
   }
@@ -56,13 +58,33 @@ export class StripeService {
 
   // Makes a request to our backend to request the Stripe API to charge the event host
   // This will need an extra visa parameter for event host stripe charge info
-  public charge(event: Event) {
-    // TODO
+  public charge(Booking: Booking): Promise<boolean> {
+    const current = this.connection + '/charge';
+    return this.http.post(current, { booking: booking }, { headers: this.headers })
+        .toPromise()
+        .then((response: Response) => {
+            if (response.status == 200) {
+              return true;
+            } else {
+              return false;
+            }
+        })
+        .catch(this.handleError);
   }
 
   // Make a request to our backend to request the Stripe API to refund this payment
-  public refund(payment: Payment) {
-    // TODO
+  public refund(payment: Payment): Promise<boolean> {
+    const current = this.connection + '/refund';
+    return this.http.post(current, { payment: payment }, { headers: this.headers })
+        .toPromise()
+        .then((response: Response) => {
+            if (response.status == 200) {
+              return true;
+            } else {
+              return false;
+            }
+        })
+        .catch(this.handleError);
   }
 
   private handleError(error: any): Promise<any> {
