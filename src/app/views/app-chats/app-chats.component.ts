@@ -50,7 +50,7 @@ export class AppChatsComponent implements OnInit {
   connectedUsers: User[] = new Array();
 
   // ==============================================
-  // Receipient users form Variables
+  // Receipient users form Variables, chips
   // ==============================================
   recipientsFormControl = new FormControl();
 
@@ -62,6 +62,14 @@ export class AppChatsComponent implements OnInit {
   ];
 
   filteredOptions: Observable<DummyUser[]>;
+
+  isVisible: boolean = true;
+  isSelectable: boolean = true;
+  isRemovable: boolean = true;
+  isAddOnBlur: boolean = true;
+  separatorKeysCodes = [ENTER, COMMA];
+
+  recipientChips = [ { name: 'pidgey@poke.com' }];
 
   // ==============================================
   // Init Methods
@@ -104,6 +112,28 @@ export class AppChatsComponent implements OnInit {
   onStartNewConversationButtonClick() {
     //TODO: make so new blank user is added and is active, empty recipient form on right top bar
     console.log('New conversation button clicked!');
+  }
+
+  // Chip methods
+  add(event: MatChipInputEvent): void {
+    let input = event.input;
+    let value = event.value;
+
+    // Add our fruit
+    if ((value || '').trim()) { this.recipientChips.push({ name: value.trim() }); }
+
+    // Reset the input value
+    if (input) {
+      input.value = '';
+    }
+  }
+
+  remove(fruit: any): void {
+    let index = this.recipientChips.indexOf(fruit);
+
+    if (index >= 0) {
+      this.recipientChips.splice(index, 1);
+    }
   }
 
   // ==============================================

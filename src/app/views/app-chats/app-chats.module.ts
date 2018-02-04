@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatIconModule, MatButtonModule, MatSidenavModule, MatMenuModule, MatInputModule,
-         MatListModule, MatToolbarModule, MatCardModule, MatAutocompleteModule } from '@angular/material';
+         MatListModule, MatToolbarModule, MatCardModule, MatAutocompleteModule, MatChipsModule } from '@angular/material';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { AppChatsComponent } from './app-chats.component';
 import { ChatsRoutes } from "./app-chats.routing";
@@ -15,6 +15,7 @@ import { ChatsRoutes } from "./app-chats.routing";
     MatMenuModule,
     MatInputModule,
     MatIconModule,
+    MatChipsModule,
     MatButtonModule,
     MatListModule,
     MatToolbarModule,

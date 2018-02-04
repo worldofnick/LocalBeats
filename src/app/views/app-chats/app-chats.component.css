@@ -1,8 +1,12 @@
 .example-form {
-    min-width: 150px;
+    
     width: 100%;
   }
   
   .example-full-width {
+    width: 100%;
+  }
+
+  .active-chat-user {
     width: 100%;
   }

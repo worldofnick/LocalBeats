@@ -54,12 +54,22 @@
             <!-- Need to add ngIF here, where if isNewConversation=true, then show this, else show normal name thingy-->
             <form class="example-form">
                 <mat-form-field class="example-full-width">
-                  <input type="text" placeholder="Recipient(s)" aria-label="Recipient" matInput [formControl]="recipientsFormControl" [matAutocomplete]="auto">
+
+                   <!-- <mat-chip-list #chipList>
+                        <mat-chip *ngFor="let fruit of recipientChips" [selectable]="isSelectable"
+                                 [removable]="isRemovable" (remove)="remove(fruit)">
+                          {{fruit.name}}
+                          <mat-icon matChipRemove *ngIf="isRemovable">cancel</mat-icon>
+                        </mat-chip> -->
+
+                  <input placeholder="Recipient(s)" aria-label="Recipient" matInput [formControl]="recipientsFormControl" [matAutocomplete]="auto" >
+                   <!-- [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="isAddOnBlur" (matChipInputTokenEnd)="add($event)"> -->
                   <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
                     <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
                       {{ option.email }}
                     </mat-option>
                   </mat-autocomplete>
+                <!-- </mat-chip-list> -->
                 </mat-form-field>
               </form>
           </div>
