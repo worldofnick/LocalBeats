@@ -2,8 +2,13 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { Subscription } from "rxjs/Subscription";
 import { MediaChange, ObservableMedia } from "@angular/flex-layout";
-import { MatSidenav, MatDialog } from '@angular/material';
+import { MatSidenav, MatDialog, MatChipInputEvent } from '@angular/material';
+import {ENTER, COMMA} from '@angular/cdk/keycodes';
 import { Observable } from 'rxjs/Rx';
+import {startWith} from 'rxjs/operators/startWith';
+import {map} from 'rxjs/operators/map';
+import {FormControl} from '@angular/forms';
+
 import { ChatsService } from 'app/services/chats/chats.service';
 import { SocketService } from 'app/services/chats/socket.service';
 import { User } from '../../models/user';
