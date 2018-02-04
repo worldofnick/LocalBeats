@@ -1,5 +1,8 @@
 .example-form {
-    
+    min-width: 400px;
+    max-width: 500px;
+    font-size: 12pt;
+    font-family: Roboto, Arial, sans-serif;
     width: 100%;
   }
   

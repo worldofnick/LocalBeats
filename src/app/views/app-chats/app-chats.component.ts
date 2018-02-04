@@ -106,6 +106,7 @@ export class AppChatsComponent implements OnInit {
   }
 
   displayFn(user?: DummyUser): string | undefined {
+    
     return user ? user.firstName + ' ' + user.lastName : undefined;
   }
 
