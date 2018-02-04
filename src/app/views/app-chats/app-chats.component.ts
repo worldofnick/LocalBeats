@@ -19,6 +19,8 @@ import { MessageTypes } from '../../services/chats/model/messageTypes';
 })
 export class AppChatsComponent implements OnInit {
   
+  //TODO: add users to chat with, some form of notifications
+
   // ==============================================
   // Material Variables
   // ==============================================
