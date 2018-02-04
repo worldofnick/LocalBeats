@@ -4,10 +4,11 @@
     <mat-sidenav class="chat-sidenav" #chatSidebar [opened]="isSidenavOpen" mode="side">
       <!-- Left side topbar -->
       <mat-toolbar color="primary" class="chat-sidebar-toolbar">
-        <a href="" class="toolbar-avatar online">
+        <button mat-button (click)="onStartNewConversationButtonClick()">Start new conversation</button>
+        <!-- <a href="" class="toolbar-avatar online">
           <img [src]="loggedInUser.profilePicUrl" alt="">
           <span class="status-dot"></span>
-        </a>
+        </a> -->
       </mat-toolbar>
       <!-- Left side contact list -->
       <mat-nav-list class="inbox-nav-list" role="list">

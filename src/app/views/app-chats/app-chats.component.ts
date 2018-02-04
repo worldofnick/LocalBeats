@@ -80,7 +80,7 @@ export class AppChatsComponent implements OnInit {
   }
 
   // ==============================================
-  // Recipient Form Methods
+  // Recipient Form Methods, Add button
   // ==============================================
 
   private initRecipientForm() {
@@ -99,6 +99,11 @@ export class AppChatsComponent implements OnInit {
 
   displayFn(user?: DummyUser): string | undefined {
     return user ? user.firstName + ' ' + user.lastName : undefined;
+  }
+
+  onStartNewConversationButtonClick() {
+    //TODO: make so new blank user is added and is active, empty recipient form on right top bar
+    console.log('New conversation button clicked!');
   }
 
   // ==============================================
