@@ -17,6 +17,10 @@ import { SocketEvent } from '../../services/chats/model/event';
 import { Action } from '../../services/chats/model/action';
 import { MessageTypes } from '../../services/chats/model/messageTypes';
 
+export class DummyUser {
+  constructor(public firstName: string, public lastName: string, public email: string) { }
+}
+
 @Component({
   selector: 'app-chats',
   templateUrl: './app-chats.component.html',
@@ -46,7 +50,21 @@ export class AppChatsComponent implements OnInit {
   connectedUsers: User[] = new Array();
 
   // ==============================================
-  // Methods
+  // Receipient users form Variables
+  // ==============================================
+  recipientsFormControl = new FormControl();
+
+  // TODO: change all to User from DummyUser
+  options = [
+    new DummyUser('Snorlax', 'Ketchum', 'snor@poke.com'),
+    new DummyUser('Onix', 'Brock', 'onix@poke.com'),
+    new DummyUser('Meowth', 'Rocket', 'meow@poke.com')
+  ];
+
+  filteredOptions: Observable<DummyUser[]>;
+
+  // ==============================================
+  // Init Methods
   // ==============================================
 
   constructor(private media: ObservableMedia, private _socketService: SocketService, private _chatsService: ChatsService) {
@@ -58,7 +76,34 @@ export class AppChatsComponent implements OnInit {
   ngOnInit() {
     this.initIoConnection();
     this.chatSideBarInit();
+    this.initRecipientForm();
   }
+
+  // ==============================================
+  // Recipient Form Methods
+  // ==============================================
+
+  private initRecipientForm() {
+    this.filteredOptions = this.recipientsFormControl.valueChanges
+      .pipe(
+        startWith<string | DummyUser>(''),
+        map(value => typeof value === 'string' ? value : value.email),  //TODO: change to name?
+        map(name => name ? this.filter(name) : this.options.slice())
+      );
+  }
+
+  filter(name: string): DummyUser[] {
+    return this.options.filter(option =>
+      option.email.toLowerCase().indexOf(name.toLowerCase()) === 0);
+  }
+
+  displayFn(user?: DummyUser): string | undefined {
+    return user ? user.firstName + ' ' + user.lastName : undefined;
+  }
+
+  // ==============================================
+  // Others
+  // ==============================================
 
   private initIoConnection(): void {
     // this._socketService.initSocket();
