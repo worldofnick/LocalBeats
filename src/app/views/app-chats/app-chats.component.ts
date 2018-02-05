@@ -222,7 +222,8 @@ export class AppChatsComponent implements OnInit {
           if (this.loggedInUser._id !== temp.from._id ) {
             this.connectedUsers.unshift(temp.from);
           }
-        } else if ( this.activeChatUser._id === temp.from._id  ||
+        } 
+        if ( this.activeChatUser._id === temp.from._id  ||
                     this.loggedInUser._id === temp.from._id) {
           this.activeChatMessages.push(temp);
         } else {
