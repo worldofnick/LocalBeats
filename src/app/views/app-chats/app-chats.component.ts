@@ -253,7 +253,7 @@ export class AppChatsComponent implements OnInit {
   // SUbscribe takes 3 event handlers:
   // onNext, onError, onCompleted
   reloadChatSideBarWithNewConnectedUsers() {
-    this._chatsService.getConnectionUsers().subscribe(
+    this._chatsService.getAllConversationBuddiesOfThisUser().subscribe(
       data => {
         // console.log('User DATA: ', data);
         const temp = data as { users: User[] };
@@ -294,6 +294,7 @@ export class AppChatsComponent implements OnInit {
   }
 
   initiateAutocompleteOptions() {
+    this.options = [];
     this._chatsService.getConnectionUsers().subscribe(
       data => {
         // console.log('User DATA: ', data);
