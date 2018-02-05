@@ -54,6 +54,7 @@ export class AppChatsComponent implements OnInit {
   // ==============================================
   recipientsFormControl = new FormControl();
   newConversationClicked: boolean = false;
+  recipientStringAny: any;
 
   // TODO: change all to User from DummyUser
   options = [
@@ -70,7 +71,7 @@ export class AppChatsComponent implements OnInit {
   isAddOnBlur: boolean = true;
   separatorKeysCodes = [ENTER, COMMA];
 
-  recipientChips = [ { name: 'pidgey@poke.com' }];
+  recipientChips = [];
 
   // ==============================================
   // Init Methods
@@ -85,7 +86,6 @@ export class AppChatsComponent implements OnInit {
   ngOnInit() {
     this.initIoConnection();
     this.chatSideBarInit();
-    this.initRecipientForm();
   }
 
   // ==============================================
@@ -112,7 +112,15 @@ export class AppChatsComponent implements OnInit {
   }
 
   onStartNewConversationButtonClick() {
+    
+    let blankUser = new User();
+    blankUser.firstName = 'New ';
+    blankUser.lastName = 'Message';
+    this.connectedUsers.unshift(blankUser);
+    this.activeChatUser = blankUser;
+
     //TODO: make so new blank user is added and is active, empty recipient form on right top bar
+    this.initRecipientForm();
     this.newConversationClicked = true;
     console.log('New conversation button clicked!');
   }
@@ -120,15 +128,20 @@ export class AppChatsComponent implements OnInit {
   // Chip methods
   add(event: MatChipInputEvent): void {
     let input = event.input;
-    let value = event.value;
+    // let value = event.value;
+    let value = this.recipientStringAny.firstName + ' ' + this.recipientStringAny.lastName;
 
-    // Add our fruit
+    // Add our recipient
     if ((value || '').trim()) { this.recipientChips.push({ name: value.trim() }); }
-
+    console.log('New recipients: ', this.recipientChips);
     // Reset the input value
     if (input) {
       input.value = '';
     }
+
+    // this.recipientsFormControl.disable();
+    this.newConversationClicked = false;
+    // TODO: reset recipientsChips
   }
 
   remove(fruit: any): void {
@@ -259,6 +272,9 @@ export class AppChatsComponent implements OnInit {
   }
 
   changeActiveUser(user) {
+    if (this.connectedUsers[0].firstName === 'New '&& this.connectedUsers[0].lastName === 'Message') {
+      this.connectedUsers.shift();
+    }
     let connection;
     this.activeChatUser = user;
     console.log('New User clicked:', this.activeChatUser);
