@@ -4,7 +4,9 @@
     <mat-sidenav class="chat-sidenav" #chatSidebar [opened]="isSidenavOpen" mode="side">
       <!-- Left side topbar -->
       <mat-toolbar color="primary" class="chat-sidebar-toolbar">
-        <button mat-button (click)="onStartNewConversationButtonClick()">Start new conversation</button>
+          <span fxFlex></span>
+        <button mat-icon-button class="topbar-button-right" (click)="onStartNewConversationButtonClick()">
+          <mat-icon aria-label="Start a new conversation">add</mat-icon></button>
         <!-- <a href="" class="toolbar-avatar online">
           <img [src]="loggedInUser.profilePicUrl" alt="">
           <span class="status-dot"></span>
