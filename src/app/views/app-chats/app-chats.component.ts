@@ -81,8 +81,7 @@ export class AppChatsComponent implements OnInit {
   constructor(private media: ObservableMedia, private _socketService: SocketService, private _chatsService: ChatsService) {
     this.loggedInUser = this._chatsService.getCurrentLoggedInUser();
     this.initChatSideBarWithWithNewUsers();
-    console.log('Logged in User:', this._chatsService.getCurrentLoggedInUser());
-    
+    console.log('Logged in User:', this._chatsService.getCurrentLoggedInUser());  
   }
 
   ngOnInit() {
@@ -244,6 +243,7 @@ export class AppChatsComponent implements OnInit {
       data => {
         // console.log('User DATA: ', data);
         const temp = data as { users: User[] };
+        this.initiateAutocompleteOptions(temp.users);
         // console.log('Full response: ', temp.users);
         // Reset the users
         this.connectedUsers = new Array();    //TODO: expect the current chat ones (active user)?
