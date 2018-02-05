@@ -51,6 +51,27 @@ module.exports = function (io) {
             io.emit('someUserLoggedOut', {serverMessage: payload.from.firstName+' logged out', serverPayload: payload.from});
         });
 
+        socket.on('addBeatBotToUserMessage', (payload) => {
+            console.log('Adding beat bot to new user...');
+
+            User.findOne({ email: 'beatbot@localbeats.com' }, function (err, user) {
+                if (err || !user) {
+                    console.log('>>> Beatbot user not found!!!');
+                }
+                let newMessage = new Message();
+                newMessage.from = user;
+                newMessage.to = payload.to;
+                newMessage.content = 'Welcome to localBeats!';
+
+                newMessage.save(function (err, message) {
+                    if (err) {
+                        console.log('Unable to save the message...');
+                    }
+                    console.log('Greeting bot added');
+                });
+            });
+        });
+
         // ============================================
         // Private Messaging Event Handlers - P2P
         // ============================================
