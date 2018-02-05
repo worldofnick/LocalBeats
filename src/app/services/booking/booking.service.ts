@@ -22,12 +22,12 @@ export class BookingService {
 
     constructor(private http: Http, private dialog: MatDialog) { }
 
-    public negotiate(booking: Booking, user: string): Observable<any> {
+    public negotiate(booking: Booking, initial: boolean, view: string): Observable<any> {
         let dialogRef: MatDialogRef<NegotiateDialogComponent>;
         dialogRef = this.dialog.open(NegotiateDialogComponent, {
             width: '380px',
             disableClose: true,
-            data: {booking, user}
+            data: {booking, initial, view}
         });
         return dialogRef.afterClosed();
     }
