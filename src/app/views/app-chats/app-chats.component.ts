@@ -217,9 +217,13 @@ export class AppChatsComponent implements OnInit {
         // If you are the receiver and the sender is not already in the connectedUsers list,
         // add the user to list. Else, if the chat is ongoing with this sender, reload the messages.
         // TODO: should make it active and load the messages as well? Could break current chat so think not
-        if ( !this.connectedUsers.includes(temp.from) ) { 
-          this.connectedUsers.unshift(temp.from);
-        } else if ( this.activeChatUser === temp.from ) {
+        
+        if ( !this.isUserInConnectedUsers(temp) ) {
+          if (this.loggedInUser._id !== temp.from._id ) {
+            this.connectedUsers.unshift(temp.from);
+          }
+        } else if ( this.activeChatUser._id === temp.from._id  ||
+                    this.loggedInUser._id === temp.from._id) {
           this.activeChatMessages.push(temp);
         } else {
           // TODO: push notification, notification dot
@@ -238,6 +242,15 @@ export class AppChatsComponent implements OnInit {
     //                                         (message.serverPayload.to._id === this.loggedInUser._id)) ;
     //     this.respondToIsItYouPMSocketRequest(message);
     // });
+  }
+
+  isUserInConnectedUsers(message):boolean {
+    for (let chatBuddy of this.connectedUsers) {
+      if (chatBuddy._id === message.from._id) {
+        return true;
+      }
+    }
+    return false;
   }
 
   respondToIsItYouPMSocketRequest(message) {
