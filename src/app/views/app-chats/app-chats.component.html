@@ -37,60 +37,58 @@
         <!-- Selected active user: on topbar, the current recipient -->
         <div class="active-chat-user" fxLayout="row" fxLayoutAlign="start center">
 
-          <a [ngClass]="{online: activeChatUser.isOnline}" class="toolbar-avatar mr-1">
-              <img [src]="activeChatUser.profilePicUrl" alt="">
-              <span class="status-dot"></span>
-            </a>
-            <div fxLayout="column">
-          <!-- Need to add ngIF here, where if isNewConversation=true, then show this, else show normal name thingy-->
-          <form class="example-form" *ngIf="newConversationClicked" else existingConversationUser>
-            <mat-form-field class="new-conversation-form">
+          <div fxLayout="column">
+            <!-- Need to add ngIF here, where if isNewConversation=true, then show this, else show normal name thingy-->
+            <form class="newConversationForm" *ngIf="newConversationClicked" else existingConversationUser>
+              <mat-form-field class="new-conversation-form">
 
-              <!-- <mat-chip-list #chipList>
+                <mat-chip-list #chipList>
                         <mat-chip *ngFor="let fruit of recipientChips" [selectable]="isSelectable"
                                  [removable]="isRemovable" (remove)="remove(fruit)">
                           {{fruit.name}}
                           <mat-icon matChipRemove *ngIf="isRemovable">cancel</mat-icon>
-                        </mat-chip> -->
+                        </mat-chip> 
 
-              <input placeholder="Recipient(s)" aria-label="Recipient" matInput [formControl]="recipientsFormControl" [matAutocomplete]="auto">
-              <!-- [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="isAddOnBlur" (matChipInputTokenEnd)="add($event)"> -->
-              <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
-                <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
-                  {{ option.email }}
-                </mat-option>
-              </mat-autocomplete>
-              <!-- </mat-chip-list> -->
-            </mat-form-field>
-          </form>
+                <input [(ngModel)]="recipientStringAny" placeholder="Recipient(s)" aria-label="Recipient" matInput [formControl]="recipientsFormControl" [matAutocomplete]="auto"
+                [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="isAddOnBlur" (matChipInputTokenEnd)="add($event)">
+                <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+                  <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+                    {{ option.email }}
+                  </mat-option>
+                </mat-autocomplete>
+                </mat-chip-list>
+              </mat-form-field>
+            </form>
 
-          <!-- Here is where the profile pic is displayed -->
-          <!-- <div #existingConversationUser fxLayout="row" fxLayoutAlign="start center"> -->
-<!--             <a [ngClass]="{online: activeChatUser.isOnline}" class="toolbar-avatar mr-1">  -->
-     <!--          <img [src]="activeChatUser.profilePicUrl" alt=""> -->
-          <!--     <span class="status-dot"></span>  -->
-            <!-- </a>  -->
-            <!-- <div fxLayout="column">  -->
-              <!-- Here is where the name is displayed -->
-             <!-- <h6 class="m-0 font-normal fz-1">{{activeChatUser.firstName + ' ' + activeChatUser.lastName}}</h6>  
 
-            </div>-->
+            <!-- Here is where the profile pic is displayed -->
+            <!-- <div #existingConversationUser fxLayout="row" fxLayoutAlign="start center">
+              <a [ngClass]="{online: activeChatUser.isOnline}" class="toolbar-avatar mr-1">
+                <img [src]="activeChatUser.profilePicUrl" alt="">
+                <span class="status-dot"></span>
+              </a>
+              <div fxLayout="column"> -->
+                <!-- Here is where the name is displayed -->
+                <!-- <h6 class="m-0 font-normal fz-1">{{activeChatUser.firstName + ' ' + activeChatUser.lastName}}</h6>  
+
+              </div>
+            </div> -->
           </div>
         </div>
 
-        <!-- Right side top menu -->
-        <span fxFlex></span>
-        <button [style.alignSelf]="'center'" mat-icon-button [matMenuTriggerFor]="toolbarDDMenu" class="topbar-button-right hidden-on-open">
-          <mat-icon>more_vert</mat-icon>
-        </button>
-        <mat-menu #toolbarDDMenu="matMenu">
-          <button mat-menu-item>
-            <mat-icon>account_circle</mat-icon>Contact info</button>
-          <button mat-menu-item>
-            <mat-icon>volume_mute</mat-icon>Mute</button>
-          <button mat-menu-item>
-            <mat-icon>delete</mat-icon>Clear chat</button>
-        </mat-menu>
+          <!-- Right side top menu -->
+          <span fxFlex></span>
+          <button [style.alignSelf]="'center'" mat-icon-button [matMenuTriggerFor]="toolbarDDMenu" class="topbar-button-right hidden-on-open">
+            <mat-icon>more_vert</mat-icon>
+          </button>
+          <mat-menu #toolbarDDMenu="matMenu">
+            <button mat-menu-item>
+              <mat-icon>account_circle</mat-icon>Contact info</button>
+            <button mat-menu-item>
+              <mat-icon>volume_mute</mat-icon>Mute</button>
+            <button mat-menu-item>
+              <mat-icon>delete</mat-icon>Clear chat</button>
+          </mat-menu>
       </mat-toolbar>
 
       <!-- Main chat body -->
@@ -131,6 +129,6 @@
         </button>
       </div>
 
-    </div>
+      </div>
   </mat-sidenav-container>
 </mat-card>
