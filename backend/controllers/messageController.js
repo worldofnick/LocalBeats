@@ -54,22 +54,28 @@ exports.getAllActiveConversationsFrom = function (req, res) {
 
     let ids = [req.params.fromUID];
     Message.find({}).where('from').in(ids).distinct('to', function (error, toIds) {
+        if (error) {
+            console.log('Error retreiving TO users...')
+            return res.status(400).send({
+                reason: "Unable to get distinct (to) users of (from)...",
+                error: error
+            });
+        }
         console.log('to IDS: ', toIds);
         User.find({}).where('_id').in(toIds)
-            .exec(function (err, messages) {
+            .exec(function (err, toUsers) {
                 if (err) {
-                    console.log('Error getting active conversation user (from): ', err);
+                    console.log('Error getting user objects for TO ids: ', err);
                     return res.status(400).send({
-                        reason: "Unable to get distinct (to) users of (from)...",
+                        reason: "Unable to get user objects for TO user ids",
                         error: err
                     });
                 }
                 // hide hashPassword
-                for (let i = 0; i < messages.length; i++) {
-                    // messages[i].from.hashPassword = undefined;
-                    // messages[i].to.hashPassword = undefined;
+                for (let i = 0; i < toUsers.length; i++) {
+                    toUsers[i].hashPassword = undefined;
                 }
-                return res.status(200).send({ users: messages });
+                return res.status(200).send({ users: toUsers });
             });
     });
 
