@@ -145,21 +145,25 @@ export class AppChatsComponent implements OnInit {
       //TODO: get user object from server and use it
       let newUser = this.recipientStringAny as User;
 
-      // Check if the new user is already in the list. If so, switch to that user
+      // Check if the new user is already in the list. If so, switch to that user. Else add it
       if (this.connectedUsers.includes(newUser)) {
+        this.connectedUsers.shift();  // Remove blank user from the side bar list
         console.log('User already exists in conversation. Switching to that user at index', this.connectedUsers.indexOf(newUser));
         this.activeChatUser = this.connectedUsers[this.connectedUsers.indexOf(newUser)];
+      } else {
+        this.connectedUsers.shift();  // Remove blank user from the side bar list
+        this.connectedUsers.unshift(newUser);
+        this.activeChatUser = newUser;
       }
 
-      this.connectedUsers.shift();
-      this.connectedUsers.unshift(newUser);
-      this.activeChatUser = newUser;
+      
 
       // Reset stuff
       this.newConversationClicked = false;
       this.recipientChips = [];
       this.recipientStringAny = '';
-      // TODO: reset recipientsChips
+
+      
     }
 
   }
