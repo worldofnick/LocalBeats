@@ -37,6 +37,7 @@ export class AppChatsComponent implements OnInit {
   screenSizeWatcher: Subscription;
   isSidenavOpen: Boolean = true;
   @ViewChild(MatSidenav) private sideNave: MatSidenav;
+  // isBlankTemplate: Boolean = false;
 
   // ==============================================
   // Chat Variables
@@ -79,15 +80,31 @@ export class AppChatsComponent implements OnInit {
   // ==============================================
 
   constructor(private media: ObservableMedia, private _socketService: SocketService, private _chatsService: ChatsService) {
+    // this.initSelfUser();
     this.loggedInUser = this._chatsService.getCurrentLoggedInUser();
+    // if (this.connectedUsers.length < 1) {
+      // this.isBlankTemplate = true;
+      
+    // }
     this.initChatSideBarWithWithNewUsers();
-    console.log('Logged in User:', this._chatsService.getCurrentLoggedInUser());  
+    console.log('Init active user:', this.activeChatUser);
+    console.log('Init connectedUsers user:', this.connectedUsers);
+    
+    console.log('Logged in User:', this.loggedInUser);
   }
 
   ngOnInit() {
+    // console.log('ngOnInit: ConnectedUser length: ', this.connectedUsers.length, ' and isBlank: ', this.isBlankTemplate);
     this.initIoConnection();
     this.chatSideBarInit();
+    console.log('On open, connectd users: ', this.connectedUsers);
   }
+
+  // initSelfUser() {
+    
+    // this.activeChatUser = this.loggedInUser;
+    // this.connectedUsers.push(this.loggedInUser);
+  // }
 
   // ==============================================
   // Recipient Form Methods, Add button
@@ -134,7 +151,11 @@ export class AppChatsComponent implements OnInit {
     let value = this.recipientStringAny.firstName + ' ' + this.recipientStringAny.lastName;
 
     // Add our recipient
-    if ((value || '').trim()) { this.recipientChips.push({ name: value.trim() }); }
+    if ((value || '').trim()) { 
+      if(value !== 'undefined undefined') {
+        this.recipientChips.push({ name: value.trim() }); 
+      }
+    }
     console.log('New recipients: ', this.recipientChips);
     // Reset the input value
     if (input) {
@@ -199,7 +220,7 @@ export class AppChatsComponent implements OnInit {
 
     this._socketService.onEvent(SocketEvent.SEND_PRIVATE_MSG)
       .subscribe((message: Message) => {
-
+        // this.isBlankTemplate = false;
         console.log('Private Chat message from server (chat event): ', message);
         const temp: Message = message as Message;
         
@@ -312,11 +333,13 @@ export class AppChatsComponent implements OnInit {
 
   changeActiveUser(user) {
     // Check if a blank new conversation was halfway started while switched to an existing user. If so, remove it.
-    if (this.connectedUsers[0].firstName === 'New '&& this.connectedUsers[0].lastName === 'Message') {
-      this.connectedUsers.shift();
-      this.newConversationClicked = false;
-    }
-    let connection;
+    if (this.connectedUsers.length > 0) {
+      if (this.connectedUsers[0].firstName === 'New '&& this.connectedUsers[0].lastName === 'Message') {
+        this.connectedUsers.shift();
+        this.newConversationClicked = false;
+      }
+
+      let connection;
     this.activeChatUser = user;
     console.log('New User clicked:', this.activeChatUser);
 
@@ -331,6 +354,8 @@ export class AppChatsComponent implements OnInit {
       err => console.error('Error fetching PMs between 2 users: ', err),
       () => console.log('Done fetching PMs from the server DB')
   );
+    }
+    
 
     // ALGORITHM:
     // retrieve getUserByID. 
