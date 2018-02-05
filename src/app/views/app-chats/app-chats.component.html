@@ -35,9 +35,10 @@
         </button>
 
         <!-- Selected active user: on topbar, the current recipient -->
-        <div class="active-chat-user" fxLayout="row" fxLayoutAlign="start center" 
-          *ngIf="newConversationClicked; then newConversationTemplate else existingConversationTemplate">
-          <ng-template #newConversationTemplate>
+        <div *ngIf="newConversationClicked; then newConversationTemplate else existingConversationTemplate"></div>
+        <ng-template #newConversationTemplate>
+        <div class="active-chat-user" fxLayout="row" fxLayoutAlign="start center" >
+          
           <div fxLayout="column">
             <!-- Need to add ngIF here, where if isNewConversation=true, then show this, else show normal name thingy-->
             <form class="newConversationForm">
@@ -61,12 +62,13 @@
               </mat-form-field>
             </form>
             </div>
+            </div>
           </ng-template>
 
 
             <!-- Here is where the profile pic is displayed -->
             <ng-template #existingConversationTemplate>
-              <!-- <div fxLayout="row" fxLayoutAlign="start center"> -->
+              <div class="active-chat-user" fxLayout="row" fxLayoutAlign="start center">
                 <a [ngClass]="{online: activeChatUser.isOnline}" class="toolbar-avatar mr-1">
                   <img [src]="activeChatUser.profilePicUrl" alt="">
                   <span class="status-dot"></span>
@@ -76,9 +78,9 @@
                   <h6 class="m-0 font-normal fz-1">{{activeChatUser.firstName + ' ' + activeChatUser.lastName}}</h6>
 
                 </div>
-              <!-- </div> -->
+              </div>
             </ng-template>
-          </div>
+          
 
         <!-- Right side top menu -->
         <span fxFlex></span>
