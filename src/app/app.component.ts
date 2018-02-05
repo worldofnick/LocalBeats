@@ -1,13 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { Router, NavigationEnd, ActivatedRoute, ActivatedRouteSnapshot } from '@angular/router';
-import { MatSnackBar } from '@angular/material';
 import * as hopscotch from 'hopscotch';
 import 'rxjs/add/operator/filter';
 import { RoutePartsService } from "./services/route-parts/route-parts.service";
 import { SocketService } from 'app/services/chats/socket.service';
-import { SocketEvent } from 'app/services/chats/model/event';
-import { Message } from 'app/services/chats/model/message';
+import { MatSnackBar } from '@angular/material';
 
 @Component({
   selector: 'app-root',
@@ -21,32 +19,17 @@ export class AppComponent implements OnInit {
   constructor(public title: Title, 
     private router: Router, 
     private activeRoute: ActivatedRoute,
-    private routePartsService: RoutePartsService,
     public snackBar: MatSnackBar,
+    private routePartsService: RoutePartsService,
     private _socketService: SocketService) { }
 
   ngOnInit() {
     this.changePageTitle();
     this._socketService.initSocket();
-    this.initIoConnection();            // Listen for any private messages
     // Init User Tour
     setTimeout(() => {
       hopscotch.startTour(this.tourSteps());
     }, 2000);
-  }
-
-  initIoConnection() {
-    this._socketService.onEvent(SocketEvent.SEND_PRIVATE_MSG)
-      .subscribe((message: Message) => {
-        console.log('PM from server (main app module): ', message);
-        const temp: Message = message as Message;
-        this.openNewMessageSnackBar(temp);
-    });
-  }
-
-  openNewMessageSnackBar(message: Message) {
-    this.snackBar.open('You have a new message from ' + message.from.firstName + ' ' + message.from.lastName,
-                        'close', { duration: 5000 });
   }
   /*
   ***** Tour Steps ****
