@@ -112,19 +112,19 @@
         <div *ngFor="let message of activeChatMessages" class="single-conversation {{ !!(message.from._id == this.loggedInUser._id) ? 
                                       ('me') : 
                                       ('sender')}}" fxLayout="row">
-          <a href="" class="toolbar-avatar online">
+          <a href="" class="toolbar-avatar online" [@flyInOut]="'in'">
             <img [src]="!!(message.from._id == this.loggedInUser._id) ? 
                         (this.loggedInUser.profilePicUrl) : 
-                        (message.from.profilePicUrl)" alt="">
-            <span class="status-dot"></span>
+                        (message.from.profilePicUrl)" alt="" [@flyInOut]="'in'">
+            <span class="status-dot" [@flyInOut]="'in'"></span>
           </a>
           <div>
             <!-- <h5 class="chat-username text-muted">{{ !!(message.from._id === this.loggedInUser._id) ? (this.loggedInUser.firstName + ' ' + this.loggedInUser.lastName) 
               : (message.from.firstName + ' ' + message.from.lastName) }}</h5> -->
-            <div class="conversation-msg">
+            <div class="conversation-msg" [@flyInOut]="'in'">
               {{message.content}}
             </div>
-            <p class="chat-date text-muted">{{message.sentAt | date:'EEEE, MMM d, y, h:mm a'}}</p>
+            <p class="chat-date text-muted" [@flyInOut]="'in'">{{message.sentAt | date:'EEEE, MMM d, y, h:mm a'}}</p>
           </div>
         </div>
 

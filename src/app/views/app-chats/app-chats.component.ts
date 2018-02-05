@@ -8,6 +8,7 @@ import { Observable } from 'rxjs/Rx';
 import {startWith} from 'rxjs/operators/startWith';
 import {map} from 'rxjs/operators/map';
 import {FormControl} from '@angular/forms';
+import {trigger,state,style,animate,transition} from '@angular/animations';
 
 import { ChatsService } from 'app/services/chats/chats.service';
 import { SocketService } from 'app/services/chats/socket.service';
@@ -17,14 +18,32 @@ import { SocketEvent } from '../../services/chats/model/event';
 import { Action } from '../../services/chats/model/action';
 import { MessageTypes } from '../../services/chats/model/messageTypes';
 
-export class DummyUser {
-  constructor(public firstName: string, public lastName: string, public email: string) { }
-}
+// export class DummyUser {
+//   constructor(public firstName: string, public lastName: string, public email: string) { }
+// }
 
 @Component({
   selector: 'app-chats',
   templateUrl: './app-chats.component.html',
-  styleUrls: ['./app-chats.component.css']
+  styleUrls: ['./app-chats.component.css'],
+  animations: [
+    trigger('flyInOut', [
+      state('in', style({opacity: 1, transform: 'translateX(0)'})),
+      transition('void => *', [
+        style({
+          opacity: 0,
+          transform: 'translateX(-100%)'
+        }),
+        animate('0.2s ease-in-out')
+      ]),
+      transition('* => void', [
+        animate('0.1s 200ms ease-out', style({
+          opacity: 0,
+          transform: 'translateX(100%)'
+        }))
+      ])
+    ])
+  ]
 })
 export class AppChatsComponent implements OnInit {
   
