@@ -53,6 +53,7 @@ export class AppChatsComponent implements OnInit {
   // Receipient users form Variables, chips
   // ==============================================
   recipientsFormControl = new FormControl();
+  newConversationClicked: boolean = false;
 
   // TODO: change all to User from DummyUser
   options = [
@@ -112,6 +113,7 @@ export class AppChatsComponent implements OnInit {
 
   onStartNewConversationButtonClick() {
     //TODO: make so new blank user is added and is active, empty recipient form on right top bar
+    this.newConversationClicked = true;
     console.log('New conversation button clicked!');
   }
 
