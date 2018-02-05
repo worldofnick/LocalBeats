@@ -184,13 +184,6 @@ export class AppChatsComponent implements OnInit {
   // ==============================================
 
   private initIoConnection(): void {
-    // this._socketService.initSocket();
-
-    // TODO: add:
-    // this._socketService.socket.on('connect', () => {
-    //        listen to all events inside it
-    //});
-
     // Every time there is a new login/out, it reloads the chat side Bar.
     this._socketService.onEvent(SocketEvent.NEW_LOG_IN)                       // TODO: optimize to reload only online status and new, deleted users
       .subscribe((message: Message) => {
@@ -206,18 +199,12 @@ export class AppChatsComponent implements OnInit {
 
     this._socketService.onEvent(SocketEvent.SEND_PRIVATE_MSG)
       .subscribe((message: Message) => {
-        // Add response message[] to the activeChatMessages[]
-        // this.activeChatMessages = new Array();      // Reset the array
-        // for (let temp of message as Message[]) {
-          // this.activeChatMessages.push(temp as Message);
-        // };
+
         console.log('Private Chat message from server (chat event): ', message);
         const temp: Message = message as Message;
-        // TODO: if user is not in conversation list, add it. Or retrieve connectedUsers again.
+        
         // If you are the receiver and the sender is not already in the connectedUsers list,
         // add the user to list. Else, if the chat is ongoing with this sender, reload the messages.
-        // TODO: should make it active and load the messages as well? Could break current chat so think not
-        
         if ( !this.isUserInConnectedUsers(temp) ) {
           if (this.loggedInUser._id !== temp.from._id ) {
             this.connectedUsers.unshift(temp.from);
@@ -227,22 +214,10 @@ export class AppChatsComponent implements OnInit {
                     this.loggedInUser._id === temp.from._id) {
           this.activeChatMessages.push(temp);
         } else {
-          // TODO: push notification, notification dot
+          // TODO: push notification, notification dot if not active user
         }
-        // this.initiateAutocompleteOptions(); //TODO: change to new method
-        
-        // console.log('Active Chat Messages var (chat event): ', this.activeChatMessages);
-        
         // TODO: refresh UI?
     });
-
-    // this._socketService.onEvent(Event.REQUEST_PM_SOCKET_ID)
-    //   .subscribe((message: Message) => {
-    //     console.log('Socket Request (chat event): ', message);
-    //     console.log(' to == logged in? : ', (message.serverPayload.from._id === this.loggedInUser._id) ||
-    //                                         (message.serverPayload.to._id === this.loggedInUser._id)) ;
-    //     this.respondToIsItYouPMSocketRequest(message);
-    // });
   }
 
   isUserInConnectedUsers(message):boolean {
