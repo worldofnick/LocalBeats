@@ -139,8 +139,17 @@ export class AppChatsComponent implements OnInit {
       input.value = '';
     }
 
-    // this.recipientsFormControl.disable();
+    console.log('Initiating chat with: ', this.recipientStringAny);
+    //TODO: get user object from server and use it
+    let newUser = this.recipientStringAny as User;
+    this.connectedUsers.shift();
+    this.connectedUsers.unshift(newUser);
+    this.activeChatUser = newUser;
+    
+    // Reset stuff
     this.newConversationClicked = false;
+    this.recipientChips = [];
+    this.recipientStringAny = '';
     // TODO: reset recipientsChips
   }
 
