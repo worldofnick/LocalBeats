@@ -242,7 +242,6 @@ export class AppChatsComponent implements OnInit {
         // console.log('User DATA: ', data);
         const temp = data as { users: User[] };
         // console.log('Full response: ', temp.users);
-        
         // Reset the users
         this.connectedUsers = new Array();    //TODO: expect the current chat ones (active user)?
 
@@ -265,6 +264,7 @@ export class AppChatsComponent implements OnInit {
       data => {
         // console.log('User DATA: ', data);
         const temp = data as { users: User[] };
+        this.initiateAutocompleteOptions(temp.users);
         // console.log('Full response: ', temp.users);
 
         this.connectedUsers.push(temp.users[3]);          // TODO: add only if users not in connectedUsers
@@ -280,6 +280,11 @@ export class AppChatsComponent implements OnInit {
         this.changeActiveUser(this.activeChatUser);
       }
     );
+  }
+
+  initiateAutocompleteOptions(userList: User[]) {
+    this.options = userList;
+    console.log('Options: ', this.options);
   }
 
   changeActiveUser(user) {
