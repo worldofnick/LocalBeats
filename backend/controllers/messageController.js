@@ -50,12 +50,15 @@ exports.getAllFromToMessages = function (req, res) {
   });
 };
 
-//TODO: retreive users where from hasnt intialiated the conversation
-// Sent to snorlax: Message.find({}).where('to').in(ids).distinct('from', function (error, toIds) {
-// Sent by snorlax: Message.find({}).where('from').in(ids).distinct('to', function (error, toIds) {
+/**
+ * Retrieves all the conversation buddies of the passed from_id user. 
+ * Looks for users from_id sent messages to and got messages from. So even if 
+ * from_id did not sent someone messages but received messages from them, that 
+ * buddy will be added to the resulting users.
+ * @param {*} req - Contains from_id of the user you want the budddies of
+ * @param {*} res - returns { users: [User] }
+ */
 exports.getAllActiveConversationsFrom = function (req, res) {
-    //   console.log('(Not Yet Implemented (getAllFromToMessages)');
-
     let ids = [req.params.fromUID];
 
     async.parallel([
@@ -80,8 +83,6 @@ exports.getAllActiveConversationsFrom = function (req, res) {
                 error: asyncError
             });
         }
-        // console.log('Async results: ', asyncResults);
-        // console.log('Async error: ', asyncError);
 
         let resultIds = [];
         for (let id of asyncResults[0]) {
