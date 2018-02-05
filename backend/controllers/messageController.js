@@ -49,6 +49,32 @@ exports.getAllFromToMessages = function (req, res) {
   });
 };
 
+exports.getAllActiveConversationsFrom = function (req, res) {
+    //   console.log('(Not Yet Implemented (getAllFromToMessages)');
+
+    let ids = [req.params.fromUID];
+    Message.find({}).where('from').in(ids).distinct('to', function (error, toIds) {
+        console.log('to IDS: ', toIds);
+        User.find({}).where('_id').in(toIds)
+            .exec(function (err, messages) {
+                if (err) {
+                    console.log('Error getting active conversation user (from): ', err);
+                    return res.status(400).send({
+                        reason: "Unable to get distinct (to) users of (from)...",
+                        error: err
+                    });
+                }
+                // hide hashPassword
+                for (let i = 0; i < messages.length; i++) {
+                    // messages[i].from.hashPassword = undefined;
+                    // messages[i].to.hashPassword = undefined;
+                }
+                return res.status(200).send({ users: messages });
+            });
+    });
+
+};
+
 exports.saveMessage = function (req, res) {
     // console.log('(Not Yet Implemented (saveMessage)');
 
