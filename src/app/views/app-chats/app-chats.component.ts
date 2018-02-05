@@ -163,7 +163,9 @@ export class AppChatsComponent implements OnInit {
       this.recipientChips = [];
       this.recipientStringAny = '';
 
-      
+      if (this.connectedUsers.includes(newUser)) {
+        this.changeActiveUser(this.activeChatUser);
+      }
     }
 
   }
