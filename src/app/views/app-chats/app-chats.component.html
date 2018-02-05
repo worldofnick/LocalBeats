@@ -116,7 +116,7 @@
             <img [src]="!!(message.from._id == this.loggedInUser._id) ? 
                         (this.loggedInUser.profilePicUrl) : 
                         (message.from.profilePicUrl)" alt="" [@flyInOut]="'in'">
-            <span class="status-dot" [@flyInOut]="'in'"></span>
+            <!-- <span class="status-dot" [@flyInOut]="'in'"></span> -->
           </a>
           <div>
             <!-- <h5 class="chat-username text-muted">{{ !!(message.from._id === this.loggedInUser._id) ? (this.loggedInUser.firstName + ' ' + this.loggedInUser.lastName) 
