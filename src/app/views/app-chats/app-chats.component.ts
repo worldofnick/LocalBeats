@@ -1,14 +1,14 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewChecked, ElementRef } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { Subscription } from "rxjs/Subscription";
 import { MediaChange, ObservableMedia } from "@angular/flex-layout";
 import { MatSidenav, MatDialog, MatChipInputEvent, MatSnackBar } from '@angular/material';
-import {ENTER, COMMA} from '@angular/cdk/keycodes';
+import { ENTER, COMMA } from '@angular/cdk/keycodes';
 import { Observable } from 'rxjs/Rx';
-import {startWith} from 'rxjs/operators/startWith';
-import {map} from 'rxjs/operators/map';
-import {FormControl} from '@angular/forms';
-import {trigger,state,style,animate,transition} from '@angular/animations';
+import { startWith } from 'rxjs/operators/startWith';
+import { map } from 'rxjs/operators/map';
+import { FormControl } from '@angular/forms';
+import { trigger, state, style, animate, transition } from '@angular/animations';
 
 import { ChatsService } from 'app/services/chats/chats.service';
 import { SocketService } from 'app/services/chats/socket.service';
@@ -28,7 +28,7 @@ import { MessageTypes } from '../../services/chats/model/messageTypes';
   styleUrls: ['./app-chats.component.css'],
   animations: [
     trigger('flyInOut', [
-      state('in', style({opacity: 1, transform: 'translateX(0)'})),
+      state('in', style({ opacity: 1, transform: 'translateX(0)' })),
       transition('void => *', [
         style({
           opacity: 0,
@@ -45,8 +45,10 @@ import { MessageTypes } from '../../services/chats/model/messageTypes';
     ])
   ]
 })
-export class AppChatsComponent implements OnInit {
-  
+export class AppChatsComponent implements OnInit, AfterViewChecked {
+
+  @ViewChild('scrollMe') private myScrollContainer: ElementRef;
+
   //TODO: add users to chat with, some form of notifications
 
   // ==============================================
@@ -79,9 +81,9 @@ export class AppChatsComponent implements OnInit {
   // TODO: change all to User from DummyUser
   options: User[] = new Array();
   //  = [
-    // new DummyUser('Snorlax', 'Ketchum', 'snor@poke.com'),
-    // new DummyUser('Onix', 'Brock', 'onix@poke.com'),
-    // new DummyUser('Meowth', 'Rocket', 'meow@poke.com')
+  // new DummyUser('Snorlax', 'Ketchum', 'snor@poke.com'),
+  // new DummyUser('Onix', 'Brock', 'onix@poke.com'),
+  // new DummyUser('Meowth', 'Rocket', 'meow@poke.com')
   // ];
 
   filteredOptions: Observable<User[]>;
@@ -99,17 +101,17 @@ export class AppChatsComponent implements OnInit {
   // ==============================================
 
   constructor(private media: ObservableMedia, public _snackBar: MatSnackBar,
-              private _socketService: SocketService, private _chatsService: ChatsService) {
+    private _socketService: SocketService, private _chatsService: ChatsService) {
     // this.initSelfUser();
     this.loggedInUser = this._chatsService.getCurrentLoggedInUser();
     // if (this.connectedUsers.length < 1) {
-      // this.isBlankTemplate = true;
-      
+    // this.isBlankTemplate = true;
+
     // }
     this.initChatSideBarWithWithNewUsers();
     console.log('Init active user:', this.activeChatUser);
     console.log('Init connectedUsers user:', this.connectedUsers);
-    
+
     console.log('Logged in User:', this.loggedInUser);
   }
 
@@ -124,10 +126,20 @@ export class AppChatsComponent implements OnInit {
     console.log('On open, connectd users: ', this.connectedUsers);
   }
 
+  ngAfterViewChecked() {
+    this.scrollToBottom();
+  }
+
+  scrollToBottom(): void {
+    try {
+      this.myScrollContainer.nativeElement.scrollTop = this.myScrollContainer.nativeElement.scrollHeight;
+    } catch (err) { }
+  }
+
   // initSelfUser() {
-    
-    // this.activeChatUser = this.loggedInUser;
-    // this.connectedUsers.push(this.loggedInUser);
+
+  // this.activeChatUser = this.loggedInUser;
+  // this.connectedUsers.push(this.loggedInUser);
   // }
 
   // ==============================================
@@ -137,9 +149,9 @@ export class AppChatsComponent implements OnInit {
   private initRecipientForm() {
     this.filteredOptions = this.recipientsFormControl.valueChanges
       .pipe(
-        startWith<string | User>(''),
-        map(value => typeof value === 'string' ? value : value.email),  //TODO: change to name?
-        map(name => name ? this.filter(name) : this.options.slice())
+      startWith<string | User>(''),
+      map(value => typeof value === 'string' ? value : value.email),  //TODO: change to name?
+      map(name => name ? this.filter(name) : this.options.slice())
       );
   }
 
@@ -149,12 +161,12 @@ export class AppChatsComponent implements OnInit {
   }
 
   displayFn(user?: User): string | undefined {
-    
+
     return user ? user.firstName + ' ' + user.lastName : undefined;
   }
 
   onStartNewConversationButtonClick() {
-    
+
     let blankUser = new User();
     blankUser.firstName = 'New ';
     blankUser.lastName = 'Message';
@@ -175,9 +187,9 @@ export class AppChatsComponent implements OnInit {
     let value = this.recipientStringAny.firstName + ' ' + this.recipientStringAny.lastName;
 
     // Add our recipient
-    if ((value || '').trim()) { 
-      if(value !== 'undefined undefined') {
-        this.recipientChips.push({ name: value.trim() }); 
+    if ((value || '').trim()) {
+      if (value !== 'undefined undefined') {
+        this.recipientChips.push({ name: value.trim() });
       }
     }
     console.log('New recipients: ', this.recipientChips);
@@ -202,7 +214,7 @@ export class AppChatsComponent implements OnInit {
         this.activeChatUser = newUser;
       }
 
-      
+
 
       // Reset stuff
       this.newConversationClicked = false;
@@ -234,38 +246,38 @@ export class AppChatsComponent implements OnInit {
       .subscribe((message: Message) => {
         console.log('New user logged in (chat event): ', message);
         this.reloadChatSideBarWithNewConnectedUsers();                   // reload the connectedUsers navBar
-    });
+      });
 
     this._socketService.onEvent(SocketEvent.SMN_LOGGED_OUT)
-      .subscribe( (message: Message) => {
+      .subscribe((message: Message) => {
         console.log('Some user logged out (chat event): ', message);
         this.reloadChatSideBarWithNewConnectedUsers();                   // reload the connectedUsers navBar
-    });
+      });
 
     this._socketService.onEvent(SocketEvent.SEND_PRIVATE_MSG)
       .subscribe((message: Message) => {
         // this.isBlankTemplate = false;
         console.log('Private Chat message from server (chat event): ', message);
         const temp: Message = message as Message;
-        
+
         // If you are the receiver and the sender is not already in the connectedUsers list,
         // add the user to list. Else, if the chat is ongoing with this sender, reload the messages.
-        if ( !this.isUserInConnectedUsers(temp) ) {
-          if (this.loggedInUser._id !== temp.from._id ) {
+        if (!this.isUserInConnectedUsers(temp)) {
+          if (this.loggedInUser._id !== temp.from._id) {
             this.connectedUsers.unshift(temp.from);
           }
-        } 
-        if ( this.activeChatUser._id === temp.from._id  ||
-                    this.loggedInUser._id === temp.from._id) {
+        }
+        if (this.activeChatUser._id === temp.from._id ||
+          this.loggedInUser._id === temp.from._id) {
           this.activeChatMessages.push(temp);
         } else {
           // TODO: push notification, notification dot if not active user
         }
         // TODO: refresh UI?
-    });
+      });
   }
 
-  isUserInConnectedUsers(message):boolean {
+  isUserInConnectedUsers(message): boolean {
     for (let chatBuddy of this.connectedUsers) {
       if (chatBuddy._id === message.from._id) {
         return true;
@@ -275,24 +287,24 @@ export class AppChatsComponent implements OnInit {
   }
 
   respondToIsItYouPMSocketRequest(message) {
-    if ( (message.serverPayload.from._id === this.loggedInUser._id) ||
-        (message.serverPayload.to._id === this.loggedInUser._id)) {
+    if ((message.serverPayload.from._id === this.loggedInUser._id) ||
+      (message.serverPayload.to._id === this.loggedInUser._id)) {
 
-          this._chatsService.getPMsBetweenActiveAndLoggedInUser(this.loggedInUser, this.activeChatUser).subscribe(
-            data => {
-              // console.log('\n====\nUser PMs from Server DB: ', JSON.stringify(data));
-              // console.log('\n====\nUser PMs from Server DB: ', data as {messages: Message[]} );
-              this.activeChatMessages = new Array();
-              let temp = data as {messages: Message[]};
-              this.activeChatMessages = temp.messages;
-            },
-            err => console.error('Error fetching PMs between 2 users: ', err),
-            () => { 
-              console.log('Done fetching PMs from the server DB');
-              console.log('Sending myself with messages[]: ', this.activeChatMessages);
-              this._socketService.send(Action.REQUEST_PM_SOCKET_ID, {serverPayload: this.activeChatMessages} );
-            }
-        );
+      this._chatsService.getPMsBetweenActiveAndLoggedInUser(this.loggedInUser, this.activeChatUser).subscribe(
+        data => {
+          // console.log('\n====\nUser PMs from Server DB: ', JSON.stringify(data));
+          // console.log('\n====\nUser PMs from Server DB: ', data as {messages: Message[]} );
+          this.activeChatMessages = new Array();
+          let temp = data as { messages: Message[] };
+          this.activeChatMessages = temp.messages;
+        },
+        err => console.error('Error fetching PMs between 2 users: ', err),
+        () => {
+          console.log('Done fetching PMs from the server DB');
+          console.log('Sending myself with messages[]: ', this.activeChatMessages);
+          this._socketService.send(Action.REQUEST_PM_SOCKET_ID, { serverPayload: this.activeChatMessages });
+        }
+      );
     }
   }
 
@@ -358,35 +370,35 @@ export class AppChatsComponent implements OnInit {
   changeActiveUser(user) {
     // Check if a blank new conversation was halfway started while switched to an existing user. If so, remove it.
     if (this.connectedUsers.length > 0) {
-      if (this.connectedUsers[0].firstName === 'New '&& this.connectedUsers[0].lastName === 'Message') {
+      if (this.connectedUsers[0].firstName === 'New ' && this.connectedUsers[0].lastName === 'Message') {
         this.connectedUsers.shift();
         this.newConversationClicked = false;
       }
 
       let connection;
-    this.activeChatUser = user;
-    console.log('New User clicked:', this.activeChatUser);
+      this.activeChatUser = user;
+      console.log('New User clicked:', this.activeChatUser);
 
-    this._chatsService.getPMsBetweenActiveAndLoggedInUser(this.loggedInUser, this.activeChatUser).subscribe(
-      data => {
-        // console.log('\n====\nUser PMs from Server DB: ', JSON.stringify(data));
-        // console.log('\n====\nUser PMs from Server DB: ', data as {messages: Message[]} );
-        this.activeChatMessages = new Array();
-        let temp = data as {messages: Message[]};
-        this.activeChatMessages = temp.messages;
-      },
-      err => console.error('Error fetching PMs between 2 users: ', err),
-      () => console.log('Done fetching PMs from the server DB')
-  );
+      this._chatsService.getPMsBetweenActiveAndLoggedInUser(this.loggedInUser, this.activeChatUser).subscribe(
+        data => {
+          // console.log('\n====\nUser PMs from Server DB: ', JSON.stringify(data));
+          // console.log('\n====\nUser PMs from Server DB: ', data as {messages: Message[]} );
+          this.activeChatMessages = new Array();
+          let temp = data as { messages: Message[] };
+          this.activeChatMessages = temp.messages;
+        },
+        err => console.error('Error fetching PMs between 2 users: ', err),
+        () => console.log('Done fetching PMs from the server DB')
+      );
     }
-    
+
 
     // ALGORITHM:
     // retrieve getUserByID. 
-        // if the receiverUser is online:
-            // ask server to add to private chat room
-        // else
-            // REST api store messages to DB as unread for receiver user
+    // if the receiverUser is online:
+    // ask server to add to private chat room
+    // else
+    // REST api store messages to DB as unread for receiver user
 
 
     // this._chatsService.sendPrivateJoinMessage(this.activeChatUser);
@@ -432,7 +444,7 @@ export class AppChatsComponent implements OnInit {
 
     if (this.messageEntered.trim().length > 0) {
 
-      
+
       let privateMessage: Message;
       // CASE 1: Both users online. So do a socket event
       if (this.activeChatUser.isOnline) {
@@ -443,7 +455,7 @@ export class AppChatsComponent implements OnInit {
       // CASE 2: The recipient is offline. So an HTTP request instead of socket event
       else {
         privateMessage = this.createPMObject(false, MessageTypes.MSG);
-        
+
       }
       // this.awaitMessageSaveResponse(privateMessage);
       this._socketService.send(Action.SEND_PRIVATE_MSG, privateMessage);

@@ -28,7 +28,7 @@
     </mat-sidenav>
 
     <!-- Right side -->
-    <div class="chats-wrap" style="min-height: 550px; max-height:650px">
+    <div class="chats-wrap" #scrollMe style="min-height: 550px; max-height:650px; overflow:scroll;">
       <!-- Right side topbar -->
       <mat-toolbar color="primary" class="chat-toolbar mb-1" style="position: sticky; top: 0px; flex-direction: row; box-sizing: border-box; display: flex;">
         <!-- sidebar toggle button -->
@@ -112,7 +112,7 @@
       </mat-toolbar>
 
       <!-- Main chat body -->
-      <div class="conversations-hold" style="min-height: 500px; position: sticky; top:0; z-index: -1;">
+      <div class="conversations-hold" style="min-height: 500px; position: sticky; top:0; z-index: -1; padding: 5% 0% 15% 0%;">
         <!-- single chat item -->
         <div *ngFor="let message of activeChatMessages" class="single-conversation {{ !!(message.from._id == this.loggedInUser._id) ? 
                                       ('me') : 
