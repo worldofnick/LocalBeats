@@ -124,6 +124,7 @@ export class AppChatsComponent implements OnInit {
     this.initRecipientForm();
     this.newConversationClicked = true;
     console.log('New conversation button clicked!');
+    this.activeChatMessages = [];
   }
 
   // Chip methods
