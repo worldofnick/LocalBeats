@@ -20,8 +20,10 @@ exports.getAllMessages = function (req, res) {
         }
         // console.log('Messages: ', messages);
         for( let i = 0; i < messages.length; i++ ) {
-            messages[i].from.hashPassword = undefined;
-            messages[i].to.hashPassword = undefined;
+            if(messages[i] != null || messages[i] != undefined) {
+                messages[i].from.hashPassword = undefined;
+                messages[i].to.hashPassword = undefined;
+            }
         }
         return res.status(200).send({messages: messages});
     });
