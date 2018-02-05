@@ -73,7 +73,7 @@ export class NegotiateDialogComponent implements OnInit {
       // Check if artist application
       if(this.data.booking.bookingType == 'artist-apply') {
         // Check what view it's coming from
-        if(this.data.view == 'event-singleton') {
+        if(this.data.view == 'artist') {
           // Check to see who is the most recent approval of the offer
           if(this.data.booking.hostApproved && this.negotiable) {
             // Host has done the most recent offer
@@ -98,8 +98,30 @@ export class NegotiateDialogComponent implements OnInit {
             this.declineButtonText = "Cancel Application";
           }
         } else {
-          // Otherwise, it's coming from 'My Performances' on profile
+          // It's coming from the host
           // Check to see who is the most recent approval of the offer
+          // Check to see who is the most recent approval of the offer
+          if(this.data.booking.hostApproved && this.negotiable) {
+            this.title = "Your Current Offer";
+            this.subtext = "Please enter a new bid, accept your current bid, or decline the application."
+            this.acceptButtonText = "Accept";
+            this.declineButtonText = "Decline";
+          } else if (this.data.booking.hostApproved && !this.negotiable) {
+            this.title = "Your Offer";
+            this.subtext = "You made this event non-negotiable.  Please accept or decline the artist's application at your listed price."
+            this.acceptButtonText = "Accept";
+            this.declineButtonText = "Decline";
+          } else if (this.data.booking.artistApproved && this.negotiable) {
+            this.title = "Artist's Current Bid";
+            this.subtext = "Please enter a new offer or accept the artist's bid to confirm the booking."
+            this.acceptButtonText = "Accept";
+            this.declineButtonText = "Decline";
+          } else {
+            this.title = "Artist's Application";
+            this.subtext = "You made this event non-negotiable.  Please accept or decline the artist's application.";
+            this.acceptButtonText = "Confirm Application";
+            this.declineButtonText = "Cancel Application";
+          }
 
         }
       } else {
@@ -133,9 +155,9 @@ export class NegotiateDialogComponent implements OnInit {
   onPriceChange(){
     if(this.negotiationForm.get('price').value != this.initialPrice) {
       // Come up with cases here for the different negotiation instances
-      if(this.data.booking.hostApproved && this.negotiable) {
+      if(this.data.booking.hostApproved && this.negotiable && this.data.view == 'artist') {
         this.acceptButtonText = "Counter Offer";
-      } else if(this.data.booking.artistApproved && this.negotiable) {
+      } else if(this.data.booking.artistApproved && this.negotiable && this.data.view == 'artist') {
         this.acceptButtonText = "New Bid";
       }
     } else {

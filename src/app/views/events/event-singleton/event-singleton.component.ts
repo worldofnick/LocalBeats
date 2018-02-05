@@ -117,7 +117,7 @@ export class EventSingletonComponent implements OnInit {
 
   openNegotiationDialog() {
     let booking = new Booking(undefined, 'artist-apply', this.model.hostUser, this.userService.user, this.model, false, false, false, false, this.model.fixedPrice);
-    this.bookingService.negotiate(booking, true, 'event-singleton')
+    this.bookingService.negotiate(booking, true, 'artist')
       .subscribe((result) => {
         if(result.accepted == 'accepted' || result.accepted == 'new') {
           booking = new Booking(undefined, 'artist-apply', this.model.hostUser, this.userService.user, this.model, false, false, true, false, result.price);
@@ -141,7 +141,7 @@ export class EventSingletonComponent implements OnInit {
   }
 
   viewApplication() {
-    this.bookingService.negotiate(this.userBooking, false, 'event-singleton')
+    this.bookingService.negotiate(this.userBooking, false, 'artist')
       .subscribe((result) => {
         if(result.accepted == 'accepted' || result.accepted == 'new') {
           this.userBooking.currentPrice = result.price;
