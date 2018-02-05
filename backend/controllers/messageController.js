@@ -1,6 +1,7 @@
 'use strict';
 
 var mongoose  = require('mongoose');
+const async   = require('async');
 var User      = mongoose.model('User');
 var Message   = mongoose.model('Message');
 
@@ -49,20 +50,58 @@ exports.getAllFromToMessages = function (req, res) {
   });
 };
 
+//TODO: retreive users where from hasnt intialiated the conversation
+// Sent to snorlax: Message.find({}).where('to').in(ids).distinct('from', function (error, toIds) {
+// Sent by snorlax: Message.find({}).where('from').in(ids).distinct('to', function (error, toIds) {
 exports.getAllActiveConversationsFrom = function (req, res) {
     //   console.log('(Not Yet Implemented (getAllFromToMessages)');
 
     let ids = [req.params.fromUID];
-    Message.find({}).where('from').in(ids).distinct('to', function (error, toIds) {
-        if (error) {
-            console.log('Error retreiving TO users...')
-            return res.status(400).send({
-                reason: "Unable to get distinct (to) users of (from)...",
-                error: error
+
+    async.parallel([
+        function (callback) {
+            Message.find({}).where('from').in(ids).distinct('to', function (error, toIds) {
+                if (error) {
+                    // console.log('Error retreiving TO users...')
+                    // return res.status(400).send({
+                    //     reason: "Unable to get distinct (to) users of (from)...",
+                    //     error: error
+                    // });
+                }
+                console.log('Sent (to) IDS      : ', toIds);
+                callback(error, toIds);
             });
+        },
+        function (callback) {
+            Message.find({}).where('to').in(ids).distinct('from', function (error, fromIds) {
+                if (error) {
+                    // console.log('Error retreiving TO users...')
+                    // return res.status(400).send({
+                    //     reason: "Unable to get distinct (to) users of (from)...",
+                    //     error: error
+                    // });
+                }
+                console.log('Received (from) IDS: ', fromIds);
+                callback(error, fromIds);
+            })
         }
-        console.log('to IDS: ', toIds);
-        User.find({}).where('_id').in(toIds)
+    ], (asyncError, asyncResults) => {
+        console.log('Async results: ', asyncResults);
+
+        let resultIds = [];
+        for (let id of asyncResults[0]) {
+            resultIds.push(id);
+        }
+        // console.log('Results after 1st: ', resultIds);
+        for (let id of asyncResults[1]) {
+            // console.log(id + ' is in array? [', this.isInArray(id, resultIds) + ']');
+            // if (!resultIds.isInArray(id)) {
+            resultIds.push(id);
+            // }
+        }
+        console.log('Resulting IDS: ', resultIds);
+
+        User.find({}).where('_id').in(resultIds)
             .exec(function (err, toUsers) {
                 if (err) {
                     console.log('Error getting user objects for TO ids: ', err);
@@ -78,7 +117,6 @@ exports.getAllActiveConversationsFrom = function (req, res) {
                 return res.status(200).send({ users: toUsers });
             });
     });
-
 };
 
 exports.saveMessage = function (req, res) {
