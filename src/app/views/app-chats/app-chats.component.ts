@@ -144,6 +144,13 @@ export class AppChatsComponent implements OnInit {
       console.log('Initiating chat with: ', this.recipientStringAny);
       //TODO: get user object from server and use it
       let newUser = this.recipientStringAny as User;
+
+      // Check if the new user is already in the list. If so, switch to that user
+      if (this.connectedUsers.includes(newUser)) {
+        console.log('User already exists in conversation. Switching to that user at index', this.connectedUsers.indexOf(newUser));
+        this.activeChatUser = this.connectedUsers[this.connectedUsers.indexOf(newUser)];
+      }
+
       this.connectedUsers.shift();
       this.connectedUsers.unshift(newUser);
       this.activeChatUser = newUser;
