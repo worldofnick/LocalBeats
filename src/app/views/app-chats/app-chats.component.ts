@@ -277,21 +277,24 @@ export class AppChatsComponent implements OnInit {
   }
 
   initChatSideBarWithWithNewUsers() {
-    this._chatsService.getConnectionUsers().subscribe(
+    this._chatsService.getAllConversationBuddiesOfThisUser().subscribe(
       data => {
         // console.log('User DATA: ', data);
         const temp = data as { users: User[] };
-        this.initiateAutocompleteOptions();
+        for (let buddy of temp.users) {
+          this.connectedUsers.push(buddy);
+        }
         // console.log('Full response: ', temp.users);
 
-        this.connectedUsers.push(temp.users[3]);          // TODO: add only if users not in connectedUsers
-        this.connectedUsers.push(temp.users[5]);
-        this.connectedUsers.push(temp.users[6]);
+        // this.connectedUsers.push(temp.users[3]);          // TODO: add only if users not in connectedUsers
+        // this.connectedUsers.push(temp.users[5]);
+        // this.connectedUsers.push(temp.users[6]);
         console.log('(Init) Side Bar Connected Users:', this.connectedUsers);
         this.activeChatUser = this.connectedUsers[0]; // TODO: change to whatever filter applied later
       },
       err => console.error(err),
       () => {
+        this.initiateAutocompleteOptions();
         console.log('Done initializing users in chat side bar');
         // Reload the active user's messages
         this.changeActiveUser(this.activeChatUser);
