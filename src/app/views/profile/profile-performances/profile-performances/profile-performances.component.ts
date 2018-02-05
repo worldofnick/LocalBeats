@@ -140,7 +140,7 @@ export class ProfilePerformancesComponent implements OnInit {
   }
 
   openNegotiationDialog(booking: Booking, user:string) {
-    this.bookingService.negotiate(booking, user)
+    this.bookingService.negotiate(booking, false, 'performances')
       .subscribe((result) => {
         if(result.accepted == 'accepted') {
           if(user == 'host') {

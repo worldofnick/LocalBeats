@@ -115,13 +115,38 @@ export class EventSingletonComponent implements OnInit {
     });
   }
 
-  openNegotiationDialog(type:string) {
+  openNegotiationDialog() {
     let booking = new Booking(undefined, 'artist-apply', this.model.hostUser, this.userService.user, this.model, false, false, false, false, this.model.fixedPrice);
-    this.bookingService.negotiate(booking, 'artist')
+    this.bookingService.negotiate(booking, true, 'event-singleton')
       .subscribe((result) => {
         if(result.accepted == 'accepted' || result.accepted == 'new') {
           booking = new Booking(undefined, 'artist-apply', this.model.hostUser, this.userService.user, this.model, false, false, true, false, result.price);
           this.bookingService.createBooking(booking).then((booking: Booking) => {
+            this.hasApplied = true;
+            this.userBooking = booking;
+            this.buttonText = "View Application";
+          });
+        } else {
+          if(this.model.negotiable) {
+            this.buttonText = "Bid";
+          } else {
+            this.buttonText = "Apply";
+          }
+          if(this.userBooking != null) {
+            this.onCancelApp();
+          }
+        }
+
+      });
+  }
+
+  viewApplication() {
+    this.bookingService.negotiate(this.userBooking, false, 'event-singleton')
+      .subscribe((result) => {
+        if(result.accepted == 'accepted' || result.accepted == 'new') {
+          this.userBooking.currentPrice = result.price;
+          this.userBooking.artistApproved = true;
+          this.bookingService.updateBooking(this.userBooking).then((booking: Booking) => {
             this.hasApplied = true;
             this.userBooking = booking;
             this.buttonText = "View Application";

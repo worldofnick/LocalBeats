@@ -76,7 +76,7 @@ export class ProfileRequestComponent implements OnInit {
 
   openNegotiationDialog(event: Event) {
     let booking = new Booking(undefined, 'host-request', event.hostUser, this.artist, event, false, false, false, true, event.fixedPrice);
-    this.bookingService.negotiate(booking, 'host').subscribe((result) => {
+    this.bookingService.negotiate(booking, true, 'profile-request').subscribe((result) => {
       if(result.accepted == 'accepted' || result.accepted == 'new') {
         console.log('here')
         console.log(result);
