@@ -213,7 +213,19 @@ export class AppChatsComponent implements OnInit {
         // };
         console.log('Private Chat message from server (chat event): ', message);
         const temp: Message = message as Message;
-        this.activeChatMessages.push(temp);
+        // TODO: if user is not in conversation list, add it. Or retrieve connectedUsers again.
+        // If you are the receiver and the sender is not already in the connectedUsers list,
+        // add the user to list. Else, if the chat is ongoing with this sender, reload the messages.
+        // TODO: should make it active and load the messages as well? Could break current chat so think not
+        if ( !this.connectedUsers.includes(temp.from) ) { 
+          this.connectedUsers.unshift(temp.from);
+        } else if ( this.activeChatUser === temp.from ) {
+          this.activeChatMessages.push(temp);
+        } else {
+          // TODO: push notification, notification dot
+        }
+        // this.initiateAutocompleteOptions(); //TODO: change to new method
+        
         // console.log('Active Chat Messages var (chat event): ', this.activeChatMessages);
         
         // TODO: refresh UI?
