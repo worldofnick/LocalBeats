@@ -116,8 +116,8 @@ export class AppChatsComponent implements OnInit {
     let blankUser = new User();
     blankUser.firstName = 'New ';
     blankUser.lastName = 'Message';
-    this.connectedUsers.unshift(blankUser);
-    this.activeChatUser = blankUser;
+    this.connectedUsers.unshift(blankUser); // Add to the top of the users list
+    this.activeChatUser = blankUser;        // Make it the actively selected user on sidebar
 
     //TODO: make so new blank user is added and is active, empty recipient form on right top bar
     this.initRecipientForm();
@@ -272,8 +272,10 @@ export class AppChatsComponent implements OnInit {
   }
 
   changeActiveUser(user) {
+    // Check if a blank new conversation was halfway started while switched to an existing user. If so, remove it.
     if (this.connectedUsers[0].firstName === 'New '&& this.connectedUsers[0].lastName === 'Message') {
       this.connectedUsers.shift();
+      this.newConversationClicked = false;
     }
     let connection;
     this.activeChatUser = user;
