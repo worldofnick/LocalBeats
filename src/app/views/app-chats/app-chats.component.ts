@@ -57,13 +57,14 @@ export class AppChatsComponent implements OnInit {
   recipientStringAny: any;
 
   // TODO: change all to User from DummyUser
-  options = [
-    new DummyUser('Snorlax', 'Ketchum', 'snor@poke.com'),
-    new DummyUser('Onix', 'Brock', 'onix@poke.com'),
-    new DummyUser('Meowth', 'Rocket', 'meow@poke.com')
-  ];
+  options: User[] = new Array();
+  //  = [
+    // new DummyUser('Snorlax', 'Ketchum', 'snor@poke.com'),
+    // new DummyUser('Onix', 'Brock', 'onix@poke.com'),
+    // new DummyUser('Meowth', 'Rocket', 'meow@poke.com')
+  // ];
 
-  filteredOptions: Observable<DummyUser[]>;
+  filteredOptions: Observable<User[]>;
 
   isVisible: boolean = true;
   isSelectable: boolean = true;
@@ -81,6 +82,7 @@ export class AppChatsComponent implements OnInit {
     this.loggedInUser = this._chatsService.getCurrentLoggedInUser();
     this.initChatSideBarWithWithNewUsers();
     console.log('Logged in User:', this._chatsService.getCurrentLoggedInUser());
+    
   }
 
   ngOnInit() {
@@ -95,18 +97,18 @@ export class AppChatsComponent implements OnInit {
   private initRecipientForm() {
     this.filteredOptions = this.recipientsFormControl.valueChanges
       .pipe(
-        startWith<string | DummyUser>(''),
+        startWith<string | User>(''),
         map(value => typeof value === 'string' ? value : value.email),  //TODO: change to name?
         map(name => name ? this.filter(name) : this.options.slice())
       );
   }
 
-  filter(name: string): DummyUser[] {
+  filter(name: string): User[] {
     return this.options.filter(option =>
       option.email.toLowerCase().indexOf(name.toLowerCase()) === 0);
   }
 
-  displayFn(user?: DummyUser): string | undefined {
+  displayFn(user?: User): string | undefined {
     
     return user ? user.firstName + ' ' + user.lastName : undefined;
   }
