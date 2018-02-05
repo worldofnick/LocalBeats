@@ -57,7 +57,10 @@
                       [matChipInputAddOnBlur]="isAddOnBlur" (matChipInputTokenEnd)="add($event)">
                     <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
                       <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
-                        {{ option.email }}
+                          <img style="vertical-align:middle;" aria-hidden [src]="option.profilePicUrl" height="25" />
+                          <span>{{ option.firstName + ' ' + option.lastName }}</span> | 
+                          <small>{{option.email}}</small>
+                        <!-- {{ option.email }} -->
                       </mat-option>
                     </mat-autocomplete>
                   </mat-chip-list>
