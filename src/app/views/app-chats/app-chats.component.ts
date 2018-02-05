@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { Subscription } from "rxjs/Subscription";
 import { MediaChange, ObservableMedia } from "@angular/flex-layout";
-import { MatSidenav, MatDialog, MatChipInputEvent } from '@angular/material';
+import { MatSidenav, MatDialog, MatChipInputEvent, MatSnackBar } from '@angular/material';
 import {ENTER, COMMA} from '@angular/cdk/keycodes';
 import { Observable } from 'rxjs/Rx';
 import {startWith} from 'rxjs/operators/startWith';
@@ -98,7 +98,8 @@ export class AppChatsComponent implements OnInit {
   // Init Methods
   // ==============================================
 
-  constructor(private media: ObservableMedia, private _socketService: SocketService, private _chatsService: ChatsService) {
+  constructor(private media: ObservableMedia, public _snackBar: MatSnackBar,
+              private _socketService: SocketService, private _chatsService: ChatsService) {
     // this.initSelfUser();
     this.loggedInUser = this._chatsService.getCurrentLoggedInUser();
     // if (this.connectedUsers.length < 1) {
@@ -111,6 +112,10 @@ export class AppChatsComponent implements OnInit {
     
     console.log('Logged in User:', this.loggedInUser);
   }
+
+  // openNewMessageSnackBar() {
+
+  // }
 
   ngOnInit() {
     // console.log('ngOnInit: ConnectedUser length: ', this.connectedUsers.length, ' and isBlank: ', this.isBlankTemplate);
