@@ -54,7 +54,7 @@ export class AppChatsComponent implements OnInit {
   // ==============================================
   recipientsFormControl = new FormControl();
   newConversationClicked: boolean = false;
-  recipientStringAny: any;
+  recipientStringAny: any = '';
 
   // TODO: change all to User from DummyUser
   options: User[] = new Array();
@@ -141,18 +141,21 @@ export class AppChatsComponent implements OnInit {
       input.value = '';
     }
 
-    console.log('Initiating chat with: ', this.recipientStringAny);
-    //TODO: get user object from server and use it
-    let newUser = this.recipientStringAny as User;
-    this.connectedUsers.shift();
-    this.connectedUsers.unshift(newUser);
-    this.activeChatUser = newUser;
-    
-    // Reset stuff
-    this.newConversationClicked = false;
-    this.recipientChips = [];
-    this.recipientStringAny = '';
-    // TODO: reset recipientsChips
+    if (this.recipientStringAny !== '') {
+      console.log('Initiating chat with: ', this.recipientStringAny);
+      //TODO: get user object from server and use it
+      let newUser = this.recipientStringAny as User;
+      this.connectedUsers.shift();
+      this.connectedUsers.unshift(newUser);
+      this.activeChatUser = newUser;
+
+      // Reset stuff
+      this.newConversationClicked = false;
+      this.recipientChips = [];
+      this.recipientStringAny = '';
+      // TODO: reset recipientsChips
+    }
+
   }
 
   remove(fruit: any): void {
