@@ -61,43 +61,34 @@ exports.getAllActiveConversationsFrom = function (req, res) {
     async.parallel([
         function (callback) {
             Message.find({}).where('from').in(ids).distinct('to', function (error, toIds) {
-                if (error) {
-                    // console.log('Error retreiving TO users...')
-                    // return res.status(400).send({
-                    //     reason: "Unable to get distinct (to) users of (from)...",
-                    //     error: error
-                    // });
-                }
-                console.log('Sent (to) IDS      : ', toIds);
+                // console.log('Sent (to) IDS      : ', toIds);
                 callback(error, toIds);
             });
         },
         function (callback) {
             Message.find({}).where('to').in(ids).distinct('from', function (error, fromIds) {
-                if (error) {
-                    // console.log('Error retreiving TO users...')
-                    // return res.status(400).send({
-                    //     reason: "Unable to get distinct (to) users of (from)...",
-                    //     error: error
-                    // });
-                }
-                console.log('Received (from) IDS: ', fromIds);
+                // console.log('Received (from) IDS: ', fromIds);
                 callback(error, fromIds);
             })
         }
     ], (asyncError, asyncResults) => {
-        console.log('Async results: ', asyncResults);
+
+        if (asyncError !== null) {
+            console.log('Error getting conversation buddies: ', asyncError);
+            return res.status(400).send({
+                reason: "Unable to get conversation buddies...",
+                error: asyncError
+            });
+        }
+        // console.log('Async results: ', asyncResults);
+        // console.log('Async error: ', asyncError);
 
         let resultIds = [];
         for (let id of asyncResults[0]) {
             resultIds.push(id);
         }
-        // console.log('Results after 1st: ', resultIds);
         for (let id of asyncResults[1]) {
-            // console.log(id + ' is in array? [', this.isInArray(id, resultIds) + ']');
-            // if (!resultIds.isInArray(id)) {
             resultIds.push(id);
-            // }
         }
         console.log('Resulting IDS: ', resultIds);
 
