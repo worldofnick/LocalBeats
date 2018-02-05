@@ -20,7 +20,7 @@ export class HomeComponent implements OnInit {
   }, {
     name: 'Featured Guitarist',
     url: 'assets/images/guitar-pic.jpg'
-  }]
+  }];
 
   events = [{
     name: 'Featured Restaurant',
@@ -31,22 +31,18 @@ export class HomeComponent implements OnInit {
   }, {
     name: 'Featured Wedding',
     url: 'assets/images/wedding-pic.jpg'
-  }]
-  constructor(private _userService: UserService, public snackBar: MatSnackBar, private _socketService: SocketService) { 
-    
-  }
+  }];
+
+  constructor(private snackBar: MatSnackBar, 
+              private _userService: UserService, private _socketService: SocketService) { }
 
   ngOnInit() {
-    this.initIoConnection();            // Listen for any private messages
+    this.initIoConnection();            // Listen to server for any registered events inside this method
   }
 
-  openNewMessageSnackBar(message: Message) {
-    if (this._userService.user._id !== message.from._id) {
-      this.snackBar.open('You have a new message from ' + message.from.firstName + ' ' + message.from.lastName,
-                        'close', { duration: 3500 });
-    };
-  }
-
+  /**
+   * Listens to the server for any registered events and takes action accordingly.
+   */
   initIoConnection() {
     this._socketService.onEvent(SocketEvent.SEND_PRIVATE_MSG)
       .subscribe((message: Message) => {
@@ -56,4 +52,14 @@ export class HomeComponent implements OnInit {
     });
   }
 
+  /**
+   * Display a snack bar pop-up whenever this user gets a new PM
+   * @param message The original PM that is received
+   */
+  openNewMessageSnackBar(message: Message) {
+    if (this._userService.user._id !== message.from._id) {
+      this.snackBar.open('You have a new message from ' + message.from.firstName + ' ' + message.from.lastName,
+                        'close', { duration: 3500 });
+    };
+  }
 }
