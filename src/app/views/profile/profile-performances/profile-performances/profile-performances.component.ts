@@ -3,20 +3,19 @@ import { ActivatedRoute } from "@angular/router";
 import { NgForm } from '@angular/forms/src/directives/ng_form';
 import { Router } from "@angular/router";
 
-
-import { UserService } from '../../../services/auth/user.service';
-import { BookingService } from '../../../services/booking/booking.service';
-import { EventService } from '../../../services/event/event.service';
-import { User } from '../../../models/user';
-import { Event } from '../../../models/event';
-import { Booking } from '../../../models/booking';
+import { UserService } from '../../../../services/auth/user.service';
+import { BookingService } from '../../../../services/booking/booking.service';
+import { EventService } from '../../../../services/event/event.service';
+import { User } from '../../../../models/user';
+import { Event } from '../../../../models/event';
+import { Booking } from '../../../../models/booking';
 
 @Component({
-  selector: 'app-profile-events',
-  templateUrl: './profile-events.component.html',
-  styleUrls: ['./profile-events.component.css']
+  selector: 'app-profile-performances',
+  templateUrl: './profile-performances.component.html',
+  styleUrls: ['./profile-performances.component.css']
 })
-export class ProfileEventsComponent implements OnInit {
+export class ProfilePerformancesComponent implements OnInit {
   user:User = new User;
   events: any[];
   requestedArtistBookings: Booking[];
@@ -141,21 +140,24 @@ export class ProfileEventsComponent implements OnInit {
   }
 
   openNegotiationDialog(booking: Booking, user:string) {
-    this.bookingService.negotiate(booking, false, 'host')
+    this.bookingService.negotiate(booking, false, 'artist')
       .subscribe((result) => {
         booking.currentPrice = result.price;
         if(result.accepted == 'accepted') {
-          booking.hostApproved = true;
-          if(booking.artistApproved == true) {
+          booking.artistApproved = true;
+          if(booking.hostApproved == true) {
             booking.approved = true;
             this.bookingService.acceptBooking(booking).then(() => this.getEvents());
           } else {
-            this.bookingService.updateBooking(booking).then(() => this.getEvents());
+            this.bookingService.updateBooking(booking).then((tempBooking:Booking) => {
+              this.getEvents()});
           }
         } else if(result.accepted == 'new') {
-            booking.hostApproved = true;
-            booking.artistApproved = false;
-            this.bookingService.updateBooking(booking).then(() => this.getEvents());
+            booking.hostApproved = false;
+            booking.artistApproved = true;
+            this.bookingService.updateBooking(booking).then((tempBooking: Booking) => {
+              this.getEvents()
+            });
         } else if(result.accepted == 'cancel' || result.accepted == 'declined') {
           this.bookingService.declineBooking(booking).then(() => this.getEvents());
         }

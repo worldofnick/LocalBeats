@@ -44,7 +44,13 @@
           <ng-template [ngIf]="this.onOwnProfile">
             <mat-list-item (click)="clickedOverview = false" [routerLink]="['/profile', 'events']" routerLinkActive="list-item-active">
               <mat-icon>events</mat-icon>
-              My Events
+              My Hosted Events
+            </mat-list-item>
+          </ng-template>
+          <ng-template [ngIf]="this.onOwnProfile">
+            <mat-list-item (click)="clickedOverview = false" [routerLink]="['/profile', 'performances']" routerLinkActive="list-item-active">
+              <mat-icon>music_note</mat-icon>
+              My Performances
             </mat-list-item>
           </ng-template>
 

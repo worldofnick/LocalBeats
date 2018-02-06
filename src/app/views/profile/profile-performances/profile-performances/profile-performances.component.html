@@ -1,0 +1,73 @@
+<mat-card class="p-0">
+  <mat-card-title class="mat-bg-primary m-0">
+    <div class="card-title-text">
+      <span>My Performances</span>
+    </div>
+  </mat-card-title>
+  <mat-tab-group>
+    <mat-tab label="Requested Performances">
+      <mat-card *ngIf="requestedArtistBookings.length == 0" class="example-card no-shadow">
+        <mat-card-title>You have no requested performances.</mat-card-title>
+      </mat-card>
+      <mat-card *ngFor="let booking of requestedArtistBookings; let i = index" class="example-card no-shadow">
+        <mat-card-header>
+          <div mat-card-avatar class="example-header-image"></div>
+          <mat-card-title>{{booking.eventEID.eventName }}</mat-card-title>
+          <mat-card-subtitle>{{booking.eventEID.eventType}}</mat-card-subtitle>
+          <mat-card-subtitle>{{booking.currentPrice}}</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <p>The event is on {{booking.eventEID.toDate}}</p>
+        </mat-card-content>
+        <mat-card-actions>
+          <button (click)="openNegotiationDialog(booking, 'artist')" mat-button>View Request</button>
+        </mat-card-actions>
+      </mat-card>
+    </mat-tab>
+
+
+    <mat-tab label="Performance Applications">
+      <mat-card *ngIf="appliedBookings.length == 0" class="example-card no-shadow">
+        <mat-card-title>You have no active performance applications.</mat-card-title>
+      </mat-card>
+      <mat-card *ngFor="let booking of this.appliedBookings; let i = index" class="example-card">
+        <mat-card-header>
+          <div mat-card-avatar class="example-header-image"></div>
+          <mat-card-title>{{booking.eventEID.eventName }}</mat-card-title>
+          <mat-card-subtitle>{{booking.eventEID.eventType}}</mat-card-subtitle>
+          <mat-card-subtitle>{{booking.currentPrice}}</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <p>
+              The event is on {{booking.eventEID.toDate}}
+            </p>
+        </mat-card-content>
+        <mat-card-actions>
+            <button (click)="openNegotiationDialog(booking, 'artist')" mat-button>View Application</button>
+        </mat-card-actions>
+      </mat-card>
+    </mat-tab>
+
+    <mat-tab label="Booked Performances">
+        <mat-card *ngIf="confirmedBookings.length == 0" class="example-card no-shadow">
+          <mat-card-title>You have not booked any performances.</mat-card-title>
+        </mat-card>
+        <mat-card *ngFor="let booking of this.confirmedBookings; let i = index" class="example-card no-shadow">
+          <mat-card-header>
+            <div mat-card-avatar class="example-header-image"></div>
+            <mat-card-title>{{booking.eventEID.eventName }}</mat-card-title>
+            <mat-card-subtitle>{{booking.eventEID.eventType}}</mat-card-subtitle>
+            <mat-card-subtitle>{{booking.currentPrice}}</mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-content>
+            <p>
+                The event is on {{booking.eventEID.toDate}}
+              </p>
+          </mat-card-content>
+          <mat-card-actions>
+            <button (click)="openNegotiationDialog(booking, 'artist')" mat-button>Cancel Booking</button>
+          </mat-card-actions>
+        </mat-card>
+      </mat-tab>
+  </mat-tab-group>
+</mat-card>

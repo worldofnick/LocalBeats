@@ -27,8 +27,9 @@ import { SocketEvent } from         '../../../services/chats/model/event';
 })
 export class TopbarComponent implements OnInit {
   searchForm: FormGroup;
-
-  numNotifications: any = 0;
+  values = '';
+  
+  numNotifications = 0;
   isSearchOpen: boolean = false;
   clickedSearch: boolean = false;
 
@@ -150,6 +151,12 @@ export class TopbarComponent implements OnInit {
         });
       });
     });
+  }
+
+  onKey(event: any) {
+    if(event.keyCode != 13){
+      this.clickedInsideSearch()
+    }
   }
 
   clickedOutsideSearch() {

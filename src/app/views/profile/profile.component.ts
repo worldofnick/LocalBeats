@@ -70,18 +70,6 @@ export class ProfileComponent implements OnInit {
     // this.userService.sendNotificationToUser(notif);
  }
 
-
-  onRequestArtist(ID:string){
-    // this.router.navigate(['/pick-event', this.userService._id]);
-    // this.clickedRequestArtist
-  }
-
-  onCancelArtist(ID:string) {
-    // this.router.navigate(['/pick-event', this.userService._id]);
-  }
-
-
-
   ngOnInit() {
     this.user = this.userService.user;
     this.activeView = this.route.snapshot.params['view']
