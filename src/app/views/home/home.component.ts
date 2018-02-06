@@ -4,6 +4,8 @@ import { SocketEvent } from 'app/services/chats/model/event';
 import { Message } from 'app/services/chats/model/message';
 import { MatSnackBar } from '@angular/material';
 import { UserService } from 'app/services/auth/user.service';
+import { NotificationService } from '../../services/notification/notification.service';
+import * as socketIO from 'socket.io-client';
 
 @Component({
   selector: 'app-home',

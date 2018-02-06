@@ -1,69 +1,66 @@
 <mat-card class="p-0">
+  <mat-card-title class="mat-bg-primary m-0">
+    <div class="card-title-text">
+      <span>My Performances</span>
+    </div>
+  </mat-card-title>
   <mat-tab-group>
-
-    <!-- my events -->
-    
-
-
-    <mat-tab label="Requested Events">
-      <mat-card *ngFor="let booking of this.requestedArtistBookings; let i = index" class="example-card">
+    <mat-tab label="Requested Performances">
+      <mat-card *ngIf="requestedArtistBookings.length == 0" class="example-card no-shadow">
+        <mat-card-title>You have no requested performances.</mat-card-title>
+      </mat-card>
+      <mat-card *ngFor="let booking of requestedArtistBookings; let i = index" class="example-card no-shadow">
         <mat-card-header>
-          <div mat-card-avatar class="example-header-image"></div>
-          <mat-card-title>Event name: {{ booking.eventEID.eventName }}</mat-card-title>
-          <mat-card-subtitle>Event type: {{booking.eventEID.eventType}}</mat-card-subtitle>
-          <mat-card-subtitle>Negotiated price: {{booking.currentPrice}}</mat-card-subtitle>
+          <img mat-card-avatar [src]="booking.eventEID.eventPicUrl">
+          <mat-card-title><a [routerLink]="['/events', booking.eventEID._id]">{{booking.eventEID.eventName }}</a></mat-card-title>
+          <mat-card-subtitle>{{booking.eventEID.eventType | capitalize}}</mat-card-subtitle>
+          <mat-card-subtitle>{{booking.eventEID.toDate | date:'MMM d, y, h:mm a'}}</mat-card-subtitle>
+          <mat-card-subtitle>{{booking.currentPrice | currency}}</mat-card-subtitle>
         </mat-card-header>
-        <!-- <img mat-card-image src="https://material.angular.io/assets/img/examples/shiba2.jpg" width="50px" heaight="50px"alt="Photo of a Shiba Inu"> -->
         <mat-card-content>
-          <p>
-              The event is on {{booking.eventEID.toDate}}
-          </p>
         </mat-card-content>
         <mat-card-actions>
-          <button (click)="openNegotiationDialog(booking, 'artist')" mat-button>View Request</button>
+          <button (click)="openNegotiationDialog(booking, 'artist')" mat-button color="primary">View Request</button>
         </mat-card-actions>
       </mat-card>
     </mat-tab>
 
-
-    <mat-tab label="Applied Events">
+    <mat-tab label="Performance Applications">
+      <mat-card *ngIf="appliedBookings.length == 0" class="example-card no-shadow">
+        <mat-card-title>You have no active performance applications.</mat-card-title>
+      </mat-card>
       <mat-card *ngFor="let booking of this.appliedBookings; let i = index" class="example-card">
         <mat-card-header>
-          <div mat-card-avatar class="example-header-image"></div>
-          <mat-card-title>Event name: {{ booking.eventEID.eventName }}</mat-card-title>
-          <mat-card-subtitle>Event type: {{booking.eventEID.eventType}}</mat-card-subtitle>
-          <mat-card-subtitle>Negotiated price: {{booking.currentPrice}}</mat-card-subtitle>
+          <img mat-card-avatar [src]="booking.eventEID.eventPicUrl">
+          <mat-card-title><a [routerLink]="['/events', booking.eventEID._id]">{{booking.eventEID.eventName}}</a></mat-card-title>
+          <mat-card-subtitle>{{booking.eventEID.eventType | capitalize}}</mat-card-subtitle>
+          <mat-card-subtitle>{{booking.eventEID.toDate | date:'MMM d, y, h:mm a'}}</mat-card-subtitle>
+          <mat-card-subtitle>{{booking.currentPrice | currency}}</mat-card-subtitle>
         </mat-card-header>
-        <!-- <img mat-card-image src="https://material.angular.io/assets/img/examples/shiba2.jpg" width="50px" heaight="50px"alt="Photo of a Shiba Inu"> -->
         <mat-card-content>
-          <p>
-              The event is on {{booking.eventEID.toDate}}
-            </p>
         </mat-card-content>
         <mat-card-actions>
-            <button (click)="openNegotiationDialog(booking, 'artist')" mat-button>View Application</button>
+            <button (click)="openNegotiationDialog(booking, 'artist')" mat-button color="primary">View Application</button>
         </mat-card-actions>
       </mat-card>
     </mat-tab>
 
-    <mat-tab label="Booked Events">
-        <mat-card *ngFor="let booking of this.confirmedBookings; let i = index" class="example-card">
+    <mat-tab label="Booked Performances">
+        <mat-card *ngIf="confirmedBookings.length == 0" class="example-card no-shadow">
+          <mat-card-title>You have not booked any performances.</mat-card-title>
+        </mat-card>
+        <mat-card *ngFor="let booking of this.confirmedBookings; let i = index" class="example-card no-shadow">
           <mat-card-header>
-            <div mat-card-avatar class="example-header-image"></div>
-            <mat-card-title>Event name: {{ booking.eventEID.eventName }}</mat-card-title>
-            <mat-card-subtitle>Event type: {{booking.eventEID.eventType}}</mat-card-subtitle>
-            <mat-card-subtitle>Event price: {{booking.currentPrice}}</mat-card-subtitle>
+            <img mat-card-avatar [src]="booking.eventEID.eventPicUrl">
+            <mat-card-title><a [routerLink]="['/events', booking.eventEID._id]">{{booking.eventEID.eventName}}</a></mat-card-title>
+            <mat-card-subtitle>{{booking.eventEID.eventType | capitalize}}</mat-card-subtitle>
+            <mat-card-subtitle>{{booking.eventEID.toDate | date:'MMM d, y, h:mm a'}}</mat-card-subtitle>
+            <mat-card-subtitle>{{booking.currentPrice | currency}}</mat-card-subtitle>
           </mat-card-header>
-          <!-- <img mat-card-image src="https://material.angular.io/assets/img/examples/shiba2.jpg" width="50px" heaight="50px"alt="Photo of a Shiba Inu"> -->
           <mat-card-content>
-            <p>
-                The event is on {{booking.eventEID.toDate}}
-              </p>
           </mat-card-content>
           <mat-card-actions>
-              <!-- <button *ngIf="!isCurrentUser  && userService.isAuthenticated() && requestedArtistBookings[i].approved" 
-              (click)="onDeclineArtist(booking, i)"mat-button>Cancel Performance</button> -->
-              <button (click)="openNegotiationDialog(booking, 'artist')" mat-button>Cancel Booking</button>
+            <button (click)="openNegotiationDialog(booking, 'artist')" mat-button color="primary">Cancel Booking</button>
           </mat-card-actions>
         </mat-card>
       </mat-tab>

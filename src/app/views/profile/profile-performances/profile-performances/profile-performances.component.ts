@@ -61,27 +61,6 @@ export class ProfilePerformancesComponent implements OnInit {
 
   }
 
-
-  //TODO remove event from passses in params below...not used.
-    //cancel your application
-  onCancelApp(bookingToCancel:Booking){
-
-    // console.log(this.userBooking)
-    this.bookingService.declineBooking(bookingToCancel).then(() => {this.getEvents();})
-  }
-
-  onDeclineArtist(booking:Booking, index: number){
-    this.bookingService.declineBooking(this.requestedArtistBookings[index]).then(() => this.getEvents());
-  }
-
-  onAcceptArtist(booking:Booking, index: number){
-    this.bookingService.acceptBooking(this.requestedArtistBookings[index]).then(() => this.getEvents());
-  }
-
-  onCancelRequest(event:Event, index: number) {
-    this.bookingService.declineBooking(this.appliedBookings[index]).then(() => this.getEvents());
-  }
-
   onViewEvent(event:Event){
     this.router.navigate(['/events', event._id]); //this will go to the page about the event
   }
@@ -140,34 +119,28 @@ export class ProfilePerformancesComponent implements OnInit {
   }
 
   openNegotiationDialog(booking: Booking, user:string) {
-    this.bookingService.negotiate(booking, user)
+    this.bookingService.negotiate(booking, false, 'artist')
       .subscribe((result) => {
-        if(result.accepted == 'accepted') {
-          if(user == 'host') {
-            booking.hostApproved = true;
-            if(booking.artistApproved == true) {
-              booking.approved = true;
-              this.bookingService.acceptBooking(booking).then(() => this.getEvents());
-            }
-          } else {
+        if(result != undefined) {
+          booking.currentPrice = result.price;
+          if(result.accepted == 'accepted') {
             booking.artistApproved = true;
             if(booking.hostApproved == true) {
               booking.approved = true;
               this.bookingService.acceptBooking(booking).then(() => this.getEvents());
+            } else {
+              this.bookingService.updateBooking(booking).then((tempBooking:Booking) => {
+                this.getEvents()});
             }
+          } else if(result.accepted == 'new') {
+              booking.hostApproved = false;
+              booking.artistApproved = true;
+              this.bookingService.updateBooking(booking).then((tempBooking: Booking) => {
+                this.getEvents()
+              });
+          } else if(result.accepted == 'cancel' || result.accepted == 'declined') {
+            this.bookingService.declineBooking(booking).then(() => this.getEvents());
           }
-        } else if(result.accepted == 'new') {
-          if(user == 'host'){
-            booking.hostApproved = true;
-            booking.artistApproved = false;
-            this.bookingService.acceptBooking(booking).then(() => this.getEvents());
-          } else {
-            booking.hostApproved = false;
-            booking.artistApproved = true;
-            this.bookingService.acceptBooking(booking).then(() => this.getEvents());
-          }
-        } else if(result.accepted == 'cancel' || result.accepted == 'declined') {
-          this.bookingService.declineBooking(booking).then(() => this.getEvents());
         }
       });
   }

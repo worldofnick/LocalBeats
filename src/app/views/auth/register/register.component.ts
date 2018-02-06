@@ -41,7 +41,6 @@ export class RegisterComponent implements OnInit {
 
   signup() {
     const signupData = this.signupForm.value;
-    console.log(signupData);
     this.user = {
       _id: null,
       firstName: signupData.firstName,
@@ -56,7 +55,6 @@ export class RegisterComponent implements OnInit {
       socket: null,
       isOnline: true
     };
-    console.log(this.user);
 
     this.submitButton.disabled = true;
     this.progressBar.mode = 'indeterminate';

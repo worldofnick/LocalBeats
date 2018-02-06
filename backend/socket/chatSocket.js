@@ -4,7 +4,10 @@
 let socketsHash = new Array();
 var mongoose  = require('mongoose');
 var User      = mongoose.model('User');
+var Notifications  = mongoose.model('Notification');
 var Message   = mongoose.model('Message');
+let notificationController = require('../controllers/notificationController.js');
+
 
 module.exports = function (io) {
     // Default 'connection' event listerner
@@ -76,6 +79,7 @@ module.exports = function (io) {
         // Private Messaging Event Handlers - P2P
         // ============================================
         
+        //TODO look at this for sending live notifications
         socket.on('sendPrivateMessage', (payload) => {
             console.log('\n-----\nPM received from socket: ', socket.id);
             console.log('\n-----\nPM payload: ', payload);
@@ -117,5 +121,61 @@ module.exports = function (io) {
         //         socket.emit('sendPrivateMessage', messagePayload.serverPayload);
         //     // } 
         // });
+
+        // ============================================
+        // Notifications Socket Controls
+        // ============================================
+
+        socket.on('notificationsCount', (userID) => {
+            let number = notificationController.getNotificationsCount();
+            socket.emit('notificationCount', number);
+          });
+        
+          // TODO add parans for function
+          socket.on('tellTopBar', numberOfNotifications =>{
+            socket.emit('notificationCount', numberOfNotifications);
+          })
+        
+          socket.on('tellNotificationPanel', notifications=>{
+        
+            console.log(notifications);
+            // io.sockets.connected[socket.id].emit('notifications', notifications);
+            socket.emit('notifications', notifications)
+          })
+        
+          socket.on('notificationsForUser', userID => {
+            // var notifications = notificationController.getNotificationsForUser(userID)
+            // console.log(notifications);
+            socket.emit('notifications', 'test,test,test,test');
+          });
+
+          socket.on('sendNotification', (payload) => {
+            console.log('\n-----\N Notification received from socket: ', socket.id);
+            console.log('\n-----\N Notif payload: ', payload);
+
+            // Send the message to all the recipients (currently also the sender)
+            let recipient = socketsHash[payload.receiverID._id];
+            console.log('> Sending notification to', recipient);
+
+
+            // save notification to db
+                let notification = new Notifications(); // build notification "someone has requested you to play blah"
+                notification.senderID = payload.senderID;
+                notification.message = payload.message;
+                notification.icon = payload.icon;
+                notification.receiverID = payload.receiverID;
+                notification.eventID = payload.eventID;
+                notification.route = payload.route;
+                notification.save(function (err, notification) {
+                  if (err) {
+                    return res.status(500).send("Failed to create booking notification");
+                  }
+                  console.log("saving notification")
+                  console.log(notification);
+                //   io.emit("notification", { notification: notification });
+                });
+
+            io.to(recipient).emit('sendNotification', payload);
+          });
     });
 }

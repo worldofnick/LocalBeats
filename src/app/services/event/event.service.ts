@@ -30,8 +30,6 @@ export class EventService {
             .toPromise()
             .then((response: Response) => {
                 const data = response.json();
-                this.accessToken = data.access_token;
-                sessionStorage.setItem('token', JSON.stringify({ accessToken: this.accessToken }))
                 this.event = data.event as Event;
                 return this.event
             })
@@ -46,8 +44,6 @@ export class EventService {
                 .toPromise()
                 .then((response: Response) => {
                     const data = response.json();
-                    this.accessToken = data.access_token;
-                    sessionStorage.setItem('token', JSON.stringify({ accessToken: this.accessToken }))
                     this.event = data.event as Event;
                     return this.event
                 })
@@ -70,8 +66,6 @@ export class EventService {
             .toPromise()
             .then((response: Response) => {
                 const data = response.json();
-                // this.accessToken = data.access_token;
-                // sessionStorage.setItem('token', JSON.stringify({ accessToken: this.accessToken }))
                 let events:Event[];
                 events = data.events as Event[];
                 return events
@@ -94,8 +88,6 @@ export class EventService {
             .toPromise()
             .then((response: Response) => {
                 const data = response.json();
-                // this.accessToken = data.access_token;
-                // sessionStorage.setItem('token', JSON.stringify({ accessToken: this.accessToken }))
                 this.event = data.event as Event;
                 return this.event
             })

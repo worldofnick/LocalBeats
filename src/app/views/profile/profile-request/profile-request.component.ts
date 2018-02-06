@@ -2,9 +2,13 @@ import { Component, OnInit, Input } from '@angular/core';
 import { BookingService } from '../../../services/booking/booking.service';
 import { EventService } from '../../../services/event/event.service';
 import { UserService } from '../../../services/auth/user.service';
+import { SocketService } from '../../../services/chats/socket.service';
 import { User } from '../../../models/user';
 import { Booking } from '../../../models/booking';
 import { Event } from '../../../models/event';
+import { Action } from '../../../services/chats/model/action'
+import { SocketEvent } from '../../../services/chats/model/event'
+import { Notification } from '../../../models/notification'
 
 @Component({
   selector: 'app-profile-request',
@@ -15,30 +19,16 @@ export class ProfileRequestComponent implements OnInit {
 
   @Input() user: User;
   @Input() artist: User;
-  events:any[];
-  requestedEvents:any[] = [];
+  events:any[] = [];
+  requestedBookings:any[] = [];
   deleteStatus:Number;
   artistID:any;
 
-  constructor(private eventService: EventService, private userService: UserService, private bookingService: BookingService) { }
+  constructor(private eventService: EventService, private userService: UserService,
+              private bookingService: BookingService, private _socketService: SocketService) { }
 
   ngOnInit() {
     this.getAvailableEvents()
-  }
-
-  onRequestEvent(event:Event){
-    const booking = new Booking(undefined, 'host-request', event.hostUser, this.artist, event, false, false, false, true, event.fixedPrice);
-    this.bookingService.createBooking(booking).then((booking: Booking) => this.getAvailableEvents());
-  }
-
-  onCancelRequest(event:Event) {
-    this.bookingService.getBooking(event).then((bookings: any[]) => {
-      for (let result of bookings) {
-        if (result.eventEID._id == event._id && result.performerUser._id == this.artist._id) {
-          this.bookingService.declineBooking(result).then(() => this.getAvailableEvents())
-        }
-      }
-    });
   }
 
   public getAvailableEvents() {
@@ -70,20 +60,46 @@ export class ProfileRequestComponent implements OnInit {
         }
       }
       this.events = tempEvents;
-      this.requestedEvents = tempRequestedEvents
+      this.requestedBookings = bookings;
     }));
   }
 
-  openNegotiationDialog(event: Event) {
+  newRequest(event: Event) {
     let booking = new Booking(undefined, 'host-request', event.hostUser, this.artist, event, false, false, false, true, event.fixedPrice);
-    this.bookingService.negotiate(booking, 'host').subscribe((result) => {
-      if(result.accepted == 'accepted' || result.accepted == 'new') {
-        console.log('here')
-        console.log(result);
-        booking = new Booking(undefined, 'host-request', event.hostUser, this.artist, event, false, false, false, true, result.price);
-        this.bookingService.createBooking(booking).then((booking: Booking) => this.getAvailableEvents());
-      } else {
-        this.onCancelRequest(event);
+    this.bookingService.negotiate(booking, true, 'host').subscribe((result) => {
+      if(result != undefined) {
+        if(result.accepted == 'accepted' || result.accepted == 'new') {
+          booking = new Booking(undefined, 'host-request', event.hostUser, this.artist, event, false, false, false, true, result.price);
+
+
+          let notification = new Notification(); // build notification "someone has requested you to play blah"
+          notification.receiverID = booking.performerUser;
+          notification.senderID = booking.hostUser;
+          notification.message = booking.hostUser.firstName + " has requested you for an event";
+      
+          notification.icon = 'queue_music';
+          notification.eventID = booking.eventEID._id;
+          notification.route = ['/events',notification.eventID]
+          console.log("passing this notif to server");
+          console.log(notification)
+          this._socketService.sendNotification(SocketEvent.SEND_NOTIFICATION, notification);
+          
+          this.bookingService.createBooking(booking).then((booking: Booking) => this.getAvailableEvents());
+        }
+      }
+    });
+  }
+
+  viewRequest(booking: Booking) {
+    this.bookingService.negotiate(booking, false, 'host').subscribe((result) => {
+      if(result != undefined) {
+        if(result.accepted == 'accepted' || result.accepted == 'new') {
+          booking.currentPrice = result.price;
+          booking.hostApproved = true;
+          this.bookingService.updateBooking(booking).then((booking: Booking) => this.getAvailableEvents());
+        } else {
+          this.bookingService.declineBooking(booking).then((booking: Booking) => this.getAvailableEvents());
+        }
       }
     });
   }

@@ -12,22 +12,22 @@ import { NegotiateDialogComponent } from '../../views/negotiate/negotiate-dialog
 @Injectable()
 export class BookingService {
     public connection: string = 'http://localhost:8080/api/bookings';
-    public eventBooking: string = 'http://localhost:8080/api/eventBooking/'
-    public userBooking: string = 'http://localhost:8080/api/userBookings/'
-    public acceptBookingConnection: string = 'http://localhost:8080/api/acceptBooking'
-    public declineBookingConnection: string = 'http://localhost:8080/api/declineBooking'
+    public eventBooking: string = 'http://localhost:8080/api/eventBooking/';
+    public userBooking: string = 'http://localhost:8080/api/userBookings/';
+    public acceptBookingConnection: string = 'http://localhost:8080/api/acceptBooking';
+    public declineBookingConnection: string = 'http://localhost:8080/api/declineBooking';
     // public connection: string = 'https://localbeats.herokuapp.com/api/bookings';
 
     private headers: Headers = new Headers({ 'Content-Type': 'application/json' });
 
     constructor(private http: Http, private dialog: MatDialog) { }
 
-    public negotiate(booking: Booking, user: string): Observable<any> {
+    public negotiate(booking: Booking, initial: boolean, view: string): Observable<any> {
         let dialogRef: MatDialogRef<NegotiateDialogComponent>;
         dialogRef = this.dialog.open(NegotiateDialogComponent, {
             width: '380px',
-            disableClose: true,
-            data: {booking, user}
+            disableClose: false,
+            data: {booking, initial, view}
         });
         return dialogRef.afterClosed();
     }
@@ -71,6 +71,18 @@ export class BookingService {
                 const data = response.json();
                 const bookings = data.bookings as any[];
                 return bookings
+            })
+            .catch(this.handleError);
+    }
+
+    public updateBooking(newBooking: Booking) {
+        const current = this.connection + '/' + newBooking._id
+        return this.http.put(current, {booking: newBooking}, { headers: this.headers })
+            .toPromise()
+            .then((response: Response) => {
+                const data = response.json();
+                const booking = data.booking as Booking;
+                return booking
             })
             .catch(this.handleError);
     }
