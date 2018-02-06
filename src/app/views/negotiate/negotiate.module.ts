@@ -1,4 +1,5 @@
 import { CommonModule } from '@angular/common';
+import { CurrencyMaskModule } from "ng2-currency-mask";
 import { 
   MatDialogModule,
   MatIconModule,
@@ -17,6 +18,7 @@ import { NegotiateDialogComponent } from './negotiate-dialog/negotiate-dialog.co
 @NgModule({
   imports: [
     CommonModule,
+    CurrencyMaskModule,
     MatDialogModule,
     MatButtonModule,
     MatCardModule,

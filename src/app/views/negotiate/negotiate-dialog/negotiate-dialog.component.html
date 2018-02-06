@@ -4,7 +4,7 @@
 <br>
 <form mat-dialog-content [formGroup]="negotiationForm" (ngSubmit)="submit()">
     <mat-form-field class="full-width">
-        <input matInput [formControl]="negotiationForm.controls['price']" autofocus="true" placeholder="Price" type="text" (keyup)="onPriceChange()">
+        <input matInput currencyMask [options]="{ align: 'left' }" [formControl]="negotiationForm.controls['price']" autofocus="true" placeholder="Price" type="text" (keyup)="onPriceChange()">
     </mat-form-field>
     <small *ngIf="negotiationForm.controls['price'].hasError('required') && negotiationForm.controls['price'].touched" class="form-error-msg">A price is required </small>
     <small *ngIf="negotiationForm.controls['price'].hasError('min') && negotiationForm.controls['price'].touched" class="form-error-msg">You must input a price greater than 0</small>
