@@ -124,16 +124,33 @@ export class ProfileEventsComponent implements OnInit {
             booking.hostApproved = true;
             if(booking.artistApproved == true) {
               booking.approved = true;
-              this.bookingService.acceptBooking(booking).then(() => this.getEvents());
+              this.bookingService.acceptBooking(booking).then(() => {
+                //send notification to BOTH users that the booking is confirmed 
+                this.getEvents()
+              });
             } else {
-              this.bookingService.updateBooking(booking).then(() => this.getEvents());
+              this.bookingService.updateBooking(booking).then(() => {
+                //dont send notification. host is accepting in dialog.
+                this.getEvents()
+              });
             }
           } else if(result.accepted == 'new') {
               booking.hostApproved = true;
               booking.artistApproved = false;
-              this.bookingService.updateBooking(booking).then(() => this.getEvents());
-          } else if(result.accepted == 'cancel' || result.accepted == 'declined') {
-            this.bookingService.declineBooking(booking).then(() => this.getEvents());
+              this.bookingService.updateBooking(booking).then(() => {
+                //send notificaiton to the artist that the event host has made a new offer.
+                this.getEvents()
+              });
+          } else if(result.accepted == 'cancel') {
+            this.bookingService.declineBooking(booking).then(() => {
+              //send notification to artist that the host has cancelled an already confirmed booking.
+              this.getEvents()
+            });
+          }else if (result.accepted == 'declined'){
+            this.bookingService.declineBooking(booking).then(() => {
+              //send notification to the artist that the host has cancelled an offer
+              this.getEvents()
+            });
           }
         }
       });

@@ -127,19 +127,30 @@ export class ProfilePerformancesComponent implements OnInit {
             booking.artistApproved = true;
             if(booking.hostApproved == true) {
               booking.approved = true;
-              this.bookingService.acceptBooking(booking).then(() => this.getEvents());
+              this.bookingService.acceptBooking(booking).then(() => {
+                //send notification to both parties that the booking has been confirmed. redirect artist to their performances page.
+                //if it is the host notification then redirect to their my events page
+                this.getEvents()
+              });
             } else {
               this.bookingService.updateBooking(booking).then((tempBooking:Booking) => {
+                //dont send a notification.
                 this.getEvents()});
             }
           } else if(result.accepted == 'new') {
               booking.hostApproved = false;
               booking.artistApproved = true;
               this.bookingService.updateBooking(booking).then((tempBooking: Booking) => {
+                //send a notification to the host that an artist has applied for an event
                 this.getEvents()
               });
-          } else if(result.accepted == 'cancel' || result.accepted == 'declined') {
+          } else if(result.accepted == 'cancel') {
+            //send notification to host that the artist has cancelled an alrady confirmed booking.
             this.bookingService.declineBooking(booking).then(() => this.getEvents());
+          }else if(result.accepted == 'declined'){
+            //send notification to host that the artist has declined an offer
+            this.bookingService.declineBooking(booking).then(() => this.getEvents());
+
           }
         }
       });
