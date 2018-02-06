@@ -1,6 +1,7 @@
 'use strict';
 
 var mongoose  = require('mongoose');
+const async   = require('async');
 var User      = mongoose.model('User');
 var Message   = mongoose.model('Message');
 
@@ -19,8 +20,10 @@ exports.getAllMessages = function (req, res) {
         }
         // console.log('Messages: ', messages);
         for( let i = 0; i < messages.length; i++ ) {
-            messages[i].from.hashPassword = undefined;
-            messages[i].to.hashPassword = undefined;
+            if(messages[i] != null || messages[i] != undefined) {
+                messages[i].from.hashPassword = undefined;
+                messages[i].to.hashPassword = undefined;
+            }
         }
         return res.status(200).send({messages: messages});
     });
@@ -47,6 +50,67 @@ exports.getAllFromToMessages = function (req, res) {
     }
       return res.status(200).send({messages: messages});
   });
+};
+
+/**
+ * Retrieves all the conversation buddies of the passed from_id user. 
+ * Looks for users from_id sent messages to and got messages from. So even if 
+ * from_id did not sent someone messages but received messages from them, that 
+ * buddy will be added to the resulting users.
+ * @param {*} req - Contains from_id of the user you want the budddies of
+ * @param {*} res - returns { users: [User] }
+ */
+exports.getAllActiveConversationsFrom = function (req, res) {
+    let ids = [req.params.fromUID];
+
+    async.parallel([
+        function (callback) {
+            Message.find({}).where('from').in(ids).distinct('to', function (error, toIds) {
+                // console.log('Sent (to) IDS      : ', toIds);
+                callback(error, toIds);
+            });
+        },
+        function (callback) {
+            Message.find({}).where('to').in(ids).distinct('from', function (error, fromIds) {
+                // console.log('Received (from) IDS: ', fromIds);
+                callback(error, fromIds);
+            })
+        }
+    ], (asyncError, asyncResults) => {
+
+        if (asyncError !== null) {
+            console.log('Error getting conversation buddies: ', asyncError);
+            return res.status(400).send({
+                reason: "Unable to get conversation buddies...",
+                error: asyncError
+            });
+        }
+
+        let resultIds = [];
+        for (let id of asyncResults[0]) {
+            resultIds.push(id);
+        }
+        for (let id of asyncResults[1]) {
+            resultIds.push(id);
+        }
+        console.log('Resulting IDS: ', resultIds);
+
+        User.find({}).where('_id').in(resultIds)
+            .exec(function (err, toUsers) {
+                if (err) {
+                    console.log('Error getting user objects for TO ids: ', err);
+                    return res.status(400).send({
+                        reason: "Unable to get user objects for TO user ids",
+                        error: err
+                    });
+                }
+                // hide hashPassword
+                for (let i = 0; i < toUsers.length; i++) {
+                    toUsers[i].hashPassword = undefined;
+                }
+                return res.status(200).send({ users: toUsers });
+            });
+    });
 };
 
 exports.saveMessage = function (req, res) {
