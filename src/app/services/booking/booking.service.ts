@@ -26,7 +26,7 @@ export class BookingService {
         let dialogRef: MatDialogRef<NegotiateDialogComponent>;
         dialogRef = this.dialog.open(NegotiateDialogComponent, {
             width: '380px',
-            disableClose: true,
+            disableClose: false,
             data: {booking, initial, view}
         });
         return dialogRef.afterClosed();

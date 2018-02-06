@@ -1,7 +1,12 @@
+import { CommonModule } from '@angular/common';
 import { 
   MatDialogModule,
   MatIconModule,
-  MatButtonModule
+  MatCardModule,
+  MatInputModule,
+  MatButtonModule,
+  MatProgressBarModule,
+  MatCheckboxModule
  } from '@angular/material';
 import { NgModule } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -11,9 +16,14 @@ import { NegotiateDialogComponent } from './negotiate-dialog/negotiate-dialog.co
 
 @NgModule({
   imports: [
+    CommonModule,
     MatDialogModule,
     MatButtonModule,
+    MatCardModule,
+    MatInputModule,
     MatIconModule,
+    MatProgressBarModule,
+    MatCheckboxModule,
     FlexLayoutModule,
     FormsModule,
     ReactiveFormsModule

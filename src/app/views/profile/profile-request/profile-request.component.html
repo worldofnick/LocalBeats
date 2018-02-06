@@ -12,18 +12,16 @@
       </mat-card>
       <mat-card *ngFor="let event of this.events; let i = index" class="example-card">
         <mat-card-header>
-          <div mat-card-avatar class="example-header-image"></div>
-          <mat-card-title>{{event.eventName}}</mat-card-title>
-          <mat-card-subtitle>{{event.eventType}}</mat-card-subtitle>
-          <mat-card-subtitle>{{event.fixedPrice}}</mat-card-subtitle>
+          <img mat-card-avatar [src]="event.eventPicUrl">
+          <mat-card-title><a [routerLink]="['/events', event._id]">{{event.eventName}}</a></mat-card-title>
+          <mat-card-subtitle>{{event.eventType | capitalize}}</mat-card-subtitle>
+          <mat-card-subtitle>{{event.toDate | date:'MMM d, y, h:mm a'}}</mat-card-subtitle>
+          <mat-card-subtitle>{{event.fixedPrice | currency}}</mat-card-subtitle>
         </mat-card-header>
         <mat-card-content>
-          <p>
-            The event is on {{event.toDate}}
-          </p>
         </mat-card-content>
         <mat-card-actions>
-            <button (click)="newRequest(event)" mat-button>Request Artist for this Event</button>
+            <button (click)="newRequest(event)" mat-button color="primary">Request Artist for this Event</button>
         </mat-card-actions>
       </mat-card>
     </mat-tab>
@@ -33,18 +31,16 @@
       </mat-card>
       <mat-card *ngFor="let result of requestedBookings; let i = index" class="example-card">
         <mat-card-header>
-          <div mat-card-avatar class="example-header-image"></div>
-          <mat-card-title>{{result.eventEID.eventName }}</mat-card-title>
-          <mat-card-subtitle>{{result.eventEID.eventType}}</mat-card-subtitle>
-          <mat-card-subtitle>{{result.eventEID.fixedPrice}}</mat-card-subtitle>
+          <img mat-card-avatar [src]="result.eventEID.eventPicUrl">
+          <mat-card-title><a [routerLink]="['/events', result.eventEID._id]">{{result.eventEID.eventName }}</a></mat-card-title>
+          <mat-card-subtitle>{{result.eventEID.eventType | capitalize}}</mat-card-subtitle>
+          <mat-card-subtitle>{{result.eventEID.toDate | date:'MMM d, y, h:mm a'}}</mat-card-subtitle>
+          <mat-card-subtitle>{{result.eventEID.fixedPrice | currency}}</mat-card-subtitle>
         </mat-card-header>
         <mat-card-content>
-          <p>
-              The event is on {{result.eventEID.toDate}}
-          </p>
         </mat-card-content>
         <mat-card-actions>
-          <button (click)="viewRequest(result)" mat-button>View Request</button>
+          <button (click)="viewRequest(result)" mat-button color="primary">View Request</button>
         </mat-card-actions>
       </mat-card>
     </mat-tab>

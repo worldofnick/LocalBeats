@@ -41,12 +41,8 @@ export class ProfileEventsComponent implements OnInit {
   onDeleteEvent(event:Event, index:Number){
     this.eventService.deleteEventByEID(event).then((status:Number) => {
       this.deleteStatus = status;
-      console.log(this.deleteStatus);
       if(this.deleteStatus == 200){
-        
         var newEvents:Event[] = [];
-
-        //go thru and push all events except the deleted one to the new event.
         for(let i:number = 0; i < this.events.length; i++){
           if(i != index){
             newEvents.push(this.events[i]);
@@ -60,27 +56,6 @@ export class ProfileEventsComponent implements OnInit {
       this.getEvents();
     }
 
-  }
-
-
-  //TODO remove event from passses in params below...not used.
-    //cancel your application
-  onCancelApp(bookingToCancel:Booking){
-
-    // console.log(this.userBooking)
-    this.bookingService.declineBooking(bookingToCancel).then(() => {this.getEvents();})
-  }
-
-  onDeclineArtist(booking:Booking, index: number){
-    this.bookingService.declineBooking(this.requestedArtistBookings[index]).then(() => this.getEvents());
-  }
-
-  onAcceptArtist(booking:Booking, index: number){
-    this.bookingService.acceptBooking(this.requestedArtistBookings[index]).then(() => this.getEvents());
-  }
-
-  onCancelRequest(event:Event, index: number) {
-    this.bookingService.declineBooking(this.appliedBookings[index]).then(() => this.getEvents());
   }
 
   onViewEvent(event:Event){
@@ -143,21 +118,23 @@ export class ProfileEventsComponent implements OnInit {
   openNegotiationDialog(booking: Booking, user:string) {
     this.bookingService.negotiate(booking, false, 'host')
       .subscribe((result) => {
-        booking.currentPrice = result.price;
-        if(result.accepted == 'accepted') {
-          booking.hostApproved = true;
-          if(booking.artistApproved == true) {
-            booking.approved = true;
-            this.bookingService.acceptBooking(booking).then(() => this.getEvents());
-          } else {
-            this.bookingService.updateBooking(booking).then(() => this.getEvents());
-          }
-        } else if(result.accepted == 'new') {
+        if(result != undefined) {
+          booking.currentPrice = result.price;
+          if(result.accepted == 'accepted') {
             booking.hostApproved = true;
-            booking.artistApproved = false;
-            this.bookingService.updateBooking(booking).then(() => this.getEvents());
-        } else if(result.accepted == 'cancel' || result.accepted == 'declined') {
-          this.bookingService.declineBooking(booking).then(() => this.getEvents());
+            if(booking.artistApproved == true) {
+              booking.approved = true;
+              this.bookingService.acceptBooking(booking).then(() => this.getEvents());
+            } else {
+              this.bookingService.updateBooking(booking).then(() => this.getEvents());
+            }
+          } else if(result.accepted == 'new') {
+              booking.hostApproved = true;
+              booking.artistApproved = false;
+              this.bookingService.updateBooking(booking).then(() => this.getEvents());
+          } else if(result.accepted == 'cancel' || result.accepted == 'declined') {
+            this.bookingService.declineBooking(booking).then(() => this.getEvents());
+          }
         }
       });
   }
