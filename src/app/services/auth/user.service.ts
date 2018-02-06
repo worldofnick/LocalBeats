@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Http, Headers, RequestOptions, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import { User } from 'app/models/user';
+import { Notification } from 'app/models/notification'
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { SocketService } from '../../services/chats/socket.service';
 import { Message } from '../../services/chats/model/message';
@@ -101,7 +102,6 @@ export class UserService {
             .catch(this.handleError);
     }
 
-
     /**
      * 
      * @param user 
@@ -170,6 +170,112 @@ export class UserService {
     public isAuthenticated() {
         return this.accessToken != null;
     }
+
+
+
+
+
+    /***********************
+     * 
+     * 
+     * N O T I F I C A T I O N S
+     * 
+     * 
+     *************************/
+
+
+    public getNotificationsCountForUser(ID: any): Promise<Number>{
+        let userConnection: string = 'http://localhost:8080/api/notification';
+        // app.route('/api/notification/:uid')
+        const current = userConnection + '/' + ID;
+        // const current = userConnection + '/5a7113ac9d89a873c89fe5ff';
+        //console.log("getting: ");
+        //console.log(current);
+        return this.http.get(current)
+            .toPromise()
+            .then((response: Response) => {
+                const data = response.json();
+                console.log(data)
+                // this.accessToken = data.token;
+                // console.log(this.accessToken)
+                let temp = data.notifications as Notification[];
+                if(temp == null){
+                    return 0;
+                }
+
+                this._socketService.socket.emit('tellTopBar', temp.length)
+                // this._socketService.send(Action.REQUEST_NOTIFICATION_COUNT, {
+                //     from: 'tellTopBar',
+                //     action: Action.SMN_LOGGED_OUT
+                // });
+
+                return temp.length;
+            })
+            .catch(this.handleError);
+    }
+
+
+    public getNotificationsForUser(ID: any): Promise<Notification[]>{
+        let userConnection: string = 'http://localhost:8080/api/notification';
+        const current = userConnection + '/' + ID;
+        // const current = userConnection + '/5a7113ac9d89a873c89fe5ff';
+
+        //console.log("getting: ");
+        //console.log(current);
+        return this.http.get(current)
+            .toPromise()
+            .then((response: Response) => {
+                const data = response.json();
+                // this.accessToken = data.token;
+                // console.log(this.accessToken)
+                //inserting test notifications until i can actually send them.
+                let temp = data.notifications as Notification[];
+                console.log(data);
+                let t:Notification[] = [];
+ 
+                if(temp == null){
+                    // this.io.emit('tellNotificationPanel', t)
+                    return t;
+                }
+
+                this._socketService.socket.emit('tellNotificationPanel', temp)
+                // this._socketService.socket.emit('tellTopBar', temp.length)
+
+                return temp;
+            })
+            .catch(this.handleError);
+    }
+
+
+
+    // public sendNotificationToUser(notification: Notification): Promise<any> {
+
+
+    //     this.getUserByID(notification.receiverID).then((receiver:User) =>{
+
+    //     //update the receiving user object w/ an additional notification in the list.
+    //     let userConnection: string = 'http://localhost:8080/api/users';
+    //     const current = userConnection + '/' + receiver._id;        
+    //     // receiver.notifications.push(notification);
+
+    //     console.log("sending:");
+    //     console.log(JSON.stringify(receiver));
+
+    //     return this.http.put(current, { user: JSON.stringify(receiver) }, { headers: this.headers })
+    //         .toPromise()
+    //         .then((response: Response) => {
+    //             const data = response.json();
+    //             console.log("received");
+    //             this.user = data.user as User;
+    //             console.log(this.user)
+    //             return this.user;
+    //         })
+    //         .catch(this.handleError); 
+    //     })
+
+    //     return;
+
+    // }
 
     private handleError(error: any): Promise<any> {
         let errMsg = (error.message) ? error.message :

@@ -2,9 +2,9 @@ import { User } from 'app/models/user';
 import { Event } from 'app/models/event';
 
 export class Notification {
-    sender: User
-    receiver:User
-    event:Event
+    senderID: User
+    receiverID: User
+    eventID:string
     message: string
     icon: string
     sentTime: Date;

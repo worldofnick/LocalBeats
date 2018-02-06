@@ -1,4 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { UserService } from '../../services/auth/user.service';
+import { NotificationService } from '../../services/notification/notification.service';
+import * as socketIO from 'socket.io-client';
+
 
 @Component({
   selector: 'app-home',
@@ -30,6 +34,9 @@ export class HomeComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
+      //connect and listen w/ socket
+      // this.notificationService.getNotificationsCountForUser(555);
+      
   }
 
 }

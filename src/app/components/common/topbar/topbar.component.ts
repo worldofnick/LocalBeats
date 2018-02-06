@@ -10,11 +10,15 @@ import * as domHelper from '../../../helpers/dom.helper';
 import { ThemeService } from '../../../services/theme/theme.service';
 import { UserService } from '../../../services/auth/user.service';
 import { SearchService } from '../../../services/search/search.service';
-// import { Socket } from 'socket.io'
+import * as socketIO from 'socket.io-client';
 import { NotificationService } from '../../../services/notification/notification.service';
 import { SearchTerms, Location } from '../../../models/search';
 import { User } from '../../../models/user';
 import { Event } from '../../../models/event';
+import { SocketService } from '../../../services/chats/socket.service';
+import { SocketEvent } from         '../../../services/chats/model/event';
+
+
 
 @Component({
   selector: 'topbar',
@@ -33,8 +37,8 @@ export class TopbarComponent implements OnInit {
   @Input() notificPanel;
   @Output() onSearchTypeChange = new EventEmitter<any>();
   selectedValues: string[];
-  musicGenres: any = [{genre:'Rock', checked:false}, {genre:'Country', checked:false}, {genre:'Jazz', checked:false}, {genre:'Blues', checked:false}, {genre:'Rap', checked:false}];
-  eventTypes: any = [{genre:'Wedding', checked:false}, {genre:'Birthday', checked:false}, {genre:'Business', checked:false}];
+  musicGenres: any = [{ genre: 'Rock', checked: false }, { genre: 'Country', checked: false }, { genre: 'Jazz', checked: false }, { genre: 'Blues', checked: false }, { genre: 'Rap', checked: false }];
+  eventTypes: any = [{ genre: 'Wedding', checked: false }, { genre: 'Birthday', checked: false }, { genre: 'Business', checked: false }];
   searchTypes: string[] = ['Musician', 'Event'];
   genres: any = this.musicGenres;
   currentSearch: SearchTerms = new SearchTerms(this.searchTypes[0], '', null, this.musicGenres[0]);
@@ -47,28 +51,43 @@ export class TopbarComponent implements OnInit {
   longitude: number;
   //searchControl: FormControl;
   zoom: number;
+  io:any;
 
-  constructor(private formBuilder: FormBuilder, 
-    private userService: UserService, 
-    private searchService: SearchService, 
+  constructor(private formBuilder: FormBuilder,
+    private userService: UserService,
+    private searchService: SearchService,
     private notificationService: NotificationService,
-    private router: Router, 
-    private mapsAPILoader: MapsAPILoader, 
-    private ngZone: NgZone, 
-    private changeDetector: ChangeDetectorRef) {
-         }
+    private router: Router,
+    private mapsAPILoader: MapsAPILoader,
+    private ngZone: NgZone,
+    private changeDetector: ChangeDetectorRef,
+    private _socketService: SocketService
+    ) {
+  }
 
   ngOnInit() {
     domHelper.toggleClass(document.body, 'collapsed-menu');
 
+
+    this._socketService.onEvent(SocketEvent.REQUEST_NOTIFICATION_COUNT).subscribe((count: number)=>{
+      // console.log(count)
+      this.numNotifications = count;
+    });
+
+    this._socketService.onEvent(SocketEvent.SEND_NOTIFICATION)
+    .subscribe((notification: Notification) => {
+      console.log("incrementing topbar count")
+      this.numNotifications++;
+  });
+    
     //set google maps defaults
     this.zoom = 4;
     this.latitude = 39.8282;
     this.longitude = -98.5795;
-    
+
     //create search FormControl
     //this.searchControl = new FormControl();
-    
+
     //set current position
     this.setCurrentPosition();
 
@@ -79,8 +98,9 @@ export class TopbarComponent implements OnInit {
       location: new FormControl()
     });
 
-    this.notificationService.connect();
+
   }
+
 
   private setCurrentPosition() {
     if ("geolocation" in navigator) {
@@ -92,8 +112,11 @@ export class TopbarComponent implements OnInit {
     }
   }
 
+
+
   logout() {
     this.userService.logout();
+    this.numNotifications = 0;
     this.router.navigate(['/']);
   }
 
@@ -134,12 +157,13 @@ export class TopbarComponent implements OnInit {
   }
 
   clickedOutsideSearch() {
-    if(this.isSearchOpen && !this.clickedSearch) {
+    if (this.isSearchOpen && !this.clickedSearch) {
       this.isSearchOpen = false;
     } else {
       this.clickedSearch = false;
     }
   }
+
 
   submit() {
     // Set location for submission
@@ -153,10 +177,10 @@ export class TopbarComponent implements OnInit {
     this.currentSearch.searchType = this.searchForm.get('type').value;
     // Set text
     this.currentSearch.text = this.searchForm.get('text').value;
-    console.log(typeof(this.currentSearch.text))
+    console.log(typeof (this.currentSearch.text))
     // Set genre
     const genres = <FormArray>this.searchForm.get('genres') as FormArray;
-    if(genres.length == 0 && this.currentSearch.searchType == 'Musician') {
+    if (genres.length == 0 && this.currentSearch.searchType == 'Musician') {
       this.currentSearch.genre = 'All Genres';
     } else {
       this.currentSearch.genre = 'All Events'
@@ -183,7 +207,7 @@ export class TopbarComponent implements OnInit {
   onPickingGenre(event) {
     const genres = <FormArray>this.searchForm.get('genres') as FormArray;
 
-    if(event.checked) {
+    if (event.checked) {
       event.source.value.checked = true;
       genres.push(new FormControl(event.source.value))
     } else {
@@ -198,7 +222,7 @@ export class TopbarComponent implements OnInit {
     while (genres.length !== 0) {
       genres.removeAt(0)
     }
-    for(let i = 0; i < this.genres.length; i++) {
+    for (let i = 0; i < this.genres.length; i++) {
       this.genres[i].checked = false;
     }
     this.results = null;
@@ -210,6 +234,7 @@ export class TopbarComponent implements OnInit {
   }
 
   toggleNotific() {
+    // this.notificationService.
     this.notificPanel.toggle();
   }
   toggleSidenav() {
@@ -220,7 +245,7 @@ export class TopbarComponent implements OnInit {
     domHelper.toggleClass(appBody, 'collapsed-menu');
     domHelper.removeClass(document.getElementsByClassName('has-submenu'), 'open');
     // Fix for sidebar
-    if(!domHelper.hasClass(appBody, 'collapsed-menu')) {
+    if (!domHelper.hasClass(appBody, 'collapsed-menu')) {
       (<HTMLElement>document.querySelector('mat-sidenav-content')).style.marginLeft = '240px'
     }
   }

@@ -50,7 +50,7 @@ export class ProfileComponent implements OnInit {
     }
     this.bookingService.getUserBookings(this.userService.user, 'host').then((bookings: any[]) => {
       for (let result of bookings) {
-        if (result.booking.performerUser._id == this.user._id && !this.onOwnProfile) {
+        if (result.booking && result.booking.performerUser._id == this.user._id && !this.onOwnProfile) {
           this.requested = true;
         } else {
           this.requested = false;
@@ -59,14 +59,15 @@ export class ProfileComponent implements OnInit {
     });
   }
 
-  sendNotificationToUser(){
+    //not implemented
+  sendNotification(){
     // this.socket.emit('create notification','Notification Test');
-    let notif:Notification = new Notification;
-    notif.sender = this.userService.user;
-    notif.receiver = this.userService.user;
-    notif.message = "test message" ;
-    // this.notificationService.sendNotificationToUser(notif)
-    // this.notificationService.conn
+    // let notif:Notification = new Notification;
+    // notif.sender = this.userService.user;
+    // notif.receiverID = this.userService.user._id;
+    // notif.message = "test message" ;
+    // console.log(this.userService.user);
+    // this.userService.sendNotificationToUser(notif);
  }
 
   ngOnInit() {

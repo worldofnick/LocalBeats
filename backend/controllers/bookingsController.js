@@ -5,6 +5,7 @@ var jwt         = require('jsonwebtoken');
 var bcrypt      = require('bcrypt');
 var Bookings      = mongoose.model('Bookings');
 var Events      = mongoose.model('Events');
+var Notifications  = mongoose.model('Notification');
 var config    = require('../../config.js');
 
 // ====== Bookings ROUTES ======
@@ -40,6 +41,7 @@ exports.getBookingByID = function (req, res) {
 
 exports.createBooking = function (req, res) {
     var newBooking = new Bookings(req.body.booking);
+    // var notification = new Notifications(req.body.notification);
     newBooking.save(function (err, booking) {
         if (err) {
             return res.status(400).send({
@@ -53,9 +55,25 @@ exports.createBooking = function (req, res) {
                 } else {
 
                     // Send notification for booking request
-                    var io = req.app.get('io');
-                    var notification = {}; // build notification "someone has requested you to play blah"
-                    io.emit("notification", { notification: notification });
+                    // var io = req.app.get('socketio');
+
+
+                    // var notification = new Notifications(); // build notification "someone has requested you to play blah"
+                    // notification.receiverID = newBooking.performerUser;
+                    // notification.senderID = newBooking.hostUser;
+                    // notification.message = notification.senderID['firstName'] + " has requested you for an event";
+
+                    // notification.icon = 'queue_music';
+                    // notification.eventID = newBooking._id;
+                    // // add timestamp to notification.sentTime of type date.
+                    // console.log("printing notification");
+                    // console.log(notification);
+                    // notification.save(function (err, notification) {
+                    //   if (err) {
+                    //     return res.status(500).send("Failed to create booking notification");
+                    //   }
+                    // //   io.emit("notification", { notification: notification });
+                    // });
 
                     return res.status(200).send({ "booking": booking });
                 }
@@ -75,9 +93,15 @@ exports.updateBookingByID = function (req, res) {
             } else {
 
                 // Send notification for booking request
-                var io = req.app.get('io');
-                var notification = {}; // build notification "someone has updated a request involving you"
-                io.emit("notification", { notification: notification });
+                // var io = req.app.get('socketio');
+                // var notification = new Notifications(); // build notification "someone has requested you to play blah"
+                // notification.message = "updated booking"
+                // notification.save(function (err, notification) {
+                //   if (err) {
+                //     return res.status(500).send("Failed to create booking notification");
+                //   }
+                // //   io.emit("notification", { notification: notification });
+                // });
                 return res.status(200).send({ "booking": booking });
             }
         });
@@ -184,6 +208,17 @@ exports.deleteUserBookingsByUID = function (req, res) {
   });
 };
 
+// Deletes all a users notificatoins
+exports.deleteUsersNotification = function (req, res) {
+    Notifications.remove({hostUser: req.query.hostUID}).exec(function (err, doc) {
+        if (err) {
+            return res.status(500).send("Failed to delete user notifications");
+        } else {
+            return res.status(200).send(doc);
+        }
+    });
+  };
+
 // Take a bid
 exports.acceptBooking = function(req, res) {
     // Notify both parties
@@ -202,9 +237,15 @@ exports.acceptBooking = function(req, res) {
                     return res.status(500).send("Failed to accept booking.");
                 }
                 // Send notification for booking request
-                var io = req.app.get('io');
-                var notification = {}; // build notification "booking accepted!"
-                io.emit("notification", { notification: notification });
+                // var io = req.app.get('socketio');
+                var notification = new Notifications(); // build notification "someone has requested you to play blah"
+                notification.message = 'Booking has been accepted'
+                notification.save(function (err, notification) {
+                  if (err) {
+                    return res.status(500).send("Failed to create booking notification");
+                  }
+                //   io.emit("notification", { notification: notification });
+                });
 
                 return res.status(200).send({"message": "Accepted booking."});
             })
@@ -225,9 +266,14 @@ exports.declineBooking = function(req, res) {
           } else {
 
             // Send notification for booking request
-            var io = req.app.get('io');
-            var notification = {}; // build notification "booking decline"
-            io.emit("notification", { notification: notification });
+            // var io = req.app.get('socketio');
+            var notification = new Notifications(); // build notification "someone has requested you to play blah"
+            notification.save(function (err, notification) {
+              if (err) {
+                return res.status(500).send("Failed to create booking notification");
+              }
+            //   io.emit("notification", { notification: notification });
+            });
 
             return res.status(200).send("Booking declined");
           }
