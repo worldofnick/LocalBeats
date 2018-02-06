@@ -31,11 +31,11 @@ export class NegotiateDialogComponent implements OnInit {
     // Check if the booking has been approved and if it's negotiable
     if(this.negotiable && !this.data.booking.approved) {
       this.negotiationForm = this.formBuilder.group({
-        price: new FormControl({value: this.initialPrice, disabled: false}, Validators.required)
+        price: new FormControl({value: this.initialPrice, disabled: false}, [Validators.required, Validators.min(0), Validators.pattern("^[0-9]+(\.[0-9][0-9])?$")])
       });
     } else {
       this.negotiationForm = this.formBuilder.group({
-        price: new FormControl({value: this.initialPrice, disabled: true}, Validators.required)
+        price: new FormControl({value: this.initialPrice, disabled: true}, [Validators.required])
       });
     }
     // Check whether it's an initial booking application or request

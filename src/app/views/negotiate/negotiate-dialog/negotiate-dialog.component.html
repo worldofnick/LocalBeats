@@ -7,6 +7,8 @@
         <input matInput [formControl]="negotiationForm.controls['price']" autofocus="true" placeholder="Price" type="text" (keyup)="onPriceChange()">
     </mat-form-field>
     <small *ngIf="negotiationForm.controls['price'].hasError('required') && negotiationForm.controls['price'].touched" class="form-error-msg">A price is required </small>
+    <small *ngIf="negotiationForm.controls['price'].hasError('min') && negotiationForm.controls['price'].touched" class="form-error-msg">You must input a price greater than 0</small>
+    <small *ngIf="negotiationForm.controls['price'].hasError('pattern') && negotiationForm.controls['price'].touched" class="form-error-msg">You must input a valid price of the form X or X.XX</small>
 </form>
 <div mat-dialog-actions>
 <button 
