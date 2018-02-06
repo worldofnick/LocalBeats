@@ -1,21 +1,25 @@
 
-    <h1 matDialogTitle>{{title}}</h1>
-    <div mat-dialog-content>{{subtext}}</div>
-    <form mat-dialog-content [formGroup]="negotiationForm" (ngSubmit)="submit()">
-        <mat-icon role="img">attach_money</mat-icon>
-        <input [formControl]="negotiationForm.controls['price']" autofocus="true" placeholder="Price" type="text" (keyup)="onPriceChange()">
-    </form>
-    <div mat-dialog-actions>
-    <button 
-    type="button" 
-    mat-raised-button
-    color="primary" 
-    (click)="accept()">{{acceptButtonText}}</button>
-    &nbsp;
-    <span fxFlex></span>
-    <button 
-    type="button"
-    color="accent"
-    mat-raised-button 
-    (click)="decline()">{{declineButtonText}}</button>
-    </div>`
+<h1 matDialogTitle>{{title}}</h1>
+<div mat-dialog-content>{{subtext}}</div>
+<br>
+<form mat-dialog-content [formGroup]="negotiationForm" (ngSubmit)="submit()">
+    <mat-form-field class="full-width">
+        <input matInput [formControl]="negotiationForm.controls['price']" autofocus="true" placeholder="Price" type="text" (keyup)="onPriceChange()">
+    </mat-form-field>
+    <small *ngIf="negotiationForm.controls['price'].hasError('required') && negotiationForm.controls['price'].touched" class="form-error-msg">A price is required </small>
+</form>
+<div mat-dialog-actions>
+<button 
+type="button" 
+mat-raised-button
+color="primary" 
+[disabled]="negotiationForm.invalid"
+(click)="accept()">{{acceptButtonText}}</button>
+&nbsp;
+<span fxFlex></span>
+<button 
+type="button"
+color="accent"
+mat-raised-button 
+(click)="decline()">{{declineButtonText}}</button>
+</div>`

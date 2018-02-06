@@ -1,7 +1,6 @@
-.example-header-image {
-    background-image: url('https://material.angular.io/assets/img/examples/shiba1.jpg');
-    background-size: cover;
-  }
+a:hover {
+  color: #247ba0;
+}
 
 mat-card-avatar img {
   object-fit: cover; /*this makes de image in src fit to the size of specified below*/

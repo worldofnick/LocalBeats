@@ -17,11 +17,10 @@
               <mat-card-subtitle>{{event.event.fixedPrice | currency}}</mat-card-subtitle>
             </mat-card-header>
             <mat-card-content>
-              <p>{{event.event.description}}</p>
             </mat-card-content>
             <mat-card-actions>
-              <button *ngIf="event.event.hostUser._id == this.user._id" (click)="onEditEvent(event.event, i)" mat-button>Edit</button>
-              <button *ngIf="event.event.hostUser._id == this.user._id" (click)="onDeleteEvent(event.event, i)" mat-button>Delete</button>
+              <button *ngIf="event.event.hostUser._id == this.user._id" (click)="onEditEvent(event.event, i)" mat-button color="primary">Edit</button>
+              <button *ngIf="event.event.hostUser._id == this.user._id" (click)="onDeleteEvent(event.event, i)" mat-button color="primary">Delete</button>
             </mat-card-actions>
           </mat-card>
         </mat-tab>
@@ -55,7 +54,7 @@
             <mat-card-content>
             </mat-card-content>
             <mat-card-actions>
-              <button (click)="openNegotiationDialog(booking, 'host')" mat-button>Cancel Booking</button>
+              <button (click)="openNegotiationDialog(booking, 'host')" mat-button color="primary">Cancel Booking</button>
             </mat-card-actions>
           </mat-card>
         </mat-tab>
