@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, ViewChild, AfterContentInit, ContentChild, 
-        AfterViewInit, ViewChildren, AfterViewChecked, ElementRef } from '@angular/core';
+        AfterViewInit, ViewChildren, AfterViewChecked, ElementRef, ChangeDetectorRef } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { Subscription } from "rxjs/Subscription";
 import { MediaChange, ObservableMedia } from "@angular/flex-layout";
@@ -46,7 +46,7 @@ import { MessageTypes } from '../../services/chats/model/messageTypes';
     ])
   ]
 })
-export class AppChatsComponent implements OnInit, AfterViewChecked, AfterViewChecked {
+export class AppChatsComponent implements OnInit, AfterViewChecked, AfterViewInit {
 
   @ViewChildren('messageInputBox') vc;
   @ViewChild('scrollMe') private myScrollContainer: ElementRef;
@@ -102,7 +102,7 @@ export class AppChatsComponent implements OnInit, AfterViewChecked, AfterViewChe
   // Init Methods
   // ==============================================
 
-  constructor(private media: ObservableMedia, public _snackBar: MatSnackBar,
+  constructor(private media: ObservableMedia, public _snackBar: MatSnackBar, private cdr: ChangeDetectorRef,
     private _socketService: SocketService, private _chatsService: ChatsService) {
     // this.initSelfUser();
     this.loggedInUser = this._chatsService.getCurrentLoggedInUser();
@@ -128,8 +128,9 @@ export class AppChatsComponent implements OnInit, AfterViewChecked, AfterViewChe
     console.log('On open, connectd users: ', this.connectedUsers);
   }
 
-  ngAfterViewInit() {            
+  ngAfterViewInit() {
     this.vc.first.nativeElement.focus();
+    this.cdr.detectChanges();
   }
 
   ngAfterViewChecked() {
@@ -396,6 +397,8 @@ export class AppChatsComponent implements OnInit, AfterViewChecked, AfterViewChe
         err => console.error('Error fetching PMs between 2 users: ', err),
         () => console.log('Done fetching PMs from the server DB')
       );
+      this.vc.first.nativeElement.focus();
+      this.cdr.detectChanges();
     }
 
 
