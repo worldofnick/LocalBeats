@@ -4,6 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import { Observer } from 'rxjs/Observer';
 // import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { User } from '../../models/user';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Message } from './model/message';
 import { SocketEvent } from './model/event';
 import { Action } from './model/action';
@@ -16,12 +17,16 @@ import * as io from 'socket.io-client';
 // };
 
 const SERVER_URL = 'http://localhost:8080'; //TODO: or env.url + port (heroku)
+const httpOptions = {
+  headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+};
+
 
 @Injectable()
 export class SocketService {
 
   public socket;
-  constructor() { }
+  constructor( private http: HttpClient) { }
 
   // ==============================================
   // SHARED HELPER METHODS
@@ -36,10 +41,19 @@ export class SocketService {
     this.socket.emit(eventName, message);
   }
 
-  public sendNotification(eventName: SocketEvent, notificationPayload: SocketNotification): void {
+  public sendNotification(eventName: SocketEvent, notificationPayload: SocketNotification):void {
+    //save notification to db.
+    let body = JSON.stringify(notificationPayload);
     console.log("emitting a send notification event for :")
     console.log(notificationPayload);
+    console.log(SERVER_URL)
+    this.http.post(SERVER_URL + '/api/notification/', body, httpOptions);
+    
     this.socket.emit(eventName, notificationPayload);
+
+
+
+
   }
 
 

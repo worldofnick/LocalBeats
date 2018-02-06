@@ -4,6 +4,7 @@
 let socketsHash = new Array();
 var mongoose  = require('mongoose');
 var User      = mongoose.model('User');
+var Notifications  = mongoose.model('Notification');
 var Message   = mongoose.model('Message');
 let notificationController = require('../controllers/notificationController.js');
 
@@ -134,6 +135,21 @@ module.exports = function (io) {
             // Send the message to all the recipients (currently also the sender)
             let recipient = socketsHash[payload.receiverID._id];
             console.log('> Sending notification to', recipient);
+
+
+            // save notification to db
+                let notification = new Notifications(); // build notification "someone has requested you to play blah"
+                notification.senderID = payload.senderID;
+                notification.message = payload.message;
+                notification.icon = payload.icon;
+                notification.receiverID = payload.receiverID;
+                notification.save(function (err, notification) {
+                  if (err) {
+                    return res.status(500).send("Failed to create booking notification");
+                  }
+                //   io.emit("notification", { notification: notification });
+                });
+
             io.to(recipient).emit('sendNotification', payload);
           });
     });

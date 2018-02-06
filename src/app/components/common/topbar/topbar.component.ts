@@ -29,7 +29,7 @@ export class TopbarComponent implements OnInit {
   searchForm: FormGroup;
   values = '';
   
-  numNotifications = 0;
+  numNotifications: Number = 0;
   isSearchOpen: boolean = false;
   clickedSearch: boolean = false;
 

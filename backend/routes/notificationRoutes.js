@@ -8,5 +8,4 @@ module.exports = function(app) {
 
 	app.route('/api/notification/:uid')
 		.get(notificationHandlers.getNotificationsForUser)
-		// .put(notificationHandlers.sendNotificationToUser)
 };

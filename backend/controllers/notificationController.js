@@ -53,6 +53,22 @@ exports.getNotificationsForUser = function (req, res) {
     });
 };
 
+exports.saveNotification = function (req, res) {
+    console.log('SAVAING MESSAGE');
+
+    let newNotification = new Notification();
+    newNotification = req.body;
+
+    console.log("save this notification");
+    console.log(newNotification);
+    notification.save(function (err, newNotification) {
+      if (err) {
+        return res.status(500).send("Failed to create booking notification");
+      }
+    //   io.emit("notification", { notification: notification });
+    });
+};
+
 // app.get("/api/events/:eid",
 exports.getNotificationsCount = function (req, res) {
     // Notifications.findById(req.params.eid).populate('hostUser').populate('performerUser').exec(function (err, event) {
