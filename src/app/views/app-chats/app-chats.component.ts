@@ -211,10 +211,14 @@ export class AppChatsComponent implements OnInit, AfterViewChecked, AfterViewIni
       let newUser = this.recipientStringAny as User;
 
       // Check if the new user is already in the list. If so, switch to that user. Else add it
-      if (this.connectedUsers.includes(newUser)) {
+      let indexInConnectedUsers = this.isUserObjInConnectedUsers(newUser);
+      if ( indexInConnectedUsers > 0 ) {
+        this.newConversationClicked = false;
         this.connectedUsers.shift();  // Remove blank user from the side bar list
-        console.log('User already exists in conversation. Switching to that user at index', this.connectedUsers.indexOf(newUser));
-        this.activeChatUser = this.connectedUsers[this.connectedUsers.indexOf(newUser)];
+        indexInConnectedUsers = this.isUserObjInConnectedUsers(newUser);  // get the index again
+        console.log('User already exists in conversation. Switching to that user at index', indexInConnectedUsers);
+        this.activeChatUser = this.connectedUsers[indexInConnectedUsers];
+        this.changeActiveUser(this.connectedUsers[indexInConnectedUsers]);
       } else {
         this.connectedUsers.shift();  // Remove blank user from the side bar list
         this.connectedUsers.unshift(newUser);
@@ -228,11 +232,22 @@ export class AppChatsComponent implements OnInit, AfterViewChecked, AfterViewIni
       this.recipientChips = [];
       this.recipientStringAny = '';
 
-      if (this.connectedUsers.includes(newUser)) {
-        this.changeActiveUser(this.activeChatUser);
-      }
+      // if (this.connectedUsers.includes(newUser)) {
+      //   this.changeActiveUser(this.activeChatUser);
+      // }
     }
 
+  }
+
+  isUserObjInConnectedUsers(newUser: User): number {
+
+    for (let i = 0; i < this.connectedUsers.length; i++) {
+      let chatBuddy: User = this.connectedUsers[i];
+        if (chatBuddy._id === newUser._id) {
+          return i;
+        }
+      }
+      return -1;
   }
 
   remove(fruit: any): void {
