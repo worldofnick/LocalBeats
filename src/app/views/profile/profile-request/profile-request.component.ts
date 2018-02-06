@@ -15,8 +15,8 @@ export class ProfileRequestComponent implements OnInit {
 
   @Input() user: User;
   @Input() artist: User;
-  events:any[];
-  requestedEvents:any[] = [];
+  events:any[] = [];
+  requestedBookings:any[] = [];
   deleteStatus:Number;
   artistID:any;
 
@@ -70,20 +70,33 @@ export class ProfileRequestComponent implements OnInit {
         }
       }
       this.events = tempEvents;
-      this.requestedEvents = tempRequestedEvents
+      this.requestedBookings = bookings;
+      console.log(this.requestedBookings);
     }));
   }
 
-  openNegotiationDialog(event: Event) {
+  newRequest(event: Event) {
+    console.log('new booking');
     let booking = new Booking(undefined, 'host-request', event.hostUser, this.artist, event, false, false, false, true, event.fixedPrice);
-    this.bookingService.negotiate(booking, 'host').subscribe((result) => {
+    this.bookingService.negotiate(booking, true, 'host').subscribe((result) => {
       if(result.accepted == 'accepted' || result.accepted == 'new') {
-        console.log('here')
-        console.log(result);
         booking = new Booking(undefined, 'host-request', event.hostUser, this.artist, event, false, false, false, true, result.price);
         this.bookingService.createBooking(booking).then((booking: Booking) => this.getAvailableEvents());
       } else {
         this.onCancelRequest(event);
+      }
+    });
+  }
+
+  viewRequest(booking: Booking) {
+    console.log('updating booking');
+    this.bookingService.negotiate(booking, false, 'host').subscribe((result) => {
+      if(result.accepted == 'accepted' || result.accepted == 'new') {
+        booking.currentPrice = result.price;
+        booking.hostApproved = true;
+        this.bookingService.updateBooking(booking).then((booking: Booking) => this.getAvailableEvents());
+      } else {
+        this.bookingService.declineBooking(booking).then((booking: Booking) => this.getAvailableEvents());
       }
     });
   }

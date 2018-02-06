@@ -115,9 +115,9 @@ export class EventSingletonComponent implements OnInit {
     });
   }
 
-  openNegotiationDialog(type:string) {
-    let booking = new Booking(undefined, 'artist-apply', this.model.hostUser, this.userService.user, this.model, false, false, false, false, this.model.fixedPrice);
-    this.bookingService.negotiate(booking, 'artist')
+  openNegotiationDialog() {
+    let booking = new Booking(undefined, 'artist-apply', this.model.hostUser, this.userService.user, this.model, false, false, true, false, this.model.fixedPrice);
+    this.bookingService.negotiate(booking, true, 'artist')
       .subscribe((result) => {
         if(result.accepted == 'accepted' || result.accepted == 'new') {
           booking = new Booking(undefined, 'artist-apply', this.model.hostUser, this.userService.user, this.model, false, false, true, false, result.price);
@@ -137,6 +137,30 @@ export class EventSingletonComponent implements OnInit {
           }
         }
 
+      });
+  }
+
+  viewApplication() {
+    this.bookingService.negotiate(this.userBooking, false, 'artist')
+      .subscribe((result) => {
+        if(result.accepted == 'accepted' || result.accepted == 'new') {
+          this.userBooking.currentPrice = result.price;
+          this.userBooking.artistApproved = true;
+          this.bookingService.updateBooking(this.userBooking).then((booking: Booking) => {
+            this.hasApplied = true;
+            this.userBooking = booking;
+            this.buttonText = "View Application";
+          });
+        } else {
+          if(this.model.negotiable) {
+            this.buttonText = "Bid";
+          } else {
+            this.buttonText = "Apply";
+          }
+          if(this.userBooking != null) {
+            this.onCancelApp();
+          }
+        }
       });
   }
 

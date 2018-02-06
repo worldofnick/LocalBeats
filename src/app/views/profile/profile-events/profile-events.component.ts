@@ -141,32 +141,21 @@ export class ProfileEventsComponent implements OnInit {
   }
 
   openNegotiationDialog(booking: Booking, user:string) {
-    this.bookingService.negotiate(booking, user)
+    this.bookingService.negotiate(booking, false, 'host')
       .subscribe((result) => {
+        booking.currentPrice = result.price;
         if(result.accepted == 'accepted') {
-          if(user == 'host') {
-            booking.hostApproved = true;
-            if(booking.artistApproved == true) {
-              booking.approved = true;
-              this.bookingService.acceptBooking(booking).then(() => this.getEvents());
-            }
+          booking.hostApproved = true;
+          if(booking.artistApproved == true) {
+            booking.approved = true;
+            this.bookingService.acceptBooking(booking).then(() => this.getEvents());
           } else {
-            booking.artistApproved = true;
-            if(booking.hostApproved == true) {
-              booking.approved = true;
-              this.bookingService.acceptBooking(booking).then(() => this.getEvents());
-            }
+            this.bookingService.updateBooking(booking).then(() => this.getEvents());
           }
         } else if(result.accepted == 'new') {
-          if(user == 'host'){
             booking.hostApproved = true;
             booking.artistApproved = false;
-            this.bookingService.acceptBooking(booking).then(() => this.getEvents());
-          } else {
-            booking.hostApproved = false;
-            booking.artistApproved = true;
-            this.bookingService.acceptBooking(booking).then(() => this.getEvents());
-          }
+            this.bookingService.updateBooking(booking).then(() => this.getEvents());
         } else if(result.accepted == 'cancel' || result.accepted == 'declined') {
           this.bookingService.declineBooking(booking).then(() => this.getEvents());
         }

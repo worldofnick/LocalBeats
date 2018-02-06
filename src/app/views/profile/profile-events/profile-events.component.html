@@ -1,64 +1,64 @@
 <mat-card class="p-0">
-  <mat-tab-group>
-
-    <!-- my events -->
-    <mat-tab label="My Hosted Events">
-      <mat-card *ngFor="let event of this.events; let i = index" class="example-card">
-          <mat-card class="p-0">
-              <mat-tab-group>
+  <mat-card-title class="mat-bg-primary m-0">
+      <div class="card-title-text">
+        <span>My Hosted Events</span>
+      </div>
+  </mat-card-title>
+  <div *ngFor="let event of this.events; let i = index" class="example-card">
+    <mat-card class="p-0">
+      <mat-tab-group>
         <mat-tab label="Event Details">
-          <mat-card>
-        <mat-card-header>
-          <div mat-card-avatar class="example-header-image"></div>
-
-          <mat-card-title>Event name: {{ event.event.eventName }}</mat-card-title>
-          <mat-card-subtitle>Event type: {{event.event.eventType}}</mat-card-subtitle>
-          <mat-card-subtitle>Event price: {{event.event.fixedPrice}}</mat-card-subtitle>
-
-        </mat-card-header>
-        <!-- <img mat-card-image src="https://material.angular.io/assets/img/examples/shiba2.jpg" width="50px" heaight="50px"alt="Photo of a Shiba Inu"> -->
-        <mat-card-content>
-          <p>
-            The event is on {{event.event.toDate}}
-          </p>
-        </mat-card-content>
-        <mat-card-actions>
-          <button *ngIf="event.event.hostUser._id == this.user._id" (click)="onEditEvent(event.event, i)" mat-button>Edit</button>
-          <button *ngIf="event.event.hostUser._id == this.user._id" (click)="onDeleteEvent(event.event, i)" mat-button>Delete</button>
-        </mat-card-actions>
-      </mat-card>
-      </mat-tab>
-      <mat-tab label="Applicants">
-          <mat-card *ngFor="let booking of event.applicants; let i = index" class="example-card">
+          <mat-card class="no-shadow">
             <mat-card-header>
-                <div mat-card-avatar class="example-header-image"></div>
-                <mat-card-title>Artist Name: {{booking.performerUser.firstName}} {{booking.performerUser.lastName}}</mat-card-title>
-              </mat-card-header>
-              <mat-card-content>
-                  <p>Proposed Price: {{booking.currentPrice}}</p>
-                </mat-card-content>
-                <mat-card-actions>
-                    <button (click)="openNegotiationDialog(booking, 'host')" mat-button color="primary">View Application</button>
-                </mat-card-actions>
+              <div mat-card-avatar class="example-header-image"></div>
+              <mat-card-title>{{event.event.eventName }}</mat-card-title>
+              <mat-card-subtitle>{{event.event.eventType}}</mat-card-subtitle>
+              <mat-card-subtitle>${{event.event.fixedPrice}}</mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-content>
+              <p>The event is on {{event.event.toDate}}</p>
+            </mat-card-content>
+            <mat-card-actions>
+              <button *ngIf="event.event.hostUser._id == this.user._id" (click)="onEditEvent(event.event, i)" mat-button>Edit</button>
+              <button *ngIf="event.event.hostUser._id == this.user._id" (click)="onDeleteEvent(event.event, i)" mat-button>Delete</button>
+            </mat-card-actions>
           </mat-card>
-      </mat-tab>
-      <mat-tab label="Approved Musicians">
-        <mat-card *ngFor="let booking of event.approved; let i = index" class="example-card">
+        </mat-tab>
+        <mat-tab label="Applicants">
+          <mat-card *ngIf="event.applicants.length == 0" class="example-card no-shadow">
+            <mat-card-title>You have no applicants.</mat-card-title>
+          </mat-card>
+          <mat-card *ngFor="let booking of event.applicants; let i = index" class="example-card no-shadow">
             <mat-card-header>
-                <div mat-card-avatar class="example-header-image"></div>
-                <mat-card-title>Artist Name: {{booking.performerUser.firstName}} {{booking.performerUser.lastName}}</mat-card-title>
-              </mat-card-header>
-              <mat-card-content>
-                  <p>Accepted Price: {{booking.currentPrice}}</p>
-                </mat-card-content>
-                <mat-card-actions>
-                    <button (click)="openNegotiationDialog(booking, 'host')" mat-button>Cancel Booking</button>
-                </mat-card-actions>
+              <div mat-card-avatar class="example-header-image"></div>
+              <mat-card-title>Artist Name: {{booking.performerUser.firstName}} {{booking.performerUser.lastName}}</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <p>Proposed Price: {{booking.currentPrice}}</p>
+            </mat-card-content>
+            <mat-card-actions>
+              <button (click)="openNegotiationDialog(booking, 'host')" mat-button color="primary">View Application</button>
+            </mat-card-actions>
           </mat-card>
-      </mat-tab>
-    </mat-tab-group>
-  </mat-card>
-      </mat-card>
-    </mat-tab>
-  </mat-tab-group>
+        </mat-tab>
+        <mat-tab label="Booked Musicians">
+          <mat-card *ngIf="event.approved.length == 0" class="example-card no-shadow">
+            <mat-card-title>You have no musicians booked.</mat-card-title>
+          </mat-card>
+          <mat-card *ngFor="let booking of event.approved; let i = index" class="example-card no-shadow">
+            <mat-card-header>
+              <div mat-card-avatar class="example-header-image"></div>
+              <mat-card-title>Artist Name: {{booking.performerUser.firstName}} {{booking.performerUser.lastName}}</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <p>Accepted Price: {{booking.currentPrice}}</p>
+            </mat-card-content>
+            <mat-card-actions>
+              <button (click)="openNegotiationDialog(booking, 'host')" mat-button>Cancel Booking</button>
+            </mat-card-actions>
+          </mat-card>
+        </mat-tab>
+      </mat-tab-group>
+    </mat-card>
+  </div>
 </mat-card>
