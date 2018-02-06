@@ -5,6 +5,7 @@
       <!-- Left side topbar -->
       <mat-toolbar color="primary" class="chat-sidebar-toolbar">
           <span fxFlex></span>
+          <h6 class="m-0 font-normal fz-1">Conversations</h6>
         <button mat-icon-button class="topbar-button-right" (click)="onStartNewConversationButtonClick()">
           <mat-icon aria-label="Start a new conversation">add</mat-icon></button>
         <!-- <a href="" class="toolbar-avatar online">
@@ -141,12 +142,14 @@
 
       <!-- Input box and send button -->
       <div class="chat-input-actions" fxLayout="row" style="position: sticky; bottom: 20px; background-color: rgb(255, 255, 255); flex-direction: row; box-sizing: border-box; display: flex; border-radius: 25px; margin: 10px 10px 15px; box-shadow: rgba(150, 150, 150, 0.2) 0px 10px 6px -6px; border-style: solid; border-color: rgba(245, 245, 245, 0.9); border-width: 1px; padding: 10px;">
-        <mat-form-field class="full-width mr-1">
+        <mat-form-field class="full-width mr-1" (keydown)="sendMessageClicked($event)" floatLabel="never">
           <input [(ngModel)]="messageEntered" matInput placeholder="Make a BEAT ♥" value="">
         </mat-form-field>
-        <button mat-fab color="primary" (click)="sendMessageClicked()">
+        <!-- <button mat-icon-button (click)="sendMessageClicked()"> -->
+            <!-- <mat-icon aria-label="Send Message">send</mat-icon></button> -->
+        <!-- <button mat-fab color="primary" (click)="sendMessageClicked()">
           <mat-icon>send</mat-icon>
-        </button>
+        </button> -->
       </div>
 
     </div>
