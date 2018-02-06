@@ -53,6 +53,24 @@ exports.getNotificationsForUser = function (req, res) {
     });
 };
 
+exports.deleteNotificationsByID = function (req, res) {
+    console.log(req);
+    //todo fix this so itll loop correctly.
+    Notification.findByIdAndRemove(req.params.uid, function (err, event) {
+        if (err) {
+            return res.status(500).send("There was a problem deleting the notification.");
+        } else {
+            if (event == null) {
+                return res.status(200).send("notification was already deleted.");
+            } else {
+                notification.remove({eventEID: event._id}, function (err, bookings) {
+                    return res.status(200).send("notification " + notification.message + " is removed");
+                });
+            }
+        }
+    });
+}
+
 exports.saveNotification = function (req, res) {
     console.log('SAVAING MESSAGE');
 
