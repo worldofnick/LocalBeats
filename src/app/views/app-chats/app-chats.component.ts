@@ -426,7 +426,7 @@ export class AppChatsComponent implements OnInit, AfterViewChecked {
   }
 
   sendMessageClicked(event) {
-    if (event.keyCode === 13) {
+    if (event.keyCode === 13 && !event.shiftKey) {
       console.log('-------CHAT UI---------');
     console.log('%s entered the message: %s', this.loggedInUser.firstName, this.messageEntered);
     console.log('Sender: ', this.loggedInUser.firstName + ' ' + this.loggedInUser.lastName);

@@ -127,9 +127,7 @@
           <div>
             <!-- <h5 class="chat-username text-muted">{{ !!(message.from._id === this.loggedInUser._id) ? (this.loggedInUser.firstName + ' ' + this.loggedInUser.lastName) 
               : (message.from.firstName + ' ' + message.from.lastName) }}</h5> -->
-            <div class="conversation-msg" [@flyInOut]="'in'">
-              {{message.content}}
-            </div>
+            <div class="conversation-msg" [@flyInOut]="'in'" style="white-space: pre-wrap;">{{message.content}}</div>
             <p class="chat-date text-muted" [@flyInOut]="'in'">{{message.sentAt | date:'EEEE, MMM d, y, h:mm a'}}</p>
           </div>
         </div>
@@ -143,7 +141,7 @@
       <!-- Input box and send button -->
       <div class="chat-input-actions" fxLayout="row" style="position: sticky; bottom: 20px; background-color: rgb(255, 255, 255); flex-direction: row; box-sizing: border-box; display: flex; border-radius: 25px; margin: 10px 10px 15px; box-shadow: rgba(150, 150, 150, 0.2) 0px 10px 6px -6px; border-style: solid; border-color: rgba(245, 245, 245, 0.9); border-width: 1px; padding: 10px;">
         <mat-form-field class="full-width mr-1" (keydown)="sendMessageClicked($event)" floatLabel="never">
-          <input [(ngModel)]="messageEntered" matInput placeholder="Make a BEAT ♥" value="">
+          <textarea [(ngModel)]="messageEntered" matInput placeholder="Make a BEAT ♥" value=""></textarea>
         </mat-form-field>
         <!-- <button mat-icon-button (click)="sendMessageClicked()"> -->
             <!-- <mat-icon aria-label="Send Message">send</mat-icon></button> -->
