@@ -116,6 +116,7 @@ export class TopbarComponent implements OnInit {
 
   logout() {
     this.userService.logout();
+    this.numNotifications = 0;
     this.router.navigate(['/']);
   }
 
