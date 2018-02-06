@@ -29,7 +29,7 @@ export class TopbarComponent implements OnInit {
   searchForm: FormGroup;
   values = '';
   
-  numNotifications: Number = 0;
+  numNotifications = 0;
   isSearchOpen: boolean = false;
   clickedSearch: boolean = false;
 
@@ -69,10 +69,16 @@ export class TopbarComponent implements OnInit {
     domHelper.toggleClass(document.body, 'collapsed-menu');
 
 
-    this._socketService.onEvent(SocketEvent.REQUEST_NOTIFICATION_COUNT).subscribe((count: Number)=>{
+    this._socketService.onEvent(SocketEvent.REQUEST_NOTIFICATION_COUNT).subscribe((count: number)=>{
       // console.log(count)
       this.numNotifications = count;
     });
+
+    this._socketService.onEvent(SocketEvent.SEND_NOTIFICATION)
+    .subscribe((notification: Notification) => {
+      console.log("incrementing topbar count")
+      this.numNotifications++;
+  });
     
     //set google maps defaults
     this.zoom = 4;
@@ -93,16 +99,6 @@ export class TopbarComponent implements OnInit {
     });
 
 
-  }
-
-  startSocket() {
-    // this.notificationService.connect();
-    this.userService.getNotificationsCountForUser(555).then((num) => {
-      console.log(num);
-      this.numNotifications = num;
-      console.log("printing number of notifs");
-      console.log(this.numNotifications);
-    });
   }
 
 

@@ -38,7 +38,8 @@ export class NotificationsComponent implements OnInit {
         newNotification.message = temp.message;
         newNotification.color = "blue";
         newNotification.icon = temp.icon;
-        newNotification .eventID = temp.eventID;
+        newNotification.eventID = temp.eventID;
+        newNotification.route = temp.route;
         this.notifications.push(newNotification);
     });
 
