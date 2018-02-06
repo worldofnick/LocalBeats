@@ -142,7 +142,7 @@
       <div class="chat-input-actions" fxLayout="row" style="position: sticky; bottom: 20px; background-color: rgb(255, 255, 255); flex-direction: row; box-sizing: border-box; display: flex; border-radius: 10px; margin: 10px 10px 15px; border-style: solid; border-color: rgba(245, 244, 245, 0.9); border-width: 0px; padding: 10px;box-shadow: 0 0 10px rgba(0,0,0,0.6);
       box-shadow: 0 0px 0px rgba(230,230,230,0.30), 0 -15px 2px rgba(36,120,158,0.02); box-shadow: 0 0px 0px rgba(230,230,230,0.30), 0 5px 2px rgba(36,120,158,0.05);">
         <mat-form-field class="full-width mr-1" (keydown)="sendMessageClicked($event)" floatLabel="never" hintLabel="Use SHIFT + ENTER for line breaks.">
-          <textarea [(ngModel)]="messageEntered" matInput placeholder="Make a BEAT ♥" value="" matTextareaAutosize matAutosizeMinRows="1"
+          <textarea #messageInputBox [(ngModel)]="messageEntered" matInput placeholder="" value="" matTextareaAutosize matAutosizeMinRows="1"
           matAutosizeMaxRows="5"></textarea>
         </mat-form-field>
         <!-- <button mat-icon-button (click)="sendMessageClicked()"> -->

@@ -1,4 +1,5 @@
-import { Component, OnInit, ViewChild, AfterViewChecked, ElementRef } from '@angular/core';
+import { Component, OnInit, Input, Output, ViewChild, AfterContentInit, ContentChild, 
+        AfterViewInit, ViewChildren, AfterViewChecked, ElementRef } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { Subscription } from "rxjs/Subscription";
 import { MediaChange, ObservableMedia } from "@angular/flex-layout";
@@ -45,8 +46,9 @@ import { MessageTypes } from '../../services/chats/model/messageTypes';
     ])
   ]
 })
-export class AppChatsComponent implements OnInit, AfterViewChecked {
+export class AppChatsComponent implements OnInit, AfterViewChecked, AfterViewChecked {
 
+  @ViewChildren('messageInputBox') vc;
   @ViewChild('scrollMe') private myScrollContainer: ElementRef;
 
   //TODO: add users to chat with, some form of notifications
@@ -124,6 +126,10 @@ export class AppChatsComponent implements OnInit, AfterViewChecked {
     this.initIoConnection();
     this.chatSideBarInit();
     console.log('On open, connectd users: ', this.connectedUsers);
+  }
+
+  ngAfterViewInit() {            
+    this.vc.first.nativeElement.focus();
   }
 
   ngAfterViewChecked() {
