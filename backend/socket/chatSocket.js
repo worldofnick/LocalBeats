@@ -143,10 +143,13 @@ module.exports = function (io) {
                 notification.message = payload.message;
                 notification.icon = payload.icon;
                 notification.receiverID = payload.receiverID;
+                notification.eventID = payload.eventID;
                 notification.save(function (err, notification) {
                   if (err) {
                     return res.status(500).send("Failed to create booking notification");
                   }
+                  console.log("saving notification")
+                  console.log(notification);
                 //   io.emit("notification", { notification: notification });
                 });
 

@@ -97,7 +97,9 @@ export class ProfileRequestComponent implements OnInit {
         notification.message = booking.hostUser.firstName + " has requested you for an event";
     
         notification.icon = 'queue_music';
-        notification.eventID = booking._id;
+        notification.eventID = booking.eventEID._id;
+        console.log("passing this notif to server");
+        console.log(notification)
         this._socketService.sendNotification(SocketEvent.SEND_NOTIFICATION, notification);
         
         this.bookingService.createBooking(booking).then((booking: Booking) => this.getAvailableEvents());

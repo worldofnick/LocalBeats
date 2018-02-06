@@ -38,6 +38,7 @@ export class NotificationsComponent implements OnInit {
         newNotification.message = temp.message;
         newNotification.color = "blue";
         newNotification.icon = temp.icon;
+        newNotification .eventID = temp.eventID;
         this.notifications.push(newNotification);
     });
 
@@ -60,13 +61,6 @@ export class NotificationsComponent implements OnInit {
     });
     
 
-    // if(this.userService.isAuthenticated()){
-
-    //   this.notificationService.getNotificationsForUser(this.userService.user).then((
-    //     notificationsList: Notification[]) => {
-    //     this.notifications = notificationsList;
-    //   }); 
-    // }
 
     this.router.events.subscribe((routeChange) => {
         if (routeChange instanceof NavigationEnd) {
