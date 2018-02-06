@@ -98,6 +98,7 @@ export class ProfileRequestComponent implements OnInit {
     
         notification.icon = 'queue_music';
         notification.eventID = booking.eventEID._id;
+        notification.route = ['/events',notification.eventID]
         console.log("passing this notif to server");
         console.log(notification)
         this._socketService.sendNotification(SocketEvent.SEND_NOTIFICATION, notification);

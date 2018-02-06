@@ -54,6 +54,7 @@ export class NotificationsComponent implements OnInit {
         newNotification.message = notification.message;
         newNotification.color = "blue";
         newNotification.icon = notification.icon;
+        newNotification.route = notification.route;
         this.notifications.push(newNotification);
       }
       console.log(notificationsList);
@@ -74,5 +75,11 @@ export class NotificationsComponent implements OnInit {
   clearAll(e) {
     e.preventDefault();
     this.notifications = [];
+  }
+
+  selectNotification(notification:Notification){
+    console.log("selectd notification:");
+    console.log(notification);
+    this.router.navigate(notification.route); //this will go to the page about the event
   }
 }

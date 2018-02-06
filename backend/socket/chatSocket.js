@@ -144,6 +144,7 @@ module.exports = function (io) {
                 notification.icon = payload.icon;
                 notification.receiverID = payload.receiverID;
                 notification.eventID = payload.eventID;
+                notification.route = payload.route;
                 notification.save(function (err, notification) {
                   if (err) {
                     return res.status(500).send("Failed to create booking notification");
