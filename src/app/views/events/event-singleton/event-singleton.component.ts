@@ -161,7 +161,6 @@ export class EventSingletonComponent implements OnInit {
             this.onCancelApp();
           }
         }
-
       });
   }
 

@@ -37,7 +37,6 @@ export class NegotiateDialogComponent implements OnInit {
         price: new FormControl({value: this.initialPrice, disabled: true}, Validators.required)
       });
     }
-    console.log(this.data.initial);
     // Check whether it's an initial booking application or request
     if(this.data.initial) {
       // Check if artist application
@@ -70,63 +69,56 @@ export class NegotiateDialogComponent implements OnInit {
         }
       }
     } else {
-      // Check if artist application
-      if(this.data.booking.bookingType == 'artist-apply') {
-        // Check what view it's coming from
-        if(this.data.view == 'artist') {
-          // Check to see who is the most recent approval of the offer
-          if(this.data.booking.hostApproved && this.negotiable) {
-            // Host has done the most recent offer
-            this.title = "Host's Current Offer";
-            this.subtext = "Please enter a new bid or accept the host's offer to confirm the booking."
-            this.acceptButtonText = "Accept";
-            this.declineButtonText = "Decline";
-          } else if (this.data.booking.hostApproved && !this.negotiable) {
-            this.title = "Host's Offer";
-            this.subtext = "This event is non-negotiable.  Please accept or decline the host's listed price to confirm the booking."
-            this.acceptButtonText = "Accept";
-            this.declineButtonText = "Decline";
-          } else if (this.data.booking.artistApproved && this.negotiable) {
-            this.title = "Your Current Offer";
-            this.subtext = "Please enter a new bid, accept your current bid, or cancel your application."
-            this.acceptButtonText = "Accept";
-            this.declineButtonText = "Cancel Bid";
-          } else {
-            this.title = "Artist Application";
-            this.subtext = "This event is non-negotiable.  Would you like to maintain your application?";
-            this.acceptButtonText = "Confirm Application";
-            this.declineButtonText = "Cancel Application";
-          }
+      // Check what view it's coming from
+      if(this.data.view == 'artist') {
+        // Check to see who is the most recent approval of the offer
+        if(this.data.booking.hostApproved && this.negotiable) {
+          // Host has done the most recent offer
+          this.title = "Host's Current Offer";
+          this.subtext = "Please enter a new bid or accept the host's offer to confirm the booking."
+          this.acceptButtonText = "Accept";
+          this.declineButtonText = "Decline";
+        } else if (this.data.booking.hostApproved && !this.negotiable) {
+          this.title = "Host's Offer";
+          this.subtext = "This event is non-negotiable.  Please accept or decline the host's listed price to confirm the booking."
+          this.acceptButtonText = "Accept";
+          this.declineButtonText = "Decline";
+        } else if (this.data.booking.artistApproved && this.negotiable) {
+          this.title = "Your Current Offer";
+          this.subtext = "Please enter a new bid, accept your current bid, or cancel your application."
+          this.acceptButtonText = "Accept";
+          this.declineButtonText = "Cancel Bid";
         } else {
-          // It's coming from the host
-          // Check to see who is the most recent approval of the offer
-          // Check to see who is the most recent approval of the offer
-          if(this.data.booking.hostApproved && this.negotiable) {
-            this.title = "Your Current Offer";
-            this.subtext = "Please enter a new bid, accept your current bid, or decline the application."
-            this.acceptButtonText = "Accept";
-            this.declineButtonText = "Decline";
-          } else if (this.data.booking.hostApproved && !this.negotiable) {
-            this.title = "Your Offer";
-            this.subtext = "You made this event non-negotiable.  Please accept or decline the artist's application at your listed price."
-            this.acceptButtonText = "Accept";
-            this.declineButtonText = "Decline";
-          } else if (this.data.booking.artistApproved && this.negotiable) {
-            this.title = "Artist's Current Bid";
-            this.subtext = "Please enter a new offer or accept the artist's bid to confirm the booking."
-            this.acceptButtonText = "Accept";
-            this.declineButtonText = "Decline";
-          } else {
-            this.title = "Artist's Application";
-            this.subtext = "You made this event non-negotiable.  Please accept or decline the artist's application.";
-            this.acceptButtonText = "Confirm Application";
-            this.declineButtonText = "Cancel Application";
-          }
-
+          this.title = "Artist Application";
+          this.subtext = "This event is non-negotiable.  Would you like to maintain your application?";
+          this.acceptButtonText = "Confirm Application";
+          this.declineButtonText = "Cancel Application";
         }
       } else {
-        // Otherwise, it is a host-request
-        // Check what view it's coming from
+        // It's coming from the host
+        // Check to see who is the most recent approval of the offer
+        // Check to see who is the most recent approval of the offer
+        if(this.data.booking.hostApproved && this.negotiable) {
+          this.title = "Your Current Offer";
+          this.subtext = "Please enter a new bid, accept your current bid, or decline the application."
+          this.acceptButtonText = "Accept";
+          this.declineButtonText = "Decline";
+        } else if (this.data.booking.hostApproved && !this.negotiable) {
+          this.title = "Your Offer";
+          this.subtext = "You made this event non-negotiable.  Please accept or decline the artist's application at your listed price."
+          this.acceptButtonText = "Accept";
+          this.declineButtonText = "Decline";
+        } else if (this.data.booking.artistApproved && this.negotiable) {
+          this.title = "Artist's Current Bid";
+          this.subtext = "Please enter a new offer or accept the artist's bid to confirm the booking."
+          this.acceptButtonText = "Accept";
+          this.declineButtonText = "Decline";
+        } else {
+          this.title = "Artist's Application";
+          this.subtext = "You made this event non-negotiable.  Please accept or decline the artist's application.";
+          this.acceptButtonText = "Confirm Application";
+          this.declineButtonText = "Cancel Application";
+        }
       }
     }
 
@@ -156,9 +148,13 @@ export class NegotiateDialogComponent implements OnInit {
     if(this.negotiationForm.get('price').value != this.initialPrice) {
       // Come up with cases here for the different negotiation instances
       if(this.data.booking.hostApproved && this.negotiable && this.data.view == 'artist') {
-        this.acceptButtonText = "Counter Offer";
+        this.acceptButtonText = "Counter Bid";
       } else if(this.data.booking.artistApproved && this.negotiable && this.data.view == 'artist') {
         this.acceptButtonText = "New Bid";
+      } else if(this.data.booking.hostApproved && this.negotiable && this.data.view == 'host') {
+        this.acceptButtonText = "New Offer";
+      } else {
+        this.acceptButtonText = "Counter Offer";
       }
     } else {
       this.acceptButtonText = "Accept";
