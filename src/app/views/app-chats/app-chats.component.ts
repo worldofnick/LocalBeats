@@ -460,7 +460,7 @@ export class AppChatsComponent implements OnInit, AfterViewChecked, AfterViewIni
       if (this.activeChatUser.isOnline) {
 
         // Save the message in the DB
-        privateMessage = this.createPMObject(true, MessageTypes.MSG);
+        privateMessage = this.createPMObject(false, MessageTypes.MSG);
       }
       // CASE 2: The recipient is offline. So an HTTP request instead of socket event
       else {
