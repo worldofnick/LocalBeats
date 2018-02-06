@@ -31,24 +31,6 @@ export class ProfileRequestComponent implements OnInit {
     this.getAvailableEvents()
   }
 
-  onRequestEvent(event:Event){
-    console.log("creating booking");
-    const booking = new Booking(undefined, 'host-request', event.hostUser, 
-    this.artist, event, false, false, false, true, event.fixedPrice);
-   
-    this.bookingService.createBooking(booking).then((booking: Booking) => this.getAvailableEvents());
-  }
-
-  onCancelRequest(event:Event) {
-    this.bookingService.getBooking(event).then((bookings: any[]) => {
-      for (let result of bookings) {
-        if (result.eventEID._id == event._id && result.performerUser._id == this.artist._id) {
-          this.bookingService.declineBooking(result).then(() => this.getAvailableEvents())
-        }
-      }
-    });
-  }
-
   public getAvailableEvents() {
     // Get all bookings for the current user
     this.eventService.getEventsByUID(this.user._id).then((events: Event[]) => {
@@ -79,12 +61,10 @@ export class ProfileRequestComponent implements OnInit {
       }
       this.events = tempEvents;
       this.requestedBookings = bookings;
-      console.log(this.requestedBookings);
     }));
   }
 
   newRequest(event: Event) {
-    console.log('new booking');
     let booking = new Booking(undefined, 'host-request', event.hostUser, this.artist, event, false, false, false, true, event.fixedPrice);
     this.bookingService.negotiate(booking, true, 'host').subscribe((result) => {
       if(result.accepted == 'accepted' || result.accepted == 'new') {
@@ -104,14 +84,11 @@ export class ProfileRequestComponent implements OnInit {
         this._socketService.sendNotification(SocketEvent.SEND_NOTIFICATION, notification);
         
         this.bookingService.createBooking(booking).then((booking: Booking) => this.getAvailableEvents());
-      } else {
-        this.onCancelRequest(event);
       }
     });
   }
 
   viewRequest(booking: Booking) {
-    console.log('updating booking');
     this.bookingService.negotiate(booking, false, 'host').subscribe((result) => {
       if(result.accepted == 'accepted' || result.accepted == 'new') {
         booking.currentPrice = result.price;

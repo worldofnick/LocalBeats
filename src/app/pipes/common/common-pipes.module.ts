@@ -1,14 +1,17 @@
 import { NgModule } from '@angular/core';
 import { RelativeTimePipe } from './relative-time.pipe';
-import { ExcerptPipe } from "./excerpt.pipe";
+import { ExcerptPipe } from './excerpt.pipe';
+import { CapitalizePipe } from './capitalize.pipe';
 @NgModule({
   declarations: [
     RelativeTimePipe,
-    ExcerptPipe
+    ExcerptPipe,
+    CapitalizePipe
   ],
   exports: [
     RelativeTimePipe,
-    ExcerptPipe
+    ExcerptPipe,
+    CapitalizePipe
   ]
 })
 export class CommonPipesModule { }
