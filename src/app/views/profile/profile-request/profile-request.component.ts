@@ -40,6 +40,18 @@ export class ProfileRequestComponent implements OnInit {
   }
 
   onCancelRequest(event:Event) {
+    let notification = new Notification(); // build notification "someone has requested you to play blah"
+    notification.receiverID = event.performerUser;
+    notification.senderID = event.hostUser;
+    notification.message = event.hostUser.firstName + " has cancelled the request";
+
+    notification.icon = 'error';
+    notification.eventID = event._id;
+    notification.route = ['/events',notification.eventID]
+    console.log("passing this notif to server");
+    console.log(notification)
+    this._socketService.sendNotification(SocketEvent.SEND_NOTIFICATION, notification);
+    
     this.bookingService.getBooking(event).then((bookings: any[]) => {
       for (let result of bookings) {
         if (result.eventEID._id == event._id && result.performerUser._id == this.artist._id) {
@@ -105,7 +117,9 @@ export class ProfileRequestComponent implements OnInit {
         
         this.bookingService.createBooking(booking).then((booking: Booking) => this.getAvailableEvents());
       } else {
+        console.log("cancelling request");
         this.onCancelRequest(event);
+
       }
     });
   }
