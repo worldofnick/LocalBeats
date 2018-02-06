@@ -425,8 +425,9 @@ export class AppChatsComponent implements OnInit, AfterViewChecked {
     });
   }
 
-  sendMessageClicked() {
-    console.log('-------CHAT UI---------');
+  sendMessageClicked(event) {
+    if (event.keyCode === 13) {
+      console.log('-------CHAT UI---------');
     console.log('%s entered the message: %s', this.loggedInUser.firstName, this.messageEntered);
     console.log('Sender: ', this.loggedInUser.firstName + ' ' + this.loggedInUser.lastName);
     console.log('Receiver: ', this.activeChatUser.firstName + ' ' + this.activeChatUser.lastName);
@@ -461,6 +462,7 @@ export class AppChatsComponent implements OnInit, AfterViewChecked {
       this._socketService.send(Action.SEND_PRIVATE_MSG, privateMessage);
       this.resetMessageInputBox();
     }
+    };
   }
 
   // awaitMessageSaveResponse(privateMessage: Message) {
