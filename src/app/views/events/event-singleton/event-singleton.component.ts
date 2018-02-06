@@ -116,7 +116,7 @@ export class EventSingletonComponent implements OnInit {
   }
 
   openNegotiationDialog() {
-    let booking = new Booking(undefined, 'artist-apply', this.model.hostUser, this.userService.user, this.model, false, false, false, false, this.model.fixedPrice);
+    let booking = new Booking(undefined, 'artist-apply', this.model.hostUser, this.userService.user, this.model, false, false, true, false, this.model.fixedPrice);
     this.bookingService.negotiate(booking, true, 'artist')
       .subscribe((result) => {
         if(result.accepted == 'accepted' || result.accepted == 'new') {

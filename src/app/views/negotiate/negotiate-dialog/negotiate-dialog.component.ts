@@ -12,6 +12,7 @@ export class NegotiateDialogComponent implements OnInit {
   negotiationForm: FormGroup;
   acceptButtonText: string = "Accept";
   declineButtonText: string = "Decline";
+  originalButtonText: string;
   initialPrice: number;
   negotiable: boolean;
   title: string = "Offer";
@@ -68,7 +69,7 @@ export class NegotiateDialogComponent implements OnInit {
           this.declineButtonText = "Cancel Request";
         }
       }
-    } else {
+    } else if(!this.data.booking.approved){
       // Check what view it's coming from
       if(this.data.view == 'artist') {
         // Check to see who is the most recent approval of the offer
@@ -100,9 +101,9 @@ export class NegotiateDialogComponent implements OnInit {
         // Check to see who is the most recent approval of the offer
         if(this.data.booking.hostApproved && this.negotiable) {
           this.title = "Your Current Offer";
-          this.subtext = "Please enter a new bid, accept your current bid, or decline the application."
+          this.subtext = "Please enter a new offer, accept your current offer, or cancel the request."
           this.acceptButtonText = "Accept";
-          this.declineButtonText = "Decline";
+          this.declineButtonText = "Cancel Request";
         } else if (this.data.booking.hostApproved && !this.negotiable) {
           this.title = "Your Offer";
           this.subtext = "You made this event non-negotiable.  Please accept or decline the artist's application at your listed price."
@@ -119,14 +120,21 @@ export class NegotiateDialogComponent implements OnInit {
           this.acceptButtonText = "Confirm Application";
           this.declineButtonText = "Cancel Application";
         }
-      }
+      } 
+    } else {
+      // The booking has been approved.
+      this.title = "Confirmed Booking";
+      this.subtext = "Would you like to keep or cancel your booking?"
+      this.acceptButtonText = "Keep Booking";
+      this.declineButtonText = "Cancel Booking";
     }
+    this.originalButtonText = this.acceptButtonText;
 
   }
 
   accept() {
     if(this.data.booking.approved) {
-      this.dialogRef.close({accepted: 'cancel'});
+      this.dialogRef.close({accepted: 'nocancel'});
     } else {
       if(this.negotiationForm.get('price').value != this.initialPrice) {
         this.dialogRef.close({accepted: 'new', price: this.negotiationForm.get('price').value});
@@ -138,7 +146,7 @@ export class NegotiateDialogComponent implements OnInit {
 
   decline() {
     if(this.data.booking.approved) {
-      this.dialogRef.close({accepted: 'nocancel'});
+      this.dialogRef.close({accepted: 'cancel'});
     } else {
       this.dialogRef.close({accepted: 'declined'});
     }
@@ -146,7 +154,8 @@ export class NegotiateDialogComponent implements OnInit {
 
   onPriceChange(){
     if(this.negotiationForm.get('price').value != this.initialPrice) {
-      // Come up with cases here for the different negotiation instances
+      // cases here for the different negotiation instances
+      console.log(this.data);
       if(this.data.booking.hostApproved && this.negotiable && this.data.view == 'artist') {
         this.acceptButtonText = "Counter Bid";
       } else if(this.data.booking.artistApproved && this.negotiable && this.data.view == 'artist') {
@@ -157,7 +166,7 @@ export class NegotiateDialogComponent implements OnInit {
         this.acceptButtonText = "Counter Offer";
       }
     } else {
-      this.acceptButtonText = "Accept";
+      this.acceptButtonText = this.originalButtonText;
     }
   }
 

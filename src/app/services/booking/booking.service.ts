@@ -16,7 +16,6 @@ export class BookingService {
     public userBooking: string = 'http://localhost:8080/api/userBookings/';
     public acceptBookingConnection: string = 'http://localhost:8080/api/acceptBooking';
     public declineBookingConnection: string = 'http://localhost:8080/api/declineBooking';
-    public updateBookingConnection: string = 'http://localhost:8080/api/updateBooking';
     // public connection: string = 'https://localbeats.herokuapp.com/api/bookings';
 
     private headers: Headers = new Headers({ 'Content-Type': 'application/json' });
@@ -76,10 +75,9 @@ export class BookingService {
             .catch(this.handleError);
     }
 
-    public updateBooking(booking: Booking) {
-        const current = this.updateBookingConnection + '/' + booking._id
-        
-        return this.http.put(current, { headers: this.headers })
+    public updateBooking(newBooking: Booking) {
+        const current = this.connection + '/' + newBooking._id
+        return this.http.put(current, {booking: newBooking}, { headers: this.headers })
             .toPromise()
             .then((response: Response) => {
                 const data = response.json();
