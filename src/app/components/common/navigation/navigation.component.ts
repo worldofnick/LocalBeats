@@ -12,32 +12,32 @@ export class NavigationComponent {
   ngOnInit() {
     this.menuItems = [
       {
-        name: 'HOME',
+        name: 'Home',
         type: 'link',
         tooltip: 'Home',
         icon: 'home',
         state: 'home'
       },
       {
-        name: 'PROFILE',
+        name: 'Profile',
         type: 'dropDown',
         tooltip: 'Profile',
         icon: 'person',
         state: 'profile',
         sub: [
-          {name: 'OVERVIEW', state: 'overview'},
-          {name: 'SETTINGS', state: 'settings'}
+          {name: 'Overview', state: 'overview'},
+          {name: 'Settings', state: 'settings'}
         ]
       },
       {
-        name: 'CHAT',
+        name: 'Chat',
         type: 'link',
         tooltip: 'Chat',
         icon: 'chat',
         state: 'chat'
       },
       {
-        name: 'CALENDAR',
+        name: 'Calendar',
         type: 'link',
         tooltip: 'Calendar',
         icon: 'date_range',
