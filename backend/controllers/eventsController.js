@@ -162,6 +162,10 @@ exports.deleteUserEventsByUID = function (req, res) {
     return sort;
   }
 
+function isString(x) {
+    return Object.prototype.toString.call(x) === "[object String]"
+}
+
 // Search through events
 // params
 // skip (int) how many records to skip
@@ -189,12 +193,18 @@ exports.searchEvents = function(req, res) {
 
   var query = {};
   if (req.query.event_types != null && req.query.event_types != "all events") {
+    if (isString(req.query.event_types)) {
+      req.query.event_types = [req.query.event_types]
+    }
     query.eventType = {
       "$in": req.query.event_types
     }
   }
 
   if (req.query.genres != null && req.query.genres != "all genres") {
+    if (isString(req.query.genres)) {
+      req.query.genres = [req.query.genres]
+    }
     query.eventGenres = {
       "$in": req.query.genres
     }
