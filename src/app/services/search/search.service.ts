@@ -66,8 +66,10 @@ export class SearchService {
             params.set('genres', searchTerms.genres[0].toLowerCase());
         }
         params.set('uid', searchTerms.uid);
-        // params.set('lat', String(searchTerms.location.latitude));
-        // params.set('lon', String(searchTerms.location.longitude));
+        if(searchTerms.location != null) {
+            params.set('lat', String(searchTerms.location.latitude));
+            params.set('lon', String(searchTerms.location.longitude));
+        }
         params.set('limit', '15');
         if (searchTerms.text != null && searchTerms.text.length != 0) {
             params.set('name', searchTerms.text)
@@ -95,8 +97,10 @@ export class SearchService {
             params.append('genres', genre.toLowerCase());
         }
         params.set('uid', searchTerms.uid);
-        // params.set('lat', String(searchTerms.location.latitude));
-        // params.set('lon', String(searchTerms.location.longitude));
+        if(searchTerms.location != null) {
+            params.set('lat', String(searchTerms.location.latitude));
+            params.set('lon', String(searchTerms.location.longitude));
+        }
         params.set('limit', '15');
         if (searchTerms.text != null && searchTerms.text.length != 0) {
             params.set('name', searchTerms.text)

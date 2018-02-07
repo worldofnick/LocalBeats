@@ -78,11 +78,8 @@ export class TopbarComponent implements OnInit {
       this.numNotifications++;
     });
 
-    // Set Google Maps defaults
-    this.zoom = 4;
-    this.latitude = 39.8282;
-    this.longitude = -98.5795;
-    this.setCurrentPosition();
+    // Set Current Location if desired in future
+    // this.setCurrentPosition();
 
     // Load Places Autocomplete
     this.mapsAPILoader.load().then(() => {
@@ -156,6 +153,7 @@ export class TopbarComponent implements OnInit {
         latitude: this.latitude
       };
     }
+    console.log(this.currentSearch.location);
     // Set search type
     this.currentSearch.searchType = this.searchForm.get('type').value;
     // Set text
