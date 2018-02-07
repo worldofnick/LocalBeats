@@ -190,13 +190,13 @@ exports.searchEvents = function(req, res) {
   var query = {};
   if (req.query.event_types != null && req.query.event_types != "all events") {
     query.eventType = {
-      "$in": req.query.event_types.split(',')
+      "$in": req.query.event_types
     }
   }
 
   if (req.query.genres != null && req.query.genres != "all genres") {
     query.eventGenres = {
-      "$in": req.query.genres.split(',')
+      "$in": req.query.genres
     }
   }
 
