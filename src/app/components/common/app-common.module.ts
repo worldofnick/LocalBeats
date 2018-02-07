@@ -10,6 +10,8 @@ import { OffClickModule } from 'angular2-off-click';
 import { 
   MatSidenavModule,
   MatExpansionModule,
+  MatDatepickerModule,
+  MatNativeDateModule,
   MatListModule,
   MatTooltipModule,
   MatInputModule,
@@ -54,6 +56,8 @@ import { SocketService } from 'app/services/chats/socket.service';
     FlexLayoutModule,
     MatAutocompleteModule,
     MatExpansionModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
     MatInputModule,
     MatSidenavModule,
     MatIconModule,

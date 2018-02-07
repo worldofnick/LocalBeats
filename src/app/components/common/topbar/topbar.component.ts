@@ -30,6 +30,8 @@ export class TopbarComponent implements OnInit {
   @Input() notificPanel;
   @Output() onSearchTypeChange = new EventEmitter<any>();
   @ViewChild("searchplaces") searchElementRef: ElementRef;
+  genreSelectOpened: boolean = false;
+  eventSelectOpened: boolean = false;
   searchForm = this.formBuilder.group({
     text: new FormControl('', Validators.required),
     type: new FormControl('Musician', Validators.required),
@@ -134,14 +136,18 @@ export class TopbarComponent implements OnInit {
     }
   }
 
-  // When the search dropdown is opened via toggle, it sets the boolean to true
-  open() {
-    this.expand = true;
+  offClick() {
+    if(!this.genreSelectOpened && !this.eventSelectOpened) {
+      this.expand = false;
+    }
   }
 
-  // When the search dropdown is closed via toggle, it sets the boolean to false
-  close() {
-    this.expand = false;
+  genreSelectOpen() {
+    this.genreSelectOpened = !this.genreSelectOpened;
+  }
+
+  eventSelectOpen() {
+    this.eventSelectOpened = !this.eventSelectOpened;
   }
 
   // Submission of search
