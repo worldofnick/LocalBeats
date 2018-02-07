@@ -815,27 +815,31 @@ div.hopscotch-bubble .hopscotch-nav-button.prev:hover {
 }
 
 .search-bar .top-search-form {
-    position: relative;
+    /* border-style: solid;
+    border-width: 5px;
+    border-color: green; */
+    position: absolute;
+    top: 7px;
     background: #fff;
-    border-radius: 2px 2px 2px 0px;
+    border-radius: 2px;
     margin-right: 1rem;
     display: block;
-    max-width: 600px;
+    max-width: 800px;
     margin-left: 20px;
 }
+
 .search-bar .top-search-form .material-icons {
-    position: absolute;
+    position: relative;
     top: 50%;
-    left: 10px;
     margin-top: -12px;
     color: rgba(0,0,0,.87);
 }
-.search-bar .top-search-form input {
+.search-bar .top-search-form .search-text {
     font-size: 1rem;
     padding: .95rem .75rem;
     z-index: 2;
     cursor: text;
-    text-indent: 30px;
+    /* text-indent: 30px; */
     border: none;
     background: transparent;
     width: 100%;

@@ -26,32 +26,31 @@ import { SocketEvent } from         '../../../services/chats/model/event';
   styleUrls: ['./topbar.component.css']
 })
 export class TopbarComponent implements OnInit {
-  searchForm: FormGroup;
-  values = '';
-  
-  numNotifications = 0;
-  isSearchOpen: boolean = false;
-  clickedSearch: boolean = false;
-
   @Input() sidenav;
   @Input() notificPanel;
   @Output() onSearchTypeChange = new EventEmitter<any>();
-  selectedValues: string[];
-  musicGenres: any = [{ genre: 'Rock', checked: false }, { genre: 'Country', checked: false }, { genre: 'Jazz', checked: false }, { genre: 'Blues', checked: false }, { genre: 'Rap', checked: false }];
-  eventTypes: any = [{ genre: 'Wedding', checked: false }, { genre: 'Birthday', checked: false }, { genre: 'Business', checked: false }];
-  searchTypes: string[] = ['Musician', 'Event'];
-  genres: any = this.musicGenres;
-  currentSearch: SearchTerms = new SearchTerms(this.searchTypes[0], '', null, this.musicGenres[0]);
-  public results: any = null;
-
-
   @ViewChild("searchplaces") searchElementRef: ElementRef;
-
+  searchForm = this.formBuilder.group({
+    text: new FormControl('', Validators.required),
+    type: new FormControl('Musician', Validators.required),
+    genres: new FormControl(),
+    events: new FormControl(),
+    location: new FormControl()
+  });
+  // Expansion of search box
+  expand: boolean = false;
+  // Notifications 
+  numNotifications = 0;
+  // Google Places
   latitude: number;
   longitude: number;
-  //searchControl: FormControl;
   zoom: number;
-  io:any;
+  // Search Values
+  searchTypes: string[] = ['Musician', 'Event'];
+  genresList: string[] = ['Rock', 'Country', 'Jazz', 'Blues', 'Rap'];
+  eventsList: string[] = ['Wedding', 'Birthday', 'Business'];
+  currentSearch: SearchTerms = new SearchTerms(this.searchTypes[0], '', null, this.genresList, this.eventsList, null);
+  public results: any = null;
 
   constructor(private formBuilder: FormBuilder,
     private userService: UserService,
@@ -66,42 +65,43 @@ export class TopbarComponent implements OnInit {
   }
 
   ngOnInit() {
+    // Initialize the menu to be collapsed
     domHelper.toggleClass(document.body, 'collapsed-menu');
 
-
+    // Socket setup for notifications
     this._socketService.onEvent(SocketEvent.REQUEST_NOTIFICATION_COUNT).subscribe((count: number)=>{
-      // console.log(count)
       this.numNotifications = count;
     });
 
     this._socketService.onEvent(SocketEvent.SEND_NOTIFICATION)
     .subscribe((notification: Notification) => {
-      console.log("incrementing topbar count")
       this.numNotifications++;
-  });
-    
-    //set google maps defaults
-    this.zoom = 4;
-    this.latitude = 39.8282;
-    this.longitude = -98.5795;
-
-    //create search FormControl
-    //this.searchControl = new FormControl();
-
-    //set current position
-    this.setCurrentPosition();
-
-    this.searchForm = this.formBuilder.group({
-      text: new FormControl('', Validators.required),
-      type: new FormControl('Musician', Validators.required),
-      genres: this.formBuilder.array([]),
-      location: new FormControl()
     });
 
+    // Set Current Location if desired in future
+    // this.setCurrentPosition();
 
+    // Load Places Autocomplete
+    this.mapsAPILoader.load().then(() => {
+      let autocomplete = new google.maps.places.Autocomplete(this.searchElementRef.nativeElement, {
+        types: ["(cities)"]
+      });
+      autocomplete.addListener("place_changed", () => {
+        this.ngZone.run(() => {
+          let place: google.maps.places.PlaceResult = autocomplete.getPlace();
+          this.searchForm.setControl('location', new FormControl(place.formatted_address))
+          if (place.geometry === undefined || place.geometry === null) {
+            return;
+          }
+          this.latitude = place.geometry.location.lat();
+          this.longitude = place.geometry.location.lng();
+          this.zoom = 12;
+        });
+      });
+    });
   }
 
-
+  // Helper method for Google Places
   private setCurrentPosition() {
     if ("geolocation" in navigator) {
       navigator.geolocation.getCurrentPosition((position) => {
@@ -112,59 +112,39 @@ export class TopbarComponent implements OnInit {
     }
   }
 
-
-
+  // Logs user out
   logout() {
     this.userService.logout();
     this.numNotifications = 0;
     this.router.navigate(['/']);
   }
 
-  clickedInsideSearch() {
-    this.clickedSearch = true;
-    this.isSearchOpen = true;
-    this.changeDetector.detectChanges();
-
-    //load Places Autocomplete
-    this.mapsAPILoader.load().then(() => {
-      let autocomplete = new google.maps.places.Autocomplete(this.searchElementRef.nativeElement, {
-        types: ["(cities)"]
-      });
-      autocomplete.addListener("place_changed", () => {
-        this.ngZone.run(() => {
-          //get the place result
-          let place: google.maps.places.PlaceResult = autocomplete.getPlace();
-          // place.address_components
-          // place.formatted_address
-          this.searchForm.setControl('location', new FormControl(place.formatted_address))
-          //verify result
-          if (place.geometry === undefined || place.geometry === null) {
-            return;
-          }
-          //set latitude, longitude and zoom
-          this.latitude = place.geometry.location.lat();
-          this.longitude = place.geometry.location.lng();
-          this.zoom = 12;
-        });
-      });
-    });
-  }
-
+  // Triggered by search text box, if the user starts typing, it triggers the dropdown
   onKey(event: any) {
-    if(event.keyCode != 13){
-      this.clickedInsideSearch()
+    if(event.keyCode != 13 && !this.expand){
+      this.expand = true;
     }
   }
-
-  clickedOutsideSearch() {
-    if (this.isSearchOpen && !this.clickedSearch) {
-      this.isSearchOpen = false;
+  
+  click() {
+    if(!this.expand) {
+      this.expand = true;
     } else {
-      this.clickedSearch = false;
+      this.expand = false;
     }
   }
 
+  // When the search dropdown is opened via toggle, it sets the boolean to true
+  open() {
+    this.expand = true;
+  }
 
+  // When the search dropdown is closed via toggle, it sets the boolean to false
+  close() {
+    this.expand = false;
+  }
+
+  // Submission of search
   submit() {
     // Set location for submission
     if (this.longitude != null) {
@@ -177,69 +157,54 @@ export class TopbarComponent implements OnInit {
     this.currentSearch.searchType = this.searchForm.get('type').value;
     // Set text
     this.currentSearch.text = this.searchForm.get('text').value;
-    console.log(typeof (this.currentSearch.text))
-    // Set genre
-    const genres = <FormArray>this.searchForm.get('genres') as FormArray;
-    if (genres.length == 0 && this.currentSearch.searchType == 'Musician') {
-      this.currentSearch.genre = 'All Genres';
+    // Set genres
+    const genres: string[] = this.searchForm.get('genres').value as string[];
+    if (genres == null || genres.length == 0) {
+      this.currentSearch.genres = ['all genres'];
     } else {
-      this.currentSearch.genre = 'All Events'
+      this.currentSearch.genres = genres;
+    }
+    // Set events
+    const events: string[] = this.searchForm.get('events').value as string[];
+    if (events == null || events.length == 0) {
+      this.currentSearch.event_types = ['all events'];
+    } else {
+      this.currentSearch.event_types = events;
+    }
+    // Set user id if the search is authenticated
+    if(this.userService.isAuthenticated()) {
+      this.currentSearch.uid = this.userService.user._id;
+    } else {
+      this.currentSearch.uid = null;
     }
 
     if (this.currentSearch.searchType === 'Musician') {
       this.searchService.userSearch(this.currentSearch).then((users: User[]) => {
         this.results = users;
         this.searchService.changeResult(this.results, this.currentSearch.searchType);
-        console.log(this.results);
         this.router.navigate(['/search'])
       });
     } else {
       this.searchService.eventSearch(this.currentSearch).then((events: Event[]) => {
         this.results = events;
         this.searchService.changeResult(this.results, this.currentSearch.searchType);
-        console.log(this.results)
         this.router.navigate(['/search'])
       });
     }
-    this.isSearchOpen = false;
+    this.expand = false;
   }
 
-  onPickingGenre(event) {
-    const genres = <FormArray>this.searchForm.get('genres') as FormArray;
-
-    if (event.checked) {
-      event.source.value.checked = true;
-      genres.push(new FormControl(event.source.value))
-    } else {
-      event.source.value.checked = false;
-      const i = genres.controls.findIndex(x => x.value === event.source.value);
-      genres.removeAt(i);
-    }
-  }
-
-  onChange() {
-    const genres = <FormArray>this.searchForm.get('genres') as FormArray;
-    while (genres.length !== 0) {
-      genres.removeAt(0)
-    }
-    for (let i = 0; i < this.genres.length; i++) {
-      this.genres[i].checked = false;
-    }
-    this.results = null;
-    if (this.searchForm.controls['type'].value == this.searchTypes[1]) {
-      this.genres = this.eventTypes
-    } else {
-      this.genres = this.musicGenres
-    }
-  }
-
+  // Triggers the notification panel to sideload
   toggleNotific() {
-    // this.notificationService.
     this.notificPanel.toggle();
   }
+
+  // Triggers the side navigation menu to sideload
   toggleSidenav() {
     this.sidenav.toggle();
   }
+
+  // Collapses the side navigation menu
   toggleCollapse() {
     let appBody = document.body;
     domHelper.toggleClass(appBody, 'collapsed-menu');
