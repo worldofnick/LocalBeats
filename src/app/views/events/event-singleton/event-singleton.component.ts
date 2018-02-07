@@ -245,3 +245,4 @@ export class EventSingletonComponent implements OnInit {
     console.log(notification)
     this._socketService.sendNotification(SocketEvent.SEND_NOTIFICATION, notification);
   }
+}
