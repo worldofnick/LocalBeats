@@ -9,7 +9,6 @@ var Schema = mongoose.Schema;
      hostUser          : {type: Schema.Types.ObjectId, ref: 'User', required: true},
      performerUser     : {type: Schema.Types.ObjectId, ref: 'User' },
      booking           : {type: Schema.Types.ObjectId, ref: 'Bookings' },
-     eid               : {type: String },
      amount            : {type: Number},
      date              : {type: Date},
      stripeChargeId    : {type: String},

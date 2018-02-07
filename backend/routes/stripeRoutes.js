@@ -22,7 +22,7 @@ module.exports = function(app) {
 		app.route('/api/stripe/refund')
 			.post(stripeHandlers.stripeRefund);
 
-	app.route('/api/payments/eventPaymentStatus')
+	app.route('/api/payments/bookingPaymentStatus')
 		.get(stripeHandlers.eventStatus);
 
 };

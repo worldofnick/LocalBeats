@@ -164,7 +164,6 @@ exports.stripeTransfers = function (req, res) {
     payment.hostUser = booking.hostUser;
     payment.performerUser = booking.performerUser;
     payment.booking =  booking;
-    payment.eid = booking.eventEID;
     payment.amount =  booking.currentPrice;
     payment.date = new Date();
     payment.stripeChargeId = charge.id; // check if this is right
@@ -195,7 +194,6 @@ exports.stripeTransfers = function (req, res) {
     payment.hostUser = booking.hostUser;
     payment.performerUser = booking.performerUser;
     payment.booking =  booking
-    payment.eid = booking.eventEID;
     payment.amount =  booking.currentPrice;
     payment.date = new Date();
     payment.stripeChargeId = charge.id; // check if this is right
@@ -208,14 +206,14 @@ exports.stripeTransfers = function (req, res) {
  };
 
  /**
-  * GET /api/payments/eventPaymentStatus
+  * GET /api/payments/bookingPaymentStatus
   *
-  * Sends back the payment status for an eid.
+  * Sends back the payment status for a bid.
   * Either {"paid", "refunded", "waiting"}
   */
- exports.eventStatus = function (req, res) {
+ exports.bookingPaymentStatus = function (req, res) {
    // Find the last payment associated with this event
-   var query = { eid: req.query.eid };
+   var query = { eid: req.query.bid };
    var sort = {_id: -1};
    //
    Payments.find(query).limit(1).skip(0).sort(sort).exec(function (err, payment) {
