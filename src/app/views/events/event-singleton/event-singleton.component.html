@@ -1,33 +1,47 @@
-<mat-card *ngIf="this.model && this.userService" class="p-0">
-  <mat-tab-group>
-    <mat-tab label="{{this.model.eventName}}">
-      <mat-card class="example-card">
-        <mat-card-header>
-          <!-- <div mat-card-avatar class="example-header-image"></div> -->
+<mat-card class="example-card">
+  <div fxLayout="row" fxLayoutWrap="wrap">
+    <div fxLayout="column" fxFlex="100" fxFlex.gt-md="40">
 
-          <mat-card-title>Event type: {{this.model.eventType}}</mat-card-title>
-          <mat-card-subtitle >Event price: {{this.model.fixedPrice}}</mat-card-subtitle>
-          <mat-card-subtitle *ngIf="this.model.negotiable">The event price is negotiable</mat-card-subtitle>
-          <mat-card-subtitle *ngIf="!this.model.negotiable">The event price is non-negotiable</mat-card-subtitle>
+      <mat-card-header>
+        <!-- <div mat-card-avatar class="example-header-image"></div> -->
+        <img mat-card-avatar [src]="model.eventPicUrl">
+        <mat-card-title>Event type: {{this.model.eventName}}</mat-card-title>
+        <mat-card-subtitle>On: {{this.dateString}}</mat-card-subtitle>
+        <!-- <mat-card-subtitle >Event price: {{this.model.fixedPrice}}</mat-card-subtitle>
+                  <mat-card-subtitle *ngIf="this.model.negotiable">The event price is negotiable</mat-card-subtitle>
+                  <mat-card-subtitle *ngIf="!this.model.negotiable">The event price is non-negotiable</mat-card-subtitle> -->
 
-        </mat-card-header>
-        <img mat-card-image [src]="model.eventPicUrl" style="
-                  max-width:128px;
-                  max-height:128px;
-                  width:auto;
-                  height:auto;">        
-        <mat-card-content>
-          <!-- todo make this read only -->
-            <quill-editor theme="snow" [(ngModel)]="this.model.description" value="" name="eventDescription"></quill-editor>
-          </mat-card-content>
-        
-        <mat-card-actions>
-          <button *ngIf="isCurrentUser && userService.isAuthenticated()" (click)="onEditEvent()" mat-button>Edit Event</button>
-          <button *ngIf="isCurrentUser && userService.isAuthenticated()" (click)="onDeleteEvent()" mat-button>Delete Event</button>
-          <button *ngIf="!isCurrentUser && userService.isAuthenticated() && !hasApplied" (click)="openNegotiationDialog()" mat-button>{{buttonText}}</button>
-          <button *ngIf="!isCurrentUser && userService.isAuthenticated() && hasApplied" (click)="viewApplication()" mat-button>{{buttonText}}</button>
-        </mat-card-actions>
-      </mat-card>
-    </mat-tab>
-  </mat-tab-group>
+      </mat-card-header>
+
+      
+                <img mat-card-image [src]="model.eventPicUrl" style="
+                          max-width:128px;
+                          max-height:128px;
+                          width:auto;
+                          height:auto;">        
+      <mat-card-content>
+        <!-- <div style="float:left;  max-width:500px; word-wrap:break-word;">
+                    <ng-template [ngIf]="model">
+                      {{ this.model.description }}
+                    </ng-template>
+                  </div>        -->
+        <p>
+          {{this.model.description}}
+        </p>
+      </mat-card-content>
+
+      <mat-card-actions>
+        <button *ngIf="isCurrentUser && userService.isAuthenticated()" (click)="onEditEvent()" mat-button>Edit Event</button>
+        <button *ngIf="isCurrentUser && userService.isAuthenticated()" (click)="onDeleteEvent()" mat-button>Delete Event</button>
+        <button *ngIf="!isCurrentUser && userService.isAuthenticated() && !hasApplied" (click)="openNegotiationDialog()" mat-button>{{buttonText}}</button>
+        <button *ngIf="!isCurrentUser && userService.isAuthenticated() && hasApplied" (click)="viewApplication()" mat-button>{{buttonText}}</button>
+      </mat-card-actions>
+    </div>
+  </div>
+  <!-- <div fxLayout="row" fxLayoutWrap="wrap">
+    <mat-card-content>
+
+      {{model.description}}
+    </mat-card-content>
+  </div> -->
 </mat-card>

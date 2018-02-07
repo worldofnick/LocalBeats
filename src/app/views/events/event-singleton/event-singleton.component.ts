@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from "@angular/router";
-// import { DatePipe } from '@angular/common'
+import { DatePipe } from '@angular/common'
 import { Router } from "@angular/router";
 
 
@@ -41,7 +41,8 @@ export class EventSingletonComponent implements OnInit {
     private bookingService: BookingService,
     private route: ActivatedRoute,
     private router: Router,
-    private _socketService: SocketService
+    private _socketService: SocketService,
+    public datepipe: DatePipe
   ) { }
 
   ngOnInit() {
@@ -51,7 +52,9 @@ export class EventSingletonComponent implements OnInit {
 
     this.eventService.getEventByEID(this.EID).then((event: Event) => {
       this.model = event;
-
+      console.log("event model: ", this.model)
+      this.dateString =this.datepipe.transform(this.model.toDate, 'MM-dd-yyyy');      // this.dateInBar = this.model.fromDate
+      console.log("date string: ", this.dateString);
       this.user = event.hostUser;
       if (this.userService.user != null && this.user._id === this.userService.user._id) {
         this.isCurrentUser = true;
