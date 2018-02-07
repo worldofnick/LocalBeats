@@ -6,6 +6,7 @@ export class Payment {
   public hostUser: User
   public performerUser: User
   public booking: Booking
+  public eid: string
   public date: Date
   public amount: number
   public stripeChargeId: string

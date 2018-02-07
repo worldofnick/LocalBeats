@@ -164,6 +164,7 @@ exports.stripeTransfers = function (req, res) {
     payment.hostUser = booking.hostUser;
     payment.performerUser = booking.performerUser;
     payment.booking =  booking;
+    payment.eid = booking.eventEID;
     payment.amount =  booking.currentPrice;
     payment.date = new Date();
     payment.stripeChargeId = charge.id; // check if this is right
@@ -193,7 +194,8 @@ exports.stripeTransfers = function (req, res) {
     var payment = new Payments();
     payment.hostUser = booking.hostUser;
     payment.performerUser = booking.performerUser;
-    payment.booking =  booking;
+    payment.booking =  booking
+    payment.eid = booking.eventEID;
     payment.amount =  booking.currentPrice;
     payment.date = new Date();
     payment.stripeChargeId = charge.id; // check if this is right
@@ -203,4 +205,25 @@ exports.stripeTransfers = function (req, res) {
     res.sendStatus(200);
   });
   res.sendStatus(500);
+ };
+
+ /**
+  * GET /api/payments/eventPaymentStatus
+  *
+  * Sends back the payment status for an eid.
+  * Either {"paid", "refunded", "waiting"}
+  */
+ exports.eventStatus = function (req, res) {
+   // Find the last payment associated with this event
+   var query = { eid: req.query.eid };
+   var sort = {_id: -1};
+   //
+   Payments.find(query).limit(1).skip(0).sort(sort).exec(function (err, payment) {
+     if (payment.type == "payment") {
+       res.send({"status": "paid"});
+     } else if (payment.type == "refund") {
+       res.send({"status": "refund"});
+     }
+   });
+   res.send({"status": "waiting"});
  };
