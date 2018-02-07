@@ -35,6 +35,11 @@ export class ChatsService {
     //TODO: can just update the user model to have these fields
   }
 
+  // Returns { users: [User] } JSON
+  getAllConversationBuddiesOfThisUser() {
+    return this.http.get(SERVER_URL + '/api/messages/' + this.loggedInUser._id);
+  }
+
   getCurrentLoggedInUser() {
     this.loggedInUser = this._userService.user;
     return this.loggedInUser;

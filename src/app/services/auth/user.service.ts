@@ -60,6 +60,8 @@ export class UserService {
                     action: Action.NEW_LOG_IN
                 });
 
+                this.notifyServerToAddGreetBot(this.user);
+
                 return this.user;
             })
             .catch(this.handleError);
@@ -76,6 +78,13 @@ export class UserService {
                 return this.user
             })
             .catch(this.handleError);
+    }
+
+    private notifyServerToAddGreetBot(to: User) {
+        this._socketService.send(Action.GREET_WITH_BEATBOT, {
+            to: this.user,
+            action: Action.GREET_WITH_BEATBOT
+        });
     }
 
     // post("/api/authenticate")

@@ -236,6 +236,10 @@ exports.searchEvents = function(req, res) {
     query.eventName = new RegExp(req.query.name);
   }
 
+  query.hostUser = {
+    "$not": query.query.uid
+  }
+
   Events.find(query).limit(limit).skip(skip).sort(sort).populate('hostUser').populate('performerUser').exec(function (err, doc) {
       if (err) {
           return res.status(500).send(err);

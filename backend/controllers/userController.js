@@ -134,6 +134,10 @@ exports.searchUsers = function (req, res) {
     }
   }
 
+  query._id = {
+    "$not": req.query.uid
+  }
+
   User.find(query).limit(limit).skip(skip).exec(function (err, doc) {
     if (err) {
       return res.status(500).send(err);
