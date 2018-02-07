@@ -248,9 +248,9 @@ exports.searchEvents = function(req, res) {
 
   if (req.query.uid != null) {
     query.hostUser = {
-        "$not": req.query.uid
+        "$ne": new mongoose.mongo.ObjectId(req.query.uid)
     }
-    }
+  }
 
   Events.find(query).limit(limit).skip(skip).sort(sort).populate('hostUser').populate('performerUser').exec(function (err, doc) {
       if (err) {

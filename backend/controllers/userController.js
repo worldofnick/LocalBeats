@@ -136,7 +136,7 @@ exports.searchUsers = function (req, res) {
 
   if (req.query.uid != null) {
     query._id = {
-      "$not": req.query.uid
+      "$ne": new mongoose.mongo.ObjectId(req.query.uid)
     }
   }
 
