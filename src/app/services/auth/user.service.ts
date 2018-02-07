@@ -239,7 +239,7 @@ export class UserService {
                 // console.log(this.accessToken)
                 //inserting test notifications until i can actually send them.
                 let temp = data.notifications as Notification[];
-                console.log(data);
+                // console.log(data);
                 let t:Notification[] = [];
  
                 if(temp == null){

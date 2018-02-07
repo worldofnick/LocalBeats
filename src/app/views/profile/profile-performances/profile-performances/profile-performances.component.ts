@@ -186,8 +186,8 @@ export class ProfilePerformancesComponent implements OnInit {
       notification.message = message;
       notification.icon = icon;
       notification.route = route
-      console.log("passing this notification to server");
-      console.log(notification)
+      // console.log("passing this notification to server");
+      // console.log(notification)
       this._socketService.sendNotification(SocketEvent.SEND_NOTIFICATION, notification);
     }
   
@@ -200,8 +200,8 @@ export class ProfilePerformancesComponent implements OnInit {
       notification.message = message;
       notification.icon = icon;
       notification.route = route
-      console.log("passing this notification to server");
-      console.log(notification)
+      // console.log("passing this notification to server");
+      // console.log(notification)
       this._socketService.sendNotification(SocketEvent.SEND_NOTIFICATION, notification);
     }
 
