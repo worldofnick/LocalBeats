@@ -8,4 +8,5 @@ module.exports = function(app) {
 
 	app.route('/api/notification/:uid')
 		.get(notificationHandlers.getNotificationsForUser)
+		.delete(notificationHandlers.deleteNotificationsByID)
 };

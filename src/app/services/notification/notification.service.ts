@@ -25,8 +25,6 @@ export class NotificationService {
     current: Notification
     notifications: Notification[] = [];
 
-    // Our socket connection
-    // private socket:socketIO.socket;
 
     constructor(private http: Http, private httpClient: HttpClient) { 
 
@@ -43,109 +41,18 @@ export class NotificationService {
         // io.on('fromServer', msg=>console.log(msg));
     }
 
-    sendToServer(){
-        // const io = socketIO('http://localhost:8080');
-        // io.on('connection', socket=>{
-        //     console.log
-        // })
+    public deleteNotificationById(receiverID: string): Promise<Number> {
+
+        const current = SERVER_URL + '/api/notification/' + receiverID;
+        return this.http.delete(current)
+            .toPromise()
+            .then((response: Response) => {
+                const data = response.status;
+                let statusNumber = data;
+                return statusNumber;
+            })
+            .catch(this.handleError);
     }
-
-
-    // public getNotificationsCountForUser(ID: any): Promise<Number>{
-    //     let userConnection: string = 'http://localhost:8080/api/users';
-    //     const current = userConnection + '/' + ID;
-    //     //console.log("getting: ");
-    //     //console.log(current);
-    //     return this.http.get(current)
-    //         .toPromise()
-    //         .then((response: Response) => {
-    //             const data = response.json();
-    //             // this.accessToken = data.token;
-    //             // console.log(this.accessToken)
-    //             let temp = data.user as User;
-    //             let not1:Notification = new Notification;
-    //             not1.icon = "home"
-    //             not1.message = "hello world"
-    //             temp.notifications.push(not1);
-    //             temp.notifications.push(not1);
-
-    //             this.io.emit('tellTopBar', temp.notifications.length)
-    //             return temp.notifications.length;
-    //         })
-    //         .catch(this.handleError);
-    // }
-
-
-    // public getNotificationsForUser(ID: any): Promise<Notification[]>{
-    //     let userConnection: string = 'http://localhost:8080/api/users';
-    //     const current = userConnection + '/' + ID;
-    //     //console.log("getting: ");
-    //     //console.log(current);
-    //     return this.http.get(current)
-    //         .toPromise()
-    //         .then((response: Response) => {
-    //             const data = response.json();
-    //             // this.accessToken = data.token;
-    //             // console.log(this.accessToken)
-    //             let temp = data.user as User;
-    //             let not1:Notification = new Notification;
-    //             not1.icon = "chat"
-    //             not1.message = "helloo world"
-    //             temp.notifications.push(not1);
-    //             temp.notifications.push(not1);
-
-    //             this.io.emit('tellNotificationPanel', temp.notifications)
-    //             return temp.notifications;
-    //         })
-    //         .catch(this.handleError);
-    // }
-
-
-    // public getUserByID(ID: String): Promise<User> {
-    //     let userConnection: string = 'http://localhost:8080/api/users';
-
-    //     const current = userConnection + '/' + ID;
-    //     return this.http.get(current)
-    //         .toPromise()
-    //         .then((response: Response) => {
-    //             const data = response.json();
-    //             // this.accessToken = data.token;
-    //             // console.log(this.accessToken)
-    //             let temp = data.user as User;
-    //             return temp
-    //         })
-    //         .catch(this.handleError);
-    // }
-
-    // public sendNotificationToUser(notification: any): Promise<any> {
-
-
-    //     this.getUserByID(notification.receiverID).then((receiver:User) =>{
-
-    //     //update the receiving user object w/ an additional notification in the list.
-    //     let userConnection: string = 'http://localhost:8080/api/users';
-    //     const current = userConnection + '/' + receiver._id;        
-    //     receiver.notifications.push(notification);
-    //     receiver.notifications.push(notification);
-    //     receiver.notifications.push(notification);
-
-    //     console.log(receiver.notifications);
-    //     console.log(receiver);
-
-    //     return this.http.put(current, { user: receiver }, { headers: this.headers })
-    //         .toPromise()
-    //         .then((response: Response) => {
-    //             const data = response.json();
-    //             // this.user = data.user as User;
-    //             return data.user as User;
-    //             // return
-    //         })
-    //         .catch(this.handleError); 
-    //     })
-
-    //     return;
-
-    // }
 
     private handleError(error: any): Promise<any> {
         let errMsg = (error.message) ? error.message :
