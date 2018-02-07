@@ -112,7 +112,7 @@ export class ProfileSettingsComponent implements OnInit {
   }
 
   requestPayout() {
-    this.StripeService.payoutUser(this.user).then((success: boolean) => {
+    this.stripeService.payoutUser(this.user).then((success: boolean) => {
       if (success) {
         let snackBarRef = this.snackBar.open('Payout Request Successful!', "", {
           duration: 1500,
