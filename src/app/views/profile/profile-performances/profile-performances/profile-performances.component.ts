@@ -9,6 +9,10 @@ import { EventService } from '../../../../services/event/event.service';
 import { User } from '../../../../models/user';
 import { Event } from '../../../../models/event';
 import { Booking } from '../../../../models/booking';
+import { Action } from '../../../../services/chats/model/action'
+import { SocketEvent } from '../../../../services/chats/model/event'
+import { Notification } from '../../../../models/notification'
+import { SocketService } from 'app/services/chats/socket.service';
 
 @Component({
   selector: 'app-profile-performances',
@@ -28,7 +32,8 @@ export class ProfilePerformancesComponent implements OnInit {
     private userService: UserService,
     private bookingService: BookingService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private _socketService: SocketService
     ) { }
 
   ngOnInit() {
@@ -128,8 +133,14 @@ export class ProfilePerformancesComponent implements OnInit {
             if(booking.hostApproved == true) {
               booking.approved = true;
               this.bookingService.acceptBooking(booking).then(() => {
-                //send notification to both parties that the booking has been confirmed. redirect artist to their performances page.
+                //send notification to both parties that the booking has been confirmed. \
+                //redirect artist to their performances page.
                 //if it is the host notification then redirect to their my events page
+                this.createNotificationForArtist(booking, ['/profile', 'performances'],
+                'event_available', booking.hostUser.firstName + " has confirmed " + booking.eventEID.eventName);
+
+                this.createNotificationForHost(booking, ['/profile', 'events'],
+                'event_available', "You have confirmed " + booking.eventEID.eventName);
                 this.getEvents()
               });
             } else {
@@ -141,19 +152,57 @@ export class ProfilePerformancesComponent implements OnInit {
               booking.hostApproved = false;
               booking.artistApproved = true;
               this.bookingService.updateBooking(booking).then((tempBooking: Booking) => {
-                //send a notification to the host that an artist has applied for an event
+                //send a notification to the host that an artist has applied for an event. 
+                this.createNotificationForHost(booking, ['/events', booking.eventEID._id],
+                'import_export', booking.performerUser.firstName + " has updated the offer on " + booking.eventEID.eventName);
                 this.getEvents()
               });
           } else if(result.accepted == 'cancel') {
-            //send notification to host that the artist has cancelled an alrady confirmed booking.
-            this.bookingService.declineBooking(booking).then(() => this.getEvents());
+            this.bookingService.declineBooking(booking).then(() => {
+              //send notification to host that the artist has cancelled an already confirmed booking.
+              this.createNotificationForHost(booking, ['/events', booking.eventEID._id],
+              'event_busy', booking.performerUser.firstName + " has cancelled the confirmed booking for" + booking.eventEID.eventName);
+              this.getEvents()
+            });
           }else if(result.accepted == 'declined'){
-            //send notification to host that the artist has declined an offer
-            this.bookingService.declineBooking(booking).then(() => this.getEvents());
+            this.bookingService.declineBooking(booking).then(() => {
+              //send notification to host that the artist has declined an offer
+              this.createNotificationForHost(booking, ['/events', booking.eventEID._id],
+              'event_busy', booking.performerUser.firstName + " has cancelled the request on" + booking.eventEID.eventName);
+              this.getEvents()
+            });
 
           }
         }
       });
   }
+
+    //send to artist
+    createNotificationForArtist(booking: Booking, route: string[], icon: string, message: string) {
+      let notification = new Notification(); // build notification "someone has requested you to play blah"
+      notification.receiverID = booking.performerUser;
+      notification.senderID = booking.hostUser;
+      notification.eventID = booking.eventEID._id;
+      notification.message = message;
+      notification.icon = icon;
+      notification.route = route
+      console.log("passing this notification to server");
+      console.log(notification)
+      this._socketService.sendNotification(SocketEvent.SEND_NOTIFICATION, notification);
+    }
+  
+    //send to host
+    createNotificationForHost(booking: Booking, route: string[], icon: string, message: string) {
+      let notification = new Notification(); // build notification "someone has requested you to play blah"
+      notification.receiverID = booking.hostUser;
+      notification.senderID = booking.performerUser;
+      notification.eventID = booking.eventEID._id;
+      notification.message = message;
+      notification.icon = icon;
+      notification.route = route
+      console.log("passing this notification to server");
+      console.log(notification)
+      this._socketService.sendNotification(SocketEvent.SEND_NOTIFICATION, notification);
+    }
 
 }

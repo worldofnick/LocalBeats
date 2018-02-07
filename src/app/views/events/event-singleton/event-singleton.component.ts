@@ -122,6 +122,14 @@ export class EventSingletonComponent implements OnInit {
           if (result.accepted == 'accepted' || result.accepted == 'new') {
             booking = new Booking(undefined, 'artist-apply', this.model.hostUser, this.userService.user, this.model, false, false, true, false, result.price);
             this.bookingService.createBooking(booking).then((booking: Booking) => {
+              //send notification to host that the artist has applied
+              if(!booking.eventEID.negotiable){
+                this.createNotificationForHost(booking, ['/events', booking.eventEID._id],
+                'event_available', booking.performerUser.firstName + " has applied for your event, " + booking.eventEID.eventName);
+              }else{
+                this.createNotificationForHost(booking, ['/events', booking.eventEID._id],
+                  'event_available', booking.performerUser.firstName + " has bid on your event, " + booking.eventEID.eventName);
+              }
               this.hasApplied = true;
               this.userBooking = booking;
               this.buttonText = "View Application";
@@ -152,6 +160,11 @@ export class EventSingletonComponent implements OnInit {
               this.userBooking.approved = true;
               this.bookingService.acceptBooking(this.userBooking).then(() => {
                 //booking is confirmed - send notification to event host that artist has accepted.
+                this.createNotificationForArtist(this.userBooking, ['/profile', 'performances'],
+                'event_available', "You have confirmed " + this.userBooking.eventEID.eventName);
+
+                this.createNotificationForHost(this.userBooking, ['/profile', 'events'],
+                'event_available', this.userBooking.performerUser.firstName + " has confirmed " + this.userBooking.eventEID.eventName);
                 this.hasApplied = true;
                 this.buttonText = "Cancel Booking";
               })
@@ -164,10 +177,12 @@ export class EventSingletonComponent implements OnInit {
               });
             }
           } else if (result.accepted == 'new') {
-            //send notification to host because artist has changed the price
             this.userBooking.hostApproved = false;
             this.userBooking.artistApproved = true;
             this.bookingService.updateBooking(this.userBooking).then((booking: Booking) => {
+              //send notification to host because artist has changed the price
+              this.createNotificationForHost(this.userBooking, ['/profile', 'events'],
+                'import_export', this.userBooking.performerUser.firstName + " has updated the offer on " + this.userBooking.eventEID.eventName);
               this.hasApplied = true;
               this.userBooking = booking;
               this.buttonText = "View Application";
@@ -182,13 +197,16 @@ export class EventSingletonComponent implements OnInit {
               if (result.accepted == 'cancel') {
                 this.bookingService.declineBooking(this.userBooking).then(() => {
                   //send notification to host that the artist has cancelled an already confirmed booking.
+                  this.createNotificationForHost(this.userBooking, ['/profile', 'events'],
+                  'event_busy', this.userBooking.performerUser.firstName + " has cancelled the confirmed booking for " + this.userBooking.eventEID.eventName);
                   this.hasApplied = false;
                   this.userBooking = null
                 });
               } else if (result.accepted == 'declined') {
                 this.bookingService.declineBooking(this.userBooking).then(() => {
                   //send notification to the host that the artist has cancelled a bid
-                  
+                  this.createNotificationForHost(this.userBooking, ['/profile', 'events'],
+                'event_busy', this.userBooking.performerUser.firstName + " has declined the offer on " + this.userBooking.eventEID.eventName);
                   this.hasApplied = false;
                   this.userBooking = null
                 });
@@ -200,20 +218,30 @@ export class EventSingletonComponent implements OnInit {
       });
   }
 
-  createNotification(booking: Booking, route: string[], icon: string, message: string) {
+  //send to artist
+  createNotificationForArtist(booking: Booking, route: string[], icon: string, message: string) {
     let notification = new Notification(); // build notification "someone has requested you to play blah"
     notification.receiverID = booking.performerUser;
     notification.senderID = booking.hostUser;
-    notification.message = booking.hostUser.firstName + " has cancelled the request";
-
-    notification.icon = icon;
     notification.eventID = booking.eventEID._id;
-    // notification.route = ['/events', notification.eventID]
+    notification.message = message;
+    notification.icon = icon;
     notification.route = route
-
     console.log("passing this notification to server");
     console.log(notification)
     this._socketService.sendNotification(SocketEvent.SEND_NOTIFICATION, notification);
   }
 
-}
+  //send to host
+  createNotificationForHost(booking: Booking, route: string[], icon: string, message: string) {
+    let notification = new Notification(); // build notification "someone has requested you to play blah"
+    notification.receiverID = booking.hostUser;
+    notification.senderID = booking.performerUser;
+    notification.eventID = booking.eventEID._id;
+    notification.message = message;
+    notification.icon = icon;
+    notification.route = route
+    console.log("passing this notification to server");
+    console.log(notification)
+    this._socketService.sendNotification(SocketEvent.SEND_NOTIFICATION, notification);
+  }
