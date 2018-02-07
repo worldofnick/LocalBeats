@@ -80,7 +80,6 @@ export class SearchService {
             .then((response: Response) => {
                 const data = response.json();
                 const events = data.events as Array<Event>;
-                console.log(events);
                 return events;
             })
             .catch(this.handleError);
@@ -109,7 +108,6 @@ export class SearchService {
         return this.http.get(current, { headers: this.headers, search: params } )
             .toPromise()
             .then((response: Response) => {
-                console.log(response);
                 const data = response.json();
                 const users = data.users as Array<User>;
                 return users;

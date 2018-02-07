@@ -153,7 +153,6 @@ export class TopbarComponent implements OnInit {
         latitude: this.latitude
       };
     }
-    console.log(this.currentSearch.location);
     // Set search type
     this.currentSearch.searchType = this.searchForm.get('type').value;
     // Set text
