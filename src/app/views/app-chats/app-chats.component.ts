@@ -4,7 +4,7 @@ import { DatePipe } from '@angular/common';
 import { Subscription } from "rxjs/Subscription";
 import { MediaChange, ObservableMedia } from "@angular/flex-layout";
 import { MatSidenav, MatDialog, MatChipInputEvent, MatSnackBar } from '@angular/material';
-import { ENTER, COMMA } from '@angular/cdk/keycodes';
+import { ENTER, COMMA, TAB } from '@angular/cdk/keycodes';
 import { Observable } from 'rxjs/Rx';
 import { startWith } from 'rxjs/operators/startWith';
 import { map } from 'rxjs/operators/map';
@@ -94,7 +94,7 @@ export class AppChatsComponent implements OnInit, AfterViewChecked, AfterViewIni
   isSelectable: boolean = true;
   isRemovable: boolean = true;
   isAddOnBlur: boolean = true;
-  separatorKeysCodes = [ENTER, COMMA];
+  separatorKeysCodes = [ENTER, COMMA, TAB];
 
   recipientChips = [];
 
