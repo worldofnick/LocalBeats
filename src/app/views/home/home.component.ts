@@ -6,6 +6,7 @@ import { MatSnackBar } from '@angular/material';
 import { UserService } from 'app/services/auth/user.service';
 import { NotificationService } from '../../services/notification/notification.service';
 import * as socketIO from 'socket.io-client';
+import { Notification } from '../../models/notification';
 
 @Component({
   selector: 'app-home',
@@ -52,6 +53,13 @@ export class HomeComponent implements OnInit {
         const temp: Message = message as Message;
         this.openNewMessageSnackBar(temp);
     });
+
+    this._socketService.onEvent(SocketEvent.SEND_NOTIFICATION)
+      .subscribe((message: Notification) => {
+        console.log('Notification from server (home app module): ', message);
+        const temp: Notification = message as Notification;
+        this.openNotificationSnackBar(temp);
+    });
   }
 
   /**
@@ -63,5 +71,16 @@ export class HomeComponent implements OnInit {
       this.snackBar.open('You have a new message from ' + message.from.firstName + ' ' + message.from.lastName,
                         'close', { duration: 3500 });
     };
+  }
+
+  /**
+   * Display a snack bar pop-up whenever this user gets a new notification
+   * @param message The original notification that is received
+   */
+  openNotificationSnackBar(message: Notification) {
+    // if (this._userService.user._id !== message.senderID._id) {
+      this.snackBar.open('You have a new notification from ' + message.senderID.firstName + ' ' + message.senderID.lastName,
+                        'close', { duration: 3500 });
+    // };
   }
 }
