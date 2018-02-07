@@ -21,6 +21,60 @@
   <!-- Search form -->
   <div 
   fxFlex
+  fxHide.lt-sm="true" 
+  class="search-bar">
+    <form [formGroup]="searchForm" class="top-search-form" (ngSubmit)="submit()">
+      <mat-expansion-panel [expanded]="expand" (opened)="open()" (closed)="close()">
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+                <mat-icon role="img">search</mat-icon>
+                <input class="search-text" [formControl]="searchForm.controls['text']" autofocus="true" placeholder="Search" type="text" (keyup)="onKey($event)">
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <mat-button-toggle-group [formControl]="searchForm.controls['type']" name="searchType" value="Musician">
+            <mat-button-toggle value="Musician">
+              Musicians
+            </mat-button-toggle>
+            <mat-button-toggle value="Event">
+              Events
+            </mat-button-toggle>
+          </mat-button-toggle-group>
+          <br>
+          <br>
+          <mat-form-field>
+            <mat-select placeholder="Music Genres" [formControl]="searchForm.controls['genres']" multiple>
+              <mat-select-trigger class="additional-selection">
+                {{searchForm.controls['genres'].value ? searchForm.controls['genres'].value[0] : ''}}
+                <span *ngIf="searchForm.controls['genres'].value?.length > 1">
+                  (+{{searchForm.controls['genres'].value.length - 1}} others)
+                </span>
+              </mat-select-trigger>
+              <mat-option *ngFor="let genre of genresList" [value]="genre">{{genre}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <br>
+          <mat-form-field>
+            <mat-select placeholder="Event Types" [formControl]="searchForm.controls['events']" multiple>
+              <mat-select-trigger class="additional-selection">
+                {{searchForm.controls['events'].value ? searchForm.controls['events'].value[0] : ''}}
+                <span *ngIf="searchForm.controls['events'].value?.length > 1">
+                  (+{{searchForm.controls['events'].value.length - 1}} others)
+                </span>
+              </mat-select-trigger>
+              <mat-option *ngFor="let event of eventsList" [value]="event">{{event}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <br>
+          <mat-form-field>
+            <input matInput placeholder="City, State" autocorrect="off" autocapitalize="off" spellcheck="off" type="text" #searchplaces [formControl]="searchForm.controls['location']">
+          </mat-form-field>
+          <br>
+          <button mat-raised-button class="mr-1">Submit</button>
+        </mat-expansion-panel>
+    </form>
+  </div>
+  <!-- <div 
+  fxFlex
   fxHide.lt-sm="true"
   class="search-bar">
     <form [formGroup]="searchForm" (ngSubmit)="submit()">
@@ -62,7 +116,7 @@
         </mat-card>
       </div>
     </form>
-  </div>
+  </div> -->
   <!-- <mat-select 
   placeholder=""
   class="selectorToggle"

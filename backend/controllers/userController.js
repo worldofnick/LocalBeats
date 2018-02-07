@@ -121,7 +121,7 @@ exports.searchUsers = function (req, res) {
 
   if (req.query.event_types != null) {
     query.event_types = {
-      "$in": req.query.event_type
+      "$in": req.query.event_types
     }
   }
 
@@ -134,8 +134,10 @@ exports.searchUsers = function (req, res) {
     }
   }
 
-  query._id = {
-    "$not": req.query.uid
+  if (req.query.uid != null) {
+    query._id = {
+      "$not": req.query.uid
+    }
   }
 
   User.find(query).limit(limit).skip(skip).exec(function (err, doc) {

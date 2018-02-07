@@ -51,10 +51,18 @@ export class SearchService {
     public eventSearch(searchTerms: SearchTerms): Promise<Object> {
         let current = (this.connection + 'searchEvents/')
         let params: URLSearchParams = new URLSearchParams();
-        params.set('event_type', searchTerms.genre.toLowerCase())
-        //params.set('lat', String(searchTerms.location.latitude))
-        //params.set('lon', String(searchTerms.location.longitude))
-        params.set('limit', '5')
+        console.log('Search Terms:');
+        console.log(searchTerms);
+        for(let type of searchTerms.event_types) {
+            params.append('event_types', type.toLowerCase());
+        }
+        for(let genre of searchTerms.genres) {
+            params.append('genres', genre.toLowerCase());
+        }
+        params.set('uid', searchTerms.uid);
+        // params.set('lat', String(searchTerms.location.latitude));
+        // params.set('lon', String(searchTerms.location.longitude));
+        params.set('limit', '10');
         if (searchTerms.text != null && searchTerms.text.length != 0) {
             params.set('name', searchTerms.text)
         }
@@ -64,6 +72,7 @@ export class SearchService {
             .then((response: Response) => {
                 const data = response.json();
                 const events = data.events as Array<Event>;
+                console.log(events);
                 return events;
             })
             .catch(this.handleError);
@@ -73,10 +82,16 @@ export class SearchService {
         let current = (this.connection + 'searchUsers/')
         let params: URLSearchParams = new URLSearchParams();
         params.set('artist', 'true')
-        console.log(searchTerms);
-        params.set('genre', searchTerms.genre.toLowerCase())
-        //params.set('lat', String(searchTerms.location.latitude))
-        //params.set('lon', String(searchTerms.location.longitude))
+        for(let type of searchTerms.event_types) {
+            params.append('event_types', type.toLowerCase());
+        }
+        for(let genre of searchTerms.genres) {
+            params.append('genres', genre.toLowerCase());
+        }
+        params.set('uid', searchTerms.uid);
+        // params.set('lat', String(searchTerms.location.latitude));
+        // params.set('lon', String(searchTerms.location.longitude));
+        params.set('limit', '10');
         if (searchTerms.text != null && searchTerms.text.length != 0) {
             params.set('name', searchTerms.text)
         }
