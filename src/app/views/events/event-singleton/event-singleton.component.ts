@@ -124,10 +124,10 @@ export class EventSingletonComponent implements OnInit {
             this.bookingService.createBooking(booking).then((booking: Booking) => {
               //send notification to host that the artist has applied
               if(!booking.eventEID.negotiable){
-                this.createNotificationForHost(booking, ['/events', booking.eventEID._id],
+                this.createNotificationForHost(booking, ['/events', 'events'],
                 'event_available', booking.performerUser.firstName + " has applied for your event, " + booking.eventEID.eventName);
               }else{
-                this.createNotificationForHost(booking, ['/events', booking.eventEID._id],
+                this.createNotificationForHost(booking, ['/profile', 'events'],
                   'event_available', booking.performerUser.firstName + " has bid on your event, " + booking.eventEID.eventName);
               }
               this.hasApplied = true;
