@@ -12,6 +12,7 @@ import { AppModule } from 'app/app.module';
 export class StripeService {
 
   public connection: string = AppModule.currentHost + 'api/stripe';
+  public connectionPayments: string = AppModule.currentHost + 'api/payments';
   private headers: Headers = new Headers({ 'Content-Type': 'application/json', 'x-access-token': sessionStorage.getItem('token')});
 
   constructor(private http: Http) { }
@@ -83,6 +84,19 @@ export class StripeService {
             } else {
               return false;
             }
+        })
+        .catch(this.handleError);
+  }
+
+  // Make a request to our backend to request the payment status for a booking
+  public getBookingPaymentStatus(booking: Booking): Promise<string> {
+    const current = this.connectionPayments + '/bookingPaymentStatus/?eid=' + booking.eventEID._id;
+    return this.http.get(current, { headers: this.headers })
+        .toPromise()
+        .then((response: Response) => {
+            const data = response.json();
+            const status = data["status"];
+            return status;
         })
         .catch(this.handleError);
   }
