@@ -59,8 +59,6 @@ export class ProfileSettingsComponent implements OnInit {
   }
 
   onEditProfile(form: NgForm){
-    console.log("sending \n" );
-    console.log(this.user);
     this.userService.onEditProfile(this.user).then((user: User) => {
       this.user = user;
       this.userService.user = Object.assign({}, this.user); // deep copy

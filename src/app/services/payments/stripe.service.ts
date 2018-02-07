@@ -58,7 +58,7 @@ export class StripeService {
 
   // Makes a request to our backend to request the Stripe API to charge the event host
   // This will need an extra visa parameter for event host stripe charge info
-  public charge(Booking: Booking): Promise<boolean> {
+  public charge(booking: Booking): Promise<boolean> {
     const current = this.connection + '/charge';
     return this.http.post(current, { booking: booking }, { headers: this.headers })
         .toPromise()
