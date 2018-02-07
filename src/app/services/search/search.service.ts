@@ -51,18 +51,24 @@ export class SearchService {
     public eventSearch(searchTerms: SearchTerms): Promise<Object> {
         let current = (this.connection + 'searchEvents/')
         let params: URLSearchParams = new URLSearchParams();
-        console.log('Search Terms:');
-        console.log(searchTerms);
-        for(let type of searchTerms.event_types) {
-            params.append('event_types', type.toLowerCase());
+        if(searchTerms.event_types[0] != 'all events'){
+            for(let type of searchTerms.event_types) {
+                params.append('event_types', type.toLowerCase());
+            }
+        } else {
+            params.set('event_types', searchTerms.event_types[0].toLowerCase());
         }
-        for(let genre of searchTerms.genres) {
-            params.append('genres', genre.toLowerCase());
+        if(searchTerms.genres[0] != 'all genres'){
+            for(let genre of searchTerms.genres) {
+                params.append('genres', genre.toLowerCase());
+            }
+        } else {
+            params.set('genres', searchTerms.genres[0].toLowerCase());
         }
         params.set('uid', searchTerms.uid);
         // params.set('lat', String(searchTerms.location.latitude));
         // params.set('lon', String(searchTerms.location.longitude));
-        params.set('limit', '10');
+        params.set('limit', '15');
         if (searchTerms.text != null && searchTerms.text.length != 0) {
             params.set('name', searchTerms.text)
         }
@@ -91,7 +97,7 @@ export class SearchService {
         params.set('uid', searchTerms.uid);
         // params.set('lat', String(searchTerms.location.latitude));
         // params.set('lon', String(searchTerms.location.longitude));
-        params.set('limit', '10');
+        params.set('limit', '15');
         if (searchTerms.text != null && searchTerms.text.length != 0) {
             params.set('name', searchTerms.text)
         }

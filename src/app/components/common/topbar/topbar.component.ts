@@ -124,9 +124,16 @@ export class TopbarComponent implements OnInit {
 
   // Triggered by search text box, if the user starts typing, it triggers the dropdown
   onKey(event: any) {
-    console.log(event.keyCode);
-    if(event.keyCode != 13){
+    if(event.keyCode != 13 && !this.expand){
       this.expand = true;
+    }
+  }
+  
+  click() {
+    if(!this.expand) {
+      this.expand = true;
+    } else {
+      this.expand = false;
     }
   }
 
@@ -156,14 +163,14 @@ export class TopbarComponent implements OnInit {
     // Set genres
     const genres: string[] = this.searchForm.get('genres').value as string[];
     if (genres == null || genres.length == 0) {
-      this.currentSearch.genres = this.genresList;
+      this.currentSearch.genres = ['all genres'];
     } else {
       this.currentSearch.genres = genres;
     }
     // Set events
     const events: string[] = this.searchForm.get('events').value as string[];
     if (events == null || events.length == 0) {
-      this.currentSearch.event_types = this.eventsList;
+      this.currentSearch.event_types = ['all events'];
     } else {
       this.currentSearch.event_types = events;
     }
@@ -187,6 +194,7 @@ export class TopbarComponent implements OnInit {
         this.router.navigate(['/search'])
       });
     }
+    this.expand = false;
   }
 
   // Triggers the notification panel to sideload

@@ -24,11 +24,11 @@
   fxHide.lt-sm="true" 
   class="search-bar">
     <form [formGroup]="searchForm" class="top-search-form" (ngSubmit)="submit()">
-      <mat-expansion-panel [expanded]="expand" (opened)="open()" (closed)="close()">
+      <mat-expansion-panel [expanded]="expand" (opened)="open()" (closed)="close()" [disabled]="true">
           <mat-expansion-panel-header>
             <mat-panel-title>
                 <mat-icon role="img">search</mat-icon>
-                <input class="search-text" [formControl]="searchForm.controls['text']" autofocus="true" placeholder="Search" type="text" (keyup)="onKey($event)">
+                <input class="search-text" [formControl]="searchForm.controls['text']" autofocus="true" placeholder="Search" type="text" (click)="click()" (keyup)="onKey($event)">
             </mat-panel-title>
           </mat-expansion-panel-header>
           <mat-button-toggle-group [formControl]="searchForm.controls['type']" name="searchType" value="Musician">
