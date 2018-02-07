@@ -164,7 +164,7 @@ export class ProfileEventsComponent implements OnInit {
             this.bookingService.declineBooking(booking).then(() => {
               //send notification to the artist that the host has cancelled an offer
               this.createNotificationForArtist(booking, ['/events', booking.eventEID._id],
-              'event_busy', booking.hostUser.firstName + " has cancelled the reques on " + booking.eventEID.eventName);
+              'event_busy', booking.hostUser.firstName + " has cancelled the request on " + booking.eventEID.eventName);
               this.getEvents()
             });
           }
