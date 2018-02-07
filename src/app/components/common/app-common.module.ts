@@ -9,6 +9,7 @@ import { TranslateModule } from 'ng2-translate/ng2-translate';
 import { OffClickModule } from 'angular2-off-click';
 import { 
   MatSidenavModule,
+  MatExpansionModule,
   MatListModule,
   MatTooltipModule,
   MatInputModule,
@@ -52,6 +53,7 @@ import { SocketService } from 'app/services/chats/socket.service';
     RouterModule,
     FlexLayoutModule,
     MatAutocompleteModule,
+    MatExpansionModule,
     MatInputModule,
     MatSidenavModule,
     MatIconModule,

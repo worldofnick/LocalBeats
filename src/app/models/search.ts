@@ -4,7 +4,9 @@ export class SearchTerms {
         public searchType: string,
         public text: string,
         public location: Location,
-        public genre: string
+        public genres: string[],
+        public event_types: string[],
+        public uid: string
       ) {  }
     }
 
