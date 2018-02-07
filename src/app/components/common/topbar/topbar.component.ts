@@ -204,6 +204,9 @@ export class TopbarComponent implements OnInit {
     this.sidenav.toggle();
   }
 
+  goToMessages(){
+    this.router.navigate(['/chat']);
+  }
   // Collapses the side navigation menu
   toggleCollapse() {
     let appBody = document.body;

@@ -184,6 +184,16 @@
     class="topbar-button-right">
       <mat-icon>event</mat-icon>
     </button>
+     <!-- CHat toggle button -->
+     <button 
+     mat-icon-button
+     matTooltip="Private Messaging" 
+     (click)="goToMessages()"
+     [style.overflow]="'visible'" 
+     class="topbar-button-right">
+       <mat-icon>message</mat-icon>
+       <span class="notification-number mat-bg-warn">{{numNotifications}}</span>
+     </button>
     <!-- Notification toggle button -->
     <button 
     mat-icon-button
