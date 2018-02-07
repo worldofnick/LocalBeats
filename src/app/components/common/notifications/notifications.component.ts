@@ -53,6 +53,7 @@ export class NotificationsComponent implements OnInit {
         console.log(this.notifications.length);
         let newNotification:Notification = new Notification();
         newNotification.message = notification.message;
+        newNotification.receiverID = notification.receiverID;
         newNotification.color = "blue";
         newNotification.icon = notification.icon;
         newNotification.route = notification.route;
@@ -75,7 +76,16 @@ export class NotificationsComponent implements OnInit {
   //add service call to delete those notifications.
   clearAll(e) {
     e.preventDefault();
+
+
+
+      this.notificationService.deleteNotificationById(this.notifications[0].receiverID._id).then((status: number)=>{
+        console.log("removed notification");
+      });
+
+
     this.notifications = [];
+    
   }
 
   selectNotification(notification:Notification){
