@@ -51,10 +51,26 @@ export class SearchService {
     public eventSearch(searchTerms: SearchTerms): Promise<Object> {
         let current = (this.connection + 'searchEvents/')
         let params: URLSearchParams = new URLSearchParams();
-        params.set('event_type', searchTerms.genre.toLowerCase())
-        //params.set('lat', String(searchTerms.location.latitude))
-        //params.set('lon', String(searchTerms.location.longitude))
-        params.set('limit', '5')
+        if(searchTerms.event_types[0] != 'all events'){
+            for(let type of searchTerms.event_types) {
+                params.append('event_types', type.toLowerCase());
+            }
+        } else {
+            params.set('event_types', searchTerms.event_types[0].toLowerCase());
+        }
+        if(searchTerms.genres[0] != 'all genres'){
+            for(let genre of searchTerms.genres) {
+                params.append('genres', genre.toLowerCase());
+            }
+        } else {
+            params.set('genres', searchTerms.genres[0].toLowerCase());
+        }
+        params.set('uid', searchTerms.uid);
+        if(searchTerms.location != null) {
+            params.set('lat', String(searchTerms.location.latitude));
+            params.set('lon', String(searchTerms.location.longitude));
+        }
+        params.set('limit', '15');
         if (searchTerms.text != null && searchTerms.text.length != 0) {
             params.set('name', searchTerms.text)
         }
@@ -73,10 +89,18 @@ export class SearchService {
         let current = (this.connection + 'searchUsers/')
         let params: URLSearchParams = new URLSearchParams();
         params.set('artist', 'true')
-        console.log(searchTerms);
-        params.set('genre', searchTerms.genre.toLowerCase())
-        //params.set('lat', String(searchTerms.location.latitude))
-        //params.set('lon', String(searchTerms.location.longitude))
+        for(let type of searchTerms.event_types) {
+            params.append('event_types', type.toLowerCase());
+        }
+        for(let genre of searchTerms.genres) {
+            params.append('genres', genre.toLowerCase());
+        }
+        params.set('uid', searchTerms.uid);
+        if(searchTerms.location != null) {
+            params.set('lat', String(searchTerms.location.latitude));
+            params.set('lon', String(searchTerms.location.longitude));
+        }
+        params.set('limit', '15');
         if (searchTerms.text != null && searchTerms.text.length != 0) {
             params.set('name', searchTerms.text)
         }
@@ -84,7 +108,6 @@ export class SearchService {
         return this.http.get(current, { headers: this.headers, search: params } )
             .toPromise()
             .then((response: Response) => {
-                console.log(response);
                 const data = response.json();
                 const users = data.users as Array<User>;
                 return users;

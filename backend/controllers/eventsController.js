@@ -162,6 +162,10 @@ exports.deleteUserEventsByUID = function (req, res) {
     return sort;
   }
 
+function isString(x) {
+    return Object.prototype.toString.call(x) === "[object String]"
+}
+
 // Search through events
 // params
 // skip (int) how many records to skip
@@ -188,15 +192,21 @@ exports.searchEvents = function(req, res) {
   }
 
   var query = {};
-  if (req.query.event_type != null && req.query.event_type != "all events") {
+  if (req.query.event_types != null && req.query.event_types != "all events") {
+    if (isString(req.query.event_types)) {
+      req.query.event_types = [req.query.event_types]
+    }
     query.eventType = {
-      "$in": req.query.event_type
+      "$in": req.query.event_types
     }
   }
 
-  if (req.query.event_genre != null && req.query.event_genre != "all genres") {
-    query.eventGenre = {
-      "$in": req.query.event_genre
+  if (req.query.genres != null && req.query.genres != "all genres") {
+    if (isString(req.query.genres)) {
+      req.query.genres = [req.query.genres]
+    }
+    query.eventGenres = {
+      "$in": req.query.genres
     }
   }
 
@@ -236,8 +246,10 @@ exports.searchEvents = function(req, res) {
     query.eventName = new RegExp(req.query.name);
   }
 
-  query.hostUser = {
-    "$not": query.query.uid
+  if (req.query.uid != null) {
+    query.hostUser = {
+        "$ne": new mongoose.mongo.ObjectId(req.query.uid)
+    }
   }
 
   Events.find(query).limit(limit).skip(skip).sort(sort).populate('hostUser').populate('performerUser').exec(function (err, doc) {

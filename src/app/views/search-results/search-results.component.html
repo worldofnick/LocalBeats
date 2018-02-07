@@ -1,4 +1,9 @@
 <div fxLayout="row" fxLayoutWrap="wrap">
+  <mat-card *ngIf="results.length == 0">
+      <mat-card-title class="m-0 no-shadow">
+          <div class="card-title-text text-center fz-2">We're sorry.  There are no results that fit the parameters of your search.</div>
+        </mat-card-title>
+    </mat-card>
   <div fxFlex="100" fxFlex.gt-xs="33" *ngFor="let result of results">
     <mat-card class="p-0" *ngIf="searchType == 'Event'" [routerLink]="['/events', result._id]">
       <mat-card-title class="mat-bg-primary m-0">
