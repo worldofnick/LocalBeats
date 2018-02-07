@@ -83,6 +83,10 @@ exports.deleteUserByID = function (req, res) {
   });
 };
 
+function isString(x) {
+    return Object.prototype.toString.call(x) === "[object String]"
+}
+
 // Params
 // name (string) name of the user
 // artist (boolean) true to return only artists, false to return all. Defaults to true
@@ -97,11 +101,11 @@ exports.searchUsers = function (req, res) {
   var skip = 0;
 
   if (req.query.limit != null) {
-    limit = req.query.limit;
+    limit = parseInt(req.query.limit);
   }
 
   if (req.query.skip != null) {
-    skip = req.query.skip;
+    skip = parseInt(req.query.skip);
   }
 
   if (req.query.name != null) {
@@ -113,15 +117,21 @@ exports.searchUsers = function (req, res) {
     query.isArtist = req.query.artist;
   }
 
-  if (req.query.genres != null && req.query.genres != "all genres") {
-    query.genres = {
-      "$in": req.query.genres
+  if (req.query.event_types != null && req.query.event_types != "all events") {
+    if (isString(req.query.event_types)) {
+      req.query.event_types = [req.query.event_types]
+    }
+    query.eventTypes = {
+      "$in": req.query.event_types
     }
   }
 
-  if (req.query.event_types != null) {
-    query.event_types = {
-      "$in": req.query.event_types
+  if (req.query.genres != null && req.query.genres != "all genres") {
+    if (isString(req.query.genres)) {
+      req.query.genres = [req.query.genres]
+    }
+    query.genres = {
+      "$in": req.query.genres
     }
   }
 
