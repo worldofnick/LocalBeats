@@ -1,47 +1,93 @@
-<mat-card class="example-card">
-  <div fxLayout="row" fxLayoutWrap="wrap">
-    <div fxLayout="column" fxFlex="100" fxFlex.gt-md="40">
+<agm-map 
+[latitude]="42"
+[longitude]="42"
+[zoom]="8">
+</agm-map>
 
-      <mat-card-header>
-        <!-- <div mat-card-avatar class="example-header-image"></div> -->
-        <img mat-card-avatar [src]="model.eventPicUrl">
-        <mat-card-title>Event type: {{this.model.eventName}}</mat-card-title>
-        <mat-card-subtitle>On: {{this.dateString}}</mat-card-subtitle>
-        <!-- <mat-card-subtitle >Event price: {{this.model.fixedPrice}}</mat-card-subtitle>
-                  <mat-card-subtitle *ngIf="this.model.negotiable">The event price is negotiable</mat-card-subtitle>
-                  <mat-card-subtitle *ngIf="!this.model.negotiable">The event price is non-negotiable</mat-card-subtitle> -->
+<mat-card class="p-0">
+  <mat-card-title class="">
+    <div class="card-title-text text-center fz-2">{{model.eventName}}</div>
+    <mat-divider></mat-divider>
+  </mat-card-title>
+  <mat-card-content>
+    <div fxLayout="row" fxLayoutWrap="wrap">
+      <div fxFlex="100" fxFlex.gt-xs="50" class="pr-1">
+        <div class="pb-1">
 
-      </mat-card-header>
+          <h3>Event Details:</h3>
 
-      
-                <img mat-card-image [src]="model.eventPicUrl" style="
-                          max-width:128px;
-                          max-height:128px;
-                          width:auto;
-                          height:auto;">        
-      <mat-card-content>
-        <!-- <div style="float:left;  max-width:500px; word-wrap:break-word;">
-                    <ng-template [ngIf]="model">
-                      {{ this.model.description }}
-                    </ng-template>
-                  </div>        -->
-        <p>
-          {{this.model.description}}
-        </p>
-      </mat-card-content>
+          <h4>
+            Price: {{model.fixedPrice}}</h4>
+        </div>
+        <div class="pb-1">
 
-      <mat-card-actions>
+
+          <h4>
+            Type: {{model.eventType}}</h4>
+        </div>
+
+        <div class="pb-1">
+
+          <h4>
+            Location: {{model.city}}</h4>
+
+        </div>
+
+
+        <div *ngIf="this.model.negotiable" class="pb-1">
+          <h4>The event price is negotiable</h4>
+        </div>
+
+        <div *ngIf="!this.model.negotiable" class="pb-1">
+          <h4>The event price is non-negotiable</h4>
+        </div>
+        
+       
+        <mat-divider></mat-divider>
+
+
+        <div class="pb-1">
+
+            <h3>About Event:</h3>
+            <p>{{model.description}}</p>
+  
+        </div>
+
+        <mat-divider></mat-divider>
+
+        <div class="pb-1 pt-05">
+
+
+
+            <img mat-card-image [src]="model.eventPicUrl" style="
+            max-width:512px;
+            max-height:512px;
+            width:auto;
+            height:auto;
+            text-align: center;
+            padding-top:5px;">  
+
+          </div>
+
+
         <button *ngIf="isCurrentUser && userService.isAuthenticated()" (click)="onEditEvent()" mat-button>Edit Event</button>
         <button *ngIf="isCurrentUser && userService.isAuthenticated()" (click)="onDeleteEvent()" mat-button>Delete Event</button>
         <button *ngIf="!isCurrentUser && userService.isAuthenticated() && !hasApplied" (click)="openNegotiationDialog()" mat-button>{{buttonText}}</button>
         <button *ngIf="!isCurrentUser && userService.isAuthenticated() && hasApplied" (click)="viewApplication()" mat-button>{{buttonText}}</button>
-      </mat-card-actions>
-    </div>
-  </div>
-  <!-- <div fxLayout="row" fxLayoutWrap="wrap">
-    <mat-card-content>
+      </div>
 
-      {{model.description}}
-    </mat-card-content>
-  </div> -->
+      <div fxFlex="100" fxFlex.gt-xs="50">
+       
+
+        <div class="pb-1 pt-05">
+
+
+
+
+        </div>
+      </div>
+    </div>
+  </mat-card-content>
 </mat-card>
+
+

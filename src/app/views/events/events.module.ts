@@ -52,8 +52,7 @@ import { EventSingletonComponent } from './event-singleton/event-singleton.compo
   imports: [
     CommonModule,
     AgmCoreModule.forRoot({
-      apiKey: "AIzaSyBCko4eEq6azFCzCXVXAF4_jylVNw4ZM7Q",
-      libraries: ["places"]
+      apiKey: "AIzaSyBCko4eEq6azFCzCXVXAF4_jylVNw4ZM7Q"
     }),
     FormsModule,
     ReactiveFormsModule,

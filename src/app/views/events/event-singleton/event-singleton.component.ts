@@ -14,7 +14,7 @@ import { Action } from '../../../services/chats/model/action'
 import { SocketEvent } from '../../../services/chats/model/event'
 import { Notification } from '../../../models/notification'
 import { SocketService } from '../../../services/chats/socket.service';
-
+import { AgmCoreModule, MapsAPILoader } from '@agm/core';
 
 @Component({
   selector: 'app-event-singleton',
@@ -32,6 +32,9 @@ export class EventSingletonComponent implements OnInit {
   public approvedBookings: Booking[] = [];
   public dateInBar: Date;
   public dateString: any;
+  lat: number = 51.673858;
+  lng: number = 7.815982;
+  zoom: number = 8;
   deleteStatus: Number;
   EID: any;
   buttonText: string = "Apply";
@@ -50,8 +53,10 @@ export class EventSingletonComponent implements OnInit {
       id: this.route.snapshot.params['id']
     }
 
+    
     this.eventService.getEventByEID(this.EID).then((event: Event) => {
       this.model = event;
+      
       console.log("event model: ", this.model)
       this.dateString =this.datepipe.transform(this.model.toDate, 'MM-dd-yyyy');      // this.dateInBar = this.model.fromDate
       console.log("date string: ", this.dateString);
@@ -84,7 +89,13 @@ export class EventSingletonComponent implements OnInit {
     }));
   }
 
-
+  mapClicked($event: MouseEvent) {
+    // this.markers.push({
+    //   lat: $event.coords.lat,
+    //   lng: $event.coords.lng,
+    //   draggable: true
+    // });
+  }
 
   //cancel your application. NOT BEING CALLED BUT PROBABLY IS ACTUALLY BEING CALLED
   onCancelApp() {
