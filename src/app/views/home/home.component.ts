@@ -2,11 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { SocketService } from 'app/services/chats/socket.service';
 import { SocketEvent } from 'app/services/chats/model/event';
 import { Message } from 'app/services/chats/model/message';
-import { MatSnackBar } from '@angular/material';
+import { MatSnackBar, MatSnackBarRef } from '@angular/material';
 import { UserService } from 'app/services/auth/user.service';
 import { NotificationService } from '../../services/notification/notification.service';
 import * as socketIO from 'socket.io-client';
 import { Notification } from '../../models/notification';
+import { Router } from '@angular/router';
+import { Action } from '../../services/chats/model/action';
+import { User } from '../../models/user';
 
 @Component({
   selector: 'app-home',
@@ -36,7 +39,7 @@ export class HomeComponent implements OnInit {
     url: 'assets/images/wedding-pic.jpg'
   }];
 
-  constructor(private snackBar: MatSnackBar, 
+  constructor(private snackBar: MatSnackBar, private router : Router,
               private _userService: UserService, private _socketService: SocketService) { }
 
   ngOnInit() {
@@ -68,8 +71,15 @@ export class HomeComponent implements OnInit {
    */
   openNewMessageSnackBar(message: Message) {
     if (this._userService.user._id !== message.from._id) {
-      this.snackBar.open('You have a new message from ' + message.from.firstName + ' ' + message.from.lastName,
-                        'close', { duration: 3500 });
+      let snackBarRef = this.snackBar.open('You have a new message from ' + message.from.firstName +
+        ' ' + message.from.lastName, 'Go to message...', { duration: 3500 });
+      
+      snackBarRef.onAction().subscribe(() => {
+        console.log('Going to the message...');
+
+        this.router.navigate(['/chat']);
+        this._socketService.send(Action.OPEN_SNACK_BAR_PM, message);
+      });
     };
   }
 

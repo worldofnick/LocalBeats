@@ -3,10 +3,11 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatIconModule, MatButtonModule, MatSidenavModule, MatMenuModule, MatInputModule,
-         MatListModule, MatToolbarModule, MatCardModule, MatAutocompleteModule, MatChipsModule } from '@angular/material';
+         MatListModule, MatToolbarModule, MatCardModule, MatAutocompleteModule, MatChipsModule, MatDialogModule } from '@angular/material';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { AppChatsComponent } from './app-chats.component';
+import { AppChatsComponent, DialogOverviewExampleDialog } from './app-chats.component';
 import { ChatsRoutes } from "./app-chats.routing";
+
 
 @NgModule({
   imports: [
@@ -16,6 +17,7 @@ import { ChatsRoutes } from "./app-chats.routing";
     MatInputModule,
     MatIconModule,
     MatChipsModule,
+    MatDialogModule,
     MatButtonModule,
     MatListModule,
     MatToolbarModule,
@@ -26,6 +28,8 @@ import { ChatsRoutes } from "./app-chats.routing";
     MatAutocompleteModule,
     RouterModule.forChild(ChatsRoutes)
   ],
-  declarations: [AppChatsComponent]
+  entryComponents: [AppChatsComponent, DialogOverviewExampleDialog],
+  declarations: [AppChatsComponent, DialogOverviewExampleDialog]
+  // bootstrap: [AppChatsComponent]
 })
 export class AppChatsModule { }
