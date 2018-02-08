@@ -16,6 +16,7 @@ import { MatTabChangeEvent } from '@angular/material';
 export class ProfileSettingsComponent implements OnInit {
   @ViewChild(MatProgressBar) progressBar: MatProgressBar;
   user: User;
+  genresList: string[] = ['Rock', 'Country', 'Jazz', 'Blues', 'Rap'];
 
   public uploader: FileUploader = new FileUploader({ url: 'upload_url' });
   public hasBaseDropZoneOver: boolean = false;
@@ -26,6 +27,10 @@ export class ProfileSettingsComponent implements OnInit {
     this.user = this.userService.user;
   }
 
+
+  compareFn(genre1: string, genre2: string): boolean {
+    return (genre1 == genre2);
+}
   public fileOverBase(e: any): void {
     this.hasBaseDropZoneOver = e;
   }
