@@ -68,6 +68,8 @@ export class AppChatsComponent implements OnInit, AfterViewChecked, AfterViewIni
   loggedInUser: User = new User();
   activeChatUser: User = new User();    //TODO: set to first user in connectedUsers list or one with highest unread count
   connectedUsers: User[] = new Array();
+  isProfileUserRequestPending = false;
+  profileRecipient: User = new User();
 
   // ==============================================
   // Receipient users form Variables, chips
@@ -298,9 +300,12 @@ export class AppChatsComponent implements OnInit, AfterViewChecked, AfterViewIni
       this._socketService.onEvent(SocketEvent.REQUEST_MSG_FROM_PROFILE_BUTTON)
       .subscribe((message: Message) => {
         console.log('Messaging from profile requested for (chat event): ', message);
-        let recipient: User = message.to as User;
-        this.addNewPmWithProfileButtonClick(recipient);
-        // this.reloadChatSideBarWithNewConnectedUsers();                   // reload the connectedUsers navBar
+        this.profileRecipient = message.to as User;
+        let indexInConnectedUsers = this.isUserObjInConnectedUsers(this.profileRecipient);  // get the index again
+        this.isProfileUserRequestPending = true;
+        if ( indexInConnectedUsers === -1 ) {
+          this.connectedUsers.unshift(this.profileRecipient);  // Add user to connected Users
+        }
       });
   }
 
@@ -309,7 +314,7 @@ export class AppChatsComponent implements OnInit, AfterViewChecked, AfterViewIni
     let indexInConnectedUsers = this.isUserObjInConnectedUsers(profileRecipient);  // get the index again
     if ( indexInConnectedUsers > -1 ) {
       this.newConversationClicked = false;
-      console.log(profileRecipient.firstName, ' already exists in conversation. Switching to that user at index', indexInConnectedUsers);
+      
       this.activeChatUser = this.connectedUsers[indexInConnectedUsers];
       this.changeActiveUser(this.connectedUsers[indexInConnectedUsers]);
     }
@@ -419,8 +424,14 @@ export class AppChatsComponent implements OnInit, AfterViewChecked, AfterViewIni
       }
 
       let connection;
-      this.activeChatUser = user;
-      console.log('New User clicked:', this.activeChatUser);
+      if (this.isProfileUserRequestPending) {
+        this.isProfileUserRequestPending = false;
+        this.activeChatUser = this.profileRecipient;
+        console.log(this.profileRecipient.firstName, ' already exists in conversation. Switching to it');
+      } else {
+        this.activeChatUser = user;
+        console.log('New User clicked:', this.activeChatUser);
+      }
 
       this._chatsService.getPMsBetweenActiveAndLoggedInUser(this.loggedInUser, this.activeChatUser).subscribe(
         data => {
@@ -431,7 +442,9 @@ export class AppChatsComponent implements OnInit, AfterViewChecked, AfterViewIni
           this.activeChatMessages = temp.messages;
         },
         err => console.error('Error fetching PMs between 2 users: ', err),
-        () => console.log('Done fetching PMs from the server DB')
+        () => {
+          console.log('Done fetching PMs from the server DB');
+        }
       );
       this.vc.first.nativeElement.focus();
       this.cdr.detectChanges();
