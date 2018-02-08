@@ -7,6 +7,7 @@ var User      = mongoose.model('User');
 var Notifications  = mongoose.model('Notification');
 var Message   = mongoose.model('Message');
 let notificationController = require('../controllers/notificationController.js');
+var profileButtonMsgPayload = new Object();
 
 
 module.exports = function (io) {
@@ -79,6 +80,22 @@ module.exports = function (io) {
         // Private Messaging Event Handlers - P2P
         // ============================================
         
+        socket.on('requestNewMsgFromProfileButtonClick', (messagePayload) => {
+            
+            console.log('Recevied messaging request with ', JSON.stringify(messagePayload) );
+            // console.log('Payload before: ', this.profileButtonMsgPayload);
+            profileButtonMsgPayload = messagePayload;
+            console.log('\nSaved as:', profileButtonMsgPayload);
+        });
+
+        socket.on('chatComponentDoneLoading', (payload) => {
+            if(profileButtonMsgPayload !== undefined) {
+                console.log('\Emitting profile payload:',profileButtonMsgPayload);
+                socket.emit('requestNewMsgFromProfileButtonClick', profileButtonMsgPayload);
+            }
+            
+        })
+
         //TODO look at this for sending live notifications
         socket.on('sendPrivateMessage', (payload) => {
             console.log('\n-----\nPM received from socket: ', socket.id);
