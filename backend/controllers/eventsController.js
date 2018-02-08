@@ -18,10 +18,6 @@ exports.listAllEvents = function (req, res) {
     });
   };
 
-
-  
-
-// app.get("/api/events/:eid",
 exports.getEventByID = function (req, res) {
     Events.findById(req.params.eid).populate('hostUser').populate('performerUser').exec(function (err, event) {
         if (err) {
@@ -149,20 +145,21 @@ exports.deleteUserEventsByUID = function (req, res) {
   });
 };
 
-  function buildSort(req) {
+function buildSort(req) {
     var sort = { fromDate: -1 };
     if (req.query.sort == 'date-asc') {
-      sort = { fromDate: 1 };
+        sort = { fromDate: 1 };
     } else if (req.query.sort == 'price-desc') {
-      sort = { fixedPrice: -1 }
+        sort = { fixedPrice: -1 }
     } else if (req.query.sort == 'price-asc') {
-      sort = { fixedPrice: 1 }
+        sort = { fixedPrice: 1 }
     } else if (req.query.sort == 'distance-desc' || req.query.sort == 'distance-asc') {
-      sort = {}
+        sort = {}
     }
 
     return sort;
-  }
+}
+
 
 function isString(x) {
     return Object.prototype.toString.call(x) === "[object String]"
@@ -253,11 +250,6 @@ exports.searchEvents = function(req, res) {
       if (err) {
           return res.status(500).send(err);
       } else {
-            // var events = [];
-            // doc.forEach(function(event) {
-            //     events.push({"event": event});
-            // });
-
             return res.status(200).send({"events": doc});
       }
   });
