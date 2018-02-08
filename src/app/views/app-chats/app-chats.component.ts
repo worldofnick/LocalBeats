@@ -1,9 +1,9 @@
-import { Component, OnInit, Input, Output, ViewChild, AfterContentInit, ContentChild, 
+import { Component, Inject, OnInit, Input, Output, ViewChild, AfterContentInit, ContentChild, 
         AfterViewInit, ViewChildren, AfterViewChecked, ElementRef, ChangeDetectorRef } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { Subscription } from "rxjs/Subscription";
 import { MediaChange, ObservableMedia } from "@angular/flex-layout";
-import { MatSidenav, MatDialog, MatChipInputEvent, MatSnackBar } from '@angular/material';
+import { MatSidenav, MatChipInputEvent, MatSnackBar, MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { ENTER, COMMA, TAB } from '@angular/cdk/keycodes';
 import { Observable } from 'rxjs/Rx';
 import { startWith } from 'rxjs/operators/startWith';
@@ -75,34 +75,35 @@ export class AppChatsComponent implements OnInit, AfterViewChecked, AfterViewIni
   // ==============================================
   // Receipient users form Variables, chips
   // ==============================================
-  recipientsFormControl = new FormControl();
-  newConversationClicked: boolean = false;
-  recipientStringAny: any = '';
+  // recipientsFormControl = new FormControl();
+  // newConversationClicked: boolean = false;
+  // recipientStringAny: any = '';
 
-  // TODO: change all to User from DummyUser
-  options: User[] = new Array();
+  // // TODO: change all to User from DummyUser
+  // options: User[] = new Array();
   //  = [
   // new DummyUser('Snorlax', 'Ketchum', 'snor@poke.com'),
   // new DummyUser('Onix', 'Brock', 'onix@poke.com'),
   // new DummyUser('Meowth', 'Rocket', 'meow@poke.com')
   // ];
 
-  filteredOptions: Observable<User[]>;
+  // filteredOptions: Observable<User[]>;
 
-  isVisible: boolean = true;
-  isSelectable: boolean = true;
-  isRemovable: boolean = true;
-  isAddOnBlur: boolean = true;
-  separatorKeysCodes = [ENTER, COMMA, TAB];
+  // isVisible: boolean = true;
+  // isSelectable: boolean = true;
+  // isRemovable: boolean = true;
+  // isAddOnBlur: boolean = true;
+  // separatorKeysCodes = [ENTER, COMMA, TAB];
 
-  recipientChips = [];
+  // recipientChips = [];
 
   // ==============================================
   // Init Methods
   // ==============================================
 
   constructor(private media: ObservableMedia, public _snackBar: MatSnackBar, private cdr: ChangeDetectorRef,
-    private _socketService: SocketService, private _chatsService: ChatsService, private router: Router) {
+    private _socketService: SocketService, private _chatsService: ChatsService, private router: Router, 
+    public dialog: MatDialog) {
     // this.initSelfUser();
     this.loggedInUser = this._chatsService.getCurrentLoggedInUser();
     // if (this.connectedUsers.length < 1) {
@@ -114,6 +115,21 @@ export class AppChatsComponent implements OnInit, AfterViewChecked, AfterViewIni
     console.log('Init connectedUsers user:', this.connectedUsers);
 
     console.log('Logged in User:', this.loggedInUser);
+  }
+
+  openDialog(): void {
+    let dialogRef = this.dialog.open(DialogOverviewExampleDialog, {
+      width: '350px',
+      data: {
+        usersList: this.options,
+        loggedInUser: this.loggedInUser,
+        recipientUser: ''
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed with result: ', result);
+    });
   }
 
   // openNewMessageSnackBar() {
@@ -153,92 +169,92 @@ export class AppChatsComponent implements OnInit, AfterViewChecked, AfterViewIni
   // Recipient Form Methods, Add button
   // ==============================================
 
-  private initRecipientForm() {
-    this.filteredOptions = this.recipientsFormControl.valueChanges
-      .pipe(
-      startWith<string | User>(''),
-      map(value => typeof value === 'string' ? value : value.email),  //TODO: change to name?
-      map(name => name ? this.filter(name) : this.options.slice())
-      );
-  }
+  // private initRecipientForm() {
+  //   this.filteredOptions = this.recipientsFormControl.valueChanges
+  //     .pipe(
+  //     startWith<string | User>(''),
+  //     map(value => typeof value === 'string' ? value : value.email),  //TODO: change to name?
+  //     map(name => name ? this.filter(name) : this.options.slice())
+  //     );
+  // }
 
-  filter(name: string): User[] {
-    return this.options.filter(option =>
-      option.email.toLowerCase().indexOf(name.toLowerCase()) === 0);
-  }
+  // filter(name: string): User[] {
+  //   return this.options.filter(option =>
+  //     option.email.toLowerCase().indexOf(name.toLowerCase()) === 0);
+  // }
 
-  displayFn(user?: User): string | undefined {
+  // displayFn(user?: User): string | undefined {
 
-    return user ? user.firstName + ' ' + user.lastName : undefined;
-  }
+  //   return user ? user.firstName + ' ' + user.lastName : undefined;
+  // }
 
-  onStartNewConversationButtonClick() {
+  // onStartNewConversationButtonClick() {
 
-    let blankUser = new User();
-    blankUser.firstName = 'New ';
-    blankUser.lastName = 'Message';
-    this.connectedUsers.unshift(blankUser); // Add to the top of the users list
-    this.activeChatUser = blankUser;        // Make it the actively selected user on sidebar
+  //   let blankUser = new User();
+  //   blankUser.firstName = 'New ';
+  //   blankUser.lastName = 'Message';
+  //   this.connectedUsers.unshift(blankUser); // Add to the top of the users list
+  //   this.activeChatUser = blankUser;        // Make it the actively selected user on sidebar
 
-    //TODO: make so new blank user is added and is active, empty recipient form on right top bar
-    this.initRecipientForm();
-    this.newConversationClicked = true;
-    console.log('New conversation button clicked!');
-    this.activeChatMessages = [];
-  }
+  //   //TODO: make so new blank user is added and is active, empty recipient form on right top bar
+  //   this.initRecipientForm();
+  //   this.newConversationClicked = true;
+  //   console.log('New conversation button clicked!');
+  //   this.activeChatMessages = [];
+  // }
 
-  // Chip methods
-  add(event: MatChipInputEvent): void {
-    let input = event.input;
-    // let value = event.value;
-    let value = this.recipientStringAny.firstName + ' ' + this.recipientStringAny.lastName;
+  // // Chip methods
+  // add(event: MatChipInputEvent): void {
+  //   let input = event.input;
+  //   // let value = event.value;
+  //   let value = this.recipientStringAny.firstName + ' ' + this.recipientStringAny.lastName;
 
-    // Add our recipient
-    if ((value || '').trim()) {
-      if (value !== 'undefined undefined') {
-        this.recipientChips.push({ name: value.trim() });
-      }
-    }
-    console.log('New recipients: ', this.recipientChips);
-    // Reset the input value
-    if (input) {
-      input.value = '';
-    }
+  //   // Add our recipient
+  //   if ((value || '').trim()) {
+  //     if (value !== 'undefined undefined') {
+  //       this.recipientChips.push({ name: value.trim() });
+  //     }
+  //   }
+  //   console.log('New recipients: ', this.recipientChips);
+  //   // Reset the input value
+  //   if (input) {
+  //     input.value = '';
+  //   }
 
-    if (this.recipientStringAny !== '') {
-      console.log('Initiating chat with: ', this.recipientStringAny);
-      //TODO: get user object from server and use it
-      let newUser = this.recipientStringAny as User;
+  //   if (this.recipientStringAny !== '') {
+  //     console.log('Initiating chat with: ', this.recipientStringAny);
+  //     //TODO: get user object from server and use it
+  //     let newUser = this.recipientStringAny as User;
 
-      // Check if the new user is already in the list. If so, switch to that user. Else add it
-      let indexInConnectedUsers = this.isUserObjInConnectedUsers(newUser);
-      if ( indexInConnectedUsers > -1 ) {
-        this.newConversationClicked = false;
-        console.log('In add()>-1, connUsers: ', this.connectedUsers);
-        // this.connectedUsers.shift();  // Remove blank user from the side bar list
-        indexInConnectedUsers = this.isUserObjInConnectedUsers(newUser);  // get the index again
-        console.log('User already exists in conversation. Switching to that user at index', indexInConnectedUsers);
-        this.activeChatUser = this.connectedUsers[indexInConnectedUsers];
-        this.changeActiveUser(this.connectedUsers[indexInConnectedUsers]);
-      } else {
-        this.connectedUsers.shift();  // Remove blank user from the side bar list
-        this.connectedUsers.unshift(newUser);
-        this.activeChatUser = newUser;
-      }
+  //     // Check if the new user is already in the list. If so, switch to that user. Else add it
+  //     let indexInConnectedUsers = this.isUserObjInConnectedUsers(newUser);
+  //     if ( indexInConnectedUsers > -1 ) {
+  //       this.newConversationClicked = false;
+  //       console.log('In add()>-1, connUsers: ', this.connectedUsers);
+  //       // this.connectedUsers.shift();  // Remove blank user from the side bar list
+  //       indexInConnectedUsers = this.isUserObjInConnectedUsers(newUser);  // get the index again
+  //       console.log('User already exists in conversation. Switching to that user at index', indexInConnectedUsers);
+  //       this.activeChatUser = this.connectedUsers[indexInConnectedUsers];
+  //       this.changeActiveUser(this.connectedUsers[indexInConnectedUsers]);
+  //     } else {
+  //       this.connectedUsers.shift();  // Remove blank user from the side bar list
+  //       this.connectedUsers.unshift(newUser);
+  //       this.activeChatUser = newUser;
+  //     }
 
 
 
-      // Reset stuff
-      this.newConversationClicked = false;
-      this.recipientChips = [];
-      this.recipientStringAny = '';
+  //     // Reset stuff
+  //     this.newConversationClicked = false;
+  //     this.recipientChips = [];
+  //     this.recipientStringAny = '';
 
-      // if (this.connectedUsers.includes(newUser)) {
-      //   this.changeActiveUser(this.activeChatUser);
-      // }
-    }
+  //     // if (this.connectedUsers.includes(newUser)) {
+  //     //   this.changeActiveUser(this.activeChatUser);
+  //     // }
+  //   }
 
-  }
+  // }
 
   isUserObjInConnectedUsers(newUser: User): number {
 
@@ -251,13 +267,13 @@ export class AppChatsComponent implements OnInit, AfterViewChecked, AfterViewIni
       return -1;
   }
 
-  remove(fruit: any): void {
-    let index = this.recipientChips.indexOf(fruit);
+  // remove(fruit: any): void {
+  //   let index = this.recipientChips.indexOf(fruit);
 
-    if (index >= 0) {
-      this.recipientChips.splice(index, 1);
-    }
-  }
+  //   if (index >= 0) {
+  //     this.recipientChips.splice(index, 1);
+  //   }
+  // }
 
   // ==============================================
   // Others
@@ -506,4 +522,47 @@ export class AppChatsComponent implements OnInit, AfterViewChecked, AfterViewIni
       messageType: messageType
     };
   }
+}
+
+@Component({
+  selector: 'dialog-overview-example-dialog',
+  templateUrl: 'dialog-overview-example-dialog.html',
+})
+export class DialogOverviewExampleDialog {
+
+  recipientsFormControl = new FormControl();
+  filteredOptions: Observable<User[]>;
+  allUsers: User[] = new Array();
+
+  constructor(
+    public dialogRef: MatDialogRef<DialogOverviewExampleDialog>,
+    @Inject(MAT_DIALOG_DATA) public data: any) { 
+      console.log('From dialog, USERS: ', data.usersList);
+      this.allUsers = data.usersList;
+      this.initRecipientForm();
+    }
+
+  onNoClick(): void {
+    this.dialogRef.close();
+  }
+
+  private initRecipientForm() {
+    this.filteredOptions = this.recipientsFormControl.valueChanges
+      .pipe(
+      startWith<string | User>(''),
+      map(value => typeof value === 'string' ? value : value.firstName + ' ' + value.lastName),  //TODO: change to name?
+      map(name => name ? this.filter(name) : this.allUsers.slice())
+      );
+  }
+
+  filter(name: string): User[] {
+    return this.allUsers.filter(option =>
+      (option.firstName + ' ' + option.lastName).toLowerCase().indexOf(name.toLowerCase()) === 0);
+  }
+
+  displayFn(user?: User): string | undefined {
+
+    return user ? user.firstName + ' ' + user.lastName : undefined;
+  }
+
 }
