@@ -60,12 +60,17 @@ export class ProfileEventsComponent implements OnInit {
           }
         }
         this.events = newEvents;
+
+        //may need to bring this back if we ever limit the number of events we get. 
+        // if (this.events.length < 5 ) {
+        //   this.getEvents();
+        // }
       }
+
+
     });
 
-    if (this.events.length <= 5) {
-      this.getEvents();
-    }
+
 
   }
 
