@@ -82,17 +82,17 @@ module.exports = function (io) {
         
         socket.on('requestNewMsgFromProfileButtonClick', (messagePayload) => {
             
-            console.log('Recevied messaging request with ', JSON.stringify(messagePayload) );
-            console.log('Payload before: ', profileButtonMsgPayload);
+            // console.log('Recevied messaging request with ', JSON.stringify(messagePayload) );
+            // console.log('Payload before: ', profileButtonMsgPayload);
             profileButtonMsgPayload = messagePayload;
-            console.log('\nSaved as:', profileButtonMsgPayload);
+            // console.log('\nSaved as:', profileButtonMsgPayload);
         });
 
         socket.on('chatComponentDoneLoading', (payload) => {
             // console.log('Conditional 1: ', Object.keys(profileButtonMsgPayload).length !== 0 && profileButtonMsgPayload.constructor !== Object);
             // console.log('Conditional 2: ', Object.keys(profileButtonMsgPayload).length !== 0 && profileButtonMsgPayload.constructor === Object);
             if(Object.keys(profileButtonMsgPayload).length !== 0 && profileButtonMsgPayload.constructor === Object) {
-                console.log('\Emitting profile payload:',profileButtonMsgPayload);
+                // console.log('\Emitting profile payload:',profileButtonMsgPayload);
                 socket.emit('requestNewMsgFromProfileButtonClick', profileButtonMsgPayload);
                 profileButtonMsgPayload = new Object();
             }
