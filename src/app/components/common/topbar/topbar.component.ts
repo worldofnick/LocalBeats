@@ -131,8 +131,6 @@ export class TopbarComponent implements OnInit {
   click() {
     if(!this.expand) {
       this.expand = true;
-    } else {
-      this.expand = false;
     }
   }
 
