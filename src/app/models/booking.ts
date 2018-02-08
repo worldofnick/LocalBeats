@@ -19,9 +19,9 @@ export class Booking {
 }
 
 export enum StatusMessages {
-    artistBid = "New Bid - waiting for your response",
-    artistApplication = "New Application - waiting for your response",
-    hostOffer = "New Offer - waiting for your response",
+    artistBid = "New Bid",
+    artistApplication = "New Application",
+    hostOffer = "New Offer",
     waitingOnHost = "Waiting for response from host",
     waitingOnArtist = "Waiting for response from artist",
     bookingConfirmed = "Booking Confirmed",

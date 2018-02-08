@@ -28,6 +28,7 @@ export class ProfileEventsComponent implements OnInit {
   confirmedBookings: Booking[];
   deleteStatus: Number;
   hasApplied: Boolean = true;
+  applicantUpdates: Boolean = true;
 
   constructor(private eventService: EventService,
     private userService: UserService,

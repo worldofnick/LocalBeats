@@ -9,3 +9,24 @@ mat-card-avatar img {
   padding-top: 0.35cm;
   padding-left: 0.75cm;
 }
+
+mat-card-title mat-icon {
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  color: #247ba0 !important;
+}
+
+.notification-value {
+  position: relative;
+  top: 0;
+  left: 5%;
+  width: 20px;
+  height: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 20px;
+  color: #fff;
+  text-align: center;
+  border-radius: 50%;
+}

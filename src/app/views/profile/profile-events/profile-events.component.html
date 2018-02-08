@@ -24,16 +24,18 @@
             </mat-card-actions>
           </mat-card>
         </mat-tab>
-        <mat-tab label="Applicants">
+        <mat-tab>
+          <ng-template mat-tab-label>
+              Applicants <span class="notification-value mat-bg-warn">1</span>
+          </ng-template>
           <mat-card *ngIf="event.applicants.length == 0" class="example-card no-shadow">
             <mat-card-title>You have no applicants.</mat-card-title>
           </mat-card>
           <mat-card *ngFor="let booking of event.applicants; let i = index" class="example-card no-shadow">
             <mat-card-header>
               <img mat-card-avatar [src]="booking.performerUser.profilePicUrl">
-              <mat-card-title><a [routerLink]="['/profile', booking.performerUser._id]">{{booking.performerUser.firstName}} {{booking.performerUser.lastName}}</a></mat-card-title>
-              <mat-card-subtitle>Proposed Price: {{booking.currentPrice | currency}}</mat-card-subtitle>
-              <mat-card-subtitle>Status: {{booking.hostStatusMessage}}</mat-card-subtitle>
+              <mat-card-title><a [routerLink]="['/profile', booking.performerUser._id]">{{booking.performerUser.firstName}} {{booking.performerUser.lastName}} </a><mat-icon *ngIf="booking.artistApproved">music_note</mat-icon></mat-card-title>
+              <mat-card-subtitle>{{booking.hostStatusMessage}} - {{booking.currentPrice | currency}}</mat-card-subtitle>
             </mat-card-header>
             <mat-card-content>
             </mat-card-content>
