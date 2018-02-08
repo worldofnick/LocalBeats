@@ -122,10 +122,10 @@ export class AppChatsComponent implements OnInit, AfterViewChecked, AfterViewIni
     this.initIoConnection();
     this.chatSideBarInit();
     console.log('On open, connectd users: ', this.connectedUsers);
-    this._socketService.send(SocketEvent.NOTIFY_SERVER_CHAT_LOADED, null);
   }
 
   ngAfterViewInit() {
+    this._socketService.send(SocketEvent.NOTIFY_SERVER_CHAT_LOADED, null);
     this.vc.first.nativeElement.focus();
     this.cdr.detectChanges();
   }
