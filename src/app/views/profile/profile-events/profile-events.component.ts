@@ -40,6 +40,12 @@ export class ProfileEventsComponent implements OnInit {
   ngOnInit() {
     this.user = this.userService.user;
     this.getEvents();
+
+    //listening for real time notification
+    this._socketService.onEvent(SocketEvent.SEND_NOTIFICATION)
+      .subscribe((notification: Notification) => {
+        this.getEvents();
+    });
   }
 
 
@@ -134,8 +140,8 @@ export class ProfileEventsComponent implements OnInit {
                 this.createNotificationForArtist(booking, ['/profile', 'performances'],
                 'event_available', booking.hostUser.firstName + " has confirmed the booking" + booking.eventEID.eventName);
 
-                this.createNotificationForHost(booking, ['/profile', 'events'],
-                'event_available', "You have confirmed the booking " + booking.eventEID.eventName);
+                // this.createNotificationForHost(booking, ['/profile', 'events'],
+                // 'event_available', "You have confirmed the booking " + booking.eventEID.eventName);
                 this.getEvents()
               });
             } else {

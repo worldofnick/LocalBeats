@@ -58,27 +58,46 @@ export class EventSingletonComponent implements OnInit {
       } else {
         this.isCurrentUser = false;
       }
-    }).then(() => this.bookingService.getBooking(this.model).then((bookings: any[]) => {
+    }).then(() => this.getBooking());
+
+    //listening for real time notification
+    this._socketService.onEvent(SocketEvent.SEND_NOTIFICATION)
+      .subscribe((notification: Notification) => {
+        this.getBooking();
+    });
+  }
+
+  getBooking() {
+    this.bookingService.getBooking(this.model).then((bookings: any[]) => {
       this.currentBookings = bookings;
-      for (let result of this.currentBookings) {
-        if (result.approved) {
-          this.approvedBookings.push(result)
+      if(this.currentBookings.length != 0) {
+        for (let result of this.currentBookings) {
+          if (result.approved) {
+            this.approvedBookings.push(result)
+          }
+          if (this.userService.user != null && result.performerUser._id === this.userService.user._id) {
+            this.hasApplied = true;
+            this.userBooking = result
+          }
         }
-        if (this.userService.user != null && result.performerUser._id === this.userService.user._id) {
-          this.hasApplied = true;
-          this.userBooking = result
-        }
+      } else {
+        this.userBooking = null;
+        this.hasApplied = false;
       }
+      
       if (!this.hasApplied) {
         if (this.model.negotiable) {
           this.buttonText = "Bid";
         } else {
           this.buttonText = "Apply";
         }
+      } else if(this.userBooking.approved){
+        this.buttonText = "Cancel Booking";
       } else {
         this.buttonText = "View Application";
       }
-    }));
+    })
+
   }
 
 
@@ -152,6 +171,7 @@ export class EventSingletonComponent implements OnInit {
   viewApplication() {
     this.bookingService.negotiate(this.userBooking, false, 'artist')
       .subscribe((result) => {
+        console.log(result);
         if (result != undefined) {
           this.userBooking.currentPrice = result.price;
           if (result.accepted == 'accepted') {
@@ -187,7 +207,7 @@ export class EventSingletonComponent implements OnInit {
               this.userBooking = booking;
               this.buttonText = "View Application";
             });
-          } else {
+          } else if (result.accepted == 'cancel' || result.accepted == 'declined'){
             if (this.model.negotiable) {
               this.buttonText = "Bid";
             } else {

@@ -6,7 +6,7 @@
     </mat-card-title>
   <mat-tab-group>
     <!-- my events -->
-    <mat-tab label="Events You Can Request This Artist For">
+    <mat-tab label="Available Events">
       <mat-card *ngIf="events.length == 0" class="example-card no-shadow">
           <mat-card-title>You have no events which you can request this artist for.</mat-card-title>
       </mat-card>
@@ -25,7 +25,7 @@
         </mat-card-actions>
       </mat-card>
     </mat-tab>
-    <mat-tab label="Events You've Requested This Artist For">
+    <mat-tab label="Requested Events">
       <mat-card *ngIf="requestedBookings.length == 0" class="example-card no-shadow">
           <mat-card-title>You have not requested this artist for any of your events.</mat-card-title>
       </mat-card>
@@ -41,6 +41,25 @@
         </mat-card-content>
         <mat-card-actions>
           <button (click)="viewRequest(result)" mat-button color="primary">View Request</button>
+        </mat-card-actions>
+      </mat-card>
+    </mat-tab>
+    <mat-tab label="Booked Events">
+      <mat-card *ngIf="confirmedBookings.length == 0" class="example-card no-shadow">
+          <mat-card-title>You have not booked this artist for any of your events.</mat-card-title>
+      </mat-card>
+      <mat-card *ngFor="let result of confirmedBookings; let i = index" class="example-card">
+        <mat-card-header>
+          <img mat-card-avatar [src]="result.eventEID.eventPicUrl">
+          <mat-card-title><a [routerLink]="['/events', result.eventEID._id]">{{result.eventEID.eventName }}</a></mat-card-title>
+          <mat-card-subtitle>{{result.eventEID.eventType | capitalize}}</mat-card-subtitle>
+          <mat-card-subtitle>{{result.eventEID.toDate | date:'MMM d, y, h:mm a'}}</mat-card-subtitle>
+          <mat-card-subtitle>{{result.eventEID.fixedPrice | currency}}</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+        </mat-card-content>
+        <mat-card-actions>
+          <button (click)="viewRequest(result)" mat-button color="primary">Cancel Booking</button>
         </mat-card-actions>
       </mat-card>
     </mat-tab>

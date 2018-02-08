@@ -21,6 +21,7 @@ export class ProfileRequestComponent implements OnInit {
   @Input() artist: User;
   events: any[] = [];
   requestedBookings: any[] = [];
+  confirmedBookings: any[] = [];
   deleteStatus: Number;
   artistID: any;
 
@@ -29,6 +30,12 @@ export class ProfileRequestComponent implements OnInit {
 
   ngOnInit() {
     this.getAvailableEvents()
+
+    //listening for real time notification
+    this._socketService.onEvent(SocketEvent.SEND_NOTIFICATION)
+      .subscribe((notification: Notification) => {
+        this.getAvailableEvents();
+    });
   }
 
   public getAvailableEvents() {
@@ -59,8 +66,25 @@ export class ProfileRequestComponent implements OnInit {
             tempEvents.push(event)
           }
         }
+        this.requestedBookings = [];
+        this.confirmedBookings = [];
+        for (let result of bookings) {
+          if (result.bookingType == 'host-request') {
+            if(!result.approved) {
+              this.requestedBookings.push(result);
+            } else {
+              this.confirmedBookings.push(result);
+            }
+  
+          } else if (result.bookingType == 'artist-apply') {
+            if(!result.approved){
+              this.requestedBookings.push(result);
+            } else {
+              this.confirmedBookings.push(result);
+            }
+          }
+        }
         this.events = tempEvents;
-        this.requestedBookings = bookings;
       }));
   }
 
@@ -128,7 +152,7 @@ export class ProfileRequestComponent implements OnInit {
         'import_export', booking.hostUser.firstName + " has updated the offer on " + booking.eventEID.eventName);
           this.getAvailableEvents()
         });
-        } else {
+        } else if(result.accepted == 'cancel'){
 
           this.bookingService.declineBooking(booking).then((booking2: Booking) => {
             //send notifcaiotn cancellation here
