@@ -1,8 +1,8 @@
 <h1 mat-dialog-title>Hi {{data.loggedInUser.firstName + ' ' + data.loggedInUser.lastName}}</h1>
 <div mat-dialog-content>
   <p>Who would you like to privately converse with?</p>
-  <mat-form-field>
-    <input matInput [(ngModel)]="data.recipientUser" placeholder="Recipient" 
+  <mat-form-field style="width:100%">
+    <input cdkFocusInitial matInput [(ngModel)]="data.recipientUser" placeholder="Recipient" 
     [formControl]="recipientsFormControl" [matAutocomplete]="auto">  <!-- Change it -->
     <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
             <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
@@ -16,5 +16,5 @@
 </div>
 <div mat-dialog-actions>
   <button mat-button (click)="onNoClick()">No One</button>
-  <button mat-button [mat-dialog-close]="data" cdkFocusInitial>Let's Chat</button>
+  <button mat-button [mat-dialog-close]="data">Let's Chat</button>
 </div>
