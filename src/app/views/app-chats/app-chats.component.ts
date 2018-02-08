@@ -301,28 +301,8 @@ export class AppChatsComponent implements OnInit, AfterViewChecked, AfterViewIni
       .subscribe((message: Message) => {
         console.log('Messaging from profile requested for (chat event): ', message);
         this.profileRecipient = message.to as User;
-        // let indexInConnectedUsers = this.isUserObjInConnectedUsers(this.profileRecipient);  // get the index again
         this.isProfileUserRequestPending = true;
-        // if ( indexInConnectedUsers === -1 ) {
-        //   this.connectedUsers.unshift(this.profileRecipient);  // Add user to connected Users
-        // }
       });
-  }
-
-  addNewPmWithProfileButtonClick(profileRecipient: User) {
-    // Check if the recipient is already in chat. If so, switch to that user
-    let indexInConnectedUsers = this.isUserObjInConnectedUsers(profileRecipient);  // get the index again
-    if ( indexInConnectedUsers > -1 ) {
-      this.newConversationClicked = false;
-      
-      this.activeChatUser = this.connectedUsers[indexInConnectedUsers];
-      this.changeActiveUser(this.connectedUsers[indexInConnectedUsers]);
-    }
-    // Else, initialite new chat with this recipient
-    else {
-      this.connectedUsers.unshift(profileRecipient);  // Add user to connected Users
-      this.changeActiveUser(profileRecipient);
-    }
   }
 
   isUserInConnectedUsers(message): boolean {
