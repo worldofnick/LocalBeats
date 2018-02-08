@@ -436,21 +436,6 @@ export class AppChatsComponent implements OnInit, AfterViewChecked, AfterViewIni
       this.vc.first.nativeElement.focus();
       this.cdr.detectChanges();
     }
-
-
-    // ALGORITHM:
-    // retrieve getUserByID. 
-    // if the receiverUser is online:
-    // ask server to add to private chat room
-    // else
-    // REST api store messages to DB as unread for receiver user
-
-
-    // this._chatsService.sendPrivateJoinMessage(this.activeChatUser);
-
-    // connection = this._chatsService.getServerJoinPrivateChatAcknowledge().subscribe(message => {
-    //     console.log('Acknowledge message from server : ', message);
-    //   });
   }
 
   updateSidenav() {
