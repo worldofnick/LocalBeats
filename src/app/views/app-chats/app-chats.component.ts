@@ -10,6 +10,7 @@ import { startWith } from 'rxjs/operators/startWith';
 import { map } from 'rxjs/operators/map';
 import { FormControl } from '@angular/forms';
 import { trigger, state, style, animate, transition } from '@angular/animations';
+import { Router } from '@angular/router';
 
 import { ChatsService } from 'app/services/chats/chats.service';
 import { SocketService } from 'app/services/chats/socket.service';
@@ -101,7 +102,7 @@ export class AppChatsComponent implements OnInit, AfterViewChecked, AfterViewIni
   // ==============================================
 
   constructor(private media: ObservableMedia, public _snackBar: MatSnackBar, private cdr: ChangeDetectorRef,
-    private _socketService: SocketService, private _chatsService: ChatsService) {
+    private _socketService: SocketService, private _chatsService: ChatsService, private router: Router) {
     // this.initSelfUser();
     this.loggedInUser = this._chatsService.getCurrentLoggedInUser();
     // if (this.connectedUsers.length < 1) {
@@ -475,15 +476,6 @@ export class AppChatsComponent implements OnInit, AfterViewChecked, AfterViewIni
     console.log('Sender: ', this.loggedInUser.firstName + ' ' + this.loggedInUser.lastName);
     console.log('Receiver: ', this.activeChatUser.firstName + ' ' + this.activeChatUser.lastName);
     console.log('---------------------');
-
-    /**
-     * isRead?: boolean;
-    sentAt?: Date;
-    messageType?: string;
-    attachmentURL?: string;
-    serverMessage?: any;
-    serverPayload?: any;
-     */
     // If the user entered non-blank message and hit send, communicate with server
 
     if (this.messageEntered.trim().length > 0) {
@@ -508,23 +500,10 @@ export class AppChatsComponent implements OnInit, AfterViewChecked, AfterViewIni
     };
   }
 
-  // awaitMessageSaveResponse(privateMessage: Message) {
-  //   //TODO: change to promise, then?
-  //   this._chatsService.savePrivateMessageToDB(privateMessage).subscribe(
-  //     data => {
-  //       console.log('\n====\nMessage save response from server: ', JSON.stringify(data));
-  //       // console.log('\n====\nUser PMs from Server DB: ', data as {messages: Message[]} );
-  //       // this.activeChatMessages = new Array();
-  //       // let temp = data as {messages: Message[]};
-  //       // this.activeChatMessages = temp.messages;
-  //     },
-  //     err => console.error('Error saving the message: ', err),
-  //     () => { 
-  //       console.log('Done saving the message to server DB. Sending socket request.');
-  //       this._socketService.send(Action.SEND_PRIVATE_MSG, privateMessage);
-  //     }
-  //   );
-  // }
+  topBarGoToProfileClicked() {
+    console.log('Go to profile clicked for user: ', this.activeChatUser);
+    this.router.navigate(['profile/', this.activeChatUser._id]);
+  }
 
   resetMessageInputBox() {
     this.messageEntered = '';                   // Reset the message input box 
