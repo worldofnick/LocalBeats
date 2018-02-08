@@ -80,7 +80,7 @@ export class AppChatsComponent implements OnInit, AfterViewChecked, AfterViewIni
   // recipientStringAny: any = '';
 
   // // TODO: change all to User from DummyUser
-  // options: User[] = new Array();
+  options: User[] = new Array();
   //  = [
   // new DummyUser('Snorlax', 'Ketchum', 'snor@poke.com'),
   // new DummyUser('Onix', 'Brock', 'onix@poke.com'),
