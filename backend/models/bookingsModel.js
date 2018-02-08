@@ -12,7 +12,7 @@ var BookingsSchema = new Schema({
     eventEID        : {type: Schema.Types.ObjectId, ref: 'Events' },
     approved        : {type: Boolean, default: false}, // Approved is true when bookingType=artist-apply when a host has accepted an application from an artist. When bookingType=host-request it means the artist has agreed to the request from the host.
     hostStatusMessage   : {type: String, default: ''},
-    artistStatusMessage : {type, String, default: ''},
+    artistStatusMessage : {type: String, default: ''},
     artistApproved  : {type: Boolean, default: false},
     hostApproved    : {type: Boolean, default: false},
     currentPrice    : {type: Number, required: true},
