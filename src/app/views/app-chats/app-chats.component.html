@@ -6,7 +6,8 @@
       <mat-toolbar color="primary" class="chat-sidebar-toolbar">
           <span fxFlex></span>
           <h6 class="m-0 font-normal fz-1">Conversations</h6>
-        <button mat-icon-button class="topbar-button-right" (click)="onStartNewConversationButtonClick()">
+          <!-- onStartNewConversationButtonClick() -->
+        <button mat-icon-button class="topbar-button-right" (click)="openDialog()">
           <mat-icon aria-label="Start a new conversation">add</mat-icon></button>
         <!-- <a href="" class="toolbar-avatar online">
           <img [src]="loggedInUser.profilePicUrl" alt="">
