@@ -73,8 +73,6 @@ exports.createEvent = function (req, res) {
                 if (err) {
                     return res.status(500).send("Failed to create event");
                 } else {
-                    console.log("PRINTING NEW EVENT");
-                    console.log(fetchedEvent)
                     return res.status(200).send({ "event": fetchedEvent });
                 }
             });
@@ -242,7 +240,7 @@ exports.searchEvents = function(req, res) {
    }
 
   if (req.query.name != null) {
-    query.eventName = new RegExp(req.query.name);
+    query.eventName = new RegExp(req.query.name, 'gi');
   }
 
   if (req.query.uid != null) {

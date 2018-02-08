@@ -61,12 +61,17 @@ export class ProfileEventsComponent implements OnInit {
           }
         }
         this.events = newEvents;
+
+        //may need to bring this back if we ever limit the number of events we get. 
+        // if (this.events.length < 5 ) {
+        //   this.getEvents();
+        // }
       }
+
+
     });
 
-    if (this.events.length <= 5) {
-      this.getEvents();
-    }
+
 
   }
 
@@ -142,9 +147,6 @@ export class ProfileEventsComponent implements OnInit {
                 //send notification to BOTH users that the booking is confirmed 
                 this.createNotificationForArtist(booking, ['/profile', 'performances'],
                 'event_available', booking.hostUser.firstName + " has confirmed the booking" + booking.eventEID.eventName);
-
-                // this.createNotificationForHost(booking, ['/profile', 'events'],
-                // 'event_available', "You have confirmed the booking " + booking.eventEID.eventName);
                 this.getEvents()
               });
             } else {
@@ -192,8 +194,7 @@ export class ProfileEventsComponent implements OnInit {
     notification.message = message;
     notification.icon = icon;
     notification.route = route
-    // console.log("passing this notification to server");
-    // console.log(notification)
+
     this._socketService.sendNotification(SocketEvent.SEND_NOTIFICATION, notification);
   }
 
@@ -206,8 +207,6 @@ export class ProfileEventsComponent implements OnInit {
     notification.message = message;
     notification.icon = icon;
     notification.route = route
-    // console.log("passing this notification to server");
-    // console.log(notification)
     this._socketService.sendNotification(SocketEvent.SEND_NOTIFICATION, notification);
   }
 }
