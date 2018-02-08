@@ -33,6 +33,7 @@
               <img mat-card-avatar [src]="booking.performerUser.profilePicUrl">
               <mat-card-title><a [routerLink]="['/profile', booking.performerUser._id]">{{booking.performerUser.firstName}} {{booking.performerUser.lastName}}</a></mat-card-title>
               <mat-card-subtitle>Proposed Price: {{booking.currentPrice | currency}}</mat-card-subtitle>
+              <mat-card-subtitle>Status: {{booking.statusMessage}}</mat-card-subtitle>
             </mat-card-header>
             <mat-card-content>
             </mat-card-content>

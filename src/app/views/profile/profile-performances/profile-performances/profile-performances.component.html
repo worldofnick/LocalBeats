@@ -15,7 +15,8 @@
           <mat-card-title><a [routerLink]="['/events', booking.eventEID._id]">{{booking.eventEID.eventName }}</a></mat-card-title>
           <mat-card-subtitle>{{booking.eventEID.eventType | capitalize}}</mat-card-subtitle>
           <mat-card-subtitle>{{booking.eventEID.toDate | date:'MMM d, y, h:mm a'}}</mat-card-subtitle>
-          <mat-card-subtitle>{{booking.currentPrice | currency}}</mat-card-subtitle>
+          <mat-card-subtitle>Proposed Price: {{booking.currentPrice | currency}}</mat-card-subtitle>
+          <mat-card-subtitle>Status: {{booking.statusMessage}}</mat-card-subtitle>
         </mat-card-header>
         <mat-card-content>
         </mat-card-content>
@@ -35,7 +36,8 @@
           <mat-card-title><a [routerLink]="['/events', booking.eventEID._id]">{{booking.eventEID.eventName}}</a></mat-card-title>
           <mat-card-subtitle>{{booking.eventEID.eventType | capitalize}}</mat-card-subtitle>
           <mat-card-subtitle>{{booking.eventEID.toDate | date:'MMM d, y, h:mm a'}}</mat-card-subtitle>
-          <mat-card-subtitle>{{booking.currentPrice | currency}}</mat-card-subtitle>
+          <mat-card-subtitle>Proposed Price: {{booking.currentPrice | currency}}</mat-card-subtitle>
+          <mat-card-subtitle>Status: {{booking.statusMessage}}</mat-card-subtitle>
         </mat-card-header>
         <mat-card-content>
         </mat-card-content>
@@ -55,7 +57,7 @@
             <mat-card-title><a [routerLink]="['/events', booking.eventEID._id]">{{booking.eventEID.eventName}}</a></mat-card-title>
             <mat-card-subtitle>{{booking.eventEID.eventType | capitalize}}</mat-card-subtitle>
             <mat-card-subtitle>{{booking.eventEID.toDate | date:'MMM d, y, h:mm a'}}</mat-card-subtitle>
-            <mat-card-subtitle>{{booking.currentPrice | currency}}</mat-card-subtitle>
+            <mat-card-subtitle>Accepted Price: {{booking.currentPrice | currency}}</mat-card-subtitle>
           </mat-card-header>
           <mat-card-content>
           </mat-card-content>
