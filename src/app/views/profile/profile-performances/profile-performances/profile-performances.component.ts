@@ -8,7 +8,7 @@ import { BookingService } from '../../../../services/booking/booking.service';
 import { EventService } from '../../../../services/event/event.service';
 import { User } from '../../../../models/user';
 import { Event } from '../../../../models/event';
-import { Booking } from '../../../../models/booking';
+import { Booking, StatusMessages } from '../../../../models/booking';
 import { Action } from '../../../../services/chats/model/action'
 import { SocketEvent } from '../../../../services/chats/model/event'
 import { Notification } from '../../../../models/notification'
@@ -137,6 +137,8 @@ export class ProfilePerformancesComponent implements OnInit {
             booking.artistApproved = true;
             if(booking.hostApproved == true) {
               booking.approved = true;
+              booking.hostStatusMessage = StatusMessages.bookingConfirmed;
+              booking.artistStatusMessage = StatusMessages.bookingConfirmed;
               this.bookingService.acceptBooking(booking).then(() => {
                 //send notification to both parties that the booking has been confirmed. \
                 //redirect artist to their performances page.
@@ -154,6 +156,8 @@ export class ProfilePerformancesComponent implements OnInit {
           } else if(result.accepted == 'new') {
               booking.hostApproved = false;
               booking.artistApproved = true;
+              booking.hostStatusMessage = StatusMessages.artistBid;
+              booking.artistStatusMessage = StatusMessages.waitingOnHost;
               this.bookingService.updateBooking(booking).then((tempBooking: Booking) => {
                 //send a notification to the host that an artist has applied for an event. 
                 this.createNotificationForHost(booking, ['/events', booking.eventEID._id],

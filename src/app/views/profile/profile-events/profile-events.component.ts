@@ -9,7 +9,7 @@ import { BookingService } from '../../../services/booking/booking.service';
 import { EventService } from '../../../services/event/event.service';
 import { User } from '../../../models/user';
 import { Event } from '../../../models/event';
-import { Booking } from '../../../models/booking';
+import { Booking, StatusMessages } from '../../../models/booking';
 import { Action } from '../../../services/chats/model/action'
 import { SocketEvent } from '../../../services/chats/model/event'
 import { Notification } from '../../../models/notification'
@@ -135,6 +135,8 @@ export class ProfileEventsComponent implements OnInit {
             booking.hostApproved = true;
             if (booking.artistApproved == true) {
               booking.approved = true;
+              booking.hostStatusMessage = StatusMessages.bookingConfirmed;
+              booking.artistStatusMessage = StatusMessages.bookingConfirmed;
               this.bookingService.acceptBooking(booking).then(() => {
                 //send notification to BOTH users that the booking is confirmed 
                 this.createNotificationForArtist(booking, ['/profile', 'performances'],
@@ -153,6 +155,8 @@ export class ProfileEventsComponent implements OnInit {
           } else if (result.accepted == 'new') {
             booking.hostApproved = true;
             booking.artistApproved = false;
+            booking.hostStatusMessage = StatusMessages.waitingOnArtist;
+            booking.artistStatusMessage = StatusMessages.hostOffer;
             this.bookingService.updateBooking(booking).then(() => {
               //send notificaiton to the artist that the event host has made a new offer.
               this.createNotificationForArtist(booking, ['/events', booking.eventEID._id],

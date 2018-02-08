@@ -9,7 +9,7 @@ import { BookingService } from '../../../services/booking/booking.service';
 import { EventService } from '../../../services/event/event.service';
 import { User } from '../../../models/user';
 import { Event } from '../../../models/event';
-import { Booking } from '../../../models/booking';
+import { Booking, StatusMessages } from '../../../models/booking';
 import { Action } from '../../../services/chats/model/action'
 import { SocketEvent } from '../../../services/chats/model/event'
 import { Notification } from '../../../models/notification'
@@ -133,13 +133,16 @@ export class EventSingletonComponent implements OnInit {
   }
 
   openNegotiationDialog() {
-    let booking = new Booking(undefined, 'artist-apply', this.model.hostUser, this.userService.user, this.model, false, false, true, false, this.model.fixedPrice);
+    let booking = new Booking(undefined, 'artist-apply', this.model.hostUser, this.userService.user, this.model, false, '', '', false, true, false, this.model.fixedPrice);
     this.bookingService.negotiate(booking, true, 'artist')
       .subscribe((result) => {
         if (result != undefined) {
           booking.currentPrice = result.price;
           if (result.accepted == 'accepted' || result.accepted == 'new') {
-            booking = new Booking(undefined, 'artist-apply', this.model.hostUser, this.userService.user, this.model, false, false, true, false, result.price);
+            booking = new Booking(undefined, 'artist-apply', this.model.hostUser, this.userService.user, this.model, false, StatusMessages.artistBid, StatusMessages.waitingOnHost,false, true, false, result.price);
+            if(!this.model.negotiable) {
+              booking.hostStatusMessage = StatusMessages.artistApplication;
+            }
             this.bookingService.createBooking(booking).then((booking: Booking) => {
               //send notification to host that the artist has applied
               if(!booking.eventEID.negotiable){
@@ -178,6 +181,8 @@ export class EventSingletonComponent implements OnInit {
             this.userBooking.artistApproved = true;
             if (this.userBooking.hostApproved) {
               this.userBooking.approved = true;
+              this.userBooking.hostStatusMessage = StatusMessages.bookingConfirmed;
+              this.userBooking.artistStatusMessage = StatusMessages.bookingConfirmed;
               this.bookingService.acceptBooking(this.userBooking).then(() => {
                 //booking is confirmed - send notification to event host that artist has accepted.
                 this.createNotificationForArtist(this.userBooking, ['/profile', 'performances'],
@@ -199,6 +204,8 @@ export class EventSingletonComponent implements OnInit {
           } else if (result.accepted == 'new') {
             this.userBooking.hostApproved = false;
             this.userBooking.artistApproved = true;
+            this.userBooking.artistStatusMessage = StatusMessages.waitingOnHost;
+            this.userBooking.hostStatusMessage = StatusMessages.artistBid;
             this.bookingService.updateBooking(this.userBooking).then((booking: Booking) => {
               //send notification to host because artist has changed the price
               this.createNotificationForHost(this.userBooking, ['/profile', 'events'],
