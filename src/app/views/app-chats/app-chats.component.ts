@@ -214,7 +214,8 @@ export class AppChatsComponent implements OnInit, AfterViewChecked, AfterViewIni
       let indexInConnectedUsers = this.isUserObjInConnectedUsers(newUser);
       if ( indexInConnectedUsers > -1 ) {
         this.newConversationClicked = false;
-        this.connectedUsers.shift();  // Remove blank user from the side bar list
+        console.log('In add()>-1, connUsers: ', this.connectedUsers);
+        // this.connectedUsers.shift();  // Remove blank user from the side bar list
         indexInConnectedUsers = this.isUserObjInConnectedUsers(newUser);  // get the index again
         console.log('User already exists in conversation. Switching to that user at index', indexInConnectedUsers);
         this.activeChatUser = this.connectedUsers[indexInConnectedUsers];
