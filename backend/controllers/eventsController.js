@@ -240,7 +240,7 @@ exports.searchEvents = function(req, res) {
    }
 
   if (req.query.name != null) {
-    query.eventName = new RegExp(req.query.name);
+    query.eventName = new RegExp(req.query.name, 'gi'););
   }
 
   if (req.query.uid != null) {

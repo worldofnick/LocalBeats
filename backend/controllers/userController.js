@@ -89,7 +89,7 @@ exports.searchUsers = function (req, res) {
   }
 
   if (req.query.name != null) {
-    query.firstName = new RegExp(req.query.name);
+    query.firstName = new RegExp(req.query.name, 'gi');
   }
 
   query.isArtist = false
