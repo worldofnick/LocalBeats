@@ -119,7 +119,7 @@ export class AppChatsComponent implements OnInit, AfterViewChecked, AfterViewIni
 
   openDialog(): void {
     let dialogRef = this.dialog.open(DialogOverviewExampleDialog, {
-      width: '150%',
+      width: '50%',
       data: {
         usersList: this.options,
         loggedInUser: this.loggedInUser,
@@ -545,6 +545,7 @@ export class AppChatsComponent implements OnInit, AfterViewChecked, AfterViewIni
 @Component({
   selector: 'dialog-overview-example-dialog',
   templateUrl: 'dialog-overview-example-dialog.html',
+  styleUrls: ['dialog-overview-example-dialog.css']
 })
 export class DialogOverviewExampleDialog {
 
