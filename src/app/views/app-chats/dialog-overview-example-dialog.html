@@ -1,0 +1,20 @@
+<h1 mat-dialog-title>Hi {{data.loggedInUser.firstName + ' ' + data.loggedInUser.lastName}}</h1>
+<div mat-dialog-content>
+  <p>Who would you like to privately converse with?</p>
+  <mat-form-field>
+    <input matInput [(ngModel)]="data.recipientUser" placeholder="Recipient" 
+    [formControl]="recipientsFormControl" [matAutocomplete]="auto">  <!-- Change it -->
+    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+            <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+                <img style="vertical-align:middle;" aria-hidden [src]="option.profilePicUrl" height="25" />
+                <span>{{ option.firstName + ' ' + option.lastName }}</span> | 
+                <small>{{option.email}}</small>
+              <!-- {{ option.email }} -->
+            </mat-option>
+          </mat-autocomplete>
+  </mat-form-field>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">No One</button>
+  <button mat-button [mat-dialog-close]="data" cdkFocusInitial>Let's Chat</button>
+</div>
