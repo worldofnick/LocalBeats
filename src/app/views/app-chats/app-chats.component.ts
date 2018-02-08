@@ -132,7 +132,7 @@ export class AppChatsComponent implements OnInit, AfterViewChecked, AfterViewIni
       if (result === undefined) {
         console.log('Undefined object. No action taken');
       }
-      else if ( !(result.recipientUser instanceof User ) ) {
+      else if ( result.recipientUser._id === undefined ) {
         console.log('Not a user object. No action taken');
       }
       else {
