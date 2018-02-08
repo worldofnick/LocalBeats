@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from "@angular/router";
-// import { DatePipe } from '@angular/common'
+import { DatePipe } from '@angular/common'
 import { Router } from "@angular/router";
 
 
@@ -14,7 +14,8 @@ import { Action } from '../../../services/chats/model/action'
 import { SocketEvent } from '../../../services/chats/model/event'
 import { Notification } from '../../../models/notification'
 import { SocketService } from '../../../services/chats/socket.service';
-
+import { Message } from '../../../services/chats/model/message';
+import { AgmCoreModule, MapsAPILoader } from '@agm/core';
 
 @Component({
   selector: 'app-event-singleton',
@@ -31,17 +32,22 @@ export class EventSingletonComponent implements OnInit {
   public currentBookings: any[] = [];
   public approvedBookings: Booking[] = [];
   public dateInBar: Date;
-  public dateString: any;
+  public zoom: number;
+  public lat: number;
+  public lng: number;
   deleteStatus: Number;
   EID: any;
   buttonText: string = "Apply";
+
+  setLocation = false;
 
   constructor(private eventService: EventService,
     private userService: UserService,
     private bookingService: BookingService,
     private route: ActivatedRoute,
     private router: Router,
-    private _socketService: SocketService
+    private _socketService: SocketService,
+    public datepipe: DatePipe
   ) { }
 
   ngOnInit() {
@@ -49,9 +55,14 @@ export class EventSingletonComponent implements OnInit {
       id: this.route.snapshot.params['id']
     }
 
+
+    
     this.eventService.getEventByEID(this.EID).then((event: Event) => {
       this.model = event;
-
+      this.lat = this.model.location[1]
+      this.lng = this.model.location[0]
+      this.zoom = 12;
+     
       this.user = event.hostUser;
       if (this.userService.user != null && this.user._id === this.userService.user._id) {
         this.isCurrentUser = true;
@@ -101,11 +112,20 @@ export class EventSingletonComponent implements OnInit {
   }
 
 
+  messageHost(){
+
+    let message:Message = {
+      to: this.model.hostUser
+    };
+
+    this.router.navigate(['/chat']);
+    this._socketService.send(Action.REQUEST_MSG_FROM_PROFILE_BUTTON, message);
+  
+  }
 
   //cancel your application. NOT BEING CALLED BUT PROBABLY IS ACTUALLY BEING CALLED
   onCancelApp() {
     this.bookingService.declineBooking(this.userBooking).then(() => {
-
       this.hasApplied = false;
       this.userBooking = null
     })
@@ -115,9 +135,16 @@ export class EventSingletonComponent implements OnInit {
 
   }
 
+  onSelectHost(){
+    if(this.isCurrentUser){
+      this.router.navigate(['/profile'])
+    }else{
+      this.router.navigate(['/profile', this.model.hostUser._id])
+    }
+  }
+
   onEditEvent() {
     this.router.navigate(['/events', 'update', this.model._id]); //this will go to the page about the event
-
   }
 
   onDeleteEvent() {
@@ -126,7 +153,7 @@ export class EventSingletonComponent implements OnInit {
       console.log(this.deleteStatus);
       if (this.deleteStatus == 200) {
         // this.eventService.events = this.eventService.events.filter(e => e !== this.event);
-        // this.router.navigate(['/profile']);
+        this.router.navigate(['/profile']);
         this.model = null;
       }
     });

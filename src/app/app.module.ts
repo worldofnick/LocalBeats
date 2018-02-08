@@ -22,6 +22,8 @@ import { ImgurService } from './services/image/imgur.service';
 import { NotificationService} from './services/notification/notification.service';
 import { ChatsService} from './services/chats/chats.service';
 import { SocketService } from './services/chats/socket.service';
+import { DatePipe } from '@angular/common'
+
 
 export function createTranslateLoader(http: Http) {
   return new TranslateStaticLoader(http, './assets/i18n', '.json');
@@ -53,6 +55,7 @@ export function createTranslateLoader(http: Http) {
     BookingService,
     EventService,
     UserGuard,
+    DatePipe,
     ImgurService
   ],
   bootstrap: [AppComponent]
