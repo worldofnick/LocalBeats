@@ -122,6 +122,7 @@ export class AppChatsComponent implements OnInit, AfterViewChecked, AfterViewIni
     this.initIoConnection();
     this.chatSideBarInit();
     console.log('On open, connectd users: ', this.connectedUsers);
+    this._socketService.send(SocketEvent.NOTIFY_SERVER_CHAT_LOADED, null);
   }
 
   ngAfterViewInit() {
@@ -208,7 +209,7 @@ export class AppChatsComponent implements OnInit, AfterViewChecked, AfterViewIni
 
       // Check if the new user is already in the list. If so, switch to that user. Else add it
       let indexInConnectedUsers = this.isUserObjInConnectedUsers(newUser);
-      if ( indexInConnectedUsers > 0 ) {
+      if ( indexInConnectedUsers > -1 ) {
         this.newConversationClicked = false;
         this.connectedUsers.shift();  // Remove blank user from the side bar list
         indexInConnectedUsers = this.isUserObjInConnectedUsers(newUser);  // get the index again
@@ -293,6 +294,30 @@ export class AppChatsComponent implements OnInit, AfterViewChecked, AfterViewIni
         }
         // TODO: refresh UI?
       });
+      
+      this._socketService.onEvent(SocketEvent.REQUEST_MSG_FROM_PROFILE_BUTTON)
+      .subscribe((message: Message) => {
+        console.log('Messaging from profile requested for (chat event): ', message);
+        let recipient: User = message.to as User;
+        this.addNewPmWithProfileButtonClick(recipient);
+        // this.reloadChatSideBarWithNewConnectedUsers();                   // reload the connectedUsers navBar
+      });
+  }
+
+  addNewPmWithProfileButtonClick(profileRecipient: User) {
+    // Check if the recipient is already in chat. If so, switch to that user
+    let indexInConnectedUsers = this.isUserObjInConnectedUsers(profileRecipient);  // get the index again
+    if ( indexInConnectedUsers > -1 ) {
+      this.newConversationClicked = false;
+      console.log(profileRecipient.firstName, ' already exists in conversation. Switching to that user at index', indexInConnectedUsers);
+      this.activeChatUser = this.connectedUsers[indexInConnectedUsers];
+      this.changeActiveUser(this.connectedUsers[indexInConnectedUsers]);
+    }
+    // Else, initialite new chat with this recipient
+    else {
+      this.connectedUsers.unshift(profileRecipient);  // Add user to connected Users
+      this.changeActiveUser(profileRecipient);
+    }
   }
 
   isUserInConnectedUsers(message): boolean {
