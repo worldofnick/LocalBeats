@@ -89,8 +89,9 @@ module.exports = function (io) {
         });
 
         socket.on('chatComponentDoneLoading', (payload) => {
-            console.log('Conditional: ', Object.keys(profileButtonMsgPayload).length === 0 && profileButtonMsgPayload.constructor === Object);
-            if(Object.keys(profileButtonMsgPayload).length === 0 && profileButtonMsgPayload.constructor === Object) {
+            // console.log('Conditional 1: ', Object.keys(profileButtonMsgPayload).length !== 0 && profileButtonMsgPayload.constructor !== Object);
+            // console.log('Conditional 2: ', Object.keys(profileButtonMsgPayload).length !== 0 && profileButtonMsgPayload.constructor === Object);
+            if(Object.keys(profileButtonMsgPayload).length !== 0 && profileButtonMsgPayload.constructor === Object) {
                 console.log('\Emitting profile payload:',profileButtonMsgPayload);
                 socket.emit('requestNewMsgFromProfileButtonClick', profileButtonMsgPayload);
                 profileButtonMsgPayload = new Object();
