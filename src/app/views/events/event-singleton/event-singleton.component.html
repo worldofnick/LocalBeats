@@ -20,19 +20,12 @@
         <mat-card-content style="padding:0">
           <mat-list class="mr-1">
             <mat-list-item>
-              <!-- <mat-icon mat-list-icon>person</mat-icon> -->
-              <img mat-card-avatar [src]="model.hostUser?.profilePicUrl"> 
-
-              <!-- <h4 mat-line>Price:</h4> -->
+          <mat-icon (click)="onSelectHost()"mat-list-icon><img [src]="model.hostUser?.profilePicUrl"> 
+          </mat-icon>
               <p mat-line> Host: {{model.hostUser?.firstName}} {{model.hostUser?.lastName}}</p>
             </mat-list-item>
             <mat-list-item>
-              <mat-icon mat-list-icon>message</mat-icon>
-              <!-- <h4 mat-line>Price:</h4> -->
-              <p mat-line> Message {{model.hostUser?.firstName}} </p>
-            </mat-list-item>
-            <mat-list-item>
-              <mat-icon mat-list-icon>shopping_basket</mat-icon>
+              <mat-icon mat-list-icon>monetization_on</mat-icon>
               <!-- <h4 mat-line>Price:</h4> -->
               <p mat-line> ${{model.fixedPrice}} </p>
             </mat-list-item>
@@ -75,6 +68,8 @@
         <button *ngIf="isCurrentUser && userService.isAuthenticated()" (click)="onDeleteEvent()" mat-button>Delete Event</button>
         <button *ngIf="!isCurrentUser && userService.isAuthenticated() && !hasApplied" (click)="openNegotiationDialog()" mat-button>{{buttonText}}</button>
         <button *ngIf="!isCurrentUser && userService.isAuthenticated() && hasApplied" (click)="viewApplication()" mat-button>{{buttonText}}</button>
+        <button *ngIf="!isCurrentUser && userService.isAuthenticated()" (click)="messageHost()" mat-button>Message Host</button>
+     
       </mat-card>
       <!-- </div> -->
 

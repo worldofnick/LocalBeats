@@ -111,10 +111,13 @@ export class EventSingletonComponent implements OnInit {
     // });
   }
 
+  messageHost(){
+    this.router.navigate(['/chat']);
+  }
+
   //cancel your application. NOT BEING CALLED BUT PROBABLY IS ACTUALLY BEING CALLED
   onCancelApp() {
     this.bookingService.declineBooking(this.userBooking).then(() => {
-
       this.hasApplied = false;
       this.userBooking = null
     })
@@ -124,9 +127,16 @@ export class EventSingletonComponent implements OnInit {
 
   }
 
+  onSelectHost(){
+    if(this.isCurrentUser){
+      this.router.navigate(['/profile'])
+    }else{
+      this.router.navigate(['/profile', this.model.hostUser._id])
+    }
+  }
+
   onEditEvent() {
     this.router.navigate(['/events', 'update', this.model._id]); //this will go to the page about the event
-
   }
 
   onDeleteEvent() {
