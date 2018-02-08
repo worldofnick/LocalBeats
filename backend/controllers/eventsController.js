@@ -37,7 +37,7 @@ function getDefaultImage(eventType) {
   if (eventType == "birthday") {
     return "http://clubsatrivercity.com/wp-content/uploads/2017/09/birthdaypic.jpg";
   } else if (eventType == "wedding") {
-    return "https://www.theknot.com/assets/topic_pages/wedding-vows-ceremony-de390170d87b481e073afef3e03a2c7b4a5d7e0b1de1036a40816f80fa85a6cd.jpg";
+    return "http://dipiazzawedding.com/wp-content/uploads/2016/03/wedding-background.jpg";
   } else if (eventType == "party") {
     return "http://themocracy.com/wp-content/uploads/2016/12/Parties.jpg";
   } else if (eventType == "live music") {
