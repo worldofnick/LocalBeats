@@ -301,11 +301,11 @@ export class AppChatsComponent implements OnInit, AfterViewChecked, AfterViewIni
       .subscribe((message: Message) => {
         console.log('Messaging from profile requested for (chat event): ', message);
         this.profileRecipient = message.to as User;
-        let indexInConnectedUsers = this.isUserObjInConnectedUsers(this.profileRecipient);  // get the index again
+        // let indexInConnectedUsers = this.isUserObjInConnectedUsers(this.profileRecipient);  // get the index again
         this.isProfileUserRequestPending = true;
-        if ( indexInConnectedUsers === -1 ) {
-          this.connectedUsers.unshift(this.profileRecipient);  // Add user to connected Users
-        }
+        // if ( indexInConnectedUsers === -1 ) {
+        //   this.connectedUsers.unshift(this.profileRecipient);  // Add user to connected Users
+        // }
       });
   }
 
@@ -426,8 +426,11 @@ export class AppChatsComponent implements OnInit, AfterViewChecked, AfterViewIni
       let connection;
       if (this.isProfileUserRequestPending) {
         this.isProfileUserRequestPending = false;
+        let indexInConnectedUsers = this.isUserObjInConnectedUsers(this.profileRecipient);
+        if ( indexInConnectedUsers === -1 ) {
+          this.connectedUsers.unshift(this.profileRecipient);  // Add user to connected Users
+        }
         this.activeChatUser = this.profileRecipient;
-        console.log(this.profileRecipient.firstName, ' already exists in conversation. Switching to it');
       } else {
         this.activeChatUser = user;
         console.log('New User clicked:', this.activeChatUser);
