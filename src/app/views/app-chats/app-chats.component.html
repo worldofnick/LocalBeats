@@ -4,11 +4,12 @@
     <mat-sidenav class="chat-sidenav" #chatSidebar [opened]="isSidenavOpen" mode="side">
       <!-- Left side topbar -->
       <mat-toolbar color="primary" class="chat-sidebar-toolbar">
-          <span fxFlex></span>
-          <h6 class="m-0 font-normal fz-1">Conversations</h6>
-          <!-- onStartNewConversationButtonClick() -->
+        <span fxFlex></span>
+        <h6 class="m-0 font-normal fz-1">Conversations</h6>
+        <!-- onStartNewConversationButtonClick() -->
         <button mat-icon-button class="topbar-button-right" (click)="openDialog()">
-          <mat-icon aria-label="Start a new conversation">add</mat-icon></button>
+          <mat-icon aria-label="Start a new conversation">add</mat-icon>
+        </button>
         <!-- <a href="" class="toolbar-avatar online">
           <img [src]="loggedInUser.profilePicUrl" alt="">
           <span class="status-dot"></span>
@@ -39,23 +40,17 @@
         </button>
 
         <div class="active-chat-user" fxLayout="row" fxLayoutAlign="start center">
-                <button class="topbarChatTransparentButton" (click)="topBarGoToProfileClicked()">
-              <a [ngClass]="{online: activeChatUser.isOnline}" class="toolbar-avatar mr-1">
-                <img [src]="activeChatUser.profilePicUrl" alt="">
-                <!-- <span class="status-dot"></span> -->
-              </a>
-              <!-- <div fxLayout="column"> -->
-                  <span fxFlex></span>
-                <!-- Here is where the name is displayed -->
-                <!-- <a href="" > -->
-                    
-                        <h6 class="m-0 font-normal fz-1" style="line-height:2.5em;">{{activeChatUser.firstName + ' ' + activeChatUser.lastName}} </h6>
-                  <!-- <h6 class="m-0 font-normal fz-1">{{activeChatUser.firstName + ' ' + activeChatUser.lastName}}</h6> -->
-                <!-- </a> -->
-
-              <!-- </div> -->
-            </button>
-            </div>
+          <button class="topbarChatTransparentButton" (click)="topBarGoToProfileClicked()">
+            <a [ngClass]="{online: activeChatUser.isOnline}" class="toolbar-avatar mr-1">
+              <img [src]="activeChatUser.profilePicUrl" alt="">
+              <!-- <span class="status-dot"></span> -->
+            </a>
+            <!-- <div fxLayout="column"> -->
+            <span fxFlex></span>
+            <!-- Here is where the name is displayed -->
+            <h6 class="m-0 font-normal fz-1" style="line-height:2.5em;">{{activeChatUser.firstName + ' ' + activeChatUser.lastName}} </h6>
+          </button>
+        </div>
 
 
 
@@ -105,10 +100,10 @@
       box-shadow: 0 0px 0px rgba(230,230,230,0.30), 0 -15px 2px rgba(36,120,158,0.02); box-shadow: 0 0px 0px rgba(230,230,230,0.30), 0 5px 2px rgba(36,120,158,0.05);">
         <mat-form-field class="full-width mr-1" (keydown)="sendMessageClicked($event)" floatLabel="never" hintLabel="Use SHIFT + ENTER for line breaks.">
           <textarea #messageInputBox [(ngModel)]="messageEntered" matInput placeholder="" value="" matTextareaAutosize matAutosizeMinRows="1"
-          matAutosizeMaxRows="1"></textarea>
+            matAutosizeMaxRows="1"></textarea>
         </mat-form-field>
         <!-- <button mat-icon-button (click)="sendMessageClicked()"> -->
-            <!-- <mat-icon aria-label="Send Message">send</mat-icon></button> -->
+        <!-- <mat-icon aria-label="Send Message">send</mat-icon></button> -->
         <!-- <button mat-fab color="primary" (click)="sendMessageClicked()">
           <mat-icon>send</mat-icon>
         </button> -->
