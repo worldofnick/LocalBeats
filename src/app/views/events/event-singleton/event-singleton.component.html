@@ -8,27 +8,31 @@
 
     <div fxLayout="column" fxFlex="40" fxFlex.gt-md="50">
 
-      <mat-card class="plan-pricing p-0 no-shadow">
+      <mat-card class="plan-pricing p-0 no-shadow" style="padding:0">
         <mat-card-title class="">
           <div class="card-title-text">
             <div class="fz-1">{{model.eventType | capitalize}} </div>
             <div class="fz-2">
               <strong>{{model.eventName}}</strong>
             </div>
-
-            <div class="fz-1">
-              <img mat-card-avatar [src]="model.hostUser?.profilePicUrl"> Host: {{model.hostUser?.firstName}} {{model.hostUser?.lastName}}
-            </div>
-            <button mat-raised-button class="mat-accent">Message {{model.hostUser?.firstName}}</button>
           </div>
         </mat-card-title>
-        <mat-card-content>
-
-
-          <mat-list class="mb-2">
-
+        <mat-card-content style="padding:0">
+          <mat-list class="mr-1">
             <mat-list-item>
-              <mat-icon mat-list-icon>monetization_on</mat-icon>
+              <!-- <mat-icon mat-list-icon>person</mat-icon> -->
+              <img mat-card-avatar [src]="model.hostUser?.profilePicUrl"> 
+
+              <!-- <h4 mat-line>Price:</h4> -->
+              <p mat-line> Host: {{model.hostUser?.firstName}} {{model.hostUser?.lastName}}</p>
+            </mat-list-item>
+            <mat-list-item>
+              <mat-icon mat-list-icon>message</mat-icon>
+              <!-- <h4 mat-line>Price:</h4> -->
+              <p mat-line> Message {{model.hostUser?.firstName}} </p>
+            </mat-list-item>
+            <mat-list-item>
+              <mat-icon mat-list-icon>shopping_basket</mat-icon>
               <!-- <h4 mat-line>Price:</h4> -->
               <p mat-line> ${{model.fixedPrice}} </p>
             </mat-list-item>
@@ -62,11 +66,11 @@
           <p>
             {{ this.model.description }}
           </p>
-          <mat-divider></mat-divider>
+
 
         </mat-card-content>
 
-
+        <mat-divider *ngIf="userService.isAuthenticated()"></mat-divider>
         <button *ngIf="isCurrentUser && userService.isAuthenticated()" (click)="onEditEvent()" mat-button>Edit Event</button>
         <button *ngIf="isCurrentUser && userService.isAuthenticated()" (click)="onDeleteEvent()" mat-button>Delete Event</button>
         <button *ngIf="!isCurrentUser && userService.isAuthenticated() && !hasApplied" (click)="openNegotiationDialog()" mat-button>{{buttonText}}</button>
