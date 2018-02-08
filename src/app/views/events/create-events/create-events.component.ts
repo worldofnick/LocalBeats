@@ -71,6 +71,7 @@ export class CreateEventsComponent implements OnInit {
 
   // eventTypes: any = [{genre:'Wedding', checked:false}, {genre:'Birthday', checked:false}, {genre:'Business', checked:false}];
   genres: any = this.musicGenres;
+  uploadedImage: boolean = false;
 
   @ViewChild("searchplaces") searchElementRef: ElementRef;
   minDate = new Date(Date.now());
@@ -210,6 +211,7 @@ export class CreateEventsComponent implements OnInit {
       this.imgurService.uploadToImgur(file).then(link => {
         this.event.eventPicUrl = link as string;
       }).then(link => {
+          this.uploadedImage = true;
           this.progressBar.mode = 'determinate';
           // update the image view
         }).catch(err => {
@@ -242,6 +244,13 @@ export class CreateEventsComponent implements OnInit {
     }
   }
 
+  onChangeEventType(event: EventTarget) {
+    if (!this.uploadedImage) {
+      this.imgurService.getDefaultPic(this.basicForm.controls.eventType.value).then(url => {
+        this.event.eventPicUrl = url;
+      })
+    }
+  }
 
   onContentChanged() { }
   onSelectionChanged() { }

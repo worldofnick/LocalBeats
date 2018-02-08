@@ -53,28 +53,6 @@ exports.createBooking = function (req, res) {
                 if (err) {
                     return res.status(500).send("Failed to create booking");
                 } else {
-
-                    // Send notification for booking request
-                    // var io = req.app.get('socketio');
-
-
-                    // var notification = new Notifications(); // build notification "someone has requested you to play blah"
-                    // notification.receiverID = newBooking.performerUser;
-                    // notification.senderID = newBooking.hostUser;
-                    // notification.message = notification.senderID['firstName'] + " has requested you for an event";
-
-                    // notification.icon = 'queue_music';
-                    // notification.eventID = newBooking._id;
-                    // // add timestamp to notification.sentTime of type date.
-                    // console.log("printing notification");
-                    // console.log(notification);
-                    // notification.save(function (err, notification) {
-                    //   if (err) {
-                    //     return res.status(500).send("Failed to create booking notification");
-                    //   }
-                    // //   io.emit("notification", { notification: notification });
-                    // });
-
                     return res.status(200).send({ "booking": booking });
                 }
             });
@@ -91,17 +69,6 @@ exports.updateBookingByID = function (req, res) {
             if (err) {
                 return res.status(500).send("Failed to update booking");
             } else {
-
-                // Send notification for booking request
-                // var io = req.app.get('socketio');
-                // var notification = new Notifications(); // build notification "someone has requested you to play blah"
-                // notification.message = "updated booking"
-                // notification.save(function (err, notification) {
-                //   if (err) {
-                //     return res.status(500).send("Failed to create booking notification");
-                //   }
-                // //   io.emit("notification", { notification: notification });
-                // });
                 return res.status(200).send({ "booking": booking });
             }
         });

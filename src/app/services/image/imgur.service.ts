@@ -33,6 +33,25 @@ export class ImgurService {
     return up.upload(op).toPromise().then(resp => resp.data.link);
   }
 
+  getDefaultPic(eventType: string): Promise<string> {
+    let current = 'http://localhost:8080/api/eventsDefault/?eventType=' + eventType;
+    return this.http.get(current, { headers: new Headers({ 'Content-Type': 'application/json' }) })
+        .toPromise()
+        .then((response: Response) => {
+            const data = response.json();
+            const url = data["url"];
+            return url;
+        })
+        .catch(this.handleError);
+  }
+
+  private handleError(error: any): Promise<any> {
+      let errMsg = (error.message) ? error.message :
+          error.status ? `${error.status} - ${error.statusText}` : 'Server error';
+      console.error(errMsg); // log to console
+      return Promise.reject(errMsg);
+  }
+
 }
 
 @Injectable()

@@ -31,7 +31,6 @@ export class NotificationsComponent implements OnInit {
     //listening for real time notification
     this._socketService.onEvent(SocketEvent.SEND_NOTIFICATION)
       .subscribe((notification: Notification) => {
-        // console.log('Notification form servre: ', notification);
         const temp: Notification = notification as Notification;
 
         let newNotification:Notification = new Notification();
@@ -45,12 +44,9 @@ export class NotificationsComponent implements OnInit {
 
     //initial getting of notifications
     this._socketService.onEvent(SocketEvent.REQUEST_NOTIFICATIONS).subscribe((notificationsList: Notification[])=>{
-      // console.log("getting notifications..");
-      // this.notifications = notificationsList;
 
       this.notifications = [];
       for(let notification of notificationsList){
-        // console.log(this.notifications.length);
         let newNotification:Notification = new Notification();
         newNotification.message = notification.message;
         newNotification.receiverID = notification.receiverID;
@@ -59,8 +55,6 @@ export class NotificationsComponent implements OnInit {
         newNotification.route = notification.route;
         this.notifications.push(newNotification);
       }
-      // console.log(notificationsList);
-      // console.log(this.notifications);
     });
     
 
@@ -80,7 +74,7 @@ export class NotificationsComponent implements OnInit {
 
 
       this.notificationService.deleteNotificationById(this.notifications[0].receiverID._id).then((status: number)=>{
-        console.log("removed notification");
+        // Success
       });
 
 
@@ -89,8 +83,6 @@ export class NotificationsComponent implements OnInit {
   }
 
   selectNotification(notification:Notification){
-    // console.log("selectd notification:");
-    // console.log(notification);
     this.router.navigate(notification.route); //this will go to the page about the event
   }
 }
