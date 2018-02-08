@@ -67,7 +67,9 @@ export class AppChatsComponent implements OnInit, AfterViewChecked, AfterViewIni
   activeChatUser: User = new User();    //TODO: set to first user in connectedUsers list or one with highest unread count
   connectedUsers: User[] = new Array();
   isProfileUserRequestPending = false;
+  isSnackBarRequestPending = false;
   profileRecipient: User = new User();
+  snackBarRecipient: User = new User();
 
   options: User[] = new Array();  // All users list to populate autocomplete with
   
@@ -199,6 +201,13 @@ export class AppChatsComponent implements OnInit, AfterViewChecked, AfterViewIni
         this.profileRecipient = message.to as User;
         this.isProfileUserRequestPending = true;
       });
+
+      this._socketService.onEvent(SocketEvent.OPEN_SNACK_BAR_PM)
+      .subscribe((message: Message) => {
+        console.log('Opening message from snackbar action (chat event): ', message);
+        this.snackBarRecipient = message.from as User;
+        this.isSnackBarRequestPending = true;
+      });
   }
 
   isUserInConnectedUsers(message): boolean {
@@ -294,10 +303,10 @@ export class AppChatsComponent implements OnInit, AfterViewChecked, AfterViewIni
   changeActiveUser(user) {
     // Check if a blank new conversation was halfway started while switched to an existing user. If so, remove it.
     if (this.connectedUsers.length > 0) {
-      if (this.connectedUsers[0].firstName === 'New ' && this.connectedUsers[0].lastName === 'Message') {
-        this.connectedUsers.shift();
-        this.newConversationClicked = false;
-      }
+      // if (this.connectedUsers[0].firstName === 'New ' && this.connectedUsers[0].lastName === 'Message') {
+      //   this.connectedUsers.shift();
+      //   // this.newConversationClicked = false;
+      // }
 
       let connection;
       if (this.isProfileUserRequestPending) {
@@ -307,7 +316,16 @@ export class AppChatsComponent implements OnInit, AfterViewChecked, AfterViewIni
           this.connectedUsers.unshift(this.profileRecipient);  // Add user to connected Users
         }
         this.activeChatUser = this.profileRecipient;
-      } else {
+      } 
+      else if (this.isSnackBarRequestPending) {
+        this.isSnackBarRequestPending = false;
+        let indexInConnectedUsers = this.isUserObjInConnectedUsers(this.snackBarRecipient);
+        if ( indexInConnectedUsers === -1 ) {
+          this.connectedUsers.unshift(this.snackBarRecipient);  // Add user to connected Users
+        }
+        this.activeChatUser = this.snackBarRecipient;
+      }
+      else {
         this.activeChatUser = user;
         console.log('New User clicked:', this.activeChatUser);
       }
@@ -324,7 +342,9 @@ export class AppChatsComponent implements OnInit, AfterViewChecked, AfterViewIni
         () => {
           console.log('Done fetching PMs from the server DB');
           this.profileRecipient = new User();
+          this.snackBarRecipient = new User();
           this.isProfileUserRequestPending = false;
+          this.isSnackBarRequestPending = false;
         }
       );
       this.vc.first.nativeElement.focus();
