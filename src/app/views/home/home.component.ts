@@ -8,6 +8,8 @@ import { NotificationService } from '../../services/notification/notification.se
 import * as socketIO from 'socket.io-client';
 import { Notification } from '../../models/notification';
 import { Router } from '@angular/router';
+import { Action } from '../../services/chats/model/action';
+import { User } from '../../models/user';
 
 @Component({
   selector: 'app-home',
@@ -74,6 +76,9 @@ export class HomeComponent implements OnInit {
       
       snackBarRef.onAction().subscribe(() => {
         console.log('Going to the message...');
+
+        this.router.navigate(['/chat']);
+        this._socketService.send(Action.OPEN_SNACK_BAR_PM, message);
       });
     };
   }
