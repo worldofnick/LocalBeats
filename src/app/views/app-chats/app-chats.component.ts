@@ -19,10 +19,6 @@ import { SocketEvent } from '../../services/chats/model/event';
 import { Action } from '../../services/chats/model/action';
 import { MessageTypes } from '../../services/chats/model/messageTypes';
 
-// export class DummyUser {
-//   constructor(public firstName: string, public lastName: string, public email: string) { }
-// }
-
 @Component({
   selector: 'app-chats',
   templateUrl: './app-chats.component.html',
