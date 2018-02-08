@@ -93,11 +93,13 @@ module.exports = function (io) {
             // console.log('Conditional 1: ', Object.keys(profileButtonMsgPayload).length !== 0 && profileButtonMsgPayload.constructor !== Object);
             // console.log('Conditional 2: ', Object.keys(profileButtonMsgPayload).length !== 0 && profileButtonMsgPayload.constructor === Object);
             if(Object.keys(profileButtonMsgPayload).length !== 0 && profileButtonMsgPayload.constructor === Object) {
-                // console.log('\Emitting profile payload:',profileButtonMsgPayload);
                 socket.emit('requestNewMsgFromProfileButtonClick', profileButtonMsgPayload);
-                socket.emit('openPmSnackBarThread', pmSnackBarPayload);
                 profileButtonMsgPayload = new Object();
+            }
+            if(Object.keys(openPmSnackBarThread).length !== 0 && openPmSnackBarThread.constructor === Object) {
+                console.log('\Emitting profile payload:',openPmSnackBarThread);
                 pmSnackBarPayload = new Object();
+                socket.emit('openPmSnackBarThread', pmSnackBarPayload);
             }
         });
 
