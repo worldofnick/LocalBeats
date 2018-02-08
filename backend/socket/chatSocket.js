@@ -96,10 +96,10 @@ module.exports = function (io) {
                 socket.emit('requestNewMsgFromProfileButtonClick', profileButtonMsgPayload);
                 profileButtonMsgPayload = new Object();
             }
-            if(Object.keys(openPmSnackBarThread).length !== 0 && openPmSnackBarThread.constructor === Object) {
-                console.log('\Emitting profile payload:',openPmSnackBarThread);
-                pmSnackBarPayload = new Object();
+            if(Object.keys(pmSnackBarPayload).length !== 0 && pmSnackBarPayload.constructor === Object) {
+                console.log('\Emitting profile payload:',pmSnackBarPayload);
                 socket.emit('openPmSnackBarThread', pmSnackBarPayload);
+                pmSnackBarPayload = new Object();
             }
         });
 
