@@ -1,7 +1,7 @@
 <h1 mat-dialog-title>So, {{data.loggedInUser.firstName + ' ' + data.loggedInUser.lastName}}...</h1>
 <div mat-dialog-content>
-  <h2>Who would you like to <strong>privately</strong> converse with?</h2>
-  <mat-form-field style="width:100%">
+  <h4>Who would you like to <strong>privately</strong> converse with?</h4>
+  <mat-form-field style="width:100%; font-size: 1.5em;">
     <input cdkFocusInitial matInput [(ngModel)]="data.recipientUser" placeholder="Recipient" 
     [formControl]="recipientsFormControl" [matAutocomplete]="auto">  <!-- Change it -->
     <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
