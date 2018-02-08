@@ -10,6 +10,7 @@ import { startWith } from 'rxjs/operators/startWith';
 import { map } from 'rxjs/operators/map';
 import { FormControl } from '@angular/forms';
 import { trigger, state, style, animate, transition } from '@angular/animations';
+import { Router } from '@angular/router';
 
 import { ChatsService } from 'app/services/chats/chats.service';
 import { SocketService } from 'app/services/chats/socket.service';
@@ -18,10 +19,6 @@ import { Message } from '../../services/chats/model/message';
 import { SocketEvent } from '../../services/chats/model/event';
 import { Action } from '../../services/chats/model/action';
 import { MessageTypes } from '../../services/chats/model/messageTypes';
-
-// export class DummyUser {
-//   constructor(public firstName: string, public lastName: string, public email: string) { }
-// }
 
 @Component({
   selector: 'app-chats',
@@ -72,6 +69,8 @@ export class AppChatsComponent implements OnInit, AfterViewChecked, AfterViewIni
   loggedInUser: User = new User();
   activeChatUser: User = new User();    //TODO: set to first user in connectedUsers list or one with highest unread count
   connectedUsers: User[] = new Array();
+  isProfileUserRequestPending = false;
+  profileRecipient: User = new User();
 
   // ==============================================
   // Receipient users form Variables, chips
@@ -103,7 +102,7 @@ export class AppChatsComponent implements OnInit, AfterViewChecked, AfterViewIni
   // ==============================================
 
   constructor(private media: ObservableMedia, public _snackBar: MatSnackBar, private cdr: ChangeDetectorRef,
-    private _socketService: SocketService, private _chatsService: ChatsService) {
+    private _socketService: SocketService, private _chatsService: ChatsService, private router: Router) {
     // this.initSelfUser();
     this.loggedInUser = this._chatsService.getCurrentLoggedInUser();
     // if (this.connectedUsers.length < 1) {
@@ -129,6 +128,7 @@ export class AppChatsComponent implements OnInit, AfterViewChecked, AfterViewIni
   }
 
   ngAfterViewInit() {
+    this._socketService.send(SocketEvent.NOTIFY_SERVER_CHAT_LOADED, null);
     this.vc.first.nativeElement.focus();
     this.cdr.detectChanges();
   }
@@ -212,9 +212,10 @@ export class AppChatsComponent implements OnInit, AfterViewChecked, AfterViewIni
 
       // Check if the new user is already in the list. If so, switch to that user. Else add it
       let indexInConnectedUsers = this.isUserObjInConnectedUsers(newUser);
-      if ( indexInConnectedUsers > 0 ) {
+      if ( indexInConnectedUsers > -1 ) {
         this.newConversationClicked = false;
-        this.connectedUsers.shift();  // Remove blank user from the side bar list
+        console.log('In add()>-1, connUsers: ', this.connectedUsers);
+        // this.connectedUsers.shift();  // Remove blank user from the side bar list
         indexInConnectedUsers = this.isUserObjInConnectedUsers(newUser);  // get the index again
         console.log('User already exists in conversation. Switching to that user at index', indexInConnectedUsers);
         this.activeChatUser = this.connectedUsers[indexInConnectedUsers];
@@ -296,6 +297,13 @@ export class AppChatsComponent implements OnInit, AfterViewChecked, AfterViewIni
           // TODO: push notification, notification dot if not active user
         }
         // TODO: refresh UI?
+      });
+      
+      this._socketService.onEvent(SocketEvent.REQUEST_MSG_FROM_PROFILE_BUTTON)
+      .subscribe((message: Message) => {
+        console.log('Messaging from profile requested for (chat event): ', message);
+        this.profileRecipient = message.to as User;
+        this.isProfileUserRequestPending = true;
       });
   }
 
@@ -398,8 +406,17 @@ export class AppChatsComponent implements OnInit, AfterViewChecked, AfterViewIni
       }
 
       let connection;
-      this.activeChatUser = user;
-      console.log('New User clicked:', this.activeChatUser);
+      if (this.isProfileUserRequestPending) {
+        this.isProfileUserRequestPending = false;
+        let indexInConnectedUsers = this.isUserObjInConnectedUsers(this.profileRecipient);
+        if ( indexInConnectedUsers === -1 ) {
+          this.connectedUsers.unshift(this.profileRecipient);  // Add user to connected Users
+        }
+        this.activeChatUser = this.profileRecipient;
+      } else {
+        this.activeChatUser = user;
+        console.log('New User clicked:', this.activeChatUser);
+      }
 
       this._chatsService.getPMsBetweenActiveAndLoggedInUser(this.loggedInUser, this.activeChatUser).subscribe(
         data => {
@@ -410,7 +427,11 @@ export class AppChatsComponent implements OnInit, AfterViewChecked, AfterViewIni
           this.activeChatMessages = temp.messages;
         },
         err => console.error('Error fetching PMs between 2 users: ', err),
-        () => console.log('Done fetching PMs from the server DB')
+        () => {
+          console.log('Done fetching PMs from the server DB');
+          this.profileRecipient = new User();
+          this.isProfileUserRequestPending = false;
+        }
       );
       this.vc.first.nativeElement.focus();
       this.cdr.detectChanges();
@@ -456,15 +477,6 @@ export class AppChatsComponent implements OnInit, AfterViewChecked, AfterViewIni
     console.log('Sender: ', this.loggedInUser.firstName + ' ' + this.loggedInUser.lastName);
     console.log('Receiver: ', this.activeChatUser.firstName + ' ' + this.activeChatUser.lastName);
     console.log('---------------------');
-
-    /**
-     * isRead?: boolean;
-    sentAt?: Date;
-    messageType?: string;
-    attachmentURL?: string;
-    serverMessage?: any;
-    serverPayload?: any;
-     */
     // If the user entered non-blank message and hit send, communicate with server
 
     if (this.messageEntered.trim().length > 0) {
@@ -489,23 +501,10 @@ export class AppChatsComponent implements OnInit, AfterViewChecked, AfterViewIni
     };
   }
 
-  // awaitMessageSaveResponse(privateMessage: Message) {
-  //   //TODO: change to promise, then?
-  //   this._chatsService.savePrivateMessageToDB(privateMessage).subscribe(
-  //     data => {
-  //       console.log('\n====\nMessage save response from server: ', JSON.stringify(data));
-  //       // console.log('\n====\nUser PMs from Server DB: ', data as {messages: Message[]} );
-  //       // this.activeChatMessages = new Array();
-  //       // let temp = data as {messages: Message[]};
-  //       // this.activeChatMessages = temp.messages;
-  //     },
-  //     err => console.error('Error saving the message: ', err),
-  //     () => { 
-  //       console.log('Done saving the message to server DB. Sending socket request.');
-  //       this._socketService.send(Action.SEND_PRIVATE_MSG, privateMessage);
-  //     }
-  //   );
-  // }
+  topBarGoToProfileClicked() {
+    console.log('Go to profile clicked for user: ', this.activeChatUser);
+    this.router.navigate(['profile/', this.activeChatUser._id]);
+  }
 
   resetMessageInputBox() {
     this.messageEntered = '';                   // Reset the message input box 

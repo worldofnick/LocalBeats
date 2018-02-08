@@ -79,15 +79,22 @@
 
           <!-- <ng-template #activeConversationTemplate> -->
             <div class="active-chat-user" fxLayout="row" fxLayoutAlign="start center">
+                <button class="topbarChatTransparentButton" (click)="topBarGoToProfileClicked()">
               <a [ngClass]="{online: activeChatUser.isOnline}" class="toolbar-avatar mr-1">
                 <img [src]="activeChatUser.profilePicUrl" alt="">
-                <span class="status-dot"></span>
+                <!-- <span class="status-dot"></span> -->
               </a>
-              <div fxLayout="column">
+              <!-- <div fxLayout="column"> -->
+                  <span fxFlex></span>
                 <!-- Here is where the name is displayed -->
-                <h6 class="m-0 font-normal fz-1">{{activeChatUser.firstName + ' ' + activeChatUser.lastName}}</h6>
+                <!-- <a href="" > -->
+                    
+                        <h6 class="m-0 font-normal fz-1" style="line-height:2.5em;">{{activeChatUser.firstName + ' ' + activeChatUser.lastName}} </h6>
+                  <!-- <h6 class="m-0 font-normal fz-1">{{activeChatUser.firstName + ' ' + activeChatUser.lastName}}</h6> -->
+                <!-- </a> -->
 
-              </div>
+              <!-- </div> -->
+            </button>
             </div>
           <!-- </ng-template>
           <ng-template #blankConversationTemplate>
