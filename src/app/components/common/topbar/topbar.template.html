@@ -22,9 +22,9 @@
   <div 
   fxFlex
   fxHide.lt-sm="true" 
-  class="search-bar">
+  class="search-bar" (offClick)="offClick()">
     <form [formGroup]="searchForm" class="top-search-form" (ngSubmit)="submit()">
-      <mat-expansion-panel [expanded]="expand" (opened)="open()" (closed)="close()" [disabled]="true">
+      <mat-expansion-panel [expanded]="expand" [disabled]="true">
           <mat-expansion-panel-header>
             <mat-panel-title>
                 <mat-icon role="img">search</mat-icon>
@@ -42,7 +42,7 @@
           <br>
           <br>
           <mat-form-field>
-            <mat-select placeholder="Music Genres" [formControl]="searchForm.controls['genres']" multiple>
+            <mat-select placeholder="Music Genres" [formControl]="searchForm.controls['genres']" (openedChange)="genreSelectOpen()" multiple>
               <mat-select-trigger class="additional-selection">
                 {{searchForm.controls['genres'].value ? searchForm.controls['genres'].value[0] : ''}}
                 <span *ngIf="searchForm.controls['genres'].value?.length > 1">
@@ -54,7 +54,7 @@
           </mat-form-field>
           <br>
           <mat-form-field>
-            <mat-select placeholder="Event Types" [formControl]="searchForm.controls['events']" multiple>
+            <mat-select placeholder="Event Types" [formControl]="searchForm.controls['events']" (openedChange)="eventSelectOpen()" multiple>
               <mat-select-trigger class="additional-selection">
                 {{searchForm.controls['events'].value ? searchForm.controls['events'].value[0] : ''}}
                 <span *ngIf="searchForm.controls['events'].value?.length > 1">
@@ -64,6 +64,12 @@
               <mat-option *ngFor="let event of eventsList" [value]="event">{{event}}</mat-option>
             </mat-select>
           </mat-form-field>
+          <!-- <br>
+          <mat-form-field>
+            <input matInput [matDatepicker]="dp3" placeholder="Start Date" disabled>
+            <mat-datepicker-toggle matSuffix [for]="dp3"></mat-datepicker-toggle>
+            <mat-datepicker #dp3 disabled="false"></mat-datepicker>
+          </mat-form-field> -->
           <br>
           <mat-form-field>
             <input matInput placeholder="City, State" autocorrect="off" autocapitalize="off" spellcheck="off" type="text" #searchplaces [formControl]="searchForm.controls['location']">
@@ -192,7 +198,7 @@
      [style.overflow]="'visible'" 
      class="topbar-button-right">
        <mat-icon>message</mat-icon>
-       <span class="notification-number mat-bg-warn">{{numNotifications}}</span>
+       <!-- <span class="notification-number mat-bg-warn">{{numNotifications}}</span> -->
      </button>
     <!-- Notification toggle button -->
     <button 

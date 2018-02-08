@@ -4,7 +4,7 @@ import { EventService } from '../../../services/event/event.service';
 import { UserService } from '../../../services/auth/user.service';
 import { SocketService } from '../../../services/chats/socket.service';
 import { User } from '../../../models/user';
-import { Booking } from '../../../models/booking';
+import { Booking, StatusMessages } from '../../../models/booking';
 import { Event } from '../../../models/event';
 import { Action } from '../../../services/chats/model/action'
 import { SocketEvent } from '../../../services/chats/model/event'
@@ -21,6 +21,7 @@ export class ProfileRequestComponent implements OnInit {
   @Input() artist: User;
   events: any[] = [];
   requestedBookings: any[] = [];
+  confirmedBookings: any[] = [];
   deleteStatus: Number;
   artistID: any;
 
@@ -29,6 +30,12 @@ export class ProfileRequestComponent implements OnInit {
 
   ngOnInit() {
     this.getAvailableEvents()
+
+    //listening for real time notification
+    this._socketService.onEvent(SocketEvent.SEND_NOTIFICATION)
+      .subscribe((notification: Notification) => {
+        this.getAvailableEvents();
+    });
   }
 
   public getAvailableEvents() {
@@ -59,18 +66,35 @@ export class ProfileRequestComponent implements OnInit {
             tempEvents.push(event)
           }
         }
+        this.requestedBookings = [];
+        this.confirmedBookings = [];
+        for (let result of bookings) {
+          if (result.bookingType == 'host-request') {
+            if(!result.approved) {
+              this.requestedBookings.push(result);
+            } else {
+              this.confirmedBookings.push(result);
+            }
+  
+          } else if (result.bookingType == 'artist-apply') {
+            if(!result.approved){
+              this.requestedBookings.push(result);
+            } else {
+              this.confirmedBookings.push(result);
+            }
+          }
+        }
         this.events = tempEvents;
-        this.requestedBookings = bookings;
       }));
   }
 
   //solely fo creating new requests. no cancellations.
   newRequest(event: Event) {
-    let booking = new Booking(undefined, 'host-request', event.hostUser, this.artist, event, false, false, false, true, event.fixedPrice);
+    let booking = new Booking(undefined, 'host-request', event.hostUser, this.artist, event, false, '', '', false, false, true, event.fixedPrice);
     this.bookingService.negotiate(booking, true, 'host').subscribe((result) => {
       if (result != undefined) {
         if (result.accepted == 'accepted' || result.accepted == 'new') {
-          booking = new Booking(undefined, 'host-request', event.hostUser, this.artist, event, false, false, false, true, result.price);
+          booking = new Booking(undefined, 'host-request', event.hostUser, this.artist, event, false, StatusMessages.waitingOnArtist, StatusMessages.hostOffer, false, false, true, result.price);
 
           this.createNotification(booking, ['/events', booking.eventEID._id], 
           'queue_music', booking.hostUser.firstName + " has requested you for an event called: " + booking.eventEID.eventName);
@@ -105,6 +129,8 @@ export class ProfileRequestComponent implements OnInit {
 
           if (booking.artistApproved == true) {
             booking.approved = true;
+            booking.hostStatusMessage = StatusMessages.bookingConfirmed;
+            booking.artistStatusMessage = StatusMessages.bookingConfirmed;
             this.bookingService.acceptBooking(booking).then(() => {
               //now there is a confirmed booking.
               //send notification to the artist that the Host has accpeted the booking. 
@@ -122,13 +148,15 @@ export class ProfileRequestComponent implements OnInit {
         } else if (result.accepted == 'new') {
           booking.hostApproved = true;
           booking.artistApproved = false;
+          booking.hostStatusMessage = StatusMessages.waitingOnArtist;
+          booking.artistStatusMessage = StatusMessages.hostOffer;
           this.bookingService.updateBooking(booking).then(() => {
           //price has changed. send notification to artist that the host has updated the price. 
           this.createNotification(booking, ['/events', booking.eventEID._id],
         'import_export', booking.hostUser.firstName + " has updated the offer on " + booking.eventEID.eventName);
           this.getAvailableEvents()
         });
-        } else {
+        } else if(result.accepted == 'cancel' || result.accepted == 'declined'){
 
           this.bookingService.declineBooking(booking).then((booking2: Booking) => {
             //send notifcaiotn cancellation here

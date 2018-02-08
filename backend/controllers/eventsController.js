@@ -35,9 +35,9 @@ exports.getEventByID = function (req, res) {
 function getDefaultImage(eventType) {
   eventType = eventType.toLowerCase(); // just in case
   if (eventType == "birthday") {
-    return "http://downingtownplaydium.com/wp-content/uploads/2014/08/Birthday-Party-for-Kids.png";
+    return "http://clubsatrivercity.com/wp-content/uploads/2017/09/birthdaypic.jpg";
   } else if (eventType == "wedding") {
-    return "https://www.theknot.com/assets/topic_pages/wedding-vows-ceremony-de390170d87b481e073afef3e03a2c7b4a5d7e0b1de1036a40816f80fa85a6cd.jpg";
+    return "http://dipiazzawedding.com/wp-content/uploads/2016/03/wedding-background.jpg";
   } else if (eventType == "party") {
     return "http://themocracy.com/wp-content/uploads/2016/12/Parties.jpg";
   } else if (eventType == "live music") {
@@ -234,12 +234,7 @@ exports.searchEvents = function(req, res) {
 //   }
 
   if (req.query.lat != null && req.query.lon != null) {
-    query.location = {
-        "$near": [
-            parseFloat(req.query.lat),
-            parseFloat(req.query.lon)
-        ]
-    }
+    query.location = { $nearSphere: { $geometry: { type: "Point", coordinates: [ parseFloat(req.query.lon) , parseFloat(req.query.lat) ] }, $maxDistance: 100000 } } // search 62 miles
    }
 
   if (req.query.name != null) {

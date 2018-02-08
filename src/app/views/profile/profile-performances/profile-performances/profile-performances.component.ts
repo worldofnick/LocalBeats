@@ -8,7 +8,7 @@ import { BookingService } from '../../../../services/booking/booking.service';
 import { EventService } from '../../../../services/event/event.service';
 import { User } from '../../../../models/user';
 import { Event } from '../../../../models/event';
-import { Booking } from '../../../../models/booking';
+import { Booking, StatusMessages } from '../../../../models/booking';
 import { Action } from '../../../../services/chats/model/action'
 import { SocketEvent } from '../../../../services/chats/model/event'
 import { Notification } from '../../../../models/notification'
@@ -39,13 +39,18 @@ export class ProfilePerformancesComponent implements OnInit {
   ngOnInit() {
     this.user = this.userService.user;
     this.getEvents();
+
+    //listening for real time notification
+    this._socketService.onEvent(SocketEvent.SEND_NOTIFICATION)
+      .subscribe((notification: Notification) => {
+        this.getEvents();
+    });
   }
 
 
   onDeleteEvent(event:Event, index:Number){
     this.eventService.deleteEventByEID(event).then((status:Number) => {
       this.deleteStatus = status;
-      console.log(this.deleteStatus);
       if(this.deleteStatus == 200){
         
         var newEvents:Event[] = [];
@@ -132,12 +137,12 @@ export class ProfilePerformancesComponent implements OnInit {
             booking.artistApproved = true;
             if(booking.hostApproved == true) {
               booking.approved = true;
+              booking.hostStatusMessage = StatusMessages.bookingConfirmed;
+              booking.artistStatusMessage = StatusMessages.bookingConfirmed;
               this.bookingService.acceptBooking(booking).then(() => {
                 //send notification to both parties that the booking has been confirmed. \
                 //redirect artist to their performances page.
                 //if it is the host notification then redirect to their my events page
-                this.createNotificationForArtist(booking, ['/profile', 'performances'],
-                'event_available', booking.hostUser.firstName + " has confirmed " + booking.eventEID.eventName);
 
                 this.createNotificationForHost(booking, ['/profile', 'events'],
                 'event_available', "You have confirmed " + booking.eventEID.eventName);
@@ -151,6 +156,8 @@ export class ProfilePerformancesComponent implements OnInit {
           } else if(result.accepted == 'new') {
               booking.hostApproved = false;
               booking.artistApproved = true;
+              booking.hostStatusMessage = StatusMessages.artistBid;
+              booking.artistStatusMessage = StatusMessages.waitingOnHost;
               this.bookingService.updateBooking(booking).then((tempBooking: Booking) => {
                 //send a notification to the host that an artist has applied for an event. 
                 this.createNotificationForHost(booking, ['/events', booking.eventEID._id],

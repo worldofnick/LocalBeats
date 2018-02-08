@@ -134,7 +134,7 @@ export class NegotiateDialogComponent implements OnInit {
 
   accept() {
     if(this.data.booking.approved) {
-      this.dialogRef.close({accepted: 'nocancel'});
+      this.dialogRef.close({accepted: 'nocancel', price: this.initialPrice});
     } else {
       if(this.negotiationForm.get('price').value != this.initialPrice) {
         this.dialogRef.close({accepted: 'new', price: this.negotiationForm.get('price').value});
@@ -146,9 +146,9 @@ export class NegotiateDialogComponent implements OnInit {
 
   decline() {
     if(this.data.booking.approved) {
-      this.dialogRef.close({accepted: 'cancel'});
+      this.dialogRef.close({accepted: 'cancel', price: this.initialPrice});
     } else {
-      this.dialogRef.close({accepted: 'declined'});
+      this.dialogRef.close({accepted: 'declined', price: this.initialPrice});
     }
   }
 
