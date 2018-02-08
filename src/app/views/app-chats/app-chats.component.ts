@@ -130,14 +130,16 @@ export class AppChatsComponent implements OnInit, AfterViewChecked, AfterViewIni
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed with result: ', result);
       if (result === undefined) {
-        console.log('No action taken');
+        console.log('Undefined object. No action taken');
       }
       else if ( !(result.recipientUser instanceof User ) ) {
-        console.log('No action taken');
+        console.log('Not a user object. No action taken');
       }
       else {
-        if ( this.isUserObjInConnectedUsers(result.recipientUser) === -1 ) {
+        console.log('Is recipient in chat: ', this.isUserObjInConnectedUsers(result.recipientUser));
+        if ( this.isUserObjInConnectedUsers(result.recipientUser) !== -1 ) {
           console.log('Already chatting with ' + result.recipientUser.firstName + '. Switching to that thread');
+          this.changeActiveUser(result.recipientUser);
         } else {
           console.log('Starting new chat with ' + result.recipientUser.firstName);
         }
