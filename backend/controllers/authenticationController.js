@@ -46,7 +46,6 @@ exports.register = function (req, res) {
             console.log('Cant chnage online status (sign up)...');
           }
           authUser.hashPassword = undefined;
-          console.log('Authenticated user: ', authUser);
         });
 
         return res.status(200).send({ auth: true, token: token, user: user });
@@ -61,8 +60,6 @@ exports.register = function (req, res) {
    */
   exports.changePassword = function (req, res) {
     var oldUser = new User(req.body.user);
-    console.log("OLD USER: \n");
-    console.log(oldUser);
 
     // var newUser = new User(req.body.user);
     var newHashPassword = bcrypt.hashSync(req.body.newPassword, 10);
@@ -70,7 +67,6 @@ exports.register = function (req, res) {
     User.findByIdAndUpdate(req.params.uid, { hashPassword: newHashPassword}, { new: true }, function (err, user) {
       if (err) return res.status(500).send("There was a problem updating the password.");
       user.hashPassword = undefined;
-      console.log(user);
       return res.status(200).send( { user: user });
     });
   };
@@ -96,7 +92,6 @@ exports.register = function (req, res) {
    * The handler handles the user authentication.
    */ 
   exports.signIn = function (req, res) {
-    console.log(req.body);
     User.findOne({ email: req.body.email }, function (err, user) {
       if (err) return res.status(500).send('Error on the sign-in server.');
       if (!user) return res.status(404).send('No such user (' + req.body.email + ') in the database...');
@@ -137,9 +132,6 @@ exports.register = function (req, res) {
    * @param {*} res 
    */
   exports.logout = function (req, res) {
-    
-    console.log(req.body);
-
     User.findByIdAndUpdate(req.body._id, {isOnline: false}, {new: true}, function (err, authUser) {
       if (err) {
         console.log('Cant chnage online status (logout controller)...');

@@ -31,12 +31,9 @@ export class ProfileSettingsComponent implements OnInit {
   }
 
   onEditProfile(form: NgForm){
-    console.log("sending \n" );
-    console.log(this.user);
     this.userService.onEditProfile(this.user).then((user: User) => {
       this.user = user;
       this.userService.user = user;
-      //this.router.navigate(['/profile']);
     });
   }
 
@@ -61,7 +58,7 @@ export class ProfileSettingsComponent implements OnInit {
             this.user = user;
             this.userService.user = this.user;
             this.progressBar.mode = 'determinate';
-            // this.router.navigate(['/profile']);
+            
           });
         }).catch(err => {
           console.log(err);
