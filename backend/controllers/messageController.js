@@ -8,7 +8,6 @@ var Message   = mongoose.model('Message');
 // ====== MESSAGE ROUTES ======
 
 exports.getAllMessages = function (req, res) {
-    // console.log('(Not Yet Implemented (getAllMessages)');
 
     Message.find({}).populate('from to').exec(function(err, messages){
         if (err) {
@@ -18,7 +17,6 @@ exports.getAllMessages = function (req, res) {
                 error: err
             });
         }
-        // console.log('Messages: ', messages);
         for( let i = 0; i < messages.length; i++ ) {
             if(messages[i] != null || messages[i] != undefined) {
                 messages[i].from.hashPassword = undefined;
@@ -30,7 +28,6 @@ exports.getAllMessages = function (req, res) {
 };
 
 exports.getAllFromToMessages = function (req, res) {
-//   console.log('(Not Yet Implemented (getAllFromToMessages)');
 
   let ids = [req.params.fromUID, req.params.toUID];
   Message.find({}).where('from').in(ids).where('to').in(ids)
@@ -66,13 +63,11 @@ exports.getAllActiveConversationsFrom = function (req, res) {
     async.parallel([
         function (callback) {
             Message.find({}).where('from').in(ids).distinct('to', function (error, toIds) {
-                // console.log('Sent (to) IDS      : ', toIds);
                 callback(error, toIds);
             });
         },
         function (callback) {
             Message.find({}).where('to').in(ids).distinct('from', function (error, fromIds) {
-                // console.log('Received (from) IDS: ', fromIds);
                 callback(error, fromIds);
             })
         }
@@ -93,7 +88,6 @@ exports.getAllActiveConversationsFrom = function (req, res) {
         for (let id of asyncResults[1]) {
             resultIds.push(id);
         }
-        console.log('Resulting IDS: ', resultIds);
 
         User.find({}).where('_id').in(resultIds)
             .exec(function (err, toUsers) {
@@ -114,8 +108,6 @@ exports.getAllActiveConversationsFrom = function (req, res) {
 };
 
 exports.saveMessage = function (req, res) {
-    // console.log('(Not Yet Implemented (saveMessage)');
-
     let newMessage = new Message();
     newMessage.from = req.body.from._id;
     newMessage.to = req.body.to._id;
@@ -137,7 +129,6 @@ exports.saveMessage = function (req, res) {
 };
 
 exports.clearMessagesDB = function (req, res) {
-    // console.log('(Not Yet Implemented (clearMessagesDB)');
     Message.remove({}).exec(function(err, messages){
         if (err) {
             console.log('Error deleting all messages: ', err);
