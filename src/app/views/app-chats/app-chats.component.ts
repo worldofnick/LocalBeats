@@ -444,6 +444,8 @@ export class AppChatsComponent implements OnInit, AfterViewChecked, AfterViewIni
         err => console.error('Error fetching PMs between 2 users: ', err),
         () => {
           console.log('Done fetching PMs from the server DB');
+          this.profileRecipient = new User();
+          this.isProfileUserRequestPending = false;
         }
       );
       this.vc.first.nativeElement.focus();
