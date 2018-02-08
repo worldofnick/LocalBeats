@@ -4,6 +4,9 @@ import { UserService } from '../../services/auth/user.service';
 import { BookingService } from '../../services/booking/booking.service';
 import { NotificationService } from '../../services/notification/notification.service';
 import { EventService } from '../../services/event/event.service';
+import { SocketService } from '../../services/chats/socket.service';
+import { Action } from '../../services/chats/model/action';
+import { Message } from '../../services/chats/model/message';
 import { User } from '../../models/user';
 import { Booking } from '../../models/booking';
 import { Event } from '../../models/event';
@@ -34,10 +37,11 @@ export class ProfileComponent implements OnInit {
 
   constructor(private route: ActivatedRoute,
     private router : Router,
-    private userService: UserService,
+    public userService: UserService,
     private bookingService: BookingService,
     private eventService: EventService,
-    private notificationService: NotificationService) {
+    private notificationService: NotificationService,
+    private _socketService: SocketService) {
     console.log("in profile component constructor");
 
      router.events.subscribe((url:any) => this.clickedOverview = router.url == "/profile/overview");
@@ -91,6 +95,30 @@ export class ProfileComponent implements OnInit {
       this.userService.getUserByID(ID).then((gottenUser: User) => {
         this.user = gottenUser;
       }).then(() => this.hasRequested());
+    }
+  }
+
+  onStartNewConversationFromProfileButtonClick() {
+    
+    // If the user clicked message to some other user, then initiate conversation with it
+    if (!this.onOwnProfile) {
+      console.log('Message clicked on the profile of: ', this.user);
+    //   from?: User;
+    // to?: User;
+    // content?: any;
+    // action?: Action;
+    // isRead?: boolean;
+    // sentAt?: Date;
+    // messageType?: string;
+    // attachmentURL?: string;
+    // serverMessage?: any;
+    // serverPayload?: any;
+      let message:Message = {
+        to: this.user
+      };
+
+      this.router.navigate(['/chat']);
+      this._socketService.send(Action.REQUEST_MSG_FROM_PROFILE_BUTTON, message);
     }
   }
 }
