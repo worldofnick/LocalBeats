@@ -46,6 +46,7 @@ import { CreateEventsComponent } from './create-events/create-events.component';
 
 import { EventRoutes } from "./events.routing";
 import { EventSingletonComponent } from './event-singleton/event-singleton.component';
+import { CommonPipesModule } from "../../pipes/common/common-pipes.module";
 
 
 @NgModule({
@@ -103,6 +104,7 @@ import { EventSingletonComponent } from './event-singleton/event-singleton.compo
     MatTabsModule,
     MatToolbarModule,
     MatTooltipModule,
+    CommonPipesModule,
     RouterModule.forChild(EventRoutes)
   ],
   declarations: [CreateEventsComponent, EventSingletonComponent]

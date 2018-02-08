@@ -32,15 +32,18 @@ export class EventSingletonComponent implements OnInit {
   public approvedBookings: Booking[] = [];
   public dateInBar: Date;
   public dateString: any;
-  zoom: number = 8;
+  // zoom: number = 8;
+  // lat: number = 42;
+  // lng: number = 43;
+  public zoom: number;
+  public lat: number;
+  public lng: number;
   deleteStatus: Number;
   EID: any;
   buttonText: string = "Apply";
   // zoom = 6;
-  mapCenter = {
-    lat: 23.806921,
-    lng: 90.377078
-  }
+
+  setLocation = false;
 
   constructor(private eventService: EventService,
     private userService: UserService,
@@ -56,9 +59,17 @@ export class EventSingletonComponent implements OnInit {
       id: this.route.snapshot.params['id']
     }
 
+
     
     this.eventService.getEventByEID(this.EID).then((event: Event) => {
       this.model = event;
+      this.lat = this.model.location[1]
+      this.lng = this.model.location[0]
+      this.zoom = 12;
+     
+      console.log(this.lat, this.lng);
+
+
       
       console.log("event model: ", this.model)
       this.dateString =this.datepipe.transform(this.model.toDate, 'MM-dd-yyyy');      // this.dateInBar = this.model.fromDate

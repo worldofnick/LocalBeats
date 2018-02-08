@@ -1,118 +1,102 @@
-  <mat-card class="p-0">
-    <mat-card-title class="">
-      <!-- <div class="card-title-text">{{model.eventName}}</div> -->
-      <!-- <div class="card-title-text text-center fz-2">{{model.eventName}}</div> -->
-      <mat-divider></mat-divider>
-    </mat-card-title>
-    <mat-card-content>
-      <!-- <mat-slide-toggle [(ngModel)]="true" color="primary" class="mb-1">Get upto 10% discount annually</mat-slide-toggle> -->
+<mat-card class="p-0">
+  <mat-card-title class="">
+    <!-- <div class="card-title-text">{{model.eventName}}</div> -->
+    <!-- <div class="card-title-text text-center fz-2">{{model.eventName}}</div> -->
+    <mat-divider></mat-divider>
+  </mat-card-title>
+  <mat-card-content>
 
-      <div fxLayout="column" fxFlex="40" fxFlex.gt-md="60">
-        <!-- new row -->
-        <!-- <div fxFlex="100" fxFlex.gt-sm="50" fxFlex.sm="50"> -->
-        <mat-card class="plan-pricing p-0">
-          <mat-card-title class="">
-            <div class="card-title-text">
-              <div class="fz-1">{{model.eventType}} </div>
-              <div class="fz-2"><strong>{{model.eventName}}</strong> </div>
-              <!-- <div class="text-sm text-muted-white">For Professional Developers</div> -->
+    <div fxLayout="column" fxFlex="40" fxFlex.gt-md="50">
+
+      <mat-card class="plan-pricing p-0 no-shadow">
+        <mat-card-title class="">
+          <div class="card-title-text">
+            <div class="fz-1">{{model.eventType | capitalize}} </div>
+            <div class="fz-2">
+              <strong>{{model.eventName}}</strong>
             </div>
-          </mat-card-title>
-          <mat-card-content>
 
-
-            <mat-list class="mb-2">
-              
-              <mat-list-item>
-                <mat-icon mat-list-icon>attach_money</mat-icon>
-                <h4 mat-line>Price:</h4>
-                <p mat-line> {{model.fixedPrice}} </p>
-              </mat-list-item>
-              <mat-list-item><mat-icon>attach_money</mat-icon> {{dateString}}</mat-list-item>
-              <mat-list-item><mat-icon>attach_money</mat-icon>From 1:30 to 3:30 PM MST</mat-list-item>
-              <mat-list-item *ngIf="this.model.negotiable"><mat-icon>attach_money</mat-icon>The event price is negotiable</mat-list-item>
-              <mat-list-item *ngIf="!this.model.negotiable">The event price is non-negotiable</mat-list-item>
-            </mat-list>
-
-            <mat-divider>
-
-            </mat-divider>
-
-
-            <div class="fz-1">About Event:</div>
-   
-
-            
-           
-            <div style="width:600px; max-width:500px; word-wrap:break-word;">
-            <ng-template [ngIf]="model">
-              {{ this.model.description }}
-            </ng-template>
+            <div class="fz-1">
+              <img mat-card-avatar [src]="model.hostUser?.profilePicUrl"> Host: {{model.hostUser?.firstName}} {{model.hostUser?.lastName}}
+            </div>
+            <button mat-raised-button class="mat-accent">Message {{model.hostUser?.firstName}}</button>
           </div>
+        </mat-card-title>
+        <mat-card-content>
 
-            <mat-divider></mat-divider>
-            <img mat-card-image [src]="model.eventPicUrl" style="
-            max-width:512px;
-            max-height:512px;
-            width:auto;
-            height:auto;
-            display: block;
-            padding-top: 15px;">
-          </mat-card-content>
+
+          <mat-list class="mb-2">
+
+            <mat-list-item>
+              <mat-icon mat-list-icon>monetization_on</mat-icon>
+              <!-- <h4 mat-line>Price:</h4> -->
+              <p mat-line> ${{model.fixedPrice}} </p>
+            </mat-list-item>
+            <mat-list-item>
+              <mat-icon mat-list-icon>date_range</mat-icon>
+              <!-- <h4 mat-line>Date:</h4> -->
+              <p mat-line> {{model.toDate | date:'MMM d, y, h:mm a'}} </p>
+            </mat-list-item>
+            <mat-list-item>
+              <mat-icon mat-list-icon>access_time</mat-icon>
+              <!-- <h4 mat-line>Time:</h4> -->
+              <p mat-line>1:30 - 3:30 PM MST </p>
+            </mat-list-item>
+            <mat-list-item *ngIf="this.model.negotiable">
+              <mat-icon mat-list-icon>import_export</mat-icon>
+              <p mat-line>Price is negotiable</p>
+            </mat-list-item>
+            <mat-list-item *ngIf="!this.model.negotiable">
+              <mat-icon mat-list-icon>import_export</mat-icon>
+              <p mat-line>Price is non-negotiable</p>
+            </mat-list-item>
+          </mat-list>
+
+          <mat-divider>
+
+          </mat-divider>
+
+          <p class="fz-1">
+            About Event:
+          </p>
+          <p>
+            {{ this.model.description }}
+          </p>
+          <mat-divider></mat-divider>
+
+        </mat-card-content>
 
 
         <button *ngIf="isCurrentUser && userService.isAuthenticated()" (click)="onEditEvent()" mat-button>Edit Event</button>
         <button *ngIf="isCurrentUser && userService.isAuthenticated()" (click)="onDeleteEvent()" mat-button>Delete Event</button>
         <button *ngIf="!isCurrentUser && userService.isAuthenticated() && !hasApplied" (click)="openNegotiationDialog()" mat-button>{{buttonText}}</button>
         <button *ngIf="!isCurrentUser && userService.isAuthenticated() && hasApplied" (click)="viewApplication()" mat-button>{{buttonText}}</button>
-        </mat-card>
-        <!-- </div> -->
+      </mat-card>
+      <!-- </div> -->
 
-      </div>
-      <!-- Pricing box -->
-
-
-      <!-- Pricing box -->
-      <!-- <div fxFlex="100" fxFlex.gt-sm="50" fxFlex.sm="50">
-       
-      </div> -->
+    </div>
 
 
-      <div fxLayout="column" fxFlex="100" fxFlex.gt-md="40">
+    <div fxLayout="column" fxFlex="100" fxFlex.gt-md="50">
 
-          <mat-card class="plan-pricing p-0">
-            
-              <mat-card-header>
-                  <img mat-card-avatar [src]="model.hostUser?.profilePicUrl">
-              <mat-card-title class="">
-                <div class="card-title-text">
-                  <div class="fz-1">Host: {{model.hostUser?.firstName}} {{model.hostUser?.lastName}}
-                    
-                  </div>
-                  <button mat-raised-button class="mat-accent">Message {{model.hostUser?.firstName}}</button>
-                </div>
-                
-                <mat-divider></mat-divider>
-              </mat-card-title>
-            </mat-card-header>
-<!--             
-              <mat-card-content>
-                <mat-list dense class="mb-1">
-                  <mat-list-item></mat-list-item>
-    
-                </mat-list>
-              </mat-card-content> -->
-            </mat-card>
-        <!-- <div fxFlex="100" fxFlex.gt-sm="50" fxFlex.sm="50"> -->
-        <mat-card class="plan-pricing text-center p-0">
+      <!-- <div fxFlex="100" fxFlex.gt-sm="50" fxFlex.sm="50"> -->
+      <mat-card class="plan-pricing no-shadow  p-0">
+        <img mat-card-image [src]="model.eventPicUrl" style="
+          max-width:800;
+          max-height:640px;
+          width:auto;
+          height:auto;
+          display: block;
+          padding-top: 15px;">
+
+        <mat-card-content class="p-0">
+          <agm-map [ngStyle]="{height: '512px'}" [zoom]="zoom" [latitude]="lat" [longitude]="lng" [scrollwheel]="false">
+            <agm-marker [latitude]="lat" [longitude]="lng"></agm-marker>
+          </agm-map>
+        </mat-card-content>
+      </mat-card>
 
 
-          <mat-card-content class="p-0">
-            <agm-map [ngStyle]="{height: '400px'}" [zoom]="zoom" [latitude]="mapCenter.lat" [longitude]="mapCenter.lng"></agm-map>
-          </mat-card-content>
-        </mat-card>
-
-
-      </div>
-    </mat-card-content>
-  </mat-card>
+    </div>
+  </mat-card-content>
+</mat-card>
