@@ -37,8 +37,7 @@ export class NotificationService {
     }
 
     connect(){
-        // const io = socketIO('http://localhost:8080');
-        // io.on('fromServer', msg=>console.log(msg));
+
     }
 
     public deleteNotificationById(receiverID: string): Promise<Number> {
