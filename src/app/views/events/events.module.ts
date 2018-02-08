@@ -46,14 +46,14 @@ import { CreateEventsComponent } from './create-events/create-events.component';
 
 import { EventRoutes } from "./events.routing";
 import { EventSingletonComponent } from './event-singleton/event-singleton.component';
+import { CommonPipesModule } from "../../pipes/common/common-pipes.module";
 
 
 @NgModule({
   imports: [
     CommonModule,
     AgmCoreModule.forRoot({
-      apiKey: "AIzaSyBCko4eEq6azFCzCXVXAF4_jylVNw4ZM7Q",
-      libraries: ["places"]
+      apiKey: "AIzaSyBCko4eEq6azFCzCXVXAF4_jylVNw4ZM7Q"
     }),
     FormsModule,
     ReactiveFormsModule,
@@ -104,6 +104,7 @@ import { EventSingletonComponent } from './event-singleton/event-singleton.compo
     MatTabsModule,
     MatToolbarModule,
     MatTooltipModule,
+    CommonPipesModule,
     RouterModule.forChild(EventRoutes)
   ],
   declarations: [CreateEventsComponent, EventSingletonComponent]

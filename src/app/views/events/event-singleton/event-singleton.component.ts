@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from "@angular/router";
-// import { DatePipe } from '@angular/common'
+import { DatePipe } from '@angular/common'
 import { Router } from "@angular/router";
 
 
@@ -14,7 +14,7 @@ import { Action } from '../../../services/chats/model/action'
 import { SocketEvent } from '../../../services/chats/model/event'
 import { Notification } from '../../../models/notification'
 import { SocketService } from '../../../services/chats/socket.service';
-
+import { AgmCoreModule, MapsAPILoader } from '@agm/core';
 
 @Component({
   selector: 'app-event-singleton',
@@ -32,16 +32,26 @@ export class EventSingletonComponent implements OnInit {
   public approvedBookings: Booking[] = [];
   public dateInBar: Date;
   public dateString: any;
+  // zoom: number = 8;
+  // lat: number = 42;
+  // lng: number = 43;
+  public zoom: number;
+  public lat: number;
+  public lng: number;
   deleteStatus: Number;
   EID: any;
   buttonText: string = "Apply";
+  // zoom = 6;
+
+  setLocation = false;
 
   constructor(private eventService: EventService,
     private userService: UserService,
     private bookingService: BookingService,
     private route: ActivatedRoute,
     private router: Router,
-    private _socketService: SocketService
+    private _socketService: SocketService,
+    public datepipe: DatePipe
   ) { }
 
   ngOnInit() {
@@ -49,9 +59,21 @@ export class EventSingletonComponent implements OnInit {
       id: this.route.snapshot.params['id']
     }
 
+
+    
     this.eventService.getEventByEID(this.EID).then((event: Event) => {
       this.model = event;
+      this.lat = this.model.location[1]
+      this.lng = this.model.location[0]
+      this.zoom = 12;
+     
+      console.log(this.lat, this.lng);
 
+
+      
+      console.log("event model: ", this.model)
+      this.dateString =this.datepipe.transform(this.model.toDate, 'MM-dd-yyyy');      // this.dateInBar = this.model.fromDate
+      console.log("date string: ", this.dateString);
       this.user = event.hostUser;
       if (this.userService.user != null && this.user._id === this.userService.user._id) {
         this.isCurrentUser = true;
@@ -100,12 +122,21 @@ export class EventSingletonComponent implements OnInit {
 
   }
 
+  mapClicked($event: MouseEvent) {
+    // this.markers.push({
+    //   lat: $event.coords.lat,
+    //   lng: $event.coords.lng,
+    //   draggable: true
+    // });
+  }
 
+  messageHost(){
+    this.router.navigate(['/chat']);
+  }
 
   //cancel your application. NOT BEING CALLED BUT PROBABLY IS ACTUALLY BEING CALLED
   onCancelApp() {
     this.bookingService.declineBooking(this.userBooking).then(() => {
-
       this.hasApplied = false;
       this.userBooking = null
     })
@@ -115,9 +146,16 @@ export class EventSingletonComponent implements OnInit {
 
   }
 
+  onSelectHost(){
+    if(this.isCurrentUser){
+      this.router.navigate(['/profile'])
+    }else{
+      this.router.navigate(['/profile', this.model.hostUser._id])
+    }
+  }
+
   onEditEvent() {
     this.router.navigate(['/events', 'update', this.model._id]); //this will go to the page about the event
-
   }
 
   onDeleteEvent() {
