@@ -103,16 +103,6 @@ export class ProfileComponent implements OnInit {
     // If the user clicked message to some other user, then initiate conversation with it
     if (!this.onOwnProfile) {
       console.log('Message clicked on the profile of: ', this.user);
-    //   from?: User;
-    // to?: User;
-    // content?: any;
-    // action?: Action;
-    // isRead?: boolean;
-    // sentAt?: Date;
-    // messageType?: string;
-    // attachmentURL?: string;
-    // serverMessage?: any;
-    // serverPayload?: any;
       let message:Message = {
         to: this.user
       };
