@@ -14,6 +14,7 @@ import { Action } from '../../../services/chats/model/action'
 import { SocketEvent } from '../../../services/chats/model/event'
 import { Notification } from '../../../models/notification'
 import { SocketService } from '../../../services/chats/socket.service';
+import { Message } from '../../../services/chats/model/message';
 import { AgmCoreModule, MapsAPILoader } from '@agm/core';
 
 @Component({
@@ -112,7 +113,14 @@ export class EventSingletonComponent implements OnInit {
 
 
   messageHost(){
+
+    let message:Message = {
+      to: this.model.hostUser
+    };
+
     this.router.navigate(['/chat']);
+    this._socketService.send(Action.REQUEST_MSG_FROM_PROFILE_BUTTON, message);
+  
   }
 
   //cancel your application. NOT BEING CALLED BUT PROBABLY IS ACTUALLY BEING CALLED
