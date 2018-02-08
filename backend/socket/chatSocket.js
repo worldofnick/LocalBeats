@@ -8,6 +8,7 @@ var Notifications  = mongoose.model('Notification');
 var Message   = mongoose.model('Message');
 let notificationController = require('../controllers/notificationController.js');
 var profileButtonMsgPayload = new Object();
+var pmSnackBarPayload = new Object();
 
 
 module.exports = function (io) {
@@ -81,11 +82,11 @@ module.exports = function (io) {
         // ============================================
         
         socket.on('requestNewMsgFromProfileButtonClick', (messagePayload) => {
-            
-            // console.log('Recevied messaging request with ', JSON.stringify(messagePayload) );
-            // console.log('Payload before: ', profileButtonMsgPayload);
             profileButtonMsgPayload = messagePayload;
-            // console.log('\nSaved as:', profileButtonMsgPayload);
+        });
+
+        socket.on('openPmSnackBarThread', (messagePayload) => {
+            pmSnackBarPayload = messagePayload;
         });
 
         socket.on('chatComponentDoneLoading', (payload) => {
@@ -94,10 +95,11 @@ module.exports = function (io) {
             if(Object.keys(profileButtonMsgPayload).length !== 0 && profileButtonMsgPayload.constructor === Object) {
                 // console.log('\Emitting profile payload:',profileButtonMsgPayload);
                 socket.emit('requestNewMsgFromProfileButtonClick', profileButtonMsgPayload);
+                socket.emit('openPmSnackBarThread', pmSnackBarPayload);
                 profileButtonMsgPayload = new Object();
+                pmSnackBarPayload = new Object();
             }
-            
-        })
+        });
 
         //TODO look at this for sending live notifications
         socket.on('sendPrivateMessage', (payload) => {
