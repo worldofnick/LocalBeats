@@ -51,6 +51,10 @@ function getDefaultImage(eventType) {
   return "http://themocracy.com/wp-content/uploads/2016/12/Parties.jpg";
 }
 
+exports.defaultPic = function (req, res) {
+  res.send({"url": getDefaultImage(req.query.eventType)});
+};
+
 exports.createEvent = function (req, res) {
     var newEvent = new Events(req.body.event);
 

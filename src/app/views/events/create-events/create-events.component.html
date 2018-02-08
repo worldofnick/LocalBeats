@@ -18,7 +18,7 @@
 
 
           <div class="pb-1">
-            <mat-select formControlName="eventType" id="langToggle" placeholder="Event Type" [(ngModel)]="this.event.eventType" name="eventType"
+            <mat-select formControlName="eventType" (change)="onChangeEventType($event)" id="langToggle" placeholder="Event Type" [(ngModel)]="this.event.eventType" name="eventType"
               class="mb-1">
               <mat-option *ngFor="let event of eventTypes" [value]="event.value" ngDefaultControl>
                 {{event.viewValue}}
