@@ -31,17 +31,12 @@ export class EventSingletonComponent implements OnInit {
   public currentBookings: any[] = [];
   public approvedBookings: Booking[] = [];
   public dateInBar: Date;
-  public dateString: any;
-  // zoom: number = 8;
-  // lat: number = 42;
-  // lng: number = 43;
   public zoom: number;
   public lat: number;
   public lng: number;
   deleteStatus: Number;
   EID: any;
   buttonText: string = "Apply";
-  // zoom = 6;
 
   setLocation = false;
 
@@ -67,13 +62,6 @@ export class EventSingletonComponent implements OnInit {
       this.lng = this.model.location[0]
       this.zoom = 12;
      
-      console.log(this.lat, this.lng);
-
-
-      
-      console.log("event model: ", this.model)
-      this.dateString =this.datepipe.transform(this.model.toDate, 'MM-dd-yyyy');      // this.dateInBar = this.model.fromDate
-      console.log("date string: ", this.dateString);
       this.user = event.hostUser;
       if (this.userService.user != null && this.user._id === this.userService.user._id) {
         this.isCurrentUser = true;
@@ -122,13 +110,6 @@ export class EventSingletonComponent implements OnInit {
 
   }
 
-  mapClicked($event: MouseEvent) {
-    // this.markers.push({
-    //   lat: $event.coords.lat,
-    //   lng: $event.coords.lng,
-    //   draggable: true
-    // });
-  }
 
   messageHost(){
     this.router.navigate(['/chat']);
@@ -164,7 +145,7 @@ export class EventSingletonComponent implements OnInit {
       console.log(this.deleteStatus);
       if (this.deleteStatus == 200) {
         // this.eventService.events = this.eventService.events.filter(e => e !== this.event);
-        // this.router.navigate(['/profile']);
+        this.router.navigate(['/profile']);
         this.model = null;
       }
     });
