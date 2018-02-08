@@ -32,12 +32,15 @@ export class EventSingletonComponent implements OnInit {
   public approvedBookings: Booking[] = [];
   public dateInBar: Date;
   public dateString: any;
-  lat: number = 51.673858;
-  lng: number = 7.815982;
   zoom: number = 8;
   deleteStatus: Number;
   EID: any;
   buttonText: string = "Apply";
+  // zoom = 6;
+  mapCenter = {
+    lat: 23.806921,
+    lng: 90.377078
+  }
 
   constructor(private eventService: EventService,
     private userService: UserService,

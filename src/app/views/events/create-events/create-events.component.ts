@@ -46,10 +46,13 @@ export class CreateEventsComponent implements OnInit {
   galley of type and scrambled it to make a type specimen book. It has survived not only five centuries
   </span></p>`;
 
-  latitude: number;
-  longitude: number;
+
   public place: google.maps.places.PlaceResult
   zoom: number;
+
+  latitude = 51.678418;
+  longitude = 7.809007;
+  locationChosen = false;
 
   selectedEventType: string = 'wedding';
   eventTypes = [
@@ -197,6 +200,12 @@ export class CreateEventsComponent implements OnInit {
         });
       });
     });
+  }
+
+  onChoseLocation(event) {
+    this.latitude = event.coords.lat;
+    this.longitude = event.coords.lng;
+    this.locationChosen = true;
   }
 
   onChange(event: EventTarget) {
