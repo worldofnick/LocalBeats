@@ -214,12 +214,21 @@ exports.searchEvents = function(req, res) {
         res.status(500).send({"error": "from date comes after to date"});
     }
 
-    query.toDate = {
-      "$gte": Date(req.query.from_date)
-    }
+    // Will need this when we have two dates for an event
+    // query.toDate = {
+    //   "$gte": Date(req.query.from_date)
+    // }
+
+    // query.toDate = {
+    //   "$lte": Date(req.query.to_date)
+    // }
 
     query.toDate = {
-      "$lte": Date(req.query.to_date)
+        "$and": [
+            {"$gte": Date(req.query.to_date)},
+            {"$lte": Date(req.query.to_date)}
+
+        ]
     }
   }
 
