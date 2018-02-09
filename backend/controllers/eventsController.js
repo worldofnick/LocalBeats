@@ -210,12 +210,16 @@ exports.searchEvents = function(req, res) {
   }
 
   if (req.query.from_date != null && req.query.to_date != null) {
-    query.fromDate = {
-      $gte: new Date(req.query.from_date)
+    if (Date(req.query.from_date) > Date(req.query.to_date)) {
+        res.status(500send({"error": "from date comes after to date"});
     }
 
     query.toDate = {
-      $lte: new Date(req.query.to_date)
+      "$gte": Date(req.query.from_date)
+    }
+
+    query.toDate = {
+      "$lte": Date(req.query.to_date)
     }
   }
 
