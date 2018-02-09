@@ -56,9 +56,7 @@
 
           <ng-template [ngIf]="this.onOwnProfile">
             <mat-divider></mat-divider>
-            <!-- if not on your own profile this doesnt show -->
-
-            <mat-list-item routerLink="/profile/settings" routerLinkActive="list-item-active">
+            <mat-list-item [routerLink]="['/profile','settings']" routerLinkActive="list-item-active">
               <mat-icon>settings</mat-icon>
               Edit Profile
             </mat-list-item>
@@ -82,7 +80,6 @@
   <!-- Profile Views -->
   <div fxFlex="100" fxFlex.gt-sm="50" fxFlex.gt-md="calc(100% - 300px)">
     <router-outlet></router-outlet>
-    <!-- //TODO DO THIS FOR THE REST OF THE CHILDREN -->
     <app-profile-request *ngIf="clickedRequestArtist" [user]="userService.user" [artist]="user"></app-profile-request>
     <app-profile-overview *ngIf="clickedOverview" [user]="this.user"></app-profile-overview>
   </div>
