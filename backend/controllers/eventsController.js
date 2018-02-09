@@ -211,7 +211,7 @@ exports.searchEvents = function(req, res) {
 
   if (req.query.from_date != null && req.query.to_date != null) {
     if (Date(req.query.from_date) > Date(req.query.to_date)) {
-        res.status(500).send({"error": "from date comes after to date"});
+        res.status(400).send({"error": "from date comes after to date"});
     }
 
     // Will need this when we have two dates for an event
