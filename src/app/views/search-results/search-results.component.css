@@ -1,5 +1,5 @@
 mat-card img {
-  object-fit: cover; /*this makes de image in src fit to the size of specified below*/
-  width: 500px; /* Here you can use wherever you want to specify the width and also the height of the <img>*/
-  height: 365px;
+  object-fit: cover;
+  width: 500px;
+  height: 250px;
 }
