@@ -35,10 +35,8 @@ export class EventSingletonComponent implements OnInit {
   public zoom: number;
   public lat: number;
   public lng: number;
-  deleteStatus: Number;
   EID: any;
   buttonText: string = "Apply";
-
   setLocation = false;
 
   constructor(private eventService: EventService,
@@ -55,8 +53,6 @@ export class EventSingletonComponent implements OnInit {
       id: this.route.snapshot.params['id']
     }
 
-
-    
     this.eventService.getEventByEID(this.EID).then((event: Event) => {
       this.model = event;
       this.lat = this.model.location[1]
@@ -113,14 +109,11 @@ export class EventSingletonComponent implements OnInit {
 
 
   messageHost(){
-
     let message:Message = {
       to: this.model.hostUser
     };
-
     this.router.navigate(['/chat']);
     this._socketService.send(Action.REQUEST_MSG_FROM_PROFILE_BUTTON, message);
-  
   }
 
   //cancel your application. NOT BEING CALLED BUT PROBABLY IS ACTUALLY BEING CALLED
@@ -129,10 +122,6 @@ export class EventSingletonComponent implements OnInit {
       this.hasApplied = false;
       this.userBooking = null
     })
-  }
-
-  onViewApplications() {
-
   }
 
   onSelectHost(){
@@ -149,10 +138,7 @@ export class EventSingletonComponent implements OnInit {
 
   onDeleteEvent() {
     this.eventService.deleteEventByEID(this.model).then((status: Number) => {
-      this.deleteStatus = status;
-      console.log(this.deleteStatus);
-      if (this.deleteStatus == 200) {
-        // this.eventService.events = this.eventService.events.filter(e => e !== this.event);
+      if (status == 200) {
         this.router.navigate(['/profile']);
         this.model = null;
       }
@@ -210,9 +196,6 @@ export class EventSingletonComponent implements OnInit {
               this.userBooking.hostStatusMessage = StatusMessages.bookingConfirmed;
               this.userBooking.artistStatusMessage = StatusMessages.bookingConfirmed;
               this.bookingService.acceptBooking(this.userBooking).then(() => {
-                //booking is confirmed - send notification to event host that artist has accepted.
-                this.createNotificationForArtist(this.userBooking, result.response, ['/profile', 'performances'],
-                'event_available', "You have confirmed " + this.userBooking.eventEID.eventName);
 
                 this.createNotificationForHost(this.userBooking, result.response, ['/profile', 'events'],
                 'event_available', this.userBooking.performerUser.firstName + " has confirmed " + this.userBooking.eventEID.eventName);
@@ -271,17 +254,7 @@ export class EventSingletonComponent implements OnInit {
       });
   }
 
-  //send to artist
-  createNotificationForArtist(booking: Booking, response: NegotiationResponses, route: string[], icon: string, message: string) {
-    // build notification "someone has requested you to play blah"
-    let notification = new Notification(booking.hostUser, booking.performerUser,
-      booking.eventEID._id, booking, response, message, icon, route);
-    this._socketService.sendNotification(SocketEvent.SEND_NOTIFICATION, notification);
-  }
-
-  //send to host
   createNotificationForHost(booking: Booking, response: NegotiationResponses, route: string[], icon: string, message: string) {
-    // build notification "someone has requested you to play blah"
     let notification = new Notification(booking.performerUser, booking.hostUser, booking.eventEID._id,
       booking, response, message, icon, route); 
     this._socketService.sendNotification(SocketEvent.SEND_NOTIFICATION, notification);
