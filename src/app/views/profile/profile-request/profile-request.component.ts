@@ -218,6 +218,26 @@ export class ProfileRequestComponent implements OnInit {
     }
   }
 
+  newRequest(event: Event, eventIndex: number) {
+    let tempBooking = new Booking(undefined, 'host-request', event.hostUser, this.artist, event, false, false, false, StatusMessages.waitingOnArtist, StatusMessages.hostOffer, false, false, true, event.fixedPrice);
+    this.bookingService.negotiate(tempBooking, true).subscribe((result) => {
+      if (result != undefined) {
+        if (result.response == NegotiationResponses.new) {
+          tempBooking.currentPrice = result.price;
+          this.bookingService.createBooking(tempBooking).then((booking: Booking) => {
+            // Remove from available events
+            this.hostedEvents.availableEvents.splice(eventIndex, 1);
+            // Push onto requested bookings
+            this.hostedEvents.requests.push(booking);
+            // Send notification to artist
+            this.createNotificationForArtist(booking, result.response, ['/events', booking.eventEID._id], 
+          'queue_music', booking.hostUser.firstName + " has requested you for an event called: " + booking.eventEID.eventName);
+          });
+        }
+      }
+    });
+  }
+
   openNegotiationDialog(booking: Booking, bookingIndex: number) {
     this.bookingService.negotiate(booking, false)
     .subscribe((result) => {
@@ -306,26 +326,6 @@ export class ProfileRequestComponent implements OnInit {
           })
         } else {
           // No change, the user kept their confirmed booking
-        }
-      }
-    });
-  }
-
-  newRequest(event: Event, eventIndex: number) {
-    let tempBooking = new Booking(undefined, 'host-request', event.hostUser, this.artist, event, false, false, false, StatusMessages.waitingOnArtist, StatusMessages.hostOffer, false, false, true, event.fixedPrice);
-    this.bookingService.negotiate(tempBooking, true).subscribe((result) => {
-      if (result != undefined) {
-        if (result.response == NegotiationResponses.new) {
-          tempBooking.currentPrice = result.price;
-          this.bookingService.createBooking(tempBooking).then((booking: Booking) => {
-            // Remove from available events
-            this.hostedEvents.availableEvents.splice(eventIndex, 1);
-            // Push onto requested bookings
-            this.hostedEvents.requests.push(booking);
-            // Send notification to artist
-            this.createNotificationForArtist(booking, result.response, ['/events', booking.eventEID._id], 
-          'queue_music', booking.hostUser.firstName + " has requested you for an event called: " + booking.eventEID.eventName);
-          });
         }
       }
     });
