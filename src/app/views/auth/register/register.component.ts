@@ -16,6 +16,8 @@ export class RegisterComponent implements OnInit {
 
   signupForm: FormGroup;
   user: User;
+  genresList: string[] = ['rock', 'country', 'jazz', 'blues', 'rap'];
+  eventsList: string[] = ['wedding', 'birthday', 'business'];
 
   constructor(private userService: UserService, private router: Router) {}
 
@@ -28,14 +30,10 @@ export class RegisterComponent implements OnInit {
       lastName: new FormControl('', Validators.required),
       email: new FormControl('', [Validators.required, Validators.email]),
       password: password,
-      confirmPassword: confirmPassword, 
-      agreed: new FormControl('', (control: FormControl) => {
-        const agreed = control.value;
-        if(!agreed) {
-          return { agreed: true }
-        }
-        return null;
-      })
+      confirmPassword: confirmPassword,
+      genres: new FormControl(),
+      events: new FormControl(), 
+      isArtist: new FormControl()
     })
   }
 
@@ -48,10 +46,10 @@ export class RegisterComponent implements OnInit {
       email: signupData.email,
       password: signupData.password,
       spotifyID: null,
-      genres: [],
-      isArtist: true,
+      genres: signupData.genres,
+      isArtist: signupData.isArtist,
       profilePicUrl: "https://www.vccircle.com/wp-content/uploads/2017/03/default-profile.png",
-      eventTypes: [],
+      eventTypes: signupData.events,
       socket: null,
       isOnline: true
     };
