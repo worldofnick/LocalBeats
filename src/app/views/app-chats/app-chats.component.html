@@ -70,7 +70,7 @@
       </mat-toolbar>
 
       <!-- Main chat body -->
-      <div class="conversations-hold" style="min-height: 500px; position: sticky; top:0; z-index: -1; padding: 5% 0% 15% 0%;">
+      <div class="conversations-hold" style="min-height: 500px; position: sticky; top:0; z-index: -1; padding: 5% 0% 10% 0%;">
         <!-- single chat item -->
         <div *ngFor="let message of activeChatMessages" class="single-conversation {{ !!(message.from._id == this.loggedInUser._id) ? 
                                       ('me') : 
