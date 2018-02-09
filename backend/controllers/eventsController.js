@@ -225,7 +225,7 @@ exports.searchEvents = function(req, res) {
 
     query.toDate = {
         "$and": [
-            {"$gte": Date(req.query.to_date)},
+            {"$gte": Date(req.query.from_date)},
             {"$lte": Date(req.query.to_date)}
 
         ]
