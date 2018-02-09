@@ -8,36 +8,56 @@
     <mat-card class="p-0" *ngIf="searchType == 'Event'" [routerLink]="['/events', result._id]">
       <mat-card-title class="mat-bg-primary m-0">
         <div class="card-title-text">
-          <span *ngIf="searchType == 'Musician'">{{result.firstName}} {{result.lastName}}</span>
-          <span *ngIf="searchType == 'Event'">{{result.eventName}}</span>
+          <span>{{result.eventName}}</span>
           <span fxFlex></span>
         </div>
         <mat-divider></mat-divider>
       </mat-card-title>
       <img mat-card-image [src]="result.eventPicUrl">
-      <img *ngIf="searchType == 'Musician'" [routerLink]="['/profile', result._id]" mat-card-image [src]="result.profilePicUrl">
       <mat-card-content>
-        <p>
-          Adipisci quas repellat sed. Quasi quaerat aut nam possimus vitae dignissimos, sapiente est atque tenetur eveniet iste iusto
-          veritatis. Adipisci quas repellat sed. Quasi quaerat aut.
-        </p>
+        <div fxLayout="row" fxLayoutWrap="wrap">
+          <div fxFlex="100" fxFlex.gt-xs="50">
+            <p><em><b>Location:</b></em></p>
+            <p>{{result.city}}, {{result.state}}</p>
+            <p>{{result.toDate | date:'MMM d, y, h:mm a'}}</p>
+          </div>
+          <div fxFlex="100" fxFlex.gt-xs="50">
+            <p><em><b>Price:</b></em></p>
+            <p *ngIf="result.negotiable">{{result.fixedPrice | currency}} (Negotiable)</p>
+            <p *ngIf="!result.negotiable">{{result.fixedPrice | currency}} (Non-Negotiable)</p>
+          </div>
+        </div>
+        
+        <div fxLayout="row" fxLayoutWrap="wrap">
+            <div fxFlex="100" fxFlex.gt-xs="100">
+                <p><em><b>Description:</b></em></p>
+                <p>{{result.description}}</p>
+            </div>
+          </div>
       </mat-card-content>
     </mat-card>
-    <mat-card class="p-0" *ngIf="searchType == 'Musician'" [routerLink]="['/profile', result._id]">
+    <mat-card class="p-0" *ngIf="searchType == 'Artist' || searchType == 'Host'" [routerLink]="['/profile', result._id]">
       <mat-card-title class="mat-bg-primary m-0">
         <div class="card-title-text">
-          <span *ngIf="searchType == 'Musician'">{{result.firstName}} {{result.lastName}}</span>
-          <span *ngIf="searchType == 'Event'">{{result.eventName}}</span>
+          <span>{{result.firstName}} {{result.lastName}}</span>
           <span fxFlex></span>
         </div>
         <mat-divider></mat-divider>
       </mat-card-title>
       <img mat-card-image [src]="result.profilePicUrl">
       <mat-card-content>
-        <p>
-          Adipisci quas repellat sed. Quasi quaerat aut nam possimus vitae dignissimos, sapiente est atque tenetur eveniet iste iusto
-          veritatis. Adipisci quas repellat sed. Quasi quaerat aut.
-        </p>
+        <mat-card-title *ngIf="result.isArtist"><b>Artist</b></mat-card-title>
+        <mat-card-title *ngIf="!result.isArtist"><b>Host</b></mat-card-title>
+        <div fxLayout="row" fxLayoutWrap="wrap">
+          <div fxFlex="100" fxFlex.gt-xs="50">
+            <p><em><b>Music Style:</b></em></p>
+            <p *ngFor="let g of result.genres">{{g | capitalize}}</p>
+          </div>
+          <div fxFlex="100" fxFlex.gt-xs="50">
+            <p><em><b>Preferred Events:</b></em></p>
+            <p *ngFor="let e of result.eventTypes">{{e | capitalize}}</p>
+          </div>
+        </div>
       </mat-card-content>
     </mat-card>
   </div>

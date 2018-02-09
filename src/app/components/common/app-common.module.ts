@@ -7,6 +7,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { AgmCoreModule, MapsAPILoader } from '@agm/core';
 import { TranslateModule } from 'ng2-translate/ng2-translate';
 import { OffClickModule } from 'angular2-off-click';
+import { CommonPipesModule } from "../../pipes/common/common-pipes.module";
 import { 
   MatSidenavModule,
   MatExpansionModule,
@@ -49,6 +50,7 @@ import { SocketService } from 'app/services/chats/socket.service';
       libraries: ["places"]
     }),
     OffClickModule,
+    CommonPipesModule,
     FormsModule,
     ReactiveFormsModule,
     BrowserModule,

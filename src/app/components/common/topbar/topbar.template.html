@@ -31,9 +31,12 @@
                 <input class="search-text" [formControl]="searchForm.controls['text']" autofocus="true" placeholder="Search" type="text" (click)="click()" (keyup)="onKey($event)">
             </mat-panel-title>
           </mat-expansion-panel-header>
-          <mat-button-toggle-group [formControl]="searchForm.controls['type']" name="searchType" value="Musician">
-            <mat-button-toggle value="Musician">
-              Musicians
+          <mat-button-toggle-group [formControl]="searchForm.controls['type']" name="searchType" value="Artist">
+            <mat-button-toggle value="Artist">
+              Artists
+            </mat-button-toggle>
+            <mat-button-toggle value="Host">
+              Hosts
             </mat-button-toggle>
             <mat-button-toggle value="Event">
               Events
@@ -44,24 +47,24 @@
           <mat-form-field>
             <mat-select placeholder="Music Genres" [formControl]="searchForm.controls['genres']" (openedChange)="genreSelectOpen()" multiple>
               <mat-select-trigger class="additional-selection">
-                {{searchForm.controls['genres'].value ? searchForm.controls['genres'].value[0] : ''}}
+                {{(searchForm.controls['genres'].value ? searchForm.controls['genres'].value[0] : '') | capitalize}}
                 <span *ngIf="searchForm.controls['genres'].value?.length > 1">
                   (+{{searchForm.controls['genres'].value.length - 1}} others)
                 </span>
               </mat-select-trigger>
-              <mat-option *ngFor="let genre of genresList" [value]="genre">{{genre}}</mat-option>
+              <mat-option *ngFor="let genre of genresList" [value]="genre">{{genre | capitalize}}</mat-option>
             </mat-select>
           </mat-form-field>
           <br>
           <mat-form-field>
             <mat-select placeholder="Event Types" [formControl]="searchForm.controls['events']" (openedChange)="eventSelectOpen()" multiple>
               <mat-select-trigger class="additional-selection">
-                {{searchForm.controls['events'].value ? searchForm.controls['events'].value[0] : ''}}
+                {{(searchForm.controls['events'].value ? searchForm.controls['events'].value[0] : '') | capitalize}}
                 <span *ngIf="searchForm.controls['events'].value?.length > 1">
                   (+{{searchForm.controls['events'].value.length - 1}} others)
                 </span>
               </mat-select-trigger>
-              <mat-option *ngFor="let event of eventsList" [value]="event">{{event}}</mat-option>
+              <mat-option *ngFor="let event of eventsList" [value]="event">{{event | capitalize}}</mat-option>
             </mat-select>
           </mat-form-field>
           <!-- TO DO: Finish datepicker -->

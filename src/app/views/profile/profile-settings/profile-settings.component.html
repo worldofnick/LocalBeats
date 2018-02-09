@@ -22,9 +22,9 @@
             </mat-select>
           </mat-form-field>
 
-          <mat-form-field *ngIf="nowArtist" class="full-width">
-              <mat-select [formControl]="settingsForm.controls['eventTypes']" name="types" placeholder="Perferred Event Types" multiple>
-                <mat-option *ngFor="let type of eventsList" [value]="type" >{{type}}</mat-option>
+          <mat-form-field class="full-width">
+              <mat-select [formControl]="settingsForm.controls['eventTypes']" name="types" placeholder="Preferred Event Types" multiple>
+                <mat-option *ngFor="let type of eventsList" [value]="type" >{{type | capitalize}}</mat-option>
               </mat-select>
           </mat-form-field>
           <div class="pb-1">
