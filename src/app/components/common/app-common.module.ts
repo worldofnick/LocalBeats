@@ -4,9 +4,9 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { BrowserModule } from "@angular/platform-browser";
 import { RouterModule } from "@angular/router";
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { AgmCoreModule, MapsAPILoader } from '@agm/core';
 import { TranslateModule } from 'ng2-translate/ng2-translate';
 import { OffClickModule } from 'angular2-off-click';
+import { CommonPipesModule } from "../../pipes/common/common-pipes.module";
 import { 
   MatSidenavModule,
   MatExpansionModule,
@@ -44,11 +44,8 @@ import { SocketService } from 'app/services/chats/socket.service';
 @NgModule({
   imports: [
     CommonModule,
-    AgmCoreModule.forRoot({
-      apiKey: "AIzaSyBCko4eEq6azFCzCXVXAF4_jylVNw4ZM7Q",
-      libraries: ["places"]
-    }),
     OffClickModule,
+    CommonPipesModule,
     FormsModule,
     ReactiveFormsModule,
     BrowserModule,

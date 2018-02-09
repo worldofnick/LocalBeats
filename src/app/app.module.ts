@@ -5,7 +5,7 @@ import { Http, HttpModule } from '@angular/http';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TranslateModule, TranslateLoader, TranslateStaticLoader } from 'ng2-translate/ng2-translate';
-
+import { AgmCoreModule, MapsAPILoader } from '@agm/core';
 import { rootRouterConfig } from './app.routes';
 import { AppCommonModule } from "./components/common/app-common.module";
 import { NegotiateModule } from './views/negotiate/negotiate.module';
@@ -33,6 +33,10 @@ export function createTranslateLoader(http: Http) {
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
+    AgmCoreModule.forRoot({
+      apiKey: "AIzaSyBCko4eEq6azFCzCXVXAF4_jylVNw4ZM7Q",
+      libraries: ["places"]
+    }),
     HttpClientModule,
     HttpModule,
     AppCommonModule,

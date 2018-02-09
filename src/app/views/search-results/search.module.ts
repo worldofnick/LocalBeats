@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { CurrencyMaskModule } from "ng2-currency-mask";
 import { 
   MatIconModule,
   MatCardModule,
@@ -22,6 +23,7 @@ import { SearchRoutes } from "./search.routing";
 @NgModule({
   imports: [
     CommonModule,
+    CurrencyMaskModule,
     MatIconModule,
     MatCardModule,
     MatMenuModule,

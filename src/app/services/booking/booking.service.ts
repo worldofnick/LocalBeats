@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Http, Headers, RequestOptions, Response, URLSearchParams } from '@angular/http';
 import { MatDialogRef, MatDialog, MatDialogConfig } from '@angular/material';
 import { Observable } from 'rxjs/Observable';
-import { Booking } from 'app/models/booking';
+import { Booking, NegotiationResponses } from 'app/models/booking';
 import { Event } from 'app/models/event';
 import { User } from 'app/models/user';
 import { NegotiateDialogComponent } from '../../views/negotiate/negotiate-dialog/negotiate-dialog.component';
@@ -22,12 +22,12 @@ export class BookingService {
 
     constructor(private http: Http, private dialog: MatDialog) { }
 
-    public negotiate(booking: Booking, initial: boolean, view: string): Observable<any> {
+    public negotiate(booking: Booking, initial: boolean): Observable<{response: NegotiationResponses, price: number}> {
         let dialogRef: MatDialogRef<NegotiateDialogComponent>;
         dialogRef = this.dialog.open(NegotiateDialogComponent, {
             width: '380px',
             disableClose: false,
-            data: {booking, initial, view}
+            data: {booking, initial}
         });
         return dialogRef.afterClosed();
     }

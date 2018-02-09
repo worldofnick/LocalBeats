@@ -2,12 +2,14 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from "@angular/router";
+import { CommonPipesModule } from "../../pipes/common/common-pipes.module";
 import { 
   MatProgressBarModule,
   MatButtonModule,
   MatInputModule,
   MatCardModule,
   MatCheckboxModule,
+  MatSelectModule,
   MatIconModule
  } from '@angular/material';
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -19,9 +21,11 @@ import { AuthRoutes } from "./auth.routing";
 @NgModule({
   imports: [
     CommonModule,
+    CommonPipesModule,
     FormsModule,
     ReactiveFormsModule,
     MatProgressBarModule,
+    MatSelectModule,
     MatButtonModule,
     MatInputModule,
     MatCardModule,

@@ -88,7 +88,11 @@ export class SearchService {
     public userSearch(searchTerms: SearchTerms): Promise<Object> {
         let current = (this.connection + 'searchUsers/')
         let params: URLSearchParams = new URLSearchParams();
-        params.set('artist', 'true')
+        if(searchTerms.searchType === 'Artist') {
+            params.set('artist', 'true')
+        } else {
+            params.set('artist', 'false');
+        }
         for(let type of searchTerms.event_types) {
             params.append('event_types', type.toLowerCase());
         }

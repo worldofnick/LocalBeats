@@ -21,8 +21,8 @@ export class ProfileSettingsComponent implements OnInit {
   @ViewChild(MatProgressBar) progressBar: MatProgressBar;
 
   user: User;
-  genresList: string[] = ['rock', 'country', 'zazz', 'blues', 'rap'];
-  eventsList: string[] = ['Wedding', 'Birthday', 'Business'];
+  genresList: string[] = ['rock', 'country', 'jazz', 'blues', 'rap'];
+  eventsList: string[] = ['wedding', 'birthday', 'business'];
   settingsForm: FormGroup;
   nowArtist = false;
   public uploader: FileUploader = new FileUploader({ url: 'upload_url' });
@@ -77,11 +77,6 @@ export class ProfileSettingsComponent implements OnInit {
     //lower case genres for serachability
     for (var _i = 0; _i < this.user.genres.length; _i++) {
       this.user.genres[_i] = this.user.genres[_i].toLowerCase()
-    }
-
-    //reset user event preferences is the user says it is not an artist anymore
-    if(!this.user.isArtist){
-      this.user.eventTypes = [];
     }
 
     this.userService.onEditProfile(this.user).then((user: User) => {

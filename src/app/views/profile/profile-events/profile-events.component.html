@@ -4,58 +4,93 @@
         <span>My Hosted Events</span>
       </div>
   </mat-card-title>
-  <div *ngFor="let event of this.events; let i = index" class="example-card">
+  <mat-card *ngIf="events.length == 0" class="example-card no-shadow">
+      <mat-card-title>You have not hosted any events.</mat-card-title>
+    </mat-card>
+  <div *ngFor="let item of this.events; let j = index" class="example-card">
     <mat-card class="p-0">
-      <mat-tab-group>
+      <mat-tab-group (selectedTabChange)="resetConfirmations($event, j)">
         <mat-tab label="Event Details">
           <mat-card class="no-shadow">
             <mat-card-header>
-              <img mat-card-avatar [src]="event.event.eventPicUrl">
-              <mat-card-title><a [routerLink]="['/events', event.event._id]">{{event.event.eventName}}</a></mat-card-title>
-              <mat-card-subtitle>{{event.event.eventType | capitalize}}</mat-card-subtitle>
-              <mat-card-subtitle>{{event.event.toDate | date:'MMM d, y, h:mm a'}}</mat-card-subtitle>
-              <mat-card-subtitle>{{event.event.fixedPrice | currency}}</mat-card-subtitle>
+              <img mat-card-avatar [src]="item.event.eventPicUrl">
+              <mat-card-title><a [routerLink]="['/events', item.event._id]">{{item.event.eventName}}</a></mat-card-title>
+              <mat-card-subtitle>{{item.event.eventType | capitalize}}</mat-card-subtitle>
+              <mat-card-subtitle>{{item.event.toDate | date:'MMM d, y, h:mm a'}}</mat-card-subtitle>
+              <mat-card-subtitle *ngIf="item.event.negotiable">{{item.event.fixedPrice | currency}} (Negotiable)</mat-card-subtitle>
+              <mat-card-subtitle *ngIf="!item.event.negotiable">{{item.event.fixedPrice | currency}} (Non-Negotiable)</mat-card-subtitle>
             </mat-card-header>
             <mat-card-content>
             </mat-card-content>
             <mat-card-actions>
-              <button *ngIf="event.event.hostUser._id == this.user._id" (click)="onEditEvent(event.event, i)" mat-button color="primary">Edit</button>
-              <button *ngIf="event.event.hostUser._id == this.user._id" (click)="onDeleteEvent(event.event, i)" mat-button color="primary">Delete</button>
+              <button *ngIf="item.event.hostUser._id == this.user._id" (click)="onEditEvent(item.event, i)" mat-raised-button color="primary">Edit</button>
+              <button *ngIf="item.event.hostUser._id == this.user._id" (click)="onDeleteEvent(item.event, i)" mat-raised-button color="accent">Delete</button>
             </mat-card-actions>
           </mat-card>
         </mat-tab>
-        <mat-tab label="Applicants">
-          <mat-card *ngIf="event.applicants.length == 0" class="example-card no-shadow">
+        <mat-tab>
+          <ng-template mat-tab-label>
+              Artist Applicants <span *ngIf="item.applicationNotifications > 0" class="notification-value mat-bg-warn">{{item.applicationNotifications}}</span>
+          </ng-template>
+          <mat-card *ngIf="item.applications.length == 0" class="example-card no-shadow">
             <mat-card-title>You have no applicants.</mat-card-title>
           </mat-card>
-          <mat-card *ngFor="let booking of event.applicants; let i = index" class="example-card no-shadow">
+          <mat-card *ngFor="let application of item.applications; let i = index" class="example-card no-shadow">
             <mat-card-header>
-              <img mat-card-avatar [src]="booking.performerUser.profilePicUrl">
-              <mat-card-title><a [routerLink]="['/profile', booking.performerUser._id]">{{booking.performerUser.firstName}} {{booking.performerUser.lastName}}</a></mat-card-title>
-              <mat-card-subtitle>Proposed Price: {{booking.currentPrice | currency}}</mat-card-subtitle>
-              <mat-card-subtitle>Status: {{booking.hostStatusMessage}}</mat-card-subtitle>
+              <img mat-card-avatar [src]="application.performerUser.profilePicUrl">
+              <mat-card-title><a [routerLink]="['/profile', application.performerUser._id]">{{application.performerUser.firstName}} {{application.performerUser.lastName}} </a><mat-icon *ngIf="application.artistApproved">music_note</mat-icon></mat-card-title>
+              <mat-card-subtitle>{{application.hostStatusMessage}}</mat-card-subtitle>
+              <mat-card-subtitle>{{application.currentPrice | currency}}</mat-card-subtitle>
             </mat-card-header>
             <mat-card-content>
             </mat-card-content>
             <mat-card-actions>
-              <button (click)="openNegotiationDialog(booking, 'host')" mat-button color="primary">View Application</button>
+              <button (click)="openNegotiationDialog(application, i, j)" mat-raised-button color="primary">View Application</button>
+              <button (click)="messageArtist(application)" mat-raised-button color="accent">Message Artist</button>
             </mat-card-actions>
           </mat-card>
         </mat-tab>
-        <mat-tab label="Booked Musicians">
-          <mat-card *ngIf="event.approved.length == 0" class="example-card no-shadow">
-            <mat-card-title>You have no musicians booked.</mat-card-title>
+        <mat-tab>
+          <ng-template mat-tab-label>
+              Requested Artists <span *ngIf="item.requestNotifications > 0" class="notification-value mat-bg-warn">{{item.requestNotifications}}</span>
+          </ng-template>
+          <mat-card *ngIf="item.requests.length == 0" class="example-card no-shadow">
+            <mat-card-title>You have not requested any artists.</mat-card-title>
           </mat-card>
-          <mat-card *ngFor="let booking of event.approved; let i = index" class="example-card no-shadow">
+          <mat-card *ngFor="let request of item.requests; let i = index" class="example-card no-shadow">
             <mat-card-header>
-              <img mat-card-avatar [src]="booking.performerUser.profilePicUrl">
-              <mat-card-title><a [routerLink]="['/profile', booking.performerUser._id]">{{booking.performerUser.firstName}} {{booking.performerUser.lastName}}</a></mat-card-title>
-              <mat-card-subtitle>Accepted Price: {{booking.currentPrice | currency}}</mat-card-subtitle>
+              <img mat-card-avatar [src]="request.performerUser.profilePicUrl">
+              <mat-card-title><a [routerLink]="['/profile', request.performerUser._id]">{{request.performerUser.firstName}} {{request.performerUser.lastName}} </a><mat-icon *ngIf="request.artistApproved">music_note</mat-icon></mat-card-title>
+              <mat-card-subtitle>{{request.hostStatusMessage}}</mat-card-subtitle>
+              <mat-card-subtitle>{{request.currentPrice | currency}}</mat-card-subtitle>
             </mat-card-header>
             <mat-card-content>
             </mat-card-content>
             <mat-card-actions>
-              <button (click)="openNegotiationDialog(booking, 'host')" mat-button color="primary">Cancel Booking</button>
+              <button (click)="openNegotiationDialog(request, i, j)" mat-raised-button color="primary">View Request</button>
+              <button (click)="messageArtist(request)" mat-raised-button color="accent">Message Artist</button>
+            </mat-card-actions>
+          </mat-card>
+        </mat-tab>
+        <mat-tab>
+          <ng-template mat-tab-label>
+            Booked Artists <span *ngIf="item.confirmationNotifications > 0" class="notification-value mat-bg-warn">{{item.confirmationNotifications}}</span>
+          </ng-template>
+          <mat-card *ngIf="item.confirmations.length == 0" class="example-card no-shadow">
+            <mat-card-title>You have no musicians booked.</mat-card-title>
+          </mat-card>
+          <mat-card *ngFor="let booking of item.confirmations; let i = index" class="example-card no-shadow">
+            <mat-card-header>
+              <img mat-card-avatar [src]="booking.performerUser.profilePicUrl">
+              <mat-card-title><a [routerLink]="['/profile', booking.performerUser._id]">{{booking.performerUser.firstName}} {{booking.performerUser.lastName}}</a></mat-card-title>
+              <mat-card-subtitle>{{booking.hostStatusMessage}}</mat-card-subtitle>
+              <mat-card-subtitle>{{booking.currentPrice | currency}}</mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-content>
+            </mat-card-content>
+            <mat-card-actions>
+              <button (click)="openNegotiationDialog(booking, i, j)" mat-raised-button color="primary">Cancel Booking</button>
+              <button (click)="messageArtist(booking)" mat-raised-button color="accent">Message Artist</button>
             </mat-card-actions>
           </mat-card>
         </mat-tab>

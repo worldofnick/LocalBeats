@@ -20,6 +20,8 @@ var UserSchema = new Schema({
     eventTypes    : {type: Array}, // Kept empty if the user is not an artist
     isArtist      : {type: Boolean, default: false},
     isOnline      : {type: Boolean, default: false},
+    city          : {type: String, default: ''},
+    state         : {type: String, default: ''},
     location: {
         type: [Number],  // [<longitude>, <latitude>]
         index: '2d'      // create the geospatial index
