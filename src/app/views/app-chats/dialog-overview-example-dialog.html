@@ -1,0 +1,21 @@
+<h1 mat-dialog-title>So, {{data.loggedInUser.firstName + ' ' + data.loggedInUser.lastName}}...</h1>
+<div mat-dialog-content>
+  <h4>Who would you like to <strong>privately</strong> converse with?</h4>
+  <mat-form-field floatLabel="never" hintLabel="Use TAB to quickly highlight this form..." style="width:100%; font-size: 1.2em;">
+    <input matInput [(ngModel)]="data.recipientUser" placeholder="Recipient" 
+    [formControl]="recipientsFormControl" [matAutocomplete]="auto">  <!-- Change it -->
+    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+            <mat-option *ngFor="let option of filteredOptions | async" [value]="option" style="font-size: 1.0em;">
+                <img style="vertical-align:middle; height:40px; border-radius: 20px;" class="toolbar-avatar" mat-list-avatar aria-hidden [src]="option.profilePicUrl" height="50" />
+                <span fxFlex="3%"></span>
+                <span > {{ option.firstName + ' ' + option.lastName }}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <span fxFlex></span>
+                <span style="font-size: 1.0em;">{{option.email}}</span>
+            </mat-option>
+          </mat-autocomplete>
+  </mat-form-field>
+</div>
+<div mat-dialog-actions>
+  <button mat-raised-button color="warn" (click)="onNoClick()">No One</button>
+  <button mat-button [mat-dialog-close]="data" cdkFocusInitial>Let's Chat</button>
+</div>
