@@ -11,14 +11,14 @@
             <div fxFlex="100" fxFlex.gt-xs="50" class="pr-1"> -->
           <div class="pb-1">
             <mat-form-field class="full-width">
-              <input matInput [(ngModel)]="this.event.eventName" name="eventName" formControlName="eventName" placeholder="Event Name (Min Length: 4, Max Length: 40)"
+              <input matInput name="eventName" formControlName="eventName" placeholder="Event Name (Min Length: 4, Max Length: 40)"
                 value="">
             </mat-form-field>
           </div>
 
 
-          <div class="pb-1">
-            <mat-select formControlName="eventType" (change)="onChangeEventType($event)" id="langToggle" placeholder="Event Type" [(ngModel)]="this.event.eventType" name="eventType"
+          <!-- <div class="pb-1">
+            <mat-select formControlName="eventType" (change)="onChangeEventType($event)" id="langToggle" placeholder="Event Type" name="eventType"
               class="mb-1">
               <mat-option *ngFor="let event of eventTypes" [value]="event.value" ngDefaultControl>
                 {{event.viewValue}}
@@ -26,7 +26,17 @@
             </mat-select>
 
 
-          </div>
+          </div> -->
+         
+          <div class="pb-1"> 
+
+          <mat-form-field class="full-width">
+              <mat-select [formControl]="basicForm.controls['eventType']" name="type" placeholder="Event Type">
+                <mat-option *ngFor="let type of eventsList" [value]="type" >{{type}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            </div>
 
 
 
@@ -40,7 +50,7 @@
           <!-- event price input field. still needs to be formatted for numbers -->
           <div class="pb-1">
             <mat-form-field class="full-width">
-              <input matInput [(ngModel)]="this.event.fixedPrice" name="fixedPrice" formControlName="fixedPrice" placeholder="Event Price"
+              <input matInput name="fixedPrice" formControlName="fixedPrice" placeholder="Event Price"
                 value="">
             </mat-form-field>
           </div>
@@ -49,7 +59,7 @@
           <!-- date picker. -->
           <div class="pb-1">
             <Label>Is price negotiable?</Label>
-            <mat-radio-group [(ngModel)]="this.event.negotiable" name="negotiable" formControlName="negotiable">
+            <mat-radio-group name="negotiable" formControlName="negotiable">
               <mat-radio-button value="true">Negotiable</mat-radio-button>
               <mat-radio-button value="false">Non-Negotiable</mat-radio-button>
             </mat-radio-group>
@@ -57,7 +67,7 @@
 
           <div class="pb-1">
             <mat-form-field class="full-width">
-              <input matInput [(ngModel)]="this.event.toDate" name="date" formControlName="date" 
+              <input matInput name="date" formControlName="date" 
               placeholder="Date" [min]="minDate" [max]="maxDate"
               [matDatepicker]="appDatepicker">
 
@@ -76,14 +86,18 @@
 
           <div class="pb-1">
 
-            <Label>Genre(s)</Label>
-            <mat-grid-list cols="3" rows="genres.length/3" rowHeight="2:1">
 
-              <mat-grid-tile *ngFor="let genre of genres; let i = index">
-                <mat-checkbox class="grid-center" (change)="onPickingGenre($event)" [value]="genre" [checked]="genre.checked">{{genre.genre}}</mat-checkbox>
-              </mat-grid-tile>
-            </mat-grid-list>
+            
+            <mat-form-field class="full-width">
+              <mat-select [formControl]="basicForm.controls['genres']" name="genres" placeholder="Music Genres" multiple>
+                <mat-option *ngFor="let genre of genresList" [value]="genre" >{{genre}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+            
+
+            
           </div>
+
 
 
 

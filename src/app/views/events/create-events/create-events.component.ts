@@ -61,6 +61,8 @@ export class CreateEventsComponent implements OnInit {
     { value: 'business', viewValue: 'Business' }
   ];
 
+  genresList: string[] = ['Rock', 'Country', 'Jazz', 'Blues', 'Rap'];
+  eventsList: string[] = ['Wedding', 'Birthday', 'Business'];
 
 
   checkedValues:Boolean[]
@@ -137,27 +139,26 @@ export class CreateEventsComponent implements OnInit {
     }
     
     this.basicForm = this.formBuilder.group({
-      eventName: new FormControl('', [
+      eventName: new FormControl(this.event.eventName, [
         Validators.minLength(4),
         Validators.maxLength(40),
         Validators.required
       ]),
-      eventType: new FormControl('', [
+      eventType: new FormControl(this.event.eventType, [
         Validators.required
       ]),
-      fixedPrice: new FormControl('', [
+      fixedPrice: new FormControl(this.event.fixedPrice, [
         // Validators.required,
       ]),
-      negotiable: new FormControl('', [
+      negotiable: new FormControl(this.event.negotiable, [
         Validators.required
-      ]),
-      eventGenre: new FormControl('', [
-        Validators.required,
       ]),
       date: new FormControl(),
       eventDescription: new FormControl(),
       imageUploaded: new FormControl(),
-      genres: this.formBuilder.array([]),
+      genres: new FormControl(this.event.eventType,[
+
+      ]),
       location: new FormControl('',[Validators.required]),
       agreed: new FormControl('', (control: FormControl) => {
         const agreed = control.value;
@@ -240,18 +241,6 @@ export class CreateEventsComponent implements OnInit {
     }
   }
 
-  onPickingGenre(event) {
-    const genres = <FormArray>this.basicForm.get('genres') as FormArray;
-
-    if(event.checked) {
-      event.source.value.checked = true;
-      genres.push(new FormControl(event.source.value))
-    } else {
-      event.source.value.checked = false;
-      const i = genres.controls.findIndex(x => x.value === event.source.value);
-      genres.removeAt(i);
-    }
-  }
 
   onChangeEventType(event: EventTarget) {
     if (!this.uploadedImage) {
@@ -281,17 +270,19 @@ export class CreateEventsComponent implements OnInit {
     
     this.event.eventName = this.basicForm.controls.eventName.value;
     // this.event.eventGenre = this.basicForm.controls.eventGenre.value;
-    this.event.eventType = this.basicForm.controls.eventType.value;
+    this.event.eventType = this.basicForm.get('eventType').value;
     this.event.fixedPrice = this.basicForm.controls.fixedPrice.value;
     this.event.toDate = this.basicForm.controls.date.value;
-    this.event.negotiable = this.basicForm.controls.negotiable.value;
-
+    this.event.negotiable = this.basicForm.get('negotiable').value;
+    this.event.eventGenres = this.basicForm.get('genres').value;
+    
     this.event.hostUser = this.user;
     this.event.hostEmail = this.user.email;
+    // this.user.genres = this.settingsForm.get('genres').value;
 
     // console.log(this.event);
 
-    const genres = <FormArray>this.basicForm.get('genres') as FormArray;
+    // const genres = <FormArray>this.basicForm.get('genres') as FormArray;
     // this.event.eventGenre = genres;
 
 
@@ -301,19 +292,20 @@ export class CreateEventsComponent implements OnInit {
     // console.log(this.basicForm.get('genres').value);
     // this.event.eventGenres = this.basicForm.get('genres').value;
 
-    let tempGenres:string[] = [];
-    for(let picked of this.basicForm.get('genres').value){
-      tempGenres.push(picked.genre);
-    }
+    // let tempGenres:string[] = [];
+    // for(let picked of this.basicForm.get('genres').value){
+    //   tempGenres.push(picked.genre);
+    // }
 
-    this.event.eventGenres = tempGenres;
+    // this.event.eventGenres = tempGenres;
 
     /////////////////
     
 
 
     if (!this.updating) {
-      console.log("creating event")
+      console.log("creating event", this.event)
+      
       this.eventService.createEvent(this.event).then((newEvent: Event) => {
         this.event = newEvent;
         this.eventService.event = this.event;

@@ -43,6 +43,7 @@ import { ProfileRoutes } from "./profile.routing";
 import { ProfileEventsComponent } from './profile-events/profile-events.component';
 import { ProfileRequestComponent } from './profile-request/profile-request.component';
 import { ProfilePerformancesComponent } from './profile-performances/profile-performances/profile-performances.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   imports: [
@@ -50,6 +51,7 @@ import { ProfilePerformancesComponent } from './profile-performances/profile-per
     FormsModule,
     MatListModule,
     MatIconModule,
+    ReactiveFormsModule,
     MatButtonModule,
     MatCardModule,
     MatMenuModule,
