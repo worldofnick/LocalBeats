@@ -4,10 +4,12 @@
     <mat-sidenav class="chat-sidenav" #chatSidebar [opened]="isSidenavOpen" mode="side">
       <!-- Left side topbar -->
       <mat-toolbar color="primary" class="chat-sidebar-toolbar">
-          <span fxFlex></span>
-          <h6 class="m-0 font-normal fz-1">Conversations</h6>
-        <button mat-icon-button class="topbar-button-right" (click)="onStartNewConversationButtonClick()">
-          <mat-icon aria-label="Start a new conversation">add</mat-icon></button>
+        <span fxFlex></span>
+        <h6 class="m-0 font-normal fz-1">Conversations</h6>
+        <!-- onStartNewConversationButtonClick() -->
+        <button mat-icon-button class="topbar-button-right" (click)="openDialog()">
+          <mat-icon aria-label="Start a new conversation">add</mat-icon>
+        </button>
         <!-- <a href="" class="toolbar-avatar online">
           <img [src]="loggedInUser.profilePicUrl" alt="">
           <span class="status-dot"></span>
@@ -37,70 +39,18 @@
           <mat-icon>short_text</mat-icon>
         </button>
 
-        <!-- Selected active user: on topbar, the current recipient -->
-        <div *ngIf="newConversationClicked; then newConversationTemplate else existingConversationTemplate"></div>
-        <ng-template #newConversationTemplate>
-          <div class="active-chat-user" fxLayout="row" fxLayoutAlign="start center">
-
-            <div fxLayout="column">
-              <!-- Need to add ngIF here, where if isNewConversation=true, then show this, else show normal name thingy-->
-              <form class="newConversationForm">
-                <mat-form-field class="new-conversation-form">
-
-                  <mat-chip-list #chipList>
-                    <mat-chip *ngFor="let fruit of recipientChips" [selectable]="isSelectable" [removable]="isRemovable" (remove)="remove(fruit)">
-                      {{fruit.name}}
-                      <mat-icon matChipRemove *ngIf="isRemovable">cancel</mat-icon>
-                    </mat-chip>
-
-                    <input [(ngModel)]="recipientStringAny" placeholder="Recipient(s)" aria-label="Recipient" matInput [formControl]="recipientsFormControl"
-                      [matAutocomplete]="auto" [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-                      [matChipInputAddOnBlur]="isAddOnBlur" (matChipInputTokenEnd)="add($event)">
-                    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
-                      <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
-                          <img style="vertical-align:middle;" aria-hidden [src]="option.profilePicUrl" height="25" />
-                          <span>{{ option.firstName + ' ' + option.lastName }}</span> | 
-                          <small>{{option.email}}</small>
-                        <!-- {{ option.email }} -->
-                      </mat-option>
-                    </mat-autocomplete>
-                  </mat-chip-list>
-                </mat-form-field>
-              </form>
-            </div>
-          </div>
-        </ng-template>
-
-
-        <!-- Here is where the profile pic is displayed -->
-
-        <ng-template #existingConversationTemplate>
-          <!-- <div *ngIf="this.connectedUsers.length === 0; then blankConversationTemplate else activeConversationTemplate"></div> -->
-
-          <!-- <ng-template #activeConversationTemplate> -->
-            <div class="active-chat-user" fxLayout="row" fxLayoutAlign="start center">
-                <button class="topbarChatTransparentButton" (click)="topBarGoToProfileClicked()">
-              <a [ngClass]="{online: activeChatUser.isOnline}" class="toolbar-avatar mr-1">
-                <img [src]="activeChatUser.profilePicUrl" alt="">
-                <!-- <span class="status-dot"></span> -->
-              </a>
-              <!-- <div fxLayout="column"> -->
-                  <span fxFlex></span>
-                <!-- Here is where the name is displayed -->
-                <!-- <a href="" > -->
-                    
-                        <h6 class="m-0 font-normal fz-1" style="line-height:2.5em;">{{activeChatUser.firstName + ' ' + activeChatUser.lastName}} </h6>
-                  <!-- <h6 class="m-0 font-normal fz-1">{{activeChatUser.firstName + ' ' + activeChatUser.lastName}}</h6> -->
-                <!-- </a> -->
-
-              <!-- </div> -->
-            </button>
-            </div>
-          <!-- </ng-template>
-          <ng-template #blankConversationTemplate>
-            <div>NOTHING</div>
-          </ng-template> -->
-        </ng-template>
+        <div class="active-chat-user" fxLayout="row" fxLayoutAlign="start center">
+          <button class="topbarChatTransparentButton" (click)="topBarGoToProfileClicked()">
+            <a [ngClass]="{online: activeChatUser.isOnline}" class="toolbar-avatar mr-1">
+              <img [src]="activeChatUser.profilePicUrl" alt="">
+              <!-- <span class="status-dot"></span> -->
+            </a>
+            <!-- <div fxLayout="column"> -->
+            <span fxFlex></span>
+            <!-- Here is where the name is displayed -->
+            <h6 class="m-0 font-normal fz-1" style="line-height:2.5em;">{{activeChatUser.firstName + ' ' + activeChatUser.lastName}} </h6>
+          </button>
+        </div>
 
 
 
@@ -120,7 +70,7 @@
       </mat-toolbar>
 
       <!-- Main chat body -->
-      <div class="conversations-hold" style="min-height: 500px; position: sticky; top:0; z-index: -1; padding: 5% 0% 15% 0%;">
+      <div class="conversations-hold" style="min-height: 500px; position: sticky; top:0; z-index: -1; padding: 5% 0% 10% 0%;">
         <!-- single chat item -->
         <div *ngFor="let message of activeChatMessages" class="single-conversation {{ !!(message.from._id == this.loggedInUser._id) ? 
                                       ('me') : 
@@ -150,10 +100,10 @@
       box-shadow: 0 0px 0px rgba(230,230,230,0.30), 0 -15px 2px rgba(36,120,158,0.02); box-shadow: 0 0px 0px rgba(230,230,230,0.30), 0 5px 2px rgba(36,120,158,0.05);">
         <mat-form-field class="full-width mr-1" (keydown)="sendMessageClicked($event)" floatLabel="never" hintLabel="Use SHIFT + ENTER for line breaks.">
           <textarea #messageInputBox [(ngModel)]="messageEntered" matInput placeholder="" value="" matTextareaAutosize matAutosizeMinRows="1"
-          matAutosizeMaxRows="1"></textarea>
+            matAutosizeMaxRows="1"></textarea>
         </mat-form-field>
         <!-- <button mat-icon-button (click)="sendMessageClicked()"> -->
-            <!-- <mat-icon aria-label="Send Message">send</mat-icon></button> -->
+        <!-- <mat-icon aria-label="Send Message">send</mat-icon></button> -->
         <!-- <button mat-fab color="primary" (click)="sendMessageClicked()">
           <mat-icon>send</mat-icon>
         </button> -->

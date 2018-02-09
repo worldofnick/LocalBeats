@@ -63,17 +63,6 @@ export class ProfileComponent implements OnInit {
     });
   }
 
-    //not implemented
-  sendNotification(){
-    // this.socket.emit('create notification','Notification Test');
-    // let notif:Notification = new Notification;
-    // notif.sender = this.userService.user;
-    // notif.receiverID = this.userService.user._id;
-    // notif.message = "test message" ;
-    // console.log(this.userService.user);
-    // this.userService.sendNotificationToUser(notif);
- }
-
   ngOnInit() {
     this.user = this.userService.user;
     this.activeView = this.route.snapshot.params['view']
@@ -103,16 +92,6 @@ export class ProfileComponent implements OnInit {
     // If the user clicked message to some other user, then initiate conversation with it
     if (!this.onOwnProfile) {
       console.log('Message clicked on the profile of: ', this.user);
-    //   from?: User;
-    // to?: User;
-    // content?: any;
-    // action?: Action;
-    // isRead?: boolean;
-    // sentAt?: Date;
-    // messageType?: string;
-    // attachmentURL?: string;
-    // serverMessage?: any;
-    // serverPayload?: any;
       let message:Message = {
         to: this.user
       };
