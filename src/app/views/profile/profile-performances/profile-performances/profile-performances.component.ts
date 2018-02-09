@@ -47,30 +47,6 @@ export class ProfilePerformancesComponent implements OnInit {
     });
   }
 
-
-  onDeleteEvent(event:Event, index:Number){
-    this.eventService.deleteEventByEID(event).then((status:Number) => {
-      this.deleteStatus = status;
-      if(this.deleteStatus == 200){
-        
-        var newEvents:Event[] = [];
-
-        //go thru and push all events except the deleted one to the new event.
-        for(let i:number = 0; i < this.events.length; i++){
-          if(i != index){
-            newEvents.push(this.events[i]);
-          }
-        }
-        this.events = newEvents;
-      }
-    });
-
-    if(this.events.length <= 5){
-      this.getEvents();
-    }
-
-  }
-
   onViewEvent(event:Event){
     this.router.navigate(['/events', event._id]); //this will go to the page about the event
   }

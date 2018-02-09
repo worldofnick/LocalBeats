@@ -29,8 +29,12 @@ export class ProfileEventsComponent implements OnInit {
   // User Model
   user: User = new User;
   // Hosted Events of the User Model
-  events: {event: Event, applications: Booking[],
+  events: {
+    event: Event,
+    applications: Booking[],
     applicationNotifications: number,
+    requests: Booking[],
+    requestNotifications: number,
     confirmations: Booking[],
     confirmationNotifications: number}[];
 
@@ -57,19 +61,26 @@ export class ProfileEventsComponent implements OnInit {
   private updateModel(newBooking: Booking, response: NegotiationResponses) {
     let eventIndex: number = -1;
     let applicationIndex: number = -1;
+    let requestIndex: number = -1;
     let confirmationIndex: number = -1;
     // Check if the booking has been approved
     if(newBooking.approved && response == NegotiationResponses.accept) {
       eventIndex = this.events.findIndex(e => e.event._id == newBooking.eventEID._id);
+      requestIndex = this.events[eventIndex].requests.findIndex(r => r._id == newBooking._id)
       applicationIndex = this.events[eventIndex].applications.findIndex(a => a._id == newBooking._id);
-      // Remove from applications and put on confirmations
-      this.events[eventIndex].applications.splice(applicationIndex, 1);
+      // Remove from applications/requests and put on confirmations
+      if(newBooking.bookingType == 'artist-apply') {
+        this.events[eventIndex].applications.splice(applicationIndex, 1);
+      } else {
+        this.events[eventIndex].requests.splice(requestIndex, 1);
+      }
       this.events[eventIndex].confirmations.push(newBooking);
       this.events[eventIndex].confirmationNotifications++;
 
     } else if(response == NegotiationResponses.new) {
       // Otherwise, check if there is a new bid or offer
       eventIndex = this.events.findIndex(e => e.event._id == newBooking.eventEID._id);
+      requestIndex = this.events[eventIndex].requests.findIndex(r => r._id == newBooking._id);
       applicationIndex = this.events[eventIndex].applications.findIndex(a => a._id == newBooking._id);
       if(applicationIndex >= 0) {
         // Then it must be an event with a current application
@@ -77,18 +88,36 @@ export class ProfileEventsComponent implements OnInit {
         this.events[eventIndex].applications[applicationIndex] = newBooking;
         // Increment the notifications
         this.events[eventIndex].applicationNotifications++;
-      } else {
-        // Otherwise, it is a brand new application
-        // Push onto applications
-        this.events[eventIndex].applications.push(newBooking);
+      } else if(requestIndex >= 0){
+        // Then it is an event with a current request
+        // Update this event
+        this.events[eventIndex].requests[requestIndex] = newBooking;
         // Increment the notifications
-        this.events[eventIndex].applicationNotifications++;
+        this.events[eventIndex].requestNotifications++;
+      } else {
+        // Otherwise, it is a brand new application/request
+        // Push onto applications/requests
+        if(newBooking.bookingType == 'artist-apply') {
+          this.events[eventIndex].applications.push(newBooking);
+          // Increment the notifications
+          this.events[eventIndex].applicationNotifications++;
+        } else {
+          this.events[eventIndex].requests.push(newBooking);
+          // Increment the notifications
+          this.events[eventIndex].requestNotifications++;
+        }
+        
       }
     } else if(response == NegotiationResponses.decline) {
       // Find it in applications and remove it
       eventIndex = this.events.findIndex(e => e.event._id == newBooking.eventEID._id);
-      applicationIndex = this.events[eventIndex].applications.findIndex(a => a._id == newBooking._id);
-      this.events[eventIndex].applications.splice(applicationIndex, 1);
+      if(newBooking.bookingType == 'artist-apply') {
+        applicationIndex = this.events[eventIndex].applications.findIndex(a => a._id == newBooking._id);
+        this.events[eventIndex].applications.splice(applicationIndex, 1);
+      } else {
+        requestIndex = this.events[eventIndex].requests.findIndex(r => r._id == newBooking._id);
+        this.events[eventIndex].requests.splice(requestIndex, 1);
+      }
     } else if(response == NegotiationResponses.cancel) {
       // Find it in confirmations and remove it
       eventIndex = this.events.findIndex(e => e.event._id == newBooking.eventEID._id);
@@ -107,8 +136,11 @@ export class ProfileEventsComponent implements OnInit {
         let confirmedBookings: Booking[] = [];
         // Get the application bookings
         let applicationBookings: Booking[] = [];
+        // Get the request bookings
+        let requestBookings: Booking[] = [];
         // Get the notification count for the applications
         let numNotif: number = 0;
+        let reqNotif: number = 0;
         let numConf: number = 0;
         this.bookingService.getBooking(e).then((bookings: Booking[]) => {
           for(let booking of bookings) {
@@ -119,22 +151,32 @@ export class ProfileEventsComponent implements OnInit {
                 numConf++;
               }
             } else {
-              applicationBookings.push(booking);
-              // If the booking is not confirmed and the artist has approved, a new notification exists
-              if(booking.artistApproved) {
-                numNotif++;
+              // Check to see if the artist applied
+              if(booking.bookingType == 'artist-apply') {
+                applicationBookings.push(booking);
+                // If the booking is not confirmed and the artist has approved, a new notification exists
+                if(booking.artistApproved) {
+                  numNotif++;
+                }
+              } else {
+                // Otherwise, it was a host request
+                requestBookings.push(booking);
+                // If the booking is not confirmed and the artist has approved, a new notification exists
+                if(booking.artistApproved) {
+                  reqNotif++;
+                }
               }
             }
           }
           this.events.push({event: e, applications: applicationBookings, applicationNotifications: numNotif,
-            confirmations: confirmedBookings, confirmationNotifications: numConf});
+            requests: requestBookings, requestNotifications: reqNotif, confirmations: confirmedBookings, confirmationNotifications: numConf});
         })
       }
     })
   }
 
   resetConfirmations(event: MatTabChangeEvent, eventIndex: number) {
-    if(event.index == 2) {
+    if(event.index == 3) {
       this.events[eventIndex].confirmationNotifications = 0;
       for(let booking of this.events[eventIndex].confirmations) {
         if(!booking.hostViewed) {
@@ -179,8 +221,13 @@ export class ProfileEventsComponent implements OnInit {
           // Update the booking asynchronously
           this.bookingService.updateBooking(booking).then(() => {
             // Update the model of the component
-            this.events[eventIndex].applications[bookingIndex] = booking;
-            this.events[eventIndex].applicationNotifications--;
+            if(booking.bookingType == 'artist-apply') {
+              this.events[eventIndex].applications[bookingIndex] = booking;
+              this.events[eventIndex].applicationNotifications--;
+            } else {
+              this.events[eventIndex].requests[bookingIndex] = booking;
+              this.events[eventIndex].requestNotifications--;
+            }
             this.createNotificationForArtist(booking, result.response, ['/events', booking.eventEID._id],
             'import_export', booking.hostUser.firstName + " has updated the offer on " + booking.eventEID.eventName);
           });
@@ -197,9 +244,14 @@ export class ProfileEventsComponent implements OnInit {
             // Asynchronously update
             this.bookingService.acceptBooking(booking).then(() => {
               // Update the model of the component
-              this.events[eventIndex].applications.splice(bookingIndex, 1);
+              if(booking.bookingType == 'artist-apply') {
+                this.events[eventIndex].applications.splice(bookingIndex, 1);
+                this.events[eventIndex].applicationNotifications--;
+              } else {
+                this.events[eventIndex].requests.splice(bookingIndex, 1);
+                this.events[eventIndex].requestNotifications--;
+              }
               this.events[eventIndex].confirmations.push(booking);
-              this.events[eventIndex].applicationNotifications--;
               this.events[eventIndex].confirmationNotifications++;
               this.createNotificationForArtist(booking, result.response, ['/profile', 'performances'],
               'event_available', booking.hostUser.firstName + " has confirmed the booking" + booking.eventEID.eventName);
@@ -214,8 +266,13 @@ export class ProfileEventsComponent implements OnInit {
           // Asynchronously update
           this.bookingService.declineBooking(booking).then(() => {
             // Update the model of the component
-            this.events[eventIndex].applications.splice(bookingIndex, 1);
-            this.events[eventIndex].applicationNotifications--;
+            if(booking.bookingType == 'artist-apply') {
+              this.events[eventIndex].applications.splice(bookingIndex, 1);
+              this.events[eventIndex].applicationNotifications--;
+            } else {
+              this.events[eventIndex].requests.splice(bookingIndex, 1);
+              this.events[eventIndex].requestNotifications--;
+            }
             this.createNotificationForArtist(booking, result.response, ['/events', booking.eventEID._id],
             'event_busy', booking.hostUser.firstName + " has cancelled the request on " + booking.eventEID.eventName);
           })

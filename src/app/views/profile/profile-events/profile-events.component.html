@@ -26,7 +26,7 @@
         </mat-tab>
         <mat-tab>
           <ng-template mat-tab-label>
-              Applicants <span *ngIf="item.applicationNotifications > 0" class="notification-value mat-bg-warn">{{item.applicationNotifications}}</span>
+              Artist Applicants <span *ngIf="item.applicationNotifications > 0" class="notification-value mat-bg-warn">{{item.applicationNotifications}}</span>
           </ng-template>
           <mat-card *ngIf="item.applications.length == 0" class="example-card no-shadow">
             <mat-card-title>You have no applicants.</mat-card-title>
@@ -47,7 +47,28 @@
         </mat-tab>
         <mat-tab>
           <ng-template mat-tab-label>
-            Booked Musicians <span *ngIf="item.confirmationNotifications > 0" class="notification-value mat-bg-warn">{{item.confirmationNotifications}}</span>
+              Requested Artists <span *ngIf="item.requestNotifications > 0" class="notification-value mat-bg-warn">{{item.requestNotifications}}</span>
+          </ng-template>
+          <mat-card *ngIf="item.requests.length == 0" class="example-card no-shadow">
+            <mat-card-title>You have not requested any artists.</mat-card-title>
+          </mat-card>
+          <mat-card *ngFor="let request of item.requests; let i = index" class="example-card no-shadow">
+            <mat-card-header>
+              <img mat-card-avatar [src]="request.performerUser.profilePicUrl">
+              <mat-card-title><a [routerLink]="['/profile', request.performerUser._id]">{{request.performerUser.firstName}} {{request.performerUser.lastName}} </a><mat-icon *ngIf="request.artistApproved">music_note</mat-icon></mat-card-title>
+              <mat-card-subtitle>{{request.hostStatusMessage}}</mat-card-subtitle>
+              <mat-card-subtitle>{{request.currentPrice | currency}}</mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-content>
+            </mat-card-content>
+            <mat-card-actions>
+              <button (click)="openNegotiationDialog(request, i, j)" mat-button color="primary">View Application</button>
+            </mat-card-actions>
+          </mat-card>
+        </mat-tab>
+        <mat-tab>
+          <ng-template mat-tab-label>
+            Booked Artists <span *ngIf="item.confirmationNotifications > 0" class="notification-value mat-bg-warn">{{item.confirmationNotifications}}</span>
           </ng-template>
           <mat-card *ngIf="item.confirmations.length == 0" class="example-card no-shadow">
             <mat-card-title>You have no musicians booked.</mat-card-title>
