@@ -66,6 +66,10 @@ export class ProfileSettingsComponent implements OnInit {
     this.user.email = this.settingsForm.get('email').value;
 
     this.user.genres = this.settingsForm.get('genres').value;
+
+    for(let genre in this.user.genres){
+      genre = genre.toLowerCase();
+    }
     this.user.eventTypes = this.settingsForm.get('eventTypes').value;
     this.user.isArtist = this.settingsForm.get('isArtist').value;
 
