@@ -6,7 +6,9 @@ export class SearchTerms {
         public location: Location,
         public genres: string[],
         public event_types: string[],
-        public uid: string
+        public uid: string,
+        public from_date: Date,
+        public to_date: Date
       ) {  }
     }
 

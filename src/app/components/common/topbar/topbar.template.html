@@ -67,17 +67,24 @@
               <mat-option *ngFor="let event of eventsList" [value]="event">{{event | capitalize}}</mat-option>
             </mat-select>
           </mat-form-field>
-          <!-- TO DO: Finish datepicker -->
-          <br>
-          <mat-form-field>
-            <input matInput [matDatepicker]="picker" placeholder="Choose a Start Date" (click)="picker.open()" [readonly]="true">
-            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-            <mat-datepicker #picker></mat-datepicker>
-          </mat-form-field>
           <br>
           <mat-form-field>
             <input matInput placeholder="City, State" autocorrect="off" autocapitalize="off" spellcheck="off" type="text" #searchplaces [formControl]="searchForm.controls['location']">
           </mat-form-field>
+          <div *ngIf="searchForm.controls['type'].value == 'Event'">
+            <br>
+            <mat-form-field>
+              <input matInput [formControl]="searchForm.controls['startDate']" [matDatepicker]="startpicker" placeholder="Start Date" (click)="startpicker.open()" [readonly]="true">
+              <mat-datepicker-toggle matSuffix [for]="startpicker"></mat-datepicker-toggle>
+              <mat-datepicker #startpicker (opened)="startDateOpen()" (closed)="startDateOpen()"></mat-datepicker>
+            </mat-form-field>
+            <br>
+            <mat-form-field>
+                <input matInput [formControl]="searchForm.controls['endDate']" [matDatepicker]="endpicker" placeholder="End Date" (click)="endpicker.open()" [readonly]="true">
+                <mat-datepicker-toggle matSuffix [for]="endpicker"></mat-datepicker-toggle>
+                <mat-datepicker #endpicker (opened)="endDateOpen()" (closed)="endDateOpen()"></mat-datepicker>
+              </mat-form-field>
+          </div>
           <br>
           <button mat-raised-button class="mr-1">Submit</button>
         </mat-expansion-panel>

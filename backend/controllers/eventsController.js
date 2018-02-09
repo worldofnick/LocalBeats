@@ -211,11 +211,11 @@ exports.searchEvents = function(req, res) {
 
   if (req.query.from_date != null && req.query.to_date != null) {
     query.fromDate = {
-      $gte: ISODate(req.query.from_date)
+      $gte: new Date(req.query.from_date)
     }
 
     query.toDate = {
-      $lte: ISODate(req.query.to_date)
+      $lte: new Date(req.query.to_date)
     }
   }
 

@@ -58,6 +58,12 @@ export class SearchService {
         } else {
             params.set('event_types', searchTerms.event_types[0].toLowerCase());
         }
+        if(searchTerms.from_date != null) {
+            params.set('from_date', searchTerms.from_date.toISOString());
+        }
+        if(searchTerms.to_date != null) {
+            params.set('to_date', searchTerms.to_date.toISOString());
+        }
         if(searchTerms.genres[0] != 'all genres'){
             for(let genre of searchTerms.genres) {
                 params.append('genres', genre.toLowerCase());
