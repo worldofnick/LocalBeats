@@ -1,5 +1,9 @@
-a:hover {
+a {
   color: #247ba0;
+}
+
+a:hover {
+  color: #ffd97d;
 }
 
 mat-card-avatar img {

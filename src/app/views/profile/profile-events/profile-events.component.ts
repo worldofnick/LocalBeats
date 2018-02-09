@@ -15,9 +15,10 @@ import { SocketService } from 'app/services/chats/socket.service';
 import { User } from '../../../models/user';
 import { Event } from '../../../models/event';
 import { Booking, StatusMessages, NegotiationResponses } from '../../../models/booking';
-import { Action } from '../../../services/chats/model/action'
-import { SocketEvent } from '../../../services/chats/model/event'
-import { Notification } from '../../../models/notification'
+import { Action } from '../../../services/chats/model/action';
+import { SocketEvent } from '../../../services/chats/model/event';
+import { Notification } from '../../../models/notification';
+import { Message } from '../../../services/chats/model/message';
 
 
 @Component({
@@ -304,5 +305,13 @@ export class ProfileEventsComponent implements OnInit {
     let notification = new Notification(booking.hostUser, booking.performerUser, booking.eventEID._id,
     booking, response, message, icon, route);
     this._socketService.sendNotification(SocketEvent.SEND_NOTIFICATION, notification);
+  }
+
+  messageArtist(booking:Booking){
+    let message:Message = {
+      to: booking.performerUser
+    };
+    this.router.navigate(['/chat']);
+    this._socketService.send(Action.REQUEST_MSG_FROM_PROFILE_BUTTON, message);
   }
 }

@@ -25,7 +25,8 @@
         <mat-card-content>
         </mat-card-content>
         <mat-card-actions>
-            <button (click)="openNegotiationDialog(application, i)" mat-button color="primary">View Application</button>
+            <button (click)="openNegotiationDialog(application, i)" mat-raised-button color="primary">View Application</button>
+            <button (click)="messageHost(application)" mat-raised-button color="accent">Message Host</button>
         </mat-card-actions>
       </mat-card>
     </mat-tab>
@@ -50,7 +51,8 @@
         <mat-card-content>
         </mat-card-content>
         <mat-card-actions>
-          <button (click)="openNegotiationDialog(request, i)" mat-button color="primary">View Request</button>
+          <button (click)="openNegotiationDialog(request, i)" mat-raised-button color="primary">View Request</button>
+          <button (click)="messageHost(request)" mat-raised-button color="accent">Message Host</button>
         </mat-card-actions>
       </mat-card>
     </mat-tab>
@@ -74,7 +76,8 @@
         <mat-card-content>
         </mat-card-content>
         <mat-card-actions>
-          <button (click)="openNegotiationDialog(booking, i)" mat-button color="primary">Cancel Booking</button>
+          <button (click)="openNegotiationDialog(booking, i)" mat-raised-button color="primary">Cancel Booking</button>
+          <button (click)="messageHost(booking)" mat-raised-button color="accent">Message Host</button>
         </mat-card-actions>
       </mat-card>
     </mat-tab>

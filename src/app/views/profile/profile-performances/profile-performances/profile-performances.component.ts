@@ -18,6 +18,7 @@ import { Booking, StatusMessages, NegotiationResponses } from '../../../../model
 import { Action } from '../../../../services/chats/model/action'
 import { SocketEvent } from '../../../../services/chats/model/event'
 import { Notification } from '../../../../models/notification'
+import { Message } from '../../../../services/chats/model/message';
 
 @Component({
   selector: 'app-profile-performances',
@@ -291,6 +292,14 @@ export class ProfilePerformancesComponent implements OnInit {
     let notification = new Notification(booking.performerUser, booking.hostUser, booking.eventEID._id,
     booking, response, message, icon, route); 
     this._socketService.sendNotification(SocketEvent.SEND_NOTIFICATION, notification);
+  }
+
+  messageHost(booking:Booking){
+    let message:Message = {
+      to: booking.hostUser
+    };
+    this.router.navigate(['/chat']);
+    this._socketService.send(Action.REQUEST_MSG_FROM_PROFILE_BUTTON, message);
   }
 
 }

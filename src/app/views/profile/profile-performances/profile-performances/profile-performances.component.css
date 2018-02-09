@@ -1,6 +1,10 @@
+a {
+  color: #247ba0;
+}
+
 a:hover {
-    color: #247ba0;
-  }
+  color: #ffd97d;
+}
   
   mat-card-avatar img {
     object-fit: cover; /*this makes de image in src fit to the size of specified below*/
