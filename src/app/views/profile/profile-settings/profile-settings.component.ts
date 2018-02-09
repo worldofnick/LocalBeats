@@ -8,6 +8,9 @@ import { NgForm } from '@angular/forms/src/directives/ng_form';
 import { ImgurService } from 'app/services/image/imgur.service';
 import { MatTabChangeEvent } from '@angular/material';
 import { FormGroup, FormControl, Validators, FormArray, FormBuilder } from '@angular/forms';
+import { SocketService } from '../../../services/chats/socket.service';
+import { Action } from '../../../services/chats/model/action';
+import { Message } from '../../../services/chats/model/message';
 
 @Component({
   selector: 'app-profile-settings',
@@ -16,6 +19,7 @@ import { FormGroup, FormControl, Validators, FormArray, FormBuilder } from '@ang
 })
 export class ProfileSettingsComponent implements OnInit {
   @ViewChild(MatProgressBar) progressBar: MatProgressBar;
+
   user: User;
   genresList: string[] = ['rock', 'country', 'jazz', 'blues', 'rap'];
   eventsList: string[] = ['wedding', 'birthday', 'business'];
@@ -24,7 +28,8 @@ export class ProfileSettingsComponent implements OnInit {
   public uploader: FileUploader = new FileUploader({ url: 'upload_url' });
   public hasBaseDropZoneOver: boolean = false;
   constructor(private router: ActivatedRoute, private userService: UserService, 
-              private imgurService: ImgurService, private formBuilder: FormBuilder) { }
+              private imgurService: ImgurService, private formBuilder: FormBuilder,
+              private _socketService: SocketService) { }
 
 
   ngOnInit() {
@@ -77,7 +82,7 @@ export class ProfileSettingsComponent implements OnInit {
     this.userService.onEditProfile(this.user).then((user: User) => {
       this.user = user;
       this.userService.user = user;
-      // this.router.navigate(['profile'])
+      this._socketService.sendToProfile('updateProfile', this.user);
     });
   }
 

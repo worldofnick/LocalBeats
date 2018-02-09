@@ -115,12 +115,7 @@ exports.searchUsers = function (req, res) {
   }
 
   if (req.query.lat != null && req.query.lon != null) {
-    query.location = {
-      "$near": [
-        parseFloat(req.query.lat),
-        parseFloat(req.query.lon)
-      ]
-    }
+    query.location = { $nearSphere: { $geometry: { type: "Point", coordinates: [ parseFloat(req.query.lon) , parseFloat(req.query.lat) ] }, $maxDistance: 100000 } } // search 62 miles
   }
 
   if (req.query.uid != null) {

@@ -103,6 +103,7 @@ module.exports = function (io) {
             }
         });
 
+        
         //TODO look at this for sending live notifications
         socket.on('sendPrivateMessage', (payload) => {
             console.log('\n-----\nPM received from socket: ', socket.id);
@@ -124,7 +125,7 @@ module.exports = function (io) {
                 } 
                 console.log("Save successful: ", message);
             });
-
+            
             // Send the message to all the recipients (currently also the sender)
             let recipients = [socketsHash[payload.from._id], socketsHash[payload.to._id]];
             console.log('>> Receipeitns: ',recipients);
@@ -133,52 +134,50 @@ module.exports = function (io) {
                 io.to(recipients[i]).emit('sendPrivateMessage', payload);
             }
         });
-
+        
         // Send a request to every client asking for the PM recipient to pind server back 
         // with its socket ID. When it does, it sends it the PMs received.
         // socket.on('requestSocketIdForPM', (messagePayload) => {           //TODO: can remove the need to send socketID at the client.
         //     console.log('PM forwarding to: ', socket.id);
-            
+        
         //     // SEND ALL THE DATA FROM DB TO RECEIVER
         //     console.log("\n----\nSending Messages: ", messagePayload.serverPayload);
         //     // for(let message in pendingMessages) {
-        //         socket.emit('sendPrivateMessage', messagePayload.serverPayload);
-        //     // } 
-        // });
-
-        // ============================================
-        // Notifications Socket Controls
-        // ============================================
-
-        socket.on('notificationsCount', (userID) => {
-            let number = notificationController.getNotificationsCount();
-            socket.emit('notificationCount', number);
-          });
-        
-          // TODO add parans for function
-          socket.on('tellTopBar', numberOfNotifications =>{
-            socket.emit('notificationCount', numberOfNotifications);
-          })
-        
-          socket.on('tellNotificationPanel', notifications=>{
-        
-            console.log(notifications);
-            // io.sockets.connected[socket.id].emit('notifications', notifications);
-            socket.emit('notifications', notifications)
-          })
-        
-          socket.on('notificationsForUser', userID => {
-            // var notifications = notificationController.getNotificationsForUser(userID)
-            // console.log(notifications);
-            socket.emit('notifications', 'test,test,test,test');
-          });
-
-          socket.on('sendNotification', (payload) => {
-            console.log('\n-----\N Notification received from socket: ', socket.id);
-            console.log('\n-----\N Notif payload: ', payload);
-
-            // Send the message to all the recipients (currently also the sender)
-            let recipient = socketsHash[payload.receiverID._id];
+            //         socket.emit('sendPrivateMessage', messagePayload.serverPayload);
+            //     // } 
+            // });
+            
+            // ============================================
+            // Notifications Socket Controls
+            // ============================================
+            
+            socket.on('notificationsCount', (userID) => {
+                let number = notificationController.getNotificationsCount();
+                socket.emit('notificationCount', number);
+            });
+            
+            // TODO add parans for function
+            socket.on('tellTopBar', numberOfNotifications =>{
+                socket.emit('notificationCount', numberOfNotifications);
+            })
+            
+            socket.on('tellNotificationPanel', notifications=>{
+                
+                // console.log(notifications);
+                socket.emit('notifications', notifications)
+            })
+            
+            socket.on('notificationsForUser', userID => {
+                // var notifications = notificationController.getNotificationsForUser(userID)
+                socket.emit('notifications', 'test,test,test,test');
+            });
+            
+            socket.on('sendNotification', (payload) => {
+                console.log('\n-----\N Notification received from socket: ', socket.id);
+                console.log('\n-----\N Notif payload: ', payload);
+                
+                // Send the message to all the recipients (currently also the sender)
+                let recipient = socketsHash[payload.receiverID._id];
             console.log('> Sending notification to', recipient);
 
 
@@ -191,15 +190,19 @@ module.exports = function (io) {
                 notification.eventID = payload.eventID;
                 notification.route = payload.route;
                 notification.save(function (err, notification) {
-                  if (err) {
-                    return res.status(500).send("Failed to create booking notification");
-                  }
-                  console.log("saving notification")
-                  console.log(notification);
-                //   io.emit("notification", { notification: notification });
+                    if (err) {
+                        return res.status(500).send("Failed to create booking notification");
+                    }
                 });
+                
+                io.to(recipient).emit('sendNotification', payload);
+            });
+            // ===========
+            // Having profile reflect settings after updating - live.
+            // ===========
 
-            io.to(recipient).emit('sendNotification', payload);
-          });
-    });
-}
+            socket.on('updateProfile', (payload) =>{
+                socket.emit('updateProfile', payload);
+            })
+        });
+    }

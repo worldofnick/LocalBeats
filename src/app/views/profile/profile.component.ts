@@ -7,6 +7,7 @@ import { EventService } from '../../services/event/event.service';
 import { SocketService } from '../../services/chats/socket.service';
 import { Action } from '../../services/chats/model/action';
 import { Message } from '../../services/chats/model/message';
+import { SocketEvent } from '../../services/chats/model/event';
 import { User } from '../../models/user';
 import { Booking } from '../../models/booking';
 import { Event } from '../../models/event';
@@ -46,6 +47,8 @@ export class ProfileComponent implements OnInit {
 
   }
 
+  
+
   hasRequested() {
     if(!this.userService.isAuthenticated()){
       return;
@@ -83,6 +86,11 @@ export class ProfileComponent implements OnInit {
         this.user = gottenUser;
       }).then(() => this.hasRequested());
     }
+
+    //received socket emition from server about updating profile 
+    this._socketService.onEvent(SocketEvent.UPDATE_PROFILE).subscribe((user: User)=>{
+      this.user = user;
+    });
   }
 
   clickedOver() {
