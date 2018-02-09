@@ -32,12 +32,18 @@ export class TopbarComponent implements OnInit {
   @ViewChild("searchplaces") searchElementRef: ElementRef;
   genreSelectOpened: boolean = false;
   eventSelectOpened: boolean = false;
+  startDateOpened: boolean = false;
+  startDateClosed: boolean = false;
+  endDateOpened: boolean = false;
+  endDateClosed: boolean = false;
   searchForm = this.formBuilder.group({
     text: new FormControl('', Validators.required),
     type: new FormControl('Artist', Validators.required),
     genres: new FormControl(),
     events: new FormControl(),
-    location: new FormControl()
+    location: new FormControl(),
+    startDate: new FormControl(),
+    endDate: new FormControl()
   });
   // Expansion of search box
   expand: boolean = false;
@@ -51,7 +57,7 @@ export class TopbarComponent implements OnInit {
   searchTypes: string[] = ['artist', 'host', 'event'];
   genresList: string[] = ['rock', 'country', 'jazz', 'blues', 'rap'];
   eventsList: string[] = ['wedding', 'birthday', 'business'];
-  currentSearch: SearchTerms = new SearchTerms(this.searchTypes[0], '', null, this.genresList, this.eventsList, null);
+  currentSearch: SearchTerms = new SearchTerms(this.searchTypes[0], '', null, this.genresList, this.eventsList, null, null, null);
   public results: any = null;
 
   constructor(private formBuilder: FormBuilder,
@@ -135,8 +141,14 @@ export class TopbarComponent implements OnInit {
   }
 
   offClick() {
-    if(!this.genreSelectOpened && !this.eventSelectOpened) {
-      this.expand = false;
+    if(!this.startDateOpened && !this.genreSelectOpened && !this.eventSelectOpened) {
+      if(!this.startDateClosed && !this.endDateClosed) {
+        this.expand = false;
+      } else {
+        this.startDateClosed = false;
+        this.endDateClosed = false;
+      }
+      
     }
   }
 
@@ -148,8 +160,21 @@ export class TopbarComponent implements OnInit {
     this.eventSelectOpened = !this.eventSelectOpened;
   }
 
+  startDateOpen() {
+    this.startDateOpened = !this.startDateOpened;
+    this.startDateClosed = true;
+  }
+
+  endDateOpen() {
+    this.endDateOpened = !this.endDateOpened;
+    this.endDateClosed = true;
+  }
+
   // Submission of search
   submit() {
+
+    this.currentSearch.from_date = this.searchForm.get('startDate').value;
+    this.currentSearch.to_date = this.searchForm.get('endDate').value;
     // Set location for submission
     if (this.longitude != null && this.searchForm.get('location').value != '') {
       this.currentSearch.location = {

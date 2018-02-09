@@ -25,7 +25,6 @@ export class ProfileComponent implements OnInit {
   userID: any = null;
   requested: boolean = null;
   clickedRequestArtist:boolean = null;
-
   clickedOverview = false;
 
   events:any[];
@@ -67,7 +66,8 @@ export class ProfileComponent implements OnInit {
 
   ngOnInit() {
     this.user = this.userService.user;
-    this.activeView = this.route.snapshot.params['view']
+    this.activeView = this.route.snapshot.params['view'];
+    
 
     //snapshot params returns a javascript object. index into it with the property field to get a property.
     this.userID = {
@@ -79,7 +79,6 @@ export class ProfileComponent implements OnInit {
       //this.user = this.userService.user;
     } else {
       //on another perons profile.
-
       this.onOwnProfile = false;
       let ID: String = this.userID["id"];
 
@@ -94,11 +93,14 @@ export class ProfileComponent implements OnInit {
     });
   }
 
+  clickedOver() {
+    this.clickedOverview = true;
+  }
+
   onStartNewConversationFromProfileButtonClick() {
     
     // If the user clicked message to some other user, then initiate conversation with it
     if (!this.onOwnProfile) {
-      console.log('Message clicked on the profile of: ', this.user);
       let message:Message = {
         to: this.user
       };
