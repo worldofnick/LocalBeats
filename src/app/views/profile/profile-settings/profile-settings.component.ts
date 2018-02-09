@@ -103,7 +103,7 @@ export class ProfileSettingsComponent implements OnInit {
             this.user = user;
             this.userService.user = this.user;
             this.progressBar.mode = 'determinate';
-            
+            this._socketService.sendToProfile('updateProfile', this.user);
           });
         }).catch(err => {
           console.log(err);
