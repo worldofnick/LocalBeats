@@ -210,19 +210,31 @@ exports.searchEvents = function(req, res) {
   }
 
   if (req.query.from_date != null && req.query.to_date != null) {
-    query.fromDate = {
-      $gte: ISODate(req.query.from_date)
+    if (Date(req.query.from_date) > Date(req.query.to_date)) {
+        res.status(400).send({"error": "from date comes after to date"});
     }
 
+    // Will need this when we have two dates for an event
+    // query.toDate = {
+    //   "$gte": Date(req.query.from_date)
+    // }
+
+    // query.toDate = {
+    //   "$lte": Date(req.query.to_date)
+    // }
+
     query.toDate = {
-      $lte: ISODate(req.query.to_date)
+        "$gte": new Date(req.query.from_date),
+        "$lte": new Date(req.query.to_date)
     }
   }
 
   if (req.query.min_budget != null && req.query.max_budget != null) {
     query.fixedPrice = {
-      $gte: parseInt(req.query.min_budget),
-      $lte: parseInt(req.query.max_budget)
+        "$and": [
+            {"$gte": parseInt(req.query.min_budget)},
+            {"$lte": parseInt(req.query.max_budget)}
+        ]
     }
   }
 
