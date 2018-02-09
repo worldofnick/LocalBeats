@@ -45,7 +45,6 @@ export class ProfileComponent implements OnInit {
     console.log("in profile component constructor");
 
      router.events.subscribe((url:any) => this.clickedOverview = router.url == "/profile/overview");
-    //  router.events.subscribe((url:any) => this.clickedOverview = router.url == "/profile/settings");
 
   }
 

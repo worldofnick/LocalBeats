@@ -7,8 +7,6 @@
           <mat-divider></mat-divider>
         </mat-card-title>
         <mat-card-content>
-          <!-- <div fxLayout="row" fxLayoutWrap="wrap">
-            <div fxFlex="100" fxFlex.gt-xs="50" class="pr-1"> -->
           <div class="pb-1">
             <mat-form-field class="full-width">
               <input matInput [(ngModel)]="this.event.eventName" name="eventName" formControlName="eventName" placeholder="Event Name (Min Length: 4, Max Length: 40)"
@@ -17,25 +15,9 @@
           </div>
 
 
-          <!-- <div class="pb-1"> -->
-            <!-- <mat-select formControlName="eventType" (change)="onChangeEventType($event)" id="langToggle" placeholder="Event Type" [(ngModel)]="this.event.eventType" name="eventType"
-              class="mb-1">
-              <mat-option *ngFor="let event of eventTypes" [value]="event.value">
-                {{event.viewValue}}
-              </mat-option>
-            </mat-select> -->
-
-            <!-- <mat-form-field class="full-width">
-
-                <mat-select [(ngModel)]="event.eventType" [formControl]="basicForm.controls['eventType']" name="type" placeholder="Event Type">
-                  <mat-option *ngFor="let type of eventsList" [value]="type" >{{type}}</mat-option>
-                </mat-select>
-              </mat-form-field>
-
-          </div> -->
+          
 
           <div class="pb-1">
-                <!-- <mat-form-field class="full-width"> -->
 
               <mat-select formControlName="eventType" (change)="onChangeEventType($event)" id="langToggle" placeholder="Event Type" [(ngModel)]="this.event.eventType" name="eventType"
                 class="mb-1">
@@ -43,7 +25,6 @@
                   {{event.viewValue}}
                 </mat-option>
               </mat-select>
-              <!-- </mat-form-field> -->
   
   
             </div>

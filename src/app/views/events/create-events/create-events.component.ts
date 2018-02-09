@@ -176,7 +176,7 @@ export class CreateEventsComponent implements OnInit {
   
   
   openSnackBar() {
-    console.log('test')
+    // console.log('test')
     this.snackBar.open('Create Event','next', { duration: 2000 });
   }
 
@@ -289,7 +289,7 @@ export class CreateEventsComponent implements OnInit {
 
 
     if (!this.updating) {
-      console.log("creating event", this.event)
+      // console.log("creating event", this.event)
       
       this.eventService.createEvent(this.event).then((newEvent: Event) => {
         this.event = newEvent;
@@ -297,7 +297,7 @@ export class CreateEventsComponent implements OnInit {
         this.router.navigate(['/events', this.event._id]); //this will go to the page about the event
       });
     } else {
-      console.log("updating event", this.event);
+      // console.log("updating event", this.event);
 
       this.eventService.updateEvent(this.event).then((newEvent: Event) => {
         this.event = newEvent;
