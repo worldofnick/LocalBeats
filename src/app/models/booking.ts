@@ -9,8 +9,10 @@ export class Booking {
     public performerUser: User,
     public eventEID: Event,
     public approved: boolean,
-    public hostStatusMessage: string,
-    public artistStatusMessage: string,
+    public artViewed: boolean,
+    public hostViewed: boolean,
+    public hostStatusMessage: StatusMessages,
+    public artistStatusMessage: StatusMessages,
     public completed: boolean,
     public artistApproved: boolean,
     public hostApproved: boolean, 
@@ -22,7 +24,15 @@ export enum StatusMessages {
     artistBid = "New Bid",
     artistApplication = "New Application",
     hostOffer = "New Offer",
-    waitingOnHost = "Waiting for response from host",
-    waitingOnArtist = "Waiting for response from artist",
+    waitingOnHost = "Waiting for response from Host",
+    waitingOnArtist = "Waiting for response from Artist",
     bookingConfirmed = "Booking Confirmed",
+}
+
+export enum NegotiationResponses {
+    new = 0, // New offer/bid/application/request
+    accept = 1, // Accepting the current offer/bid/application/request
+    decline = 2, // Decline the current offer/bid/application/request
+    nochange = 3, // No change on the user's current offer/bid/application/request
+    cancel = 4, // Cancellation of a confirmed booking
 }

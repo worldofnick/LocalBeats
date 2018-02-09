@@ -46,25 +46,25 @@ export class ProfileOverviewComponent implements OnInit {
   }];
 
   tickets = [{
-    img: 'assets/images/face-1.jpg',
+    img: '',
     name: 'Brad Pitt',
     text: 'Amazing artist!.',
     date: new Date('07/12/2017'),
     isOpen: true
   }, {
-    img: 'assets/images/face-5.jpg',
+    img: '',
     name: 'Angelina Jolie',
     text: 'Would book again!',
     date: new Date('07/7/2017'),
     isOpen: false
   }, {
-    img: 'assets/images/face-3.jpg',
+    img: '',
     name: 'Will Ferrell',
     text: 'Worst guitarist.',
     date: new Date('04/10/2017'),
     isOpen: false
   }, {
-    img: 'assets/images/face-4.jpg',
+    img: '',
     name: 'Chris Pratt',
     text: 'They should call this guy starlord.',
     date: new Date('07/7/2017'),

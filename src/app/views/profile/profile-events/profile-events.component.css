@@ -13,8 +13,8 @@ mat-card-avatar img {
 mat-card-title mat-icon {
   margin: 0;
   padding: 0;
-  position: absolute;
-  color: #247ba0 !important;
+  position: relative;
+  color: #F44336 !important;
 }
 
 .notification-value {

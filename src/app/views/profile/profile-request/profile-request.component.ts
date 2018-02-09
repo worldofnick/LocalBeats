@@ -4,7 +4,7 @@ import { EventService } from '../../../services/event/event.service';
 import { UserService } from '../../../services/auth/user.service';
 import { SocketService } from '../../../services/chats/socket.service';
 import { User } from '../../../models/user';
-import { Booking, StatusMessages } from '../../../models/booking';
+import { Booking, StatusMessages, NegotiationResponses } from '../../../models/booking';
 import { Event } from '../../../models/event';
 import { Action } from '../../../services/chats/model/action'
 import { SocketEvent } from '../../../services/chats/model/event'
@@ -90,13 +90,13 @@ export class ProfileRequestComponent implements OnInit {
 
   //solely fo creating new requests. no cancellations.
   newRequest(event: Event) {
-    let booking = new Booking(undefined, 'host-request', event.hostUser, this.artist, event, false, '', '', false, false, true, event.fixedPrice);
-    this.bookingService.negotiate(booking, true, 'host').subscribe((result) => {
+    let booking = new Booking(undefined, 'host-request', event.hostUser, this.artist, event, false, false, false, StatusMessages.waitingOnArtist, StatusMessages.hostOffer, false, false, true, event.fixedPrice);
+    this.bookingService.negotiate(booking, true).subscribe((result) => {
       if (result != undefined) {
-        if (result.accepted == 'accepted' || result.accepted == 'new') {
-          booking = new Booking(undefined, 'host-request', event.hostUser, this.artist, event, false, StatusMessages.waitingOnArtist, StatusMessages.hostOffer, false, false, true, result.price);
+        if (result.response == NegotiationResponses.accept || result.response == NegotiationResponses.new) {
+          booking = new Booking(undefined, 'host-request', event.hostUser, this.artist, event, false, false, false, StatusMessages.waitingOnArtist, StatusMessages.hostOffer, false, false, true, result.price);
 
-          this.createNotification(booking, ['/events', booking.eventEID._id], 
+          this.createNotification(booking, result.response, ['/events', booking.eventEID._id], 
           'queue_music', booking.hostUser.firstName + " has requested you for an event called: " + booking.eventEID.eventName);
 
           this.bookingService.createBooking(booking).then((booking: Booking) => this.getAvailableEvents());
@@ -105,25 +105,17 @@ export class ProfileRequestComponent implements OnInit {
     });
   }
 
-  //sends notification to artist
-  createNotification(booking: Booking, route: string[], icon: string, message: string) {
-    let notification = new Notification(); // build notification "someone has requested you to play blah"
-    notification.receiverID = booking.performerUser;
-    notification.senderID = booking.hostUser;
-    notification.eventID = booking.eventEID._id;
-    notification.message = message;
-    notification.icon = icon;
-    notification.route = route
-    // console.log("passing this notification to server");
-    // console.log(notification)
+  createNotification(booking: Booking, response: NegotiationResponses, route: string[], icon: string, message: string) {
+    let notification = new Notification(booking.hostUser, booking.performerUser, booking.eventEID._id,
+      booking, response, message, icon, route);
     this._socketService.sendNotification(SocketEvent.SEND_NOTIFICATION, notification);
   }
 
   viewRequest(booking: Booking) {
-    this.bookingService.negotiate(booking, false, 'host').subscribe((result) => {
+    this.bookingService.negotiate(booking, false).subscribe((result) => {
       if (result != undefined) {
         booking.currentPrice = result.price;
-        if (result.accepted == 'accepted') {
+        if (result.response == NegotiationResponses.accept) {
           //
           booking.hostApproved = true;
 
@@ -134,7 +126,7 @@ export class ProfileRequestComponent implements OnInit {
             this.bookingService.acceptBooking(booking).then(() => {
               //now there is a confirmed booking.
               //send notification to the artist that the Host has accpeted the booking. 
-              this.createNotification(booking, ['/events', booking.eventEID._id], 
+              this.createNotification(booking, result.response, ['/events', booking.eventEID._id], 
           'event_availble', booking.hostUser.firstName + " has accepted the request for " + booking.eventEID.eventName);
               this.getAvailableEvents()
             });
@@ -145,23 +137,23 @@ export class ProfileRequestComponent implements OnInit {
               this.getAvailableEvents()});
           }
 
-        } else if (result.accepted == 'new') {
+        } else if (result.response == NegotiationResponses.new) {
           booking.hostApproved = true;
           booking.artistApproved = false;
           booking.hostStatusMessage = StatusMessages.waitingOnArtist;
           booking.artistStatusMessage = StatusMessages.hostOffer;
           this.bookingService.updateBooking(booking).then(() => {
           //price has changed. send notification to artist that the host has updated the price. 
-          this.createNotification(booking, ['/events', booking.eventEID._id],
+          this.createNotification(booking, result.response, ['/events', booking.eventEID._id],
         'import_export', booking.hostUser.firstName + " has updated the offer on " + booking.eventEID.eventName);
           this.getAvailableEvents()
         });
-        } else if(result.accepted == 'cancel' || result.accepted == 'declined'){
+        } else if(result.response == NegotiationResponses.cancel || result.response == NegotiationResponses.decline){
 
           this.bookingService.declineBooking(booking).then((booking2: Booking) => {
             //send notifcaiotn cancellation here
             //made this boking2 because i dont think decline booking actually returns a booking.
-            this.createNotification(booking, ['/events', booking.eventEID._id], 
+            this.createNotification(booking, result.response, ['/events', booking.eventEID._id], 
             'event_busy', booking.hostUser.firstName + " has cancelled the request on " + booking.eventEID.eventName);
             this.getAvailableEvents()
 

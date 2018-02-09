@@ -8,7 +8,7 @@ import { BookingService } from '../../../../services/booking/booking.service';
 import { EventService } from '../../../../services/event/event.service';
 import { User } from '../../../../models/user';
 import { Event } from '../../../../models/event';
-import { Booking, StatusMessages } from '../../../../models/booking';
+import { Booking, StatusMessages, NegotiationResponses } from '../../../../models/booking';
 import { Action } from '../../../../services/chats/model/action'
 import { SocketEvent } from '../../../../services/chats/model/event'
 import { Notification } from '../../../../models/notification'
@@ -129,11 +129,11 @@ export class ProfilePerformancesComponent implements OnInit {
   }
 
   openNegotiationDialog(booking: Booking, user:string) {
-    this.bookingService.negotiate(booking, false, 'artist')
+    this.bookingService.negotiate(booking, false)
       .subscribe((result) => {
         if(result != undefined) {
           booking.currentPrice = result.price;
-          if(result.accepted == 'accepted') {
+          if(result.response == NegotiationResponses.accept) {
             booking.artistApproved = true;
             if(booking.hostApproved == true) {
               booking.approved = true;
@@ -144,7 +144,7 @@ export class ProfilePerformancesComponent implements OnInit {
                 //redirect artist to their performances page.
                 //if it is the host notification then redirect to their my events page
 
-                this.createNotificationForHost(booking, ['/profile', 'events'],
+                this.createNotificationForHost(booking, result.response, ['/profile', 'events'],
                 'event_available', "You have confirmed " + booking.eventEID.eventName);
                 this.getEvents()
               });
@@ -153,28 +153,28 @@ export class ProfilePerformancesComponent implements OnInit {
                 //dont send a notification.
                 this.getEvents()});
             }
-          } else if(result.accepted == 'new') {
+          } else if(result.response == NegotiationResponses.new) {
               booking.hostApproved = false;
               booking.artistApproved = true;
               booking.hostStatusMessage = StatusMessages.artistBid;
               booking.artistStatusMessage = StatusMessages.waitingOnHost;
               this.bookingService.updateBooking(booking).then((tempBooking: Booking) => {
                 //send a notification to the host that an artist has applied for an event. 
-                this.createNotificationForHost(booking, ['/events', booking.eventEID._id],
+                this.createNotificationForHost(booking, result.response, ['/events', booking.eventEID._id],
                 'import_export', booking.performerUser.firstName + " has updated the offer on " + booking.eventEID.eventName);
                 this.getEvents()
               });
-          } else if(result.accepted == 'cancel') {
+          } else if(result.response == NegotiationResponses.cancel) {
             this.bookingService.declineBooking(booking).then(() => {
               //send notification to host that the artist has cancelled an already confirmed booking.
-              this.createNotificationForHost(booking, ['/events', booking.eventEID._id],
+              this.createNotificationForHost(booking, result.response, ['/events', booking.eventEID._id],
               'event_busy', booking.performerUser.firstName + " has cancelled the confirmed booking for" + booking.eventEID.eventName);
               this.getEvents()
             });
-          }else if(result.accepted == 'declined'){
+          }else if(result.response == NegotiationResponses.decline){
             this.bookingService.declineBooking(booking).then(() => {
               //send notification to host that the artist has declined an offer
-              this.createNotificationForHost(booking, ['/events', booking.eventEID._id],
+              this.createNotificationForHost(booking, result.response, ['/events', booking.eventEID._id],
               'event_busy', booking.performerUser.firstName + " has cancelled the request on" + booking.eventEID.eventName);
               this.getEvents()
             });
@@ -184,31 +184,15 @@ export class ProfilePerformancesComponent implements OnInit {
       });
   }
 
-    //send to artist
-    createNotificationForArtist(booking: Booking, route: string[], icon: string, message: string) {
-      let notification = new Notification(); // build notification "someone has requested you to play blah"
-      notification.receiverID = booking.performerUser;
-      notification.senderID = booking.hostUser;
-      notification.eventID = booking.eventEID._id;
-      notification.message = message;
-      notification.icon = icon;
-      notification.route = route
-      // console.log("passing this notification to server");
-      // console.log(notification)
+    createNotificationForArtist(booking: Booking, response: NegotiationResponses, route: string[], icon: string, message: string) {
+      let notification = new Notification(booking.hostUser, booking.performerUser, booking.eventEID._id,
+      booking, response, message, icon, route); 
       this._socketService.sendNotification(SocketEvent.SEND_NOTIFICATION, notification);
     }
   
-    //send to host
-    createNotificationForHost(booking: Booking, route: string[], icon: string, message: string) {
-      let notification = new Notification(); // build notification "someone has requested you to play blah"
-      notification.receiverID = booking.hostUser;
-      notification.senderID = booking.performerUser;
-      notification.eventID = booking.eventEID._id;
-      notification.message = message;
-      notification.icon = icon;
-      notification.route = route
-      // console.log("passing this notification to server");
-      // console.log(notification)
+    createNotificationForHost(booking: Booking, response: NegotiationResponses, route: string[], icon: string, message: string) {
+      let notification = new Notification(booking.performerUser, booking.hostUser, booking.eventEID._id,
+      booking, response, message, icon, route); 
       this._socketService.sendNotification(SocketEvent.SEND_NOTIFICATION, notification);
     }
 

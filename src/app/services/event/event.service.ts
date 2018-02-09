@@ -36,7 +36,6 @@ export class EventService {
             .catch(this.handleError);
     }
 
-
         // post("/api/events/create")
         public updateEvent(newEvent: Event): Promise<Event> {
             const current = this.connection + '/' + newEvent._id;
@@ -49,7 +48,6 @@ export class EventService {
                 })
                 .catch(this.handleError);
         }
-
 
     /**
      * 
@@ -73,7 +71,6 @@ export class EventService {
             .catch(this.handleError);
     }
 
-
     /**
      * 
      * @param EID 
@@ -93,8 +90,6 @@ export class EventService {
             })
             .catch(this.handleError);
     }
-
-
 
     /**
      * 
