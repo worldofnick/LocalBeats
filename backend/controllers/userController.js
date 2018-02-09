@@ -120,7 +120,8 @@ exports.searchUsers = function (req, res) {
 
   if (req.query.uid != null) {
     query._id = {
-      "$ne": new mongoose.mongo.ObjectId(req.query.uid)
+      "$ne": new mongoose.mongo.ObjectId(req.query.uid),
+      "$ne": new mongoose.mongo.ObjectId("5a78aab8ea6eb81f672b1b08")
     }
   }
 
