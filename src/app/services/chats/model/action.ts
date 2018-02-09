@@ -12,5 +12,7 @@ export enum Action {
     OPEN_SNACK_BAR_PM = 'openPmSnackBarThread',
     //notifications
     REQUEST_NOTIFICATIONS = 'notifications',
-    REQUEST_NOTIFICATION_COUNT = 'notificationCount'
+    REQUEST_NOTIFICATION_COUNT = 'notificationCount',
+    UPDATE_PROFILE = 'updateProfile'
 }
+
