@@ -81,18 +81,48 @@
                   value="">
               </mat-form-field>
               <small *ngIf="signupForm.controls['confirmPassword'].hasError('required') && signupForm.controls['confirmPassword'].touched" class="form-error-msg">Confirm password is required.</small>
-              <small *ngIf="signupForm.controls['confirmPassword'].hasError('equalTo')" class="form-error-msg">Passwords do not math.</small>
+              <small *ngIf="signupForm.controls['confirmPassword'].hasError('equalTo')" class="form-error-msg">Passwords do not match.</small>
+            </div>
+
+            <div class="pb-1">
+              <mat-form-field>
+                <input matInput placeholder="City, State" autocorrect="off" autocapitalize="off" spellcheck="off" type="text" #searchplaces [formControl]="signupForm.controls['location']">
+              </mat-form-field>
+            </div>
+
+            <div class="pb-1">
+              <mat-form-field>
+                <mat-select placeholder="Preferred Music" [formControl]="signupForm.controls['genres']" multiple>
+                  <mat-select-trigger class="additional-selection">
+                    {{(signupForm.controls['genres'].value ? signupForm.controls['genres'].value[0] : '') | capitalize}}
+                    <span *ngIf="signupForm.controls['genres'].value?.length > 1">
+                      (+{{signupForm.controls['genres'].value.length - 1}} others)
+                    </span>
+                  </mat-select-trigger>
+                  <mat-option *ngFor="let genre of genresList" [value]="genre">{{genre | capitalize}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+
+            <div class="pb-1">
+              <mat-form-field>
+                <mat-select placeholder="Preferred Events" [formControl]="signupForm.controls['events']" multiple>
+                  <mat-select-trigger class="additional-selection">
+                    {{(signupForm.controls['events'].value ? signupForm.controls['events'].value[0] : '') | capitalize}}
+                    <span *ngIf="signupForm.controls['events'].value?.length > 1">
+                      (+{{signupForm.controls['events'].value.length - 1}} others)
+                    </span>
+                  </mat-select-trigger>
+                  <mat-option *ngFor="let event of eventsList" [value]="event">{{event | capitalize}}</mat-option>
+                </mat-select>
+              </mat-form-field>
             </div>
             
             <div class="pb-1">
               <mat-checkbox
-                name="agreed"
-                [formControl]="signupForm.controls['agreed']"
-                class="pb-1">I have read and agree to the terms of service.</mat-checkbox>
-  
-                <small 
-                  *ngIf="signupForm.controls['agreed'].hasError('agreed') && signupForm.controls['agreed'].touched" 
-                  class="form-error-msg"> You must agree to the terms and conditions </small>
+                name="isArtist"
+                [formControl]="signupForm.controls['isArtist']"
+                class="pb-1">I am an Artist</mat-checkbox>
             </div>
   
             <button mat-raised-button class="mat-primary full-width mb-1" [disabled]="signupForm.invalid">Sign up</button>

@@ -34,7 +34,7 @@ export class TopbarComponent implements OnInit {
   eventSelectOpened: boolean = false;
   searchForm = this.formBuilder.group({
     text: new FormControl('', Validators.required),
-    type: new FormControl('Musician', Validators.required),
+    type: new FormControl('Artist', Validators.required),
     genres: new FormControl(),
     events: new FormControl(),
     location: new FormControl()
@@ -48,9 +48,9 @@ export class TopbarComponent implements OnInit {
   longitude: number;
   zoom: number;
   // Search Values
-  searchTypes: string[] = ['Musician', 'Event'];
-  genresList: string[] = ['Rock', 'Country', 'Jazz', 'Blues', 'Rap'];
-  eventsList: string[] = ['Wedding', 'Birthday', 'Business'];
+  searchTypes: string[] = ['artist', 'host', 'event'];
+  genresList: string[] = ['rock', 'country', 'jazz', 'blues', 'rap'];
+  eventsList: string[] = ['wedding', 'birthday', 'business'];
   currentSearch: SearchTerms = new SearchTerms(this.searchTypes[0], '', null, this.genresList, this.eventsList, null);
   public results: any = null;
 
@@ -151,11 +151,13 @@ export class TopbarComponent implements OnInit {
   // Submission of search
   submit() {
     // Set location for submission
-    if (this.longitude != null) {
+    if (this.longitude != null && this.searchForm.get('location').value != '') {
       this.currentSearch.location = {
         longitude: this.longitude,
         latitude: this.latitude
       };
+    } else {
+      this.currentSearch.location = null;
     }
     // Set search type
     this.currentSearch.searchType = this.searchForm.get('type').value;
@@ -182,7 +184,7 @@ export class TopbarComponent implements OnInit {
       this.currentSearch.uid = null;
     }
 
-    if (this.currentSearch.searchType === 'Musician') {
+    if (this.currentSearch.searchType === 'Artist' || this.currentSearch.searchType === 'Host') {
       this.searchService.userSearch(this.currentSearch).then((users: User[]) => {
         this.results = users;
         this.searchService.changeResult(this.results, this.currentSearch.searchType);

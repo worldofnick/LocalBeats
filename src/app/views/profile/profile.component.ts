@@ -7,6 +7,7 @@ import { EventService } from '../../services/event/event.service';
 import { SocketService } from '../../services/chats/socket.service';
 import { Action } from '../../services/chats/model/action';
 import { Message } from '../../services/chats/model/message';
+import { SocketEvent } from '../../services/chats/model/event';
 import { User } from '../../models/user';
 import { Booking } from '../../models/booking';
 import { Event } from '../../models/event';
@@ -42,11 +43,12 @@ export class ProfileComponent implements OnInit {
     private eventService: EventService,
     private notificationService: NotificationService,
     private _socketService: SocketService) {
-    console.log("in profile component constructor");
 
      router.events.subscribe((url:any) => this.clickedOverview = router.url == "/profile/overview");
 
   }
+
+  
 
   hasRequested() {
     if(!this.userService.isAuthenticated()){
@@ -62,17 +64,6 @@ export class ProfileComponent implements OnInit {
       }
     });
   }
-
-    //not implemented
-  sendNotification(){
-    // this.socket.emit('create notification','Notification Test');
-    // let notif:Notification = new Notification;
-    // notif.sender = this.userService.user;
-    // notif.receiverID = this.userService.user._id;
-    // notif.message = "test message" ;
-    // console.log(this.userService.user);
-    // this.userService.sendNotificationToUser(notif);
- }
 
   ngOnInit() {
     this.user = this.userService.user;
@@ -96,6 +87,11 @@ export class ProfileComponent implements OnInit {
         this.user = gottenUser;
       }).then(() => this.hasRequested());
     }
+
+    //received socket emition from server about updating profile 
+    this._socketService.onEvent(SocketEvent.UPDATE_PROFILE).subscribe((user: User)=>{
+      this.user = user;
+    });
   }
 
   onStartNewConversationFromProfileButtonClick() {

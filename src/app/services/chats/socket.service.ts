@@ -41,6 +41,10 @@ export class SocketService {
     this.socket.emit(eventName, message);
   }
 
+  public sendToProfile(eventName: string, user: User): void {
+    this.socket.emit(eventName, user);
+  }
+
   public sendNotification(eventName: SocketEvent, notificationPayload: SocketNotification):void {
     //save notification to db.
     let body = JSON.stringify(notificationPayload);
@@ -50,10 +54,6 @@ export class SocketService {
     this.http.post(SERVER_URL + '/api/notification/', body, httpOptions);
     
     this.socket.emit(eventName, notificationPayload);
-
-
-
-
   }
 
   public onEvent(event: SocketEvent): Observable<any> {

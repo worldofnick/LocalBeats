@@ -1,7 +1,7 @@
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { Component, Inject, OnInit } from '@angular/core';
 import { Validators, FormGroup, FormControl, FormArray, FormBuilder } from '@angular/forms';
-import { Booking } from 'app/models/booking';
+import { Booking, NegotiationResponses } from 'app/models/booking';
 
 @Component({
   selector: 'app-negotiate-dialog',
@@ -134,28 +134,26 @@ export class NegotiateDialogComponent implements OnInit {
 
   accept() {
     if(this.data.booking.approved) {
-      this.dialogRef.close({accepted: 'nocancel', price: this.initialPrice});
+      this.dialogRef.close({response: NegotiationResponses.nochange, price: this.initialPrice});
     } else {
-      if(this.negotiationForm.get('price').value != this.initialPrice) {
-        this.dialogRef.close({accepted: 'new', price: this.negotiationForm.get('price').value});
+      if(this.negotiationForm.get('price').value != this.initialPrice || this.data.initial) {
+        this.dialogRef.close({response: NegotiationResponses.new, price: this.negotiationForm.get('price').value});
       } else {
-        this.dialogRef.close({accepted: 'accepted', price: this.negotiationForm.get('price').value});
+        this.dialogRef.close({response: NegotiationResponses.accept, price: this.negotiationForm.get('price').value});
       }
     }
   }
 
   decline() {
     if(this.data.booking.approved) {
-      this.dialogRef.close({accepted: 'cancel', price: this.initialPrice});
+      this.dialogRef.close({response: NegotiationResponses.cancel, price: this.initialPrice});
     } else {
-      this.dialogRef.close({accepted: 'declined', price: this.initialPrice});
+      this.dialogRef.close({response: NegotiationResponses.decline, price: this.initialPrice});
     }
   }
 
   onPriceChange(){
     if(this.negotiationForm.get('price').value != this.initialPrice) {
-      // cases here for the different negotiation instances
-      console.log(this.data);
       if(this.data.booking.hostApproved && this.negotiable && this.data.view == 'artist') {
         this.acceptButtonText = "Counter Bid";
       } else if(this.data.booking.artistApproved && this.negotiable && this.data.view == 'artist') {

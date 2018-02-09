@@ -1,43 +1,51 @@
 <mat-card class="p-0">
   <mat-tab-group (selectedTabChange)="onTabChange($event)">
+
     <mat-tab label="Edit Account">
       <mat-card-content class="mt-1">
-        <form (ngSubmit)="onEditProfile()" #r="ngForm" method="post" class="editProfile">
+        <form [formGroup]="settingsForm" (ngSubmit)="onEditProfile()">
           <mat-form-field class="full-width">
-              <input
-              matInput
-              name="name"
-              placeholder="Name"
-              [(ngModel)]="this.user.firstName"
-              >
-            </mat-form-field>
-            <mat-form-field class="full-width">
-                <input
-                matInput
-                name="title"
-                placeholder="Title"
-                [(ngModel)]="this.user.lastName"
-                >
-              </mat-form-field>
-            <mat-form-field class="full-width">
-              <input
-              matInput
-              name="email"
-              placeholder="Email"
-              [(ngModel)]="this.user.email">
-            </mat-form-field>
-            <button mat-raised-button color="primary">Save</button>
-          </form>
+            <input matInput name="name" placeholder="Name" formControlName="firstName">
+          </mat-form-field>
+          <mat-form-field class="full-width">
+            <input matInput name="title" placeholder="Last Name"  formControlName="lastName">
+          </mat-form-field>
+          <mat-form-field class="full-width">
+            <input matInput name="email" placeholder="Email"  formControlName="email">
+          </mat-form-field>
+          
+            <!-- <input matInput name="title" placeholder="Last Name"  formControlName="lastName"> -->
+
+          <mat-form-field class="full-width">
+            <mat-select [formControl]="settingsForm.controls['genres']" name="genres" placeholder="Music Genres" multiple>
+              <mat-option *ngFor="let genre of genresList" [value]="genre" >{{genre | capitalize}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field class="full-width">
+              <mat-select [formControl]="settingsForm.controls['eventTypes']" name="types" placeholder="Preferred Event Types" multiple>
+                <mat-option *ngFor="let type of eventsList" [value]="type" >{{type | capitalize}}</mat-option>
+              </mat-select>
+          </mat-form-field>
+          <div class="pb-1">
+
+          <mat-checkbox name="artist" (click)="onArtist()" formControlName="isArtist">Are you an artist?</mat-checkbox>
+</div>
+          <button mat-raised-button color="primary">Save</button>
+        </form>
       </mat-card-content>
     </mat-tab>
+
+
     <mat-tab label="Profile Picture">
       <mat-card-content>
         <div class="mb-1 mt-1">
           <p>Upload a profile picture</p>
-          <input type="file" (change)="onChange($event)" accept=".jpg,.png"/>
+          <input type="file" (change)="onChange($event)" accept=".jpg,.png" />
           <mat-progress-bar mode="determinate" class="session-progress"></mat-progress-bar>
         </div>
       </mat-card-content>
     </mat-tab>
+
   </mat-tab-group>
 </mat-card>

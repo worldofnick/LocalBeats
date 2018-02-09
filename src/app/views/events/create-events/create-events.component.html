@@ -7,8 +7,6 @@
           <mat-divider></mat-divider>
         </mat-card-title>
         <mat-card-content>
-          <!-- <div fxLayout="row" fxLayoutWrap="wrap">
-            <div fxFlex="100" fxFlex.gt-xs="50" class="pr-1"> -->
           <div class="pb-1">
             <mat-form-field class="full-width">
               <input matInput [(ngModel)]="this.event.eventName" name="eventName" formControlName="eventName" placeholder="Event Name (Min Length: 4, Max Length: 40)"
@@ -17,16 +15,19 @@
           </div>
 
 
+          
+
           <div class="pb-1">
-            <mat-select formControlName="eventType" (change)="onChangeEventType($event)" id="langToggle" placeholder="Event Type" [(ngModel)]="this.event.eventType" name="eventType"
-              class="mb-1">
-              <mat-option *ngFor="let event of eventTypes" [value]="event.value" ngDefaultControl>
-                {{event.viewValue}}
-              </mat-option>
-            </mat-select>
 
-
-          </div>
+              <mat-select formControlName="eventType" (change)="onChangeEventType($event)" id="langToggle" placeholder="Event Type" [(ngModel)]="this.event.eventType" name="eventType"
+                class="mb-1">
+                <mat-option *ngFor="let event of eventTypes" [value]="event.value" ngDefaultControl>
+                  {{event.viewValue}}
+                </mat-option>
+              </mat-select>
+  
+  
+            </div>
 
 
 
@@ -46,14 +47,10 @@
           </div>
 
 
-          <!-- date picker. -->
-          <div class="pb-1">
-            <Label>Is price negotiable?</Label>
-            <mat-radio-group [(ngModel)]="this.event.negotiable" name="negotiable" formControlName="negotiable">
-              <mat-radio-button value="true">Negotiable</mat-radio-button>
-              <mat-radio-button value="false">Non-Negotiable</mat-radio-button>
-            </mat-radio-group>
-          </div>
+    
+          <div class="pb-1 pt-05">
+              <mat-checkbox name="negotiable" formControlName="negotiable" class="pb-1">Price is negotiable</mat-checkbox>
+            </div>
 
           <div class="pb-1">
             <mat-form-field class="full-width">
@@ -76,24 +73,29 @@
 
           <div class="pb-1">
 
-            <Label>Genre(s)</Label>
-            <mat-grid-list cols="3" rows="genres.length/3" rowHeight="2:1">
 
-              <mat-grid-tile *ngFor="let genre of genres; let i = index">
-                <mat-checkbox class="grid-center" (change)="onPickingGenre($event)" [value]="genre" [checked]="genre.checked">{{genre.genre}}</mat-checkbox>
-              </mat-grid-tile>
-            </mat-grid-list>
+            
+            <mat-form-field class="full-width">
+
+              <mat-select [formControl]="basicForm.controls['genres']" name="genres" placeholder="Music Genres" multiple>
+                <mat-option *ngFor="let genre of genresList" [value]="genre" >{{genre}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+            
+           
+            
           </div>
+
 
 
 
           <div class="pb-1 pt-05">
-            <mat-checkbox name="agreed" formControlName="agreed" class="pb-1">I have read and agree to the terms of service.</mat-checkbox>
+            <mat-checkbox (click)="onAgreed()" name="agreed" formControlName="agreed" class="pb-1">I have read and agree to the terms of service.</mat-checkbox>
           </div>
           <!-- </div>
           </div> -->
-          <button *ngIf="!this.updating" mat-raised-button color="primary">Create Event</button>
-          <button *ngIf="this.updating" mat-raised-button color="primary">Update Event</button>
+          <button *ngIf="!this.updating && agreed" mat-raised-button color="primary">Create Event</button>
+          <button *ngIf="this.updating && agreed" mat-raised-button color="primary">Update Event</button>
         </mat-card-content>
       </mat-card>
     </div>
@@ -143,8 +145,9 @@
               <div class="card-title-text">Describe your event</div>
               <mat-divider></mat-divider>
             </mat-card-title>
-            <quill-editor theme="snow" [(ngModel)]="this.event.description" value="" (onContentChanged)="onContentChanged()" onSelectionChanged="onSelectionChanged()"
-              name="eventDescription" formControlName="eventDescription"></quill-editor>
+    
+              <textarea matInput placeholder="Description" matTextareaAutosize matAutosizeMinRows="2"
+              matAutosizeMaxRows="5" name="eventDescription" formControlName="eventDescription"></textarea>
           </div>
         </mat-card-content>
       </mat-card>
