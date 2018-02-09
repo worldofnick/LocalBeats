@@ -57,7 +57,12 @@ export class CreateEventsComponent implements OnInit {
   genresList: string[] = ['Rock', 'Country', 'Jazz', 'Blues', 'Rap'];
   eventsList: string[] = ['Wedding', 'Birthday', 'Business'];
 
-
+  selectedEventType: string = 'wedding';
+  eventTypes = [
+    { value: 'wedding', viewValue: 'Wedding' },
+    { value: 'birthday', viewValue: 'Birthday' },
+    { value: 'business', viewValue: 'Business' }
+  ];
   checkedValues:Boolean[]
   
   // evenGenres:Array<string>;
@@ -89,6 +94,7 @@ export class CreateEventsComponent implements OnInit {
 
               
   ngOnInit() {
+    this.event.eventType = "Wedding"
   
     // this.openSnackBar();
     this.zoom = 4;
@@ -148,7 +154,6 @@ export class CreateEventsComponent implements OnInit {
         Validators.required
       ]),
       negotiable: new FormControl(this.event.negotiable, [
-        Validators.required
       ]),
       date: new FormControl(),
       eventDescription: new FormControl(this.event.description, [
