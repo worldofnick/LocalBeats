@@ -27,7 +27,7 @@ import { Notification } from '../../../models/notification'
 })
 export class ProfileEventsComponent implements OnInit {
   // User Model
-  user: User = new User;
+  user: User;
   // Hosted Events of the User Model
   events: {
     event: Event,
@@ -56,74 +56,6 @@ export class ProfileEventsComponent implements OnInit {
       .subscribe((notification: Notification) => {
         this.updateModel(notification.booking, notification.response);
     });
-  }
-
-  private updateModel(newBooking: Booking, response: NegotiationResponses) {
-    let eventIndex: number = -1;
-    let applicationIndex: number = -1;
-    let requestIndex: number = -1;
-    let confirmationIndex: number = -1;
-    // Check if the booking has been approved
-    if(newBooking.approved && response == NegotiationResponses.accept) {
-      eventIndex = this.events.findIndex(e => e.event._id == newBooking.eventEID._id);
-      requestIndex = this.events[eventIndex].requests.findIndex(r => r._id == newBooking._id)
-      applicationIndex = this.events[eventIndex].applications.findIndex(a => a._id == newBooking._id);
-      // Remove from applications/requests and put on confirmations
-      if(newBooking.bookingType == 'artist-apply') {
-        this.events[eventIndex].applications.splice(applicationIndex, 1);
-      } else {
-        this.events[eventIndex].requests.splice(requestIndex, 1);
-      }
-      this.events[eventIndex].confirmations.push(newBooking);
-      this.events[eventIndex].confirmationNotifications++;
-
-    } else if(response == NegotiationResponses.new) {
-      // Otherwise, check if there is a new bid or offer
-      eventIndex = this.events.findIndex(e => e.event._id == newBooking.eventEID._id);
-      requestIndex = this.events[eventIndex].requests.findIndex(r => r._id == newBooking._id);
-      applicationIndex = this.events[eventIndex].applications.findIndex(a => a._id == newBooking._id);
-      if(applicationIndex >= 0) {
-        // Then it must be an event with a current application
-        // Update this event
-        this.events[eventIndex].applications[applicationIndex] = newBooking;
-        // Increment the notifications
-        this.events[eventIndex].applicationNotifications++;
-      } else if(requestIndex >= 0){
-        // Then it is an event with a current request
-        // Update this event
-        this.events[eventIndex].requests[requestIndex] = newBooking;
-        // Increment the notifications
-        this.events[eventIndex].requestNotifications++;
-      } else {
-        // Otherwise, it is a brand new application/request
-        // Push onto applications/requests
-        if(newBooking.bookingType == 'artist-apply') {
-          this.events[eventIndex].applications.push(newBooking);
-          // Increment the notifications
-          this.events[eventIndex].applicationNotifications++;
-        } else {
-          this.events[eventIndex].requests.push(newBooking);
-          // Increment the notifications
-          this.events[eventIndex].requestNotifications++;
-        }
-        
-      }
-    } else if(response == NegotiationResponses.decline) {
-      // Find it in applications and remove it
-      eventIndex = this.events.findIndex(e => e.event._id == newBooking.eventEID._id);
-      if(newBooking.bookingType == 'artist-apply') {
-        applicationIndex = this.events[eventIndex].applications.findIndex(a => a._id == newBooking._id);
-        this.events[eventIndex].applications.splice(applicationIndex, 1);
-      } else {
-        requestIndex = this.events[eventIndex].requests.findIndex(r => r._id == newBooking._id);
-        this.events[eventIndex].requests.splice(requestIndex, 1);
-      }
-    } else if(response == NegotiationResponses.cancel) {
-      // Find it in confirmations and remove it
-      eventIndex = this.events.findIndex(e => e.event._id == newBooking.eventEID._id);
-      confirmationIndex = this.events[eventIndex].confirmations.findIndex(a => a._id == newBooking._id);
-      this.events[eventIndex].confirmations.splice(confirmationIndex, 1);
-    }
   }
 
   private getEvents() {
@@ -173,6 +105,78 @@ export class ProfileEventsComponent implements OnInit {
         })
       }
     })
+  }
+
+  private updateModel(newBooking: Booking, response: NegotiationResponses) {
+    let eventIndex: number = -1;
+    let applicationIndex: number = -1;
+    let requestIndex: number = -1;
+    let confirmationIndex: number = -1;
+    // Check if the booking has been approved
+    if(newBooking.approved && response == NegotiationResponses.accept) {
+      eventIndex = this.events.findIndex(e => e.event._id == newBooking.eventEID._id);
+      requestIndex = this.events[eventIndex].requests.findIndex(r => r._id == newBooking._id)
+      applicationIndex = this.events[eventIndex].applications.findIndex(a => a._id == newBooking._id);
+      // Remove from applications/requests and put on confirmations
+      if(newBooking.bookingType == 'artist-apply') {
+        this.events[eventIndex].applications.splice(applicationIndex, 1);
+      } else {
+        this.events[eventIndex].requests.splice(requestIndex, 1);
+      }
+      this.events[eventIndex].confirmations.push(newBooking);
+      this.events[eventIndex].confirmationNotifications++;
+
+    } else if(response == NegotiationResponses.new) {
+      // Otherwise, check if there is a new bid or offer
+      eventIndex = this.events.findIndex(e => e.event._id == newBooking.eventEID._id);
+      requestIndex = this.events[eventIndex].requests.findIndex(r => r._id == newBooking._id);
+      applicationIndex = this.events[eventIndex].applications.findIndex(a => a._id == newBooking._id);
+      if(applicationIndex >= 0) {
+        // Then it must be an event with a current application
+        // Update this event
+        if(this.events[eventIndex].applications[applicationIndex].artistApproved != newBooking.artistApproved) {
+          // Increment the notifications only if there wasn't a previous one before the host responded
+          this.events[eventIndex].applicationNotifications++;
+        }
+        this.events[eventIndex].applications[applicationIndex] = newBooking;
+      } else if(requestIndex >= 0){
+        // Then it is an event with a current request
+        // Update this event
+        if(this.events[eventIndex].requests[requestIndex].artistApproved != newBooking.artistApproved) {
+          // Increment the notifications only if there wasn't a previous one before the host responded
+          this.events[eventIndex].requestNotifications++;
+        }
+        this.events[eventIndex].requests[requestIndex] = newBooking;
+      } else {
+        // Otherwise, it is a brand new application/request
+        // Push onto applications/requests
+        if(newBooking.bookingType == 'artist-apply') {
+          this.events[eventIndex].applications.push(newBooking);
+          // Increment the notifications
+          this.events[eventIndex].applicationNotifications++;
+        } else {
+          this.events[eventIndex].requests.push(newBooking);
+          // Increment the notifications
+          this.events[eventIndex].requestNotifications++;
+        }
+        
+      }
+    } else if(response == NegotiationResponses.decline) {
+      // Find it in applications and remove it
+      eventIndex = this.events.findIndex(e => e.event._id == newBooking.eventEID._id);
+      if(newBooking.bookingType == 'artist-apply') {
+        applicationIndex = this.events[eventIndex].applications.findIndex(a => a._id == newBooking._id);
+        this.events[eventIndex].applications.splice(applicationIndex, 1);
+      } else {
+        requestIndex = this.events[eventIndex].requests.findIndex(r => r._id == newBooking._id);
+        this.events[eventIndex].requests.splice(requestIndex, 1);
+      }
+    } else if(response == NegotiationResponses.cancel) {
+      // Find it in confirmations and remove it
+      eventIndex = this.events.findIndex(e => e.event._id == newBooking.eventEID._id);
+      confirmationIndex = this.events[eventIndex].confirmations.findIndex(a => a._id == newBooking._id);
+      this.events[eventIndex].confirmations.splice(confirmationIndex, 1);
+    }
   }
 
   resetConfirmations(event: MatTabChangeEvent, eventIndex: number) {
@@ -298,12 +302,6 @@ export class ProfileEventsComponent implements OnInit {
 
   createNotificationForArtist(booking: Booking, response: NegotiationResponses, route: string[], icon: string, message: string) {
     let notification = new Notification(booking.hostUser, booking.performerUser, booking.eventEID._id,
-    booking, response, message, icon, route);
-    this._socketService.sendNotification(SocketEvent.SEND_NOTIFICATION, notification);
-  }
-
-  createNotificationForHost(booking: Booking, response: NegotiationResponses, route: string[], icon: string, message: string) {
-    let notification = new Notification(booking.performerUser, booking.hostUser, booking.eventEID._id,
     booking, response, message, icon, route);
     this._socketService.sendNotification(SocketEvent.SEND_NOTIFICATION, notification);
   }
