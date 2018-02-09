@@ -18,7 +18,7 @@
 
           <mat-form-field class="full-width">
             <mat-select [formControl]="settingsForm.controls['genres']" name="genres" placeholder="Music Genres" multiple>
-              <mat-option *ngFor="let genre of genresList" [value]="genre" >{{genre}}</mat-option>
+              <mat-option *ngFor="let genre of genresList" [value]="genre" >{{genre | capitalize}}</mat-option>
             </mat-select>
           </mat-form-field>
 

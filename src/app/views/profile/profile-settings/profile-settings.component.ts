@@ -17,7 +17,7 @@ import { FormGroup, FormControl, Validators, FormArray, FormBuilder } from '@ang
 export class ProfileSettingsComponent implements OnInit {
   @ViewChild(MatProgressBar) progressBar: MatProgressBar;
   user: User;
-  genresList: string[] = ['Rock', 'Country', 'Jazz', 'Blues', 'Rap'];
+  genresList: string[] = ['rock', 'country', 'zazz', 'blues', 'rap'];
   eventsList: string[] = ['Wedding', 'Birthday', 'Business'];
   settingsForm: FormGroup;
   nowArtist = false;
@@ -69,6 +69,12 @@ export class ProfileSettingsComponent implements OnInit {
     this.user.eventTypes = this.settingsForm.get('eventTypes').value;
     this.user.isArtist = this.settingsForm.get('isArtist').value;
 
+    //lower case genres for serachability
+    for (var _i = 0; _i < this.user.genres.length; _i++) {
+      this.user.genres[_i] = this.user.genres[_i].toLowerCase()
+    }
+
+    //reset user event preferences is the user says it is not an artist anymore
     if(!this.user.isArtist){
       this.user.eventTypes = [];
     }
