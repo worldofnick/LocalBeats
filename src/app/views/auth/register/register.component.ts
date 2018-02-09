@@ -49,7 +49,7 @@ export class RegisterComponent implements OnInit {
       confirmPassword: confirmPassword,
       genres: new FormControl(),
       events: new FormControl(), 
-      isArtist: new FormControl(),
+      isArtist: new FormControl(false),
       location: new FormControl()
     })
 
