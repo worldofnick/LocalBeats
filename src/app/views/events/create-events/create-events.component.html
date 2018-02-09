@@ -11,32 +11,21 @@
             <div fxFlex="100" fxFlex.gt-xs="50" class="pr-1"> -->
           <div class="pb-1">
             <mat-form-field class="full-width">
-              <input matInput name="eventName" formControlName="eventName" placeholder="Event Name (Min Length: 4, Max Length: 40)"
-                value="">
+              <input matInput name="eventName" formControlName="eventName" 
+              placeholder="Event Name (Min Length: 4, Max Length: 40)" value="">
             </mat-form-field>
           </div>
 
 
-          <!-- <div class="pb-1">
-            <mat-select formControlName="eventType" (change)="onChangeEventType($event)" id="langToggle" placeholder="Event Type" name="eventType"
-              class="mb-1">
-              <mat-option *ngFor="let event of eventTypes" [value]="event.value" ngDefaultControl>
-                {{event.viewValue}}
-              </mat-option>
-            </mat-select>
+          <div class="pb-1">
+            <mat-form-field class="full-width">
 
-
-          </div> -->
-         
-          <div class="pb-1"> 
-
-          <mat-form-field class="full-width">
-              <mat-select [formControl]="basicForm.controls['eventType']" name="type" placeholder="Event Type">
-                <mat-option *ngFor="let type of eventsList" [value]="type" >{{type}}</mat-option>
+              <mat-select [(ngModel)]="event.eventType" formControl="eventType" name="type" placeholder="Event Type">
+                <mat-option *ngFor="let type of eventsList" [value]="type">{{type}}</mat-option>
               </mat-select>
             </mat-form-field>
 
-            </div>
+          </div>
 
 
 
@@ -50,26 +39,21 @@
           <!-- event price input field. still needs to be formatted for numbers -->
           <div class="pb-1">
             <mat-form-field class="full-width">
-              <input matInput name="fixedPrice" formControlName="fixedPrice" placeholder="Event Price"
+              <input matInput [(ngModel)]="this.event.fixedPrice" name="fixedPrice" formControlName="fixedPrice" placeholder="Event Price"
                 value="">
             </mat-form-field>
           </div>
 
 
-          <!-- date picker. -->
-          <div class="pb-1">
-            <Label>Is price negotiable?</Label>
-            <mat-radio-group name="negotiable" formControlName="negotiable">
-              <mat-radio-button value="true">Negotiable</mat-radio-button>
-              <mat-radio-button value="false">Non-Negotiable</mat-radio-button>
-            </mat-radio-group>
+
+          <div class="pb-1 pt-05">
+            <mat-checkbox name="negotiable" formControlName="negotiable" class="pb-1">Price is negotiable</mat-checkbox>
           </div>
 
           <div class="pb-1">
             <mat-form-field class="full-width">
-              <input matInput name="date" formControlName="date" 
-              placeholder="Date" [min]="minDate" [max]="maxDate"
-              [matDatepicker]="appDatepicker">
+              <input matInput [(ngModel)]="this.event.toDate" name="date" formControlName="date" placeholder="Date" [min]="minDate" [max]="maxDate"
+                [matDatepicker]="appDatepicker">
 
               <mat-datepicker-toggle matSuffix [for]="appDatepicker"></mat-datepicker-toggle>
             </mat-form-field>
@@ -78,24 +62,25 @@
 
           <!-- google maps widget -->
           <div class="pb-1">
-          <mat-form-field class="full-width">
-              <input [(ngModel)]="cityState" matInput placeholder="City, State" autocorrect="off" autocapitalize="off" 
-              spellcheck="off" type="text" #searchplaces [formControl]="basicForm.controls['location']">
+            <mat-form-field class="full-width">
+              <input [(ngModel)]="cityState" matInput placeholder="City, State" autocorrect="off" autocapitalize="off" spellcheck="off"
+                type="text" #searchplaces [formControl]="basicForm.controls['location']">
             </mat-form-field>
-            </div>
+          </div>
 
           <div class="pb-1">
 
 
-            
+
             <mat-form-field class="full-width">
+
               <mat-select [formControl]="basicForm.controls['genres']" name="genres" placeholder="Music Genres" multiple>
-                <mat-option *ngFor="let genre of genresList" [value]="genre" >{{genre}}</mat-option>
+                <mat-option *ngFor="let genre of genresList" [value]="genre">{{genre}}</mat-option>
               </mat-select>
             </mat-form-field>
-            
 
-            
+
+
           </div>
 
 
@@ -157,8 +142,9 @@
               <div class="card-title-text">Describe your event</div>
               <mat-divider></mat-divider>
             </mat-card-title>
-            <quill-editor theme="snow" [(ngModel)]="this.event.description" value="" (onContentChanged)="onContentChanged()" onSelectionChanged="onSelectionChanged()"
-              name="eventDescription" formControlName="eventDescription"></quill-editor>
+
+            <textarea matInput placeholder="Description" matTextareaAutosize matAutosizeMinRows="2" matAutosizeMaxRows="5" name="eventDescription"
+              formControlName="eventDescription"></textarea>
           </div>
         </mat-card-content>
       </mat-card>

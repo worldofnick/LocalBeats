@@ -54,13 +54,6 @@ export class CreateEventsComponent implements OnInit {
   longitude = 7.809007;
   locationChosen = false;
 
-  selectedEventType: string = 'wedding';
-  eventTypes = [
-    { value: 'wedding', viewValue: 'Wedding' },
-    { value: 'birthday', viewValue: 'Birthday' },
-    { value: 'business', viewValue: 'Business' }
-  ];
-
   genresList: string[] = ['Rock', 'Country', 'Jazz', 'Blues', 'Rap'];
   eventsList: string[] = ['Wedding', 'Birthday', 'Business'];
 
@@ -112,6 +105,7 @@ export class CreateEventsComponent implements OnInit {
       id: this.route.snapshot.params['id']
     }
 
+
     let ID = this.EID["id"];
     if (ID == null) {
       // console.log("creating event");
@@ -120,10 +114,11 @@ export class CreateEventsComponent implements OnInit {
       // console.log(ID);
       this.updating = true;
     }
-
+    this.setForm();
     if (this.updating) {
       this.eventService.getEventByEID(this.EID).then((eventEdit: Event) => {
         this.event = eventEdit;
+        this.setForm();
 
         //pre load maps input box
        this.cityState = this.event.city + ',' + this.event.state + ', USA' ;
@@ -138,6 +133,9 @@ export class CreateEventsComponent implements OnInit {
       });
     }
     
+  }
+
+  setForm(){
     this.basicForm = this.formBuilder.group({
       eventName: new FormControl(this.event.eventName, [
         Validators.minLength(4),
@@ -145,18 +143,19 @@ export class CreateEventsComponent implements OnInit {
         Validators.required
       ]),
       eventType: new FormControl(this.event.eventType, [
-        Validators.required
       ]),
       fixedPrice: new FormControl(this.event.fixedPrice, [
-        // Validators.required,
+        Validators.required
       ]),
       negotiable: new FormControl(this.event.negotiable, [
         Validators.required
       ]),
       date: new FormControl(),
-      eventDescription: new FormControl(),
+      eventDescription: new FormControl(this.event.description, [
+        Validators.required
+      ]),
       imageUploaded: new FormControl(),
-      genres: new FormControl(this.event.eventType,[
+      genres: new FormControl(this.event.eventGenres,[
 
       ]),
       location: new FormControl('',[Validators.required]),
@@ -268,39 +267,16 @@ export class CreateEventsComponent implements OnInit {
     }
     // console.log("creating this event: ")
     
-    this.event.eventName = this.basicForm.controls.eventName.value;
-    // this.event.eventGenre = this.basicForm.controls.eventGenre.value;
+    this.event.eventName = this.basicForm.get('eventName').value;
     this.event.eventType = this.basicForm.get('eventType').value;
-    this.event.fixedPrice = this.basicForm.controls.fixedPrice.value;
-    this.event.toDate = this.basicForm.controls.date.value;
+    this.event.fixedPrice = this.basicForm.get('fixedPrice').value;
+    this.event.toDate = this.basicForm.get('date').value;
     this.event.negotiable = this.basicForm.get('negotiable').value;
     this.event.eventGenres = this.basicForm.get('genres').value;
-    
+    this.event.description = this.basicForm.get('eventDescription').value;
     this.event.hostUser = this.user;
     this.event.hostEmail = this.user.email;
-    // this.user.genres = this.settingsForm.get('genres').value;
 
-    // console.log(this.event);
-
-    // const genres = <FormArray>this.basicForm.get('genres') as FormArray;
-    // this.event.eventGenre = genres;
-
-
-  ///////////////////////////
-
-    // console.log("genres picked for event:")
-    // console.log(this.basicForm.get('genres').value);
-    // this.event.eventGenres = this.basicForm.get('genres').value;
-
-    // let tempGenres:string[] = [];
-    // for(let picked of this.basicForm.get('genres').value){
-    //   tempGenres.push(picked.genre);
-    // }
-
-    // this.event.eventGenres = tempGenres;
-
-    /////////////////
-    
 
 
     if (!this.updating) {
@@ -312,7 +288,7 @@ export class CreateEventsComponent implements OnInit {
         this.router.navigate(['/events', this.event._id]); //this will go to the page about the event
       });
     } else {
-      console.log("updating event");
+      console.log("updating event", this.event);
 
       this.eventService.updateEvent(this.event).then((newEvent: Event) => {
         this.event = newEvent;
