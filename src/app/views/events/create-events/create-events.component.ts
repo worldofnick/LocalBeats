@@ -36,7 +36,7 @@ export class CreateEventsComponent implements OnInit {
   updating:Boolean
   cityState:string;
 
-
+  agreed = false;
   eventDescription: string = `<h1>Your Event Description</h1>
   <p><a href="http://mhrafi.com" target="_blank"><strong>MH Rafi</strong></a></p>
   <p><br></p><p><strong >Lorem Ipsum</strong>
@@ -252,6 +252,10 @@ export class CreateEventsComponent implements OnInit {
         this.event.eventPicUrl = url;
       })
     }
+  }
+
+  onAgreed(){
+    this.agreed = !this.agreed;
   }
 
   onContentChanged() { }

@@ -109,12 +109,12 @@
 
 
           <div class="pb-1 pt-05">
-            <mat-checkbox name="agreed" formControlName="agreed" class="pb-1">I have read and agree to the terms of service.</mat-checkbox>
+            <mat-checkbox (click)="onAgreed()" name="agreed" formControlName="agreed" class="pb-1">I have read and agree to the terms of service.</mat-checkbox>
           </div>
           <!-- </div>
           </div> -->
-          <button *ngIf="!this.updating" mat-raised-button color="primary">Create Event</button>
-          <button *ngIf="this.updating" mat-raised-button color="primary">Update Event</button>
+          <button *ngIf="!this.updating && agreed" mat-raised-button color="primary">Create Event</button>
+          <button *ngIf="this.updating && agreed" mat-raised-button color="primary">Update Event</button>
         </mat-card-content>
       </mat-card>
     </div>
