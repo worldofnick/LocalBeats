@@ -17,17 +17,17 @@
       <mat-card-content>
         <div fxLayout="row" fxLayoutWrap="wrap">
           <div fxFlex="100" fxFlex.gt-xs="50">
-            <p><em><b>Location:</b></em></p>
+            <p><em><b>Details:</b></em></p>
             <p>{{result.city}}, {{result.state}}</p>
-            <p>{{result.toDate | date:'MMM d, y, h:mm a'}}</p>
+            <p>{{result.toDate | date:'MMM d, y'}}</p>
+            <p *ngIf="result.negotiable">{{result.fixedPrice | currency}}</p>
+            <p *ngIf="!result.negotiable">{{result.fixedPrice | currency}}</p>
           </div>
           <div fxFlex="100" fxFlex.gt-xs="50">
-            <p><em><b>Price:</b></em></p>
-            <p *ngIf="result.negotiable">{{result.fixedPrice | currency}} (Negotiable)</p>
-            <p *ngIf="!result.negotiable">{{result.fixedPrice | currency}} (Non-Negotiable)</p>
+            <p><em><b>Music Style:</b></em></p>
+            <p *ngFor="let g of result.eventGenres">{{g | capitalize}}</p>
           </div>
         </div>
-        
         <div fxLayout="row" fxLayoutWrap="wrap">
             <div fxFlex="100" fxFlex.gt-xs="100">
                 <p><em><b>Description:</b></em></p>
