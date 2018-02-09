@@ -234,8 +234,10 @@ exports.searchEvents = function(req, res) {
 
   if (req.query.min_budget != null && req.query.max_budget != null) {
     query.fixedPrice = {
-      $gte: parseInt(req.query.min_budget),
-      $lte: parseInt(req.query.max_budget)
+        "$and": [
+            {"$gte": parseInt(req.query.min_budget)},
+            {"$lte": parseInt(req.query.max_budget)}
+        ]
     }
   }
 
