@@ -86,9 +86,15 @@
 
             <div class="pb-1">
               <mat-form-field>
+                <input matInput placeholder="City, State" autocorrect="off" autocapitalize="off" spellcheck="off" type="text" #searchplaces [formControl]="signupForm.controls['location']">
+              </mat-form-field>
+            </div>
+
+            <div class="pb-1">
+              <mat-form-field>
                 <mat-select placeholder="Preferred Music" [formControl]="signupForm.controls['genres']" multiple>
                   <mat-select-trigger class="additional-selection">
-                    {{signupForm.controls['genres'].value ? signupForm.controls['genres'].value[0] : ''}}
+                    {{(signupForm.controls['genres'].value ? signupForm.controls['genres'].value[0] : '') | capitalize}}
                     <span *ngIf="signupForm.controls['genres'].value?.length > 1">
                       (+{{signupForm.controls['genres'].value.length - 1}} others)
                     </span>
@@ -102,7 +108,7 @@
               <mat-form-field>
                 <mat-select placeholder="Preferred Events" [formControl]="signupForm.controls['events']" multiple>
                   <mat-select-trigger class="additional-selection">
-                    {{signupForm.controls['events'].value ? signupForm.controls['events'].value[0] : ''}}
+                    {{(signupForm.controls['events'].value ? signupForm.controls['events'].value[0] : '') | capitalize}}
                     <span *ngIf="signupForm.controls['events'].value?.length > 1">
                       (+{{signupForm.controls['events'].value.length - 1}} others)
                     </span>

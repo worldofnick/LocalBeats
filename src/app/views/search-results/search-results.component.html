@@ -46,8 +46,8 @@
       </mat-card-title>
       <img mat-card-image [src]="result.profilePicUrl">
       <mat-card-content>
-        <mat-card-title *ngIf="result.isArtist"><b>Artist</b></mat-card-title>
-        <mat-card-title *ngIf="!result.isArtist"><b>Host</b></mat-card-title>
+        <mat-card-title *ngIf="result.isArtist"><b>Artist</b> - {{result.city}}, {{result.state}}</mat-card-title>
+        <mat-card-title *ngIf="!result.isArtist"><b>Host</b> - {{result.city}}, {{result.state}}</mat-card-title>
         <div fxLayout="row" fxLayoutWrap="wrap">
           <div fxFlex="100" fxFlex.gt-xs="50">
             <p><em><b>Music Style:</b></em></p>

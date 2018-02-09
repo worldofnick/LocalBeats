@@ -14,7 +14,11 @@ export class User {
     public profilePicUrl: string;
     public eventTypes: string[];
     public socket: io.socket;
+    public city: string;
+    public state: string;
+    public location: number[];
 
     // Chat properties
     public isOnline: boolean = false;
 }
+
