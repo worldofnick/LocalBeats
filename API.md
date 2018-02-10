@@ -31,10 +31,7 @@ All requests must have the following properties set in the request header.
 * **Success Response:**
   
  	 * **Code:** 200 if successful<br />
-
-	**Response Body Content  `GET` | `POST`| `PUT`:**
-
-	 **Content:** `{ user : user }`
+	 	**Content:** `{ user : user }`
  
 * **Error Response:**
 
@@ -73,8 +70,7 @@ All requests must have the following properties set in the request header.
 * **Success Response:**
   
  	 * **Code:** 200 if successful<br />
-
-	 **Content:** `{ users : users }`
+	 	**Content:** `{ users : users }`
  
 * **Error Response:**
 
