@@ -6,6 +6,7 @@ All requests must have the following properties set in the request header.
 `Content-Type` = `application/json` 
 
 
+## Auth, TODO 
 
 ## Users 
 
@@ -81,3 +82,20 @@ All requests must have the following properties set in the request header.
 * **Sample Call:**
 
 `http://localbeats.com/api/searchUsers/?uid=someUid&lat=40&lon=-111`
+
+
+## Events 
+
+## Search Events
+
+## Reviews
+
+## Notifications
+
+## Bookings
+
+## Spotify
+
+## Messages
+
+## Payments
