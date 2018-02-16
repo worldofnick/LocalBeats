@@ -17,6 +17,7 @@ const Events        = require('./backend/models/eventsModel');
 const Bookings      = require('./backend/models/bookingsModel');
 const Notification  = require('./backend/models/notificationModel');
 const Message       = require('./backend/models/messageModel');
+var Payments = require('./backend/models/paymentModel');
 
 var distDir = __dirname + "/dist/";
 app.use(express.static(distDir));           // Create link to Angular build directory
@@ -51,7 +52,7 @@ app.set('io', io);
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Cache-Control");
-  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,PATCH,OPTIONS');
   next();
 });
 
@@ -66,6 +67,7 @@ var bookingsRoutes        = require('./backend/routes/bookingsRoutes.js');
 var spotifyRoutes 		    = require('./backend/routes/spotifyRoutes.js');
 var notificationRoutes 		= require('./backend/routes/notificationRoutes.js');
 var messagesRoutes 		    = require('./backend/routes/messageRoutes.js');
+var stripeRoutes 		      = require('./backend/routes/stripeRoutes.js');
 userRoutes(app);
 authenticationRoutes(app);
 eventsRoutes(app);
@@ -73,6 +75,7 @@ bookingsRoutes(app);
 spotifyRoutes(app);
 notificationRoutes(app);
 messagesRoutes(app);
+stripeRoutes(app);
 
 var privateChatSocket     = require('./backend/socket/chatSocket.js');
 privateChatSocket(io);
