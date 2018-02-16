@@ -8,17 +8,18 @@ import { SearchTerms } from 'app/models/search';
 import { Event } from 'app/models/event';
 import { User } from 'app/models/user';
 import { Notification } from 'app/models/notification';
+import { AppModule } from 'app/app.module';
 // import * as socketIO from 'socket.io-client';
 import * as Rx from 'rxjs/Rx';
 
-const SERVER_URL = 'http://localhost:8080';
+const SERVER_URL = AppModule.currentHost;
 const httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
   };
 
 @Injectable()
 export class NotificationService {
-    public connection: string = 'http://localhost:8080/api/notifications';
+    public connection: string = AppModule.currentHost + 'api/notifications';
 
     private headers: Headers = new Headers({ 'Content-Type': 'application/json' });
 

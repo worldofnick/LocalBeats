@@ -9,6 +9,7 @@ import { SocketService } from '../../services/chats/socket.service';
 import { Message } from '../../services/chats/model/message';
 import { SocketEvent } from '../../services/chats/model/event';
 import { Action } from '../../services/chats/model/action';
+import { AppModule } from 'app/app.module';
 
 // For Angular 5 HttpClient Module
 const httpOptions = {
@@ -17,11 +18,9 @@ const httpOptions = {
 
 @Injectable()
 export class UserService {
-    public connection: string = 'http://localhost:8080/api/auth';
-    public userConnection: string = 'http://localhost:8080/api/users';
-    // public connection: string = 'https://localbeats.herokuapp.com/api/auth';
-    // public userConnection: string = 'https://localbeats.herokuapp.com/api/users';
-    // public getUserConnection: string = 'https://localbeats.herokuapp.com/api/user';
+    public connection: string = AppModule.currentHost + 'api/auth';
+    public userConnection: string = AppModule.currentHost + 'api/users';
+
     public accessToken: string = null;
     public user: User = null;
     ioConnection: any;
