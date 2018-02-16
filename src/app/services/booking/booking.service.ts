@@ -7,15 +7,15 @@ import { Booking, NegotiationResponses } from 'app/models/booking';
 import { Event } from 'app/models/event';
 import { User } from 'app/models/user';
 import { NegotiateDialogComponent } from '../../views/negotiate/negotiate-dialog/negotiate-dialog.component';
-import { AppModule } from 'app/app.module';
+import { environment } from '../../../environments/environment';
 
 @Injectable()
 export class BookingService {
-    public connection: string = AppModule.currentHost + 'api/bookings';
-    public eventBooking: string = AppModule.currentHost + 'api/eventBooking/'
-    public userBooking: string = AppModule.currentHost + 'api/userBookings/'
-    public acceptBookingConnection: string = AppModule.currentHost + 'api/acceptBooking'
-    public declineBookingConnection: string = AppModule.currentHost + 'api/declineBooking'
+    public connection: string = environment.apiURL + 'api/bookings';
+    public eventBooking: string = environment.apiURL + 'api/eventBooking/'
+    public userBooking: string = environment.apiURL + 'api/userBookings/'
+    public acceptBookingConnection: string = environment.apiURL + 'api/acceptBooking'
+    public declineBookingConnection: string = environment.apiURL + 'api/declineBooking'
 
     private headers: Headers = new Headers({ 'Content-Type': 'application/json' });
 

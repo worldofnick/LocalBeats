@@ -9,7 +9,7 @@ import { User } from '../../models/user';
 import { Message } from './model/message';
 import { SocketEvent } from './model/event';
 import { SocketService} from './socket.service';
-import { AppModule } from 'app/app.module';
+import { environment } from '../../../environments/environment';
 
 // import * as io from 'socket.io-client';
 
@@ -17,7 +17,7 @@ const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
 };
 
-const SERVER_URL = AppModule.currentHost;
+const SERVER_URL = environment.apiURL;
 
 @Injectable()
 export class ChatsService {

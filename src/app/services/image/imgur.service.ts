@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Http, Headers, RequestOptions, Response } from '@angular/http';
 import { ImageUtilService } from './imageutil.service';
 import { Observable, Subject } from 'rxjs';
-import { AppModule } from 'app/app.module';
+import { environment } from '../../../environments/environment';
 
 export type ImgurUploadOptions = {
     clientId: string,
@@ -35,7 +35,7 @@ export class ImgurService {
   }
 
   getDefaultPic(eventType: string): Promise<string> {
-    let current = AppModule.currentHost + 'api/eventsDefault/?eventType=' + eventType;
+    let current = environment.apiURL + 'api/eventsDefault/?eventType=' + eventType;
     return this.http.get(current, { headers: new Headers({ 'Content-Type': 'application/json' }) })
         .toPromise()
         .then((response: Response) => {

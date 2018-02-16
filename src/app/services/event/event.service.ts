@@ -4,12 +4,12 @@ import { Http, Headers, RequestOptions, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import { User } from 'app/models/user';
 import { Event } from 'app/models/event';
-import { AppModule } from 'app/app.module';
+import { environment } from '../../../environments/environment';
 
 @Injectable()
 export class EventService {
-    public connection: string = AppModule.currentHost + 'api/events';
-    public listConnection:string = AppModule.currentHost + 'api/userEvents';
+    public connection: string = environment.apiURL + 'api/events';
+    public listConnection:string = environment.apiURL + 'api/userEvents';
     public accessToken: string = null;
     public user: User = null;
     public event: Event = null;

@@ -9,7 +9,7 @@ import { SocketService } from '../../services/chats/socket.service';
 import { Message } from '../../services/chats/model/message';
 import { SocketEvent } from '../../services/chats/model/event';
 import { Action } from '../../services/chats/model/action';
-import { AppModule } from 'app/app.module';
+import { environment } from '../../../environments/environment';
 
 // For Angular 5 HttpClient Module
 const httpOptions = {
@@ -18,8 +18,8 @@ const httpOptions = {
 
 @Injectable()
 export class UserService {
-    public connection: string = AppModule.currentHost + 'api/auth';
-    public userConnection: string = AppModule.currentHost + 'api/users';
+    public connection: string = environment.apiURL + 'api/auth';
+    public userConnection: string = environment.apiURL + 'api/users';
 
     public accessToken: string = null;
     public user: User = null;
@@ -193,7 +193,7 @@ export class UserService {
 
 
     public getNotificationsCountForUser(ID: any): Promise<Number>{
-        let userConnection: string = AppModule.currentHost + 'api/notification';
+        let userConnection: string = environment.apiURL + 'api/notification';
         // app.route('/api/notification/:uid')
         const current = userConnection + '/' + ID;
         // const current = userConnection + '/5a7113ac9d89a873c89fe5ff';
@@ -224,7 +224,7 @@ export class UserService {
 
 
     public getNotificationsForUser(ID: any): Promise<Notification[]>{
-        let userConnection: string = AppModule.currentHost + 'api/notification';
+        let userConnection: string = environment.apiURL + 'api/notification';
         const current = userConnection + '/' + ID;
         // const current = userConnection + '/5a7113ac9d89a873c89fe5ff';
 

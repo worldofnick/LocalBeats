@@ -5,11 +5,11 @@ import { Observable } from 'rxjs/Observable';
 import { SearchTerms } from 'app/models/search';
 import { Event } from 'app/models/event';
 import { User } from 'app/models/user';
-import { AppModule } from 'app/app.module';
+import { environment } from '../../../environments/environment';
 
 @Injectable()
 export class SearchService {
-    public connection: string = AppModule.currentHost + 'api/';
+    public connection: string = environment.apiURL + 'api/';
 
     private headers: Headers = new Headers({ 'Content-Type': 'application/json' });
 

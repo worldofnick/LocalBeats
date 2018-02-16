@@ -9,7 +9,7 @@ import { Message } from './model/message';
 import { SocketEvent } from './model/event';
 import { Action } from './model/action';
 import { SocketNotification } from './model/socketNotification';
-import { AppModule } from 'app/app.module';
+import { environment } from '../../../environments/environment';
 
 import * as io from 'socket.io-client';
 
@@ -17,7 +17,7 @@ import * as io from 'socket.io-client';
 //   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
 // };
 
-const SERVER_URL = AppModule.currentHost; //TODO: or env.url + port (heroku)
+const SERVER_URL = environment.apiURL; //TODO: or env.url + port (heroku)
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
 };
