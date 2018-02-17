@@ -34,7 +34,7 @@ export class NotificationService {
 
     saveNotificationToDB(notification: Notification) {
         let body = JSON.stringify(notification);
-        return this.httpClient.put(SERVER_URL + '/api/notifications/', body, httpOptions);
+        return this.httpClient.put(SERVER_URL + 'api/notifications/', body, httpOptions);
     }
 
     connect(){
@@ -43,7 +43,7 @@ export class NotificationService {
 
     public deleteNotificationById(receiverID: string): Promise<Number> {
 
-        const current = SERVER_URL + '/api/notification/' + receiverID;
+        const current = SERVER_URL + 'api/notification/' + receiverID;
         return this.http.delete(current)
             .toPromise()
             .then((response: Response) => {

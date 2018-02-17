@@ -31,14 +31,14 @@ export class ChatsService {
   // COMPONENT HELPER METHODS
   // ==============================================
   getConnectionUsers() {
-    return this.http.get(SERVER_URL + '/api/users/');
+    return this.http.get(SERVER_URL + 'api/users/');
     
     //TODO: can just update the user model to have these fields
   }
 
   // Returns { users: [User] } JSON
   getAllConversationBuddiesOfThisUser() {
-    return this.http.get(SERVER_URL + '/api/messages/' + this.loggedInUser._id);
+    return this.http.get(SERVER_URL + 'api/messages/' + this.loggedInUser._id);
   }
 
   getCurrentLoggedInUser() {
@@ -47,12 +47,12 @@ export class ChatsService {
   }
 
   getPMsBetweenActiveAndLoggedInUser(from: User, to: User) {
-    return this.http.get(SERVER_URL + '/api/messages/' + from._id + '/' + to._id);
+    return this.http.get(SERVER_URL + 'api/messages/' + from._id + '/' + to._id);
   }
 
   savePrivateMessageToDB(message: Message) {
     let body = JSON.stringify(message);
-    return this.http.post(SERVER_URL + '/api/messages/', body, httpOptions);
+    return this.http.post(SERVER_URL + 'api/messages/', body, httpOptions);
   }
 
 }

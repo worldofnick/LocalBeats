@@ -52,7 +52,7 @@ export class SocketService {
     console.log("emitting a send notification event for :")
     console.log(notificationPayload);
     console.log(SERVER_URL)
-    this.http.post(SERVER_URL + '/api/notification/', body, httpOptions);
+    this.http.post(SERVER_URL + 'api/notification/', body, httpOptions);
     
     this.socket.emit(eventName, notificationPayload);
   }
