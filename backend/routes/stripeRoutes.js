@@ -5,7 +5,7 @@ module.exports = function(app) {
 	var tokenVerificationHandler = require('../controllers/tokenVerificationController.js');
 
 		app.route('/api/stripe/authorize')
-			.post(tokenVerificationHandler.verifyToken, stripeHandlers.stripeAuthorize);
+			.post(stripeHandlers.stripeAuthorize);
 
     app.route('/api/stripe/link')
 			.get(stripeHandlers.stripeLink);
