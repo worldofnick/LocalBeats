@@ -86,6 +86,11 @@ privateChatSocket(io);
 app.get('/', function(req, res) {
   res.send('Welcome the EXPRESS Server! This API is at http://localhost:' + port + '/api');
 });
+
+app.get('*', function(req, res) {
+  res.redirect('/');
+});
+
 console.log('Magic happens at http://localhost:' + port);
 
 module.exports = app;
