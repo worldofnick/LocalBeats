@@ -13,7 +13,7 @@ export class StripeService {
 
   public connection: string = environment.apiURL + 'api/stripe'; 
   public connectionPayments: string = environment.apiURL + 'api/payments';
-  private headers: Headers = new Headers({ 'Content-Type': 'application/json', 'x-access-token': sessionStorage.getItem('token')});
+  private headers: Headers = new Headers({ 'Content-Type': 'application/json' });
 
   constructor(private http: Http) { }
 
