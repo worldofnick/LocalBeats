@@ -8,17 +8,18 @@ import { SearchTerms } from 'app/models/search';
 import { Event } from 'app/models/event';
 import { User } from 'app/models/user';
 import { Notification } from 'app/models/notification';
+import { environment } from '../../../environments/environment';
 // import * as socketIO from 'socket.io-client';
 import * as Rx from 'rxjs/Rx';
 
-const SERVER_URL = 'http://localhost:8080';
+const SERVER_URL = environment.apiURL;
 const httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
   };
 
 @Injectable()
 export class NotificationService {
-    public connection: string = 'http://localhost:8080/api/notifications';
+    public connection: string = environment.apiURL + 'api/notifications';
 
     private headers: Headers = new Headers({ 'Content-Type': 'application/json' });
 
@@ -33,7 +34,7 @@ export class NotificationService {
 
     saveNotificationToDB(notification: Notification) {
         let body = JSON.stringify(notification);
-        return this.httpClient.put(SERVER_URL + '/api/notifications/', body, httpOptions);
+        return this.httpClient.put(SERVER_URL + 'api/notifications/', body, httpOptions);
     }
 
     connect(){
@@ -42,7 +43,7 @@ export class NotificationService {
 
     public deleteNotificationById(receiverID: string): Promise<Number> {
 
-        const current = SERVER_URL + '/api/notification/' + receiverID;
+        const current = SERVER_URL + 'api/notification/' + receiverID;
         return this.http.delete(current)
             .toPromise()
             .then((response: Response) => {

@@ -9,6 +9,7 @@ import { User } from '../../models/user';
 import { Message } from './model/message';
 import { SocketEvent } from './model/event';
 import { SocketService} from './socket.service';
+import { environment } from '../../../environments/environment';
 
 // import * as io from 'socket.io-client';
 
@@ -16,7 +17,7 @@ const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
 };
 
-const SERVER_URL = 'http://localhost:8080';
+const SERVER_URL = environment.apiURL;
 
 @Injectable()
 export class ChatsService {
@@ -30,14 +31,14 @@ export class ChatsService {
   // COMPONENT HELPER METHODS
   // ==============================================
   getConnectionUsers() {
-    return this.http.get(SERVER_URL + '/api/users/');
+    return this.http.get(SERVER_URL + 'api/users/');
     
     //TODO: can just update the user model to have these fields
   }
 
   // Returns { users: [User] } JSON
   getAllConversationBuddiesOfThisUser() {
-    return this.http.get(SERVER_URL + '/api/messages/' + this.loggedInUser._id);
+    return this.http.get(SERVER_URL + 'api/messages/' + this.loggedInUser._id);
   }
 
   getCurrentLoggedInUser() {
@@ -46,12 +47,12 @@ export class ChatsService {
   }
 
   getPMsBetweenActiveAndLoggedInUser(from: User, to: User) {
-    return this.http.get(SERVER_URL + '/api/messages/' + from._id + '/' + to._id);
+    return this.http.get(SERVER_URL + 'api/messages/' + from._id + '/' + to._id);
   }
 
   savePrivateMessageToDB(message: Message) {
     let body = JSON.stringify(message);
-    return this.http.post(SERVER_URL + '/api/messages/', body, httpOptions);
+    return this.http.post(SERVER_URL + 'api/messages/', body, httpOptions);
   }
 
 }

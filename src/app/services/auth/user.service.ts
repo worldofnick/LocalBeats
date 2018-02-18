@@ -9,6 +9,7 @@ import { SocketService } from '../../services/chats/socket.service';
 import { Message } from '../../services/chats/model/message';
 import { SocketEvent } from '../../services/chats/model/event';
 import { Action } from '../../services/chats/model/action';
+import { environment } from '../../../environments/environment';
 
 // For Angular 5 HttpClient Module
 const httpOptions = {
@@ -17,11 +18,9 @@ const httpOptions = {
 
 @Injectable()
 export class UserService {
-    public connection: string = 'http://localhost:8080/api/auth';
-    public userConnection: string = 'http://localhost:8080/api/users';
-    // public connection: string = 'https://localbeats.herokuapp.com/api/auth';
-    // public userConnection: string = 'https://localbeats.herokuapp.com/api/users';
-    // public getUserConnection: string = 'https://localbeats.herokuapp.com/api/user';
+    public connection: string = environment.apiURL + 'api/auth';
+    public userConnection: string = environment.apiURL + 'api/users';
+
     public accessToken: string = null;
     public user: User = null;
     ioConnection: any;
@@ -194,7 +193,7 @@ export class UserService {
 
 
     public getNotificationsCountForUser(ID: any): Promise<Number>{
-        let userConnection: string = 'http://localhost:8080/api/notification';
+        let userConnection: string = environment.apiURL + 'api/notification';
         // app.route('/api/notification/:uid')
         const current = userConnection + '/' + ID;
         // const current = userConnection + '/5a7113ac9d89a873c89fe5ff';
@@ -225,7 +224,7 @@ export class UserService {
 
 
     public getNotificationsForUser(ID: any): Promise<Notification[]>{
-        let userConnection: string = 'http://localhost:8080/api/notification';
+        let userConnection: string = environment.apiURL + 'api/notification';
         const current = userConnection + '/' + ID;
         // const current = userConnection + '/5a7113ac9d89a873c89fe5ff';
 
@@ -254,37 +253,6 @@ export class UserService {
             })
             .catch(this.handleError);
     }
-
-
-
-    // public sendNotificationToUser(notification: Notification): Promise<any> {
-
-
-    //     this.getUserByID(notification.receiverID).then((receiver:User) =>{
-
-    //     //update the receiving user object w/ an additional notification in the list.
-    //     let userConnection: string = 'http://localhost:8080/api/users';
-    //     const current = userConnection + '/' + receiver._id;        
-    //     // receiver.notifications.push(notification);
-
-    //     console.log("sending:");
-    //     console.log(JSON.stringify(receiver));
-
-    //     return this.http.put(current, { user: JSON.stringify(receiver) }, { headers: this.headers })
-    //         .toPromise()
-    //         .then((response: Response) => {
-    //             const data = response.json();
-    //             console.log("received");
-    //             this.user = data.user as User;
-    //             console.log(this.user)
-    //             return this.user;
-    //         })
-    //         .catch(this.handleError); 
-    //     })
-
-    //     return;
-
-    // }
 
     private handleError(error: any): Promise<any> {
         let errMsg = (error.message) ? error.message :
