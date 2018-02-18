@@ -21,6 +21,7 @@ import { UserGuard } from './services/auth/user-guard.service';
 import { ImgurService } from './services/image/imgur.service';
 import { NotificationService} from './services/notification/notification.service';
 import { ChatsService} from './services/chats/chats.service';
+import { ReviewService } from './services/reviews/review.service';
 import { SocketService } from './services/chats/socket.service';
 import { DatePipe } from '@angular/common'
 
@@ -54,6 +55,7 @@ export function createTranslateLoader(http: Http) {
     NavigationService,
     SearchService,
     SocketService,
+    ReviewService,
     UserService,
     ChatsService, 
     BookingService,

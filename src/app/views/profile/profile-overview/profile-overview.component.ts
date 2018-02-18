@@ -2,6 +2,9 @@ import { Component, OnInit, Input } from '@angular/core';
 import { ActivatedRoute } from "@angular/router";
 import { UserService } from '../../../services/auth/user.service';
 import { User } from '../../../models/user';
+import { Review } from '../../../models/review';
+import { ReviewService } from '../../../services/reviews/review.service';
+
 
 @Component({
   selector: 'app-profile-overview',
@@ -10,14 +13,14 @@ import { User } from '../../../models/user';
 })
 export class ProfileOverviewComponent implements OnInit {
 
-  @Input() user: User;  
+  @Input() user: User;
+  @Input() onOwnProfile: boolean;
 
   // user:User;
 
-  onOwnProfile: boolean = null;
+  // onOwnProfile: boolean = null;
   userID: any = null;
-
-  
+  reviews: Review[] = [];
   activityData = [{
     month: 'January',
     spent: 240,
@@ -45,32 +48,6 @@ export class ProfileOverviewComponent implements OnInit {
     closed: 60
   }];
 
-  tickets = [{
-    img: '',
-    name: 'Brad Pitt',
-    text: 'Amazing artist!.',
-    date: new Date('07/12/2017'),
-    isOpen: true
-  }, {
-    img: '',
-    name: 'Angelina Jolie',
-    text: 'Would book again!',
-    date: new Date('07/7/2017'),
-    isOpen: false
-  }, {
-    img: '',
-    name: 'Will Ferrell',
-    text: 'Worst guitarist.',
-    date: new Date('04/10/2017'),
-    isOpen: false
-  }, {
-    img: '',
-    name: 'Chris Pratt',
-    text: 'They should call this guy starlord.',
-    date: new Date('07/7/2017'),
-    isOpen: false
-  }]
-
   photos = [{
     name: 'Featured Restaurant',
     url: 'assets/images/coffee-shop-pic.jpg'
@@ -82,9 +59,26 @@ export class ProfileOverviewComponent implements OnInit {
     url: 'assets/images/wedding-pic.jpg'
   }]
 
-  constructor(private route: ActivatedRoute, private userService: UserService) { }
+  constructor(private route: ActivatedRoute, 
+              private userService: UserService,
+              private reviewService: ReviewService) { }
   
   ngOnInit() {
+    //get reviews to this user. 
+    if(this.user){
+      console.log(this.onOwnProfile);
+      this.reviewService.getReviewsTo(this.user).then((reviewList:Review[])=>{
+        this.reviews = reviewList;
+      })
+    }
+
+    // this.eventService.getEventByEID(this.EID).then((event: Event) => {
+
+  }
+
+  reviewUser(){
+    console.log(this.user);
+    console.log(this.userService.user);
   }
 
 }

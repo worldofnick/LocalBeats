@@ -13,6 +13,7 @@ const SERVER_URL = environment.apiURL;
 @Injectable()
 export class ReviewService {
 
+    //TODO: change these URLs.
     public connection: string = 'http://localhost:8080/api/reviews';
     public userReviewsToConnection: string = 'http://localhost:8080/api/userReviewsTo';
     public userReviewsFromConnection: string = 'http://localhost:8080/api/userReviewsFrom';
@@ -79,14 +80,15 @@ export class ReviewService {
 
     // GET gets all reviews left for this user
     public getReviewsTo(user: User): Promise<Review[]> {
+        console.log(user);
         const current = this.userReviewsToConnection + '/?uid=' + user._id;
         return this.http.get(current)
         .toPromise()
         .then((response: Response) => {
             const data = response.json();
-            let reviews:Review[];
+            let reviews: Review[];
             reviews = data.reviews as Review[];
-            return reviews
+            return reviews;
         })
         .catch(this.handleError);
     }

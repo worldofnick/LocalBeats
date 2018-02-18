@@ -99,19 +99,21 @@
       <mat-card-title>Reviews</mat-card-title>
       <mat-card-content class="p-0">
         <mat-list class="compact-list mb-1">
-          <mat-list-item class="" *ngFor="let t of tickets">
-            <img mat-list-avatar class="mr-1" [src]="t.img" alt="">
+          <mat-list-item class="" *ngFor="let review of reviews">
+            <!-- <img mat-list-avatar class="mr-1" [src]="r.img" alt=""> -->
             <div fxLayout="row" fxFlex="100">
-              <h6 class="m-0 mr-1">{{t.name}}</h6>
+              <h6 class="m-0 mr-1">{{review.fromUser.firstName}}</h6>
               <span fxFlex></span>
-              <div fxFlex="40">{{t.text | excerpt:20 }}</div>
+              <div fxFlex="40">{{review.text | excerpt:20 }}</div>
               <span fxFlex></span>
-              <small class="text-muted mr-1">{{ t.date | relativeTime}}</small>
+              <small class="text-muted mr-1">{{ review.date | relativeTime}}</small>
             </div>
           </mat-list-item>
         </mat-list>
         <div class="text-center">
-          <button mat-button class="full-width">View all</button>
+          <button *ngIf="!userService.isAuthenticated()" mat-button class="full-width">View all</button>
+          <button *ngIf="userService.isAuthenticated()" mat-button class="half-width">View all</button>
+          <button *ngIf="!onOwnProfile && userService.isAuthenticated()" (click)="reviewUser()" mat-button class="half-width">Review User</button>
         </div>
       </mat-card-content>
     </mat-card>
