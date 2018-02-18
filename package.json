@@ -5,11 +5,11 @@
   "scripts": {
     "ng": "ng",
     "start": "node server.js",
-    "build": "ng build",
+    "build": "ng build --env=prod",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "heroku-postinstall": "ng build --env=prod"
+    "postinstall": "ng build --env=prod"
   },
   "private": true,
   "dependencies": {
