@@ -92,7 +92,7 @@ app.get('/profile/stripe/', function(req, res) {
 });
 
 app.get('*', function(req, res) {
-  res.sendfile('/src/index.html');
+  res.sendfile('./src/index.html');
 });
 
 console.log('Magic happens at http://localhost:' + port);
