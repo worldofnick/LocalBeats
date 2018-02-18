@@ -6,13 +6,13 @@ import { User } from 'app/models/user';
 import { Event } from 'app/models/event';
 import { Booking } from 'app/models/booking';
 import { Payment } from 'app/models/payment';
-import { AppModule } from 'app/app.module';
+import { environment } from '../../../environments/environment';
 
 @Injectable()
 export class StripeService {
 
-  public connection: string = AppModule.currentHost + 'api/stripe'; // TODO update after merge
-  public connectionPayments: string = AppModule.currentHost + 'api/payments';
+  public connection: string = environment.apiURL + 'api/stripe'; 
+  public connectionPayments: string = environment.apiURL + 'api/payments';
   private headers: Headers = new Headers({ 'Content-Type': 'application/json', 'x-access-token': sessionStorage.getItem('token')});
 
   constructor(private http: Http) { }
