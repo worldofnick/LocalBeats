@@ -54,14 +54,14 @@ exports.stripeAuthorize = function (req, res) {
    }, (err, response, body) => {
      if (err || body.error) {
        console.log('The Stripe onboarding process has not succeeded.');
-       res.redirect('localbeats.herokuapp.com/profile/settings/success=false');
+       res.redirect('https://localbeats.herokuapp.com/profile/settings/success=false');
      } else {
        // Update the model and store the Stripe account ID in the DB.
        stripe.accounts.retrieve(
          body.stripe_user_id,
          function(err, account) {
            if (err) {
-             res.redirect('localbeats.herokuapp.com/profile/settings/success=false');
+             res.redirect('https://localbeats.herokuapp.com/profile/settings/success=false');
            }
 
            console.log(account.email);
@@ -80,7 +80,7 @@ exports.stripeAuthorize = function (req, res) {
        );
      }
      // Redirect to the final stage.
-     res.redirect('localbeats.herokuapp.com/profile/settings/success=true');
+     res.redirect('https://localbeats.herokuapp.com/profile/settings/success=true');
    });
 
  };
