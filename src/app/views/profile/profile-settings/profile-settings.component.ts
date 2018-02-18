@@ -33,8 +33,6 @@ export class ProfileSettingsComponent implements OnInit {
   constructor(private route: ActivatedRoute, private userService: UserService, private router : Router,
               private imgurService: ImgurService, private formBuilder: FormBuilder,
               private _socketService: SocketService, public snackBar: MatSnackBar, private stripeService: StripeService) { 
-
-                this.showSnackBarIfNeeded();
               }
 
 
@@ -66,29 +64,6 @@ export class ProfileSettingsComponent implements OnInit {
   onArtist(){
     this.nowArtist = !this.nowArtist;
   }
-
-  private showSnackBarIfNeeded() {
-    if (this.router.url.indexOf('success=true') >= 0) {
-      let snackBarRef = this.snackBar.open('Stripe Account Linked!', "", {
-        duration: 1500,
-      });
-    } else if (this.router.url.indexOf('success=false') >= 0) {
-      // failure
-      let snackBarRef = this.snackBar.open("Failed to Link Account", "", {
-        duration: 1500,
-      });
-    } else if (this.router.url.indexOf('updated=true') >= 0) {
-      // failure
-      let snackBarRef = this.snackBar.open("Stripe Details Updated", "", {
-        duration: 1500,
-      });
-    } else if (this.router.url.indexOf('updated=false') >= 0) {
-      // failure
-      let snackBarRef = this.snackBar.open("Failed to Update Stripe Details", "", {
-        duration: 1500,
-      });
-  }
-}
 
   public fileOverBase(e: any): void {
     this.hasBaseDropZoneOver = e;
