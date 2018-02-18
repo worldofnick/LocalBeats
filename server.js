@@ -87,7 +87,7 @@ app.get('/', function(req, res) {
   res.send('Welcome the EXPRESS Server! This API is at http://localhost:' + port + '/api');
 });
 
-app.get('/profile/settings/', function(req, res) {
+app.get('/profile/stripe/', function(req, res) {
   res.redirect('/profile/settings/?success=' + req.query.success);
 });
 
