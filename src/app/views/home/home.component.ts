@@ -59,7 +59,6 @@ export class HomeComponent implements OnInit {
         duration: 1500,
       });
     } else if (this.router.url.indexOf('updated=true') >= 0) {
-      // failure
       let snackBarRef = this.snackBar.open("Stripe Details Updated", "", {
         duration: 1500,
       });
