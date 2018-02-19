@@ -16,7 +16,9 @@ export class Booking {
     public completed: boolean,
     public artistApproved: boolean,
     public hostApproved: boolean, 
-    public currentPrice: number
+    public currentPrice: number,
+    public hostVerified: boolean,
+    public artistVerified: boolean
     ) {  }
 }
 

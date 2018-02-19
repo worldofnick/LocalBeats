@@ -151,7 +151,7 @@ export class EventSingletonComponent implements OnInit {
   }
 
   newApplication() {
-    this.userBooking = new Booking(undefined, 'artist-apply', this.model.hostUser, this.userService.user, this.model, false, false, false, StatusMessages.artistBid, StatusMessages.waitingOnHost, false, true, false, this.model.fixedPrice);
+    this.userBooking = new Booking(undefined, 'artist-apply', this.model.hostUser, this.userService.user, this.model, false, false, false, StatusMessages.artistBid, StatusMessages.waitingOnHost, false, true, false, this.model.fixedPrice, false, false);
     this.bookingService.negotiate(this.userBooking, true).subscribe((result) => {
       if (result != undefined) {
         if (result.response == NegotiationResponses.new) {
