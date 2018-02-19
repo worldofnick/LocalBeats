@@ -1,9 +1,9 @@
 <h1 matDialogTitle>{{title}}</h1>
 <div mat-dialog-content>{{subtext}}</div>
 <br>
-<form mat-dialog-content [formGroup]="negotiationForm" (ngSubmit)="submit()">
+<form mat-dialog-content [formGroup]="verificationForm" (ngSubmit)="submit()">
     <mat-form-field class="full-width">
-        <textarea matInput [formControl]="negotiationForm.controls['comment']" placeholder="Leave a comment"></textarea>
+        <textarea matInput [formControl]="verificationForm.controls['comment']" placeholder="Leave a comment"></textarea>
     </mat-form-field>
 </form>
 <div mat-dialog-actions>

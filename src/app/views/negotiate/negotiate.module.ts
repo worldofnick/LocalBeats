@@ -31,9 +31,9 @@ import { VerifyDialogComponent } from './verify-dialog/verify-dialog.component';
     FormsModule,
     ReactiveFormsModule
   ],
-  exports: [NegotiateDialogComponent],
+  exports: [NegotiateDialogComponent, VerifyDialogComponent],
   declarations: [NegotiateDialogComponent, VerifyDialogComponent],
   providers: [],
-  entryComponents: [NegotiateDialogComponent]
+  entryComponents: [NegotiateDialogComponent, VerifyDialogComponent]
 })
 export class NegotiateModule { }
