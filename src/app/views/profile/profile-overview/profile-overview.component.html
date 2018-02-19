@@ -113,7 +113,7 @@
         <div class="text-center">
           <button *ngIf="!userService.isAuthenticated()" mat-button class="full-width">View all</button>
           <button *ngIf="userService.isAuthenticated()" mat-button class="half-width">View all</button>
-          <button *ngIf="!onOwnProfile && userService.isAuthenticated()" (click)="reviewUser()" mat-button class="half-width">Review User</button>
+          <button *ngIf="!onOwnProfile && userService.isAuthenticated()" (click)="openDialog()" mat-button class="half-width">Review User</button>
         </div>
       </mat-card-content>
     </mat-card>

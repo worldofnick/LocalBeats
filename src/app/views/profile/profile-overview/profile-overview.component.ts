@@ -1,10 +1,11 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Inject } from '@angular/core';
 import { ActivatedRoute } from "@angular/router";
 import { UserService } from '../../../services/auth/user.service';
 import { User } from '../../../models/user';
 import { Review } from '../../../models/review';
 import { ReviewService } from '../../../services/reviews/review.service';
 import { $ } from 'protractor';
+import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
 
 
 @Component({
@@ -16,6 +17,9 @@ export class ProfileOverviewComponent implements OnInit {
 
   @Input() user: User;
   @Input() onOwnProfile: boolean;
+  
+  animal: string;
+  name: string;
 
   userID: any = null;
   reviews: Review[] = [];
@@ -57,9 +61,10 @@ export class ProfileOverviewComponent implements OnInit {
     url: 'assets/images/wedding-pic.jpg'
   }]
 
-  constructor(private route: ActivatedRoute, 
+  constructor(private route: ActivatedRoute,
               private userService: UserService,
-              private reviewService: ReviewService) { }
+              private reviewService: ReviewService,
+              public dialog: MatDialog) { }
 
   ngOnInit() {
     // get reviews to this user.
@@ -74,6 +79,7 @@ export class ProfileOverviewComponent implements OnInit {
 
   }
 
+
   reviewUser() {
     const date: Date = new Date();
     const newReview: Review = new Review(null, 'best review', 'hello world', 4,
@@ -81,6 +87,38 @@ export class ProfileOverviewComponent implements OnInit {
     this.reviewService.createReview(newReview).then((review: Review) => {
       console.log('created review', review);
     });
+  }
+
+  openDialog(): void {
+    let dialogRef = this.dialog.open(ReviewDialogComponent, {
+      width: '250px',
+      data: { name: this.name, animal: this.animal }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+      this.animal = result;
+    });
+  }
+
+}
+
+@Component({
+  selector: 'review-dialog',
+  templateUrl: 'review-dialog.html',
+})
+export class ReviewDialogComponent {
+
+  constructor(
+    public dialogRef: MatDialogRef<ReviewDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any) { }
+
+  onNoClick(): void {
+    this.dialogRef.close();
+  }
+
+  onYesClick(): void {
+    this.dialogRef.close();
   }
 
 }

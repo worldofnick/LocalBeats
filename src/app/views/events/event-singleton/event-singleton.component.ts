@@ -121,17 +121,17 @@ export class EventSingletonComponent implements OnInit {
     })
   }
 
-  messageHost(){
-    let message:Message = {
+  messageHost() {
+    let message: Message = {
       to: this.model.hostUser
     };
     this.router.navigate(['/chat']);
     this._socketService.send(Action.REQUEST_MSG_FROM_PROFILE_BUTTON, message);
   }
 
-  onSelectHost(){
+  onSelectHost() {
     if(this.isCurrentUser){
-      this.router.navigate(['/profile'])
+      this.router.navigate(['/profile']);
     }else{
       this.router.navigate(['/profile', this.model.hostUser._id])
     }

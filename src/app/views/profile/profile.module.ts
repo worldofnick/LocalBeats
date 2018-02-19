@@ -36,7 +36,7 @@ import { FileUploadModule } from 'ng2-file-upload/ng2-file-upload';
 import { CommonPipesModule } from "../../pipes/common/common-pipes.module";
 
 import { ProfileComponent } from "./profile.component";
-import { ProfileOverviewComponent } from './profile-overview/profile-overview.component';
+import { ProfileOverviewComponent, ReviewDialogComponent } from './profile-overview/profile-overview.component';
 import { ProfileSettingsComponent } from './profile-settings/profile-settings.component';
 import { ProfileBlankComponent } from './profile-blank/profile-blank.component';
 import { ProfileRoutes } from "./profile.routing";
@@ -92,6 +92,8 @@ import { ReactiveFormsModule } from '@angular/forms';
     CommonPipesModule,
     RouterModule.forChild(ProfileRoutes)
   ],
-  declarations: [ProfileComponent, ProfileOverviewComponent, ProfileSettingsComponent, ProfileBlankComponent, ProfileEventsComponent, ProfileRequestComponent, ProfilePerformancesComponent]
+  entryComponents: [ProfileOverviewComponent, ReviewDialogComponent ],
+  declarations: [ProfileComponent, ProfileOverviewComponent, ProfileSettingsComponent, ProfileBlankComponent, ProfileEventsComponent, ProfileRequestComponent, ProfilePerformancesComponent, ReviewDialogComponent]
+
 })
 export class ProfileModule { }
