@@ -19,7 +19,11 @@ export class Booking {
     public currentPrice: number,
     public hostVerified: boolean,
     public artistVerified: boolean
-    ) {  }
+    ) {  
+        this.verifyComment = '';
+    }
+
+    public verifyComment: string;
 }
 
 export enum StatusMessages {

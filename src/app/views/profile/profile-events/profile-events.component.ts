@@ -214,11 +214,24 @@ export class ProfileEventsComponent implements OnInit {
       // Check to see if a response was recorded in the verification dialog box
       if(result != undefined) {
         // Check to see what the response was
+        booking.verifyComment = result.comment;
+        let notificationMessage: string = '';
         if(result.response == VerificationResponse.verify) {
           // The host has verified the artist's attendance
+          booking.hostVerified = true;
+          notificationMessage = booking.hostUser.firstName + " has verified you for the event " + booking.eventEID.eventName;
         } else {
           // The host has rejected verification of the artist's attendance
+          booking.hostVerified = false;
+          notificationMessage = booking.hostUser.firstName + " has invalidated you for the event " + booking.eventEID.eventName;
         }
+        // Update the booking asynchronously
+        this.bookingService.updateBooking(booking).then(() => {
+          // Send notification to artist
+          this.events[eventIndex].applications[bookingIndex] = booking;
+          this.createNotificationForArtist(booking, null, ['/profile', 'performances'],
+              'event_available', notificationMessage);
+        });
       }
     })
   }

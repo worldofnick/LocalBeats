@@ -18,8 +18,9 @@ var BookingsSchema = new Schema({
     artistApproved  : {type: Boolean, default: false},
     hostApproved    : {type: Boolean, default: false},
     currentPrice    : {type: Number, required: true},
-    hostVerified    : {type: Boolean, default: false},
-    artistVerified  : {type: Boolean, default: false},
+    hostVerified    : {type: Boolean, default: null},
+    artistVerified  : {type: Boolean, default: null},
+    verifyComment   : {type: String, default: ''},
     completed       : {type: Boolean, default: false}
 }, {strict: true});
 
