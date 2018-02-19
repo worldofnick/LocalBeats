@@ -10,6 +10,7 @@ import { rootRouterConfig } from './app.routes';
 import { AppCommonModule } from "./components/common/app-common.module";
 import { NegotiateModule } from './views/negotiate/negotiate.module';
 import { AppComponent } from './app.component';
+import {FormsModule} from '@angular/forms';
 
 import { RoutePartsService } from './services/route-parts/route-parts.service';
 import { NavigationService } from "./services/navigation/navigation.service";
@@ -32,6 +33,7 @@ export function createTranslateLoader(http: Http) {
 @NgModule({
   imports: [
     BrowserModule,
+    FormsModule,
     BrowserAnimationsModule,
     AgmCoreModule.forRoot({
       apiKey: "AIzaSyBCko4eEq6azFCzCXVXAF4_jylVNw4ZM7Q",
