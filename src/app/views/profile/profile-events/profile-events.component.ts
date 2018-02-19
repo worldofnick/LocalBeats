@@ -208,6 +208,10 @@ export class ProfileEventsComponent implements OnInit {
     this.router.navigate(['/events', event._id]);
   }
 
+  hostVerify(booking: Booking, bookingIndex: number, eventIndex: number) {
+    
+  }
+
   openNegotiationDialog(booking: Booking, bookingIndex: number, eventIndex: number) {
     this.bookingService.negotiate(booking, false)
     .subscribe((result) => {
