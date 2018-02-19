@@ -20,20 +20,19 @@ export class ReviewService {
     public FlagReviewFromConnection: string = 'http://localhost:8080/api/userReviewsFrom';
     private headers: Headers = new Headers({ 'Content-Type': 'application/json' });
 
-    
 
     constructor(private http: Http) { }
 
     // POST Create review
-    public crateReview(newReview: Review): Promise<Review> {
+    public createReview(newReview: Review): Promise<Review> {
+        console.log(newReview);
         const current = this.connection + '/create';
-        
         return this.http.post(current, { review: newReview }, { headers: this.headers })
             .toPromise()
             .then((response: Response) => {
                 const data = response.json();
                 const review = data.review as Review;
-                return review
+                return review;
             })
             .catch(this.handleError);
     }

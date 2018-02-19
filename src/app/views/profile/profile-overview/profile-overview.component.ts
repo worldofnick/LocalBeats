@@ -4,6 +4,7 @@ import { UserService } from '../../../services/auth/user.service';
 import { User } from '../../../models/user';
 import { Review } from '../../../models/review';
 import { ReviewService } from '../../../services/reviews/review.service';
+import { $ } from 'protractor';
 
 
 @Component({
@@ -16,9 +17,6 @@ export class ProfileOverviewComponent implements OnInit {
   @Input() user: User;
   @Input() onOwnProfile: boolean;
 
-  // user:User;
-
-  // onOwnProfile: boolean = null;
   userID: any = null;
   reviews: Review[] = [];
   activityData = [{
@@ -62,23 +60,27 @@ export class ProfileOverviewComponent implements OnInit {
   constructor(private route: ActivatedRoute, 
               private userService: UserService,
               private reviewService: ReviewService) { }
-  
+
   ngOnInit() {
-    //get reviews to this user. 
-    if(this.user){
+    // get reviews to this user.
+    if (this.user) {
       console.log(this.onOwnProfile);
-      this.reviewService.getReviewsTo(this.user).then((reviewList:Review[])=>{
+      this.reviewService.getReviewsTo(this.user).then((reviewList: Review[]) => {
         this.reviews = reviewList;
-      })
+      });
     }
 
     // this.eventService.getEventByEID(this.EID).then((event: Event) => {
 
   }
 
-  reviewUser(){
-    console.log(this.user);
-    console.log(this.userService.user);
+  reviewUser() {
+    const date: Date = new Date();
+    const newReview: Review = new Review(null, 'best review', 'hello world', 4,
+                      this.userService.user, this.user, date, 0);
+    this.reviewService.createReview(newReview).then((review: Review) => {
+      console.log('created review', review);
+    });
   }
 
 }

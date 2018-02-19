@@ -9,10 +9,8 @@ var ReviewSchema = new Schema({
     title           : {type: String, required: true},
     text            : {type: String, required: true},
     rating          : {type: Number, required: true},
-    fromUser        : {type: String, required: true},
     toUser          : {type: Schema.Types.ObjectId, ref: 'User' },
-    toUser          : {type: Schema.Types.ObjectId, ref: 'User' },
-    event           : {type: Schema.Types.ObjectId, ref: 'Events' },
+    fromUser        : {type: Schema.Types.ObjectId, ref: 'User' },
     date            : {type: Date, default: Date.now},
     flagCount       : {type: Number, default: 0}
 }, {strict: true}, {versionKey: false});

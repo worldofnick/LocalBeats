@@ -1,7 +1,7 @@
 import { User } from 'app/models/user';
 import { Event } from 'app/models/event';
 
-export class Booking { 
+export class Booking {
     constructor(
     public _id: string,
     public bookingType: string,
@@ -15,7 +15,7 @@ export class Booking {
     public artistStatusMessage: StatusMessages,
     public completed: boolean,
     public artistApproved: boolean,
-    public hostApproved: boolean, 
+    public hostApproved: boolean,
     public currentPrice: number
     ) {  }
 }

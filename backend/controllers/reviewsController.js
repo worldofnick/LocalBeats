@@ -9,7 +9,7 @@ var config    = require('../../config.js');
 // ====== Reviews ROUTES ======
 
 exports.listAllReviews = function (req, res) {
-    Reviews.find({}).populate("fromUser").populate("toUser").populate("event").exec( function (err, reviews) {
+    Reviews.find({}).populate("fromUser").populate("toUser").exec( function (err, reviews) {
       if (err)
         return res.send(err);
             
@@ -18,7 +18,7 @@ exports.listAllReviews = function (req, res) {
 };
 
 exports.getReviewByID = function (req, res) {
-  Reviews.findById(req.params.rid).populate("fromUser").populate("toUser").populate("event").exec( function (err, review) {
+  Reviews.findById(req.params.rid).populate("fromUser").populate("toUser").exec( function (err, review) {
       if (err) {
           return res.status(500).send("Failed to get review");
       } else {
@@ -28,15 +28,17 @@ exports.getReviewByID = function (req, res) {
 };
 
 exports.createReview = function (req, res) {
+    // console.log(req.body.review);
     var newReview = new Reviews(req.body.review);
     newReview.save(function (err, review) {
+        console.log(review);
         if (err) {
             return res.status(400).send({
                 message: err,
                 description: "Failed to create a review"
             });
         } else {
-            Reviews.findById(review._id).populate("fromUser").populate("toUser").populate("event").exec(function (err, review) {
+            Reviews.findById(review._id).populate("fromUser").populate("toUser").exec(function (err, review) {
                 if (err) {
                     return res.status(500).send("Failed to create review");
                 } else {
@@ -52,7 +54,7 @@ exports.updateReviewByID = function (req, res) {
         if (err) {
             return res.status(500).send("There was a problem updating the review.");
         }
-        Reviews.findById(review._id).populate("fromUser").populate("toUser").populate("event").exec(function (err, review) {
+        Reviews.findById(review._id).populate("fromUser").populate("toUser").exec(function (err, review) {
             if (err) {
                 return res.status(500).send("Failed to update review");
             } else {
@@ -89,7 +91,7 @@ exports.getUserReviewsByUIDTo = function (req, res) {
       skip = parseInt(req.query.skip);
   }
   
-  Reviews.find({toUID: req.query.uid}).limit(limit).skip(skip).populate("fromUser").populate("toUser").populate("event").exec(function (err, doc) {
+  Reviews.find({toUID: req.query.uid}).limit(limit).skip(skip).populate("fromUser").populate("toUser").exec(function (err, doc) {
       if (err) {
           return res.status(500).send("Failed to get user reviews");
       } else {
@@ -111,7 +113,7 @@ exports.getUserReviewsByUIDFrom = function (req, res) {
       skip = parseInt(req.query.skip);
   }
 
-  Reviews.find({fromUID: req.query.uid}).limit(limit).skip(skip).populate("fromUser").populate("toUser").populate("event").exec(function (err, doc) {
+  Reviews.find({fromUID: req.query.uid}).limit(limit).skip(skip).populate("fromUser").populate("toUser").exec(function (err, doc) {
       if (err) {
           return res.status(500).send("Failed to get user reviews");
       } else {
