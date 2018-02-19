@@ -14,7 +14,7 @@ import { SocketService } from 'app/services/chats/socket.service';
 // Data Models
 import { User } from '../../../models/user';
 import { Event } from '../../../models/event';
-import { Booking, StatusMessages, NegotiationResponses } from '../../../models/booking';
+import { Booking, StatusMessages, NegotiationResponses, VerificationResponse } from '../../../models/booking';
 import { Action } from '../../../services/chats/model/action';
 import { SocketEvent } from '../../../services/chats/model/event';
 import { Notification } from '../../../models/notification';
@@ -209,7 +209,18 @@ export class ProfileEventsComponent implements OnInit {
   }
 
   hostVerify(booking: Booking, bookingIndex: number, eventIndex: number) {
-    
+    this.bookingService.verify(booking, true)
+    .subscribe((result)=> {
+      // Check to see if a response was recorded in the verification dialog box
+      if(result != undefined) {
+        // Check to see what the response was
+        if(result.response == VerificationResponse.verify) {
+          // The host has verified the artist's attendance
+        } else {
+          // The host has rejected verification of the artist's attendance
+        }
+      }
+    })
   }
 
   openNegotiationDialog(booking: Booking, bookingIndex: number, eventIndex: number) {

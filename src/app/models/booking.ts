@@ -38,3 +38,8 @@ export enum NegotiationResponses {
     nochange = 3, // No change on the user's current offer/bid/application/request
     cancel = 4, // Cancellation of a confirmed booking
 }
+
+export enum VerificationResponse {
+    reject = 0,
+    verify = 1
+}

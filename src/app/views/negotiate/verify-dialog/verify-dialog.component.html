@@ -1,0 +1,22 @@
+<h1 matDialogTitle>{{title}}</h1>
+<div mat-dialog-content>{{subtext}}</div>
+<br>
+<form mat-dialog-content [formGroup]="negotiationForm" (ngSubmit)="submit()">
+    <mat-form-field class="full-width">
+        <textarea matInput [formControl]="negotiationForm.controls['comment']" placeholder="Leave a comment"></textarea>
+    </mat-form-field>
+</form>
+<div mat-dialog-actions>
+<button 
+type="button" 
+mat-raised-button
+color="primary" 
+(click)="verify()">{{acceptButtonText}}</button>
+&nbsp;
+<span fxFlex></span>
+<button 
+type="button"
+color="accent"
+mat-raised-button 
+(click)="reject()">{{declineButtonText}}</button>
+</div>`

@@ -14,6 +14,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 
 import { NegotiateDialogComponent } from './negotiate-dialog/negotiate-dialog.component';
+import { VerifyDialogComponent } from './verify-dialog/verify-dialog.component';
 
 @NgModule({
   imports: [
@@ -31,7 +32,7 @@ import { NegotiateDialogComponent } from './negotiate-dialog/negotiate-dialog.co
     ReactiveFormsModule
   ],
   exports: [NegotiateDialogComponent],
-  declarations: [NegotiateDialogComponent],
+  declarations: [NegotiateDialogComponent, VerifyDialogComponent],
   providers: [],
   entryComponents: [NegotiateDialogComponent]
 })
