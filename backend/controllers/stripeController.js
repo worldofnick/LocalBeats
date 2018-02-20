@@ -213,7 +213,7 @@ exports.stripeTransfers = function (req, res) {
   */
  exports.bookingPaymentStatus = function (req, res) {
    // Find the last payment associated with this event
-   var query = { eid: req.query.bid };
+   var query = { booking: req.query.bid };
    var sort = {_id: -1};
    
    Payments.find(query).limit(1).skip(0).sort(sort).exec(function (err, payment) {
@@ -225,3 +225,63 @@ exports.stripeTransfers = function (req, res) {
    });
    res.send({"status": "waiting"});
  };
+
+
+  /**
+  * PUT /api/payments/cancel
+  * Params: Booking via body, cancel_type={host-cancel, artist-cancel}
+  * Sends back 200 for a good cancel charge, 500 otherwise
+  */
+  exports.cancelBoookingFee = function (req, res) {
+    // If cancel_type == "host-cancel", then charge the host
+    var stripeAccountId = req.body.booking.hostUser;
+    if (req.query.cancel_type == "artist-cancel") {
+      stripeAccountId = req.body.booking.performerUser;
+    }
+    var feeAmount = booking.currentPrice * 0.15;
+    stripe.charges.create({
+      amount: feeAmount,
+      currency: "usd",
+      source: "tok_visa",
+      destination: {
+        account: stripeAccountId,
+      },
+    }).then(function(charge) {
+      // asynchronously called
+  
+      // Create new payment
+      var payment = new Payments();
+      payment.hostUser = booking.hostUser;
+      payment.performerUser = booking.performerUser;
+      payment.booking =  booking;
+      payment.amount =  booking.currentPrice;
+      payment.date = new Date();
+      payment.stripeChargeId = charge.id; // check if this is right
+      payment.type = "cancellation";
+  
+      payment.save();
+  
+      res.sendStatus(200);
+    });
+    
+    res.sendStatus(500);
+  };
+
+   /**
+  * GET /api/payments/bookingPaymentStatus
+  *
+  * Sends back an array of payments associated with a booking via bid
+  */
+  exports.bookingPayments = function (req, res) {
+    // Find all payments associated with a booking
+    var query = { booking: req.query.bid };
+    
+    Payments.find(query).exec(function (err, payments) {
+      if (err) {
+        res.status(403).send({"error": "Error in MongoDB"});
+      } else {
+        res.send({"payments": payments})
+      }
+    });
+    res.send({"status": "waiting"});
+  };

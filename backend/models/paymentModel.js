@@ -12,7 +12,7 @@ var Schema = mongoose.Schema;
      amount            : {type: Number},
      date              : {type: Date},
      stripeChargeId    : {type: String},
-     type              : {type: String} // {"payment", "refund"}
+     type              : {type: String} // {"payment", "refund", "cancellation"}
  }, {strict: true});
 
 
