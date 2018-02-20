@@ -24,6 +24,7 @@ import { NotificationService} from './services/notification/notification.service
 import { ChatsService} from './services/chats/chats.service';
 import { SocketService } from './services/chats/socket.service';
 import { DatePipe } from '@angular/common'
+import { StripeService } from './services/payments/stripe.service';
 
 
 export function createTranslateLoader(http: Http) {
@@ -62,7 +63,8 @@ export function createTranslateLoader(http: Http) {
     EventService,
     UserGuard,
     DatePipe,
-    ImgurService
+    ImgurService,
+    StripeService
   ],
   bootstrap: [AppComponent]
 })

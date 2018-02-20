@@ -54,7 +54,8 @@ export class AuthComponent implements OnInit {
       city: '',
       state: '',
       location: null,
-      isOnline: true
+      isOnline: true, 
+      stripeAccountId: null
     };
 
     this.submitButton.disabled = true;
