@@ -107,7 +107,8 @@ export class RegisterComponent implements OnInit {
       city: '',
       state: '',
       location: null,
-      isOnline: true
+      isOnline: true,
+      stripeAccountId: null
     };
 
     if (this.longitude != null && this.signupForm.get('location').value != '') {
