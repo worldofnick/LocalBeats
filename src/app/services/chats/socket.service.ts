@@ -9,6 +9,7 @@ import { Message } from './model/message';
 import { SocketEvent } from './model/event';
 import { Action } from './model/action';
 import { SocketNotification } from './model/socketNotification';
+import { environment } from '../../../environments/environment';
 
 import * as io from 'socket.io-client';
 
@@ -16,7 +17,7 @@ import * as io from 'socket.io-client';
 //   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
 // };
 
-const SERVER_URL = 'http://localhost:8080'; //TODO: or env.url + port (heroku)
+const SERVER_URL = environment.apiURL; //TODO: or env.url + port (heroku)
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
 };
@@ -51,7 +52,7 @@ export class SocketService {
     console.log("emitting a send notification event for :")
     console.log(notificationPayload);
     console.log(SERVER_URL)
-    this.http.post(SERVER_URL + '/api/notification/', body, httpOptions);
+    this.http.post(SERVER_URL + 'api/notification/', body, httpOptions);
     
     this.socket.emit(eventName, notificationPayload);
   }

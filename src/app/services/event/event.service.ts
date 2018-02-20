@@ -4,14 +4,12 @@ import { Http, Headers, RequestOptions, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import { User } from 'app/models/user';
 import { Event } from 'app/models/event';
-
+import { environment } from '../../../environments/environment';
 
 @Injectable()
 export class EventService {
-    public connection: string = 'http://localhost:8080/api/events';
-    public listConnection:string = 'http://localhost:8080/api/userEvents';
-    // public connection: string = 'https://localbeats.herokuapp.com/api/events';
-    // public listConnection: string = 'https://localbeats.herokuapp.com/api/userEvents';
+    public connection: string = environment.apiURL + 'api/events';
+    public listConnection:string = environment.apiURL + 'api/userEvents';
     public accessToken: string = null;
     public user: User = null;
     public event: Event = null;

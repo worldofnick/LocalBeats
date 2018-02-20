@@ -215,13 +215,16 @@ export class CreateEventsComponent implements OnInit {
   }
 
   onChange(event: EventTarget) {
-      this.progressBar.mode = 'indeterminate';
       let eventObj: MSInputMethodContext = <MSInputMethodContext> event;
       let target: HTMLInputElement = <HTMLInputElement> eventObj.target;
       let files: FileList = target.files;
       let file: File = files[0];
       let blob = file as Blob;
 
+      if (!blob) {
+        return;
+      }
+      this.progressBar.mode = 'indeterminate';
       this.imgurService.uploadToImgur(file).then(link => {
         this.event.eventPicUrl = link as string;
       }).then(link => {
