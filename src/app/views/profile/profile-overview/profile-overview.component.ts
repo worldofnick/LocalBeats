@@ -6,6 +6,11 @@ import { Review } from '../../../models/review';
 import { ReviewService } from '../../../services/reviews/review.service';
 import { $ } from 'protractor';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
+import { FormGroup, FormControl, Validators, FormArray, FormBuilder } from '@angular/forms';
+import { SocketService } from '../../../services/chats/socket.service';
+import { SocketEvent } from '../../../services/chats/model/event';
+import { NgForm } from '@angular/forms/src/directives/ng_form';
+
 
 
 @Component({
@@ -59,12 +64,13 @@ export class ProfileOverviewComponent implements OnInit {
   }, {
     name: 'Featured Wedding',
     url: 'assets/images/wedding-pic.jpg'
-  }]
+  }];
 
   constructor(private route: ActivatedRoute,
               private userService: UserService,
               private reviewService: ReviewService,
-              public dialog: MatDialog) { }
+              public dialog: MatDialog,
+              private _socketService: SocketService) { }
 
   ngOnInit() {
     // get reviews to this user.
@@ -73,52 +79,91 @@ export class ProfileOverviewComponent implements OnInit {
       this.reviewService.getReviewsTo(this.user).then((reviewList: Review[]) => {
         this.reviews = reviewList;
       });
-    }
-
-    // this.eventService.getEventByEID(this.EID).then((event: Event) => {
-
+    } 
   }
 
 
   reviewUser() {
-    const date: Date = new Date();
-    const newReview: Review = new Review(null, 'best review', 'hello world', 4,
-                      this.userService.user, this.user, date, 0);
-    this.reviewService.createReview(newReview).then((review: Review) => {
-      console.log('created review', review);
-    });
+    // const newReview: Review = new Review(null, 'best review', 'hello world', 4,
+    //                   this.userService.user, this.user, date, 0);
+   
   }
 
   openDialog(): void {
-    let dialogRef = this.dialog.open(ReviewDialogComponent, {
-      width: '250px',
-      data: { name: this.name, animal: this.animal }
-    });
 
+    let dialogRef = this.dialog.open(ReviewDialogComponent, {
+      width: '500px',
+      data: { name: this.user.firstName}
+    });
+    
+    
     dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
-      this.animal = result;
+      let currentReview: Review = new Review();
+      console.log('The dialog was closed', result);
+      const date: Date = new Date();
+      currentReview._id = null;
+      currentReview.date = date;
+      currentReview.title = result.title.value;
+      currentReview.text = result.text.value;
+      currentReview.toUser = this.user;
+      currentReview.rating = 0;
+      currentReview.fromUser = this.userService.user;
+      currentReview.flagCount = 0;
+      console.log('about to create', currentReview);
+      this.reviewService.createReview(currentReview).then((review: Review) => {
+        console.log('created review ');
+      });
     });
   }
 
 }
 
+
+
+/*********************************************
+ *********************************************
+ *       Review Dialog Component
+ *********************************************
+ *********************************************/
+
+
+
 @Component({
-  selector: 'review-dialog',
+  selector: 'app-review-dialog',
   templateUrl: 'review-dialog.html',
 })
 export class ReviewDialogComponent {
 
+  reviewForm: FormGroup;
+
   constructor(
     public dialogRef: MatDialogRef<ReviewDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any) { }
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private formBuilder: FormBuilder,
+    private _socketService: SocketService) { }
+
+
+  ngOnInit() {
+    this.createForm();
+  }
 
   onNoClick(): void {
     this.dialogRef.close();
   }
 
-  onYesClick(): void {
-    this.dialogRef.close();
+  onYesClick(form: NgForm): void {
+    this.dialogRef.close({title: this.reviewForm.get('title'), text: this.reviewForm.get('text')});
+  }
+
+  createForm() {
+    this.reviewForm = this.formBuilder.group({
+      title: new FormControl('', [
+        Validators.required
+      ]),
+      text: new FormControl('', [
+        Validators.required
+      ]),
+      });
   }
 
 }

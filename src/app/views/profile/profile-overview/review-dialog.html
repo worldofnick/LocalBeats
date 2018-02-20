@@ -1,11 +1,13 @@
-<h1 mat-dialog-title>Hi {{data.name}}</h1>
-<div mat-dialog-content>
-    <p>Review:</p>
-    <mat-form-field>
-        <input matInput [(ngModel)]="data.animal">
+<form [formGroup]="reviewForm" (ngSubmit)="onYesClick()">
+    <h2 mat-dialog-title>Leave a review for: {{data.name}}</h2>
+    <mat-form-field class="full-width">
+        <input matInput name="title" placeholder="Title:" formControlName="title">
     </mat-form-field>
-</div>
-<div mat-dialog-actions>
-    <button ype="button" color="accent" mat-raised-button (click)="onNoClick()">No Thanks</button>
-    <button ype="button" color="accent" mat-raised-button (click)="onYesClick()">Ok</button>
-</div>
+
+    <textarea matInput placeholder="Review:" matTextareaAutosize 
+    matAutosizeMinRows="5" matAutosizeMaxRows="10" name="text" formControlName="text"></textarea>
+    <div mat-dialog-actions>
+        <button type="button" color="accent" mat-raised-button (click)="onNoClick()">Cancel</button>
+        <button color="accent" mat-raised-button>Submit Review</button>
+    </div>
+</form>

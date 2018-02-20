@@ -25,7 +25,7 @@ export class ReviewService {
 
     // POST Create review
     public createReview(newReview: Review): Promise<Review> {
-        console.log(newReview);
+        console.log('printing review in create review', newReview);
         const current = this.connection + '/create';
         return this.http.post(current, { review: newReview }, { headers: this.headers })
             .toPromise()

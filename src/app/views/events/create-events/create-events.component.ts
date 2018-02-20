@@ -92,7 +92,7 @@ export class CreateEventsComponent implements OnInit {
               private ngZone: NgZone,
               ) { }
 
-              
+
   ngOnInit() {
     this.event.eventType = "Wedding"
   
@@ -138,7 +138,6 @@ export class CreateEventsComponent implements OnInit {
         }
       });
     }
-    
   }
 
   setForm(){

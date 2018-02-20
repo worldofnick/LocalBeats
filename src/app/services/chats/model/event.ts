@@ -10,9 +10,9 @@ export enum SocketEvent {
     REQUEST_MSG_FROM_PROFILE_BUTTON = 'requestNewMsgFromProfileButtonClick',
     NOTIFY_SERVER_CHAT_LOADED = 'chatComponentDoneLoading',
     OPEN_SNACK_BAR_PM = 'openPmSnackBarThread',
-    //notifications
     REQUEST_NOTIFICATIONS = 'notifications',
     REQUEST_NOTIFICATION_COUNT = 'notificationCount',
     SEND_NOTIFICATION = 'sendNotification',
-    UPDATE_PROFILE = 'updateProfile'
+    UPDATE_PROFILE = 'updateProfile',
+    NEW_REVIEW = 'newReview'
 }

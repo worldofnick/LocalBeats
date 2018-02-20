@@ -4,6 +4,8 @@ import { Observable } from 'rxjs/Observable';
 import { Observer } from 'rxjs/Observer';
 // import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { User } from '../../models/user';
+import { Review } from '../../models/review';
+
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Message } from './model/message';
 import { SocketEvent } from './model/event';
@@ -44,6 +46,11 @@ export class SocketService {
 
   public sendToProfile(eventName: string, user: User): void {
     this.socket.emit(eventName, user);
+  }
+
+  public addedReview(eventName: string, review: Review): void {
+    console.log("emitting ", eventName, ' ' , review);
+    this.socket.emit(eventName, review);
   }
 
   public sendNotification(eventName: SocketEvent, notificationPayload: SocketNotification):void {
