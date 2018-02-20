@@ -101,6 +101,39 @@ export class StripeService {
         .catch(this.handleError);
   }
 
+
+  public getBookingPayments(booking: Booking): Promise<Payment[]> {
+    const current = this.connectionPayments + '/bookingPayments/';
+
+    let params: URLSearchParams = new URLSearchParams();
+    params.set('bid', booking._id);
+    
+    return this.http.get(current, { headers: this.headers, search: params  })
+        .toPromise()
+        .then((response: Response) => {
+            const data = response.json();
+            const payments = data.payments as Payment[];
+            return payments
+        })
+        .catch(this.handleError);
+}
+
+  // Make a request to our backend to charge the user for cancelling
+  // Returns true if successful, false otherwise.
+  public cancelBookingFee(booking: Booking, cancelType: string): Promise<boolean> {
+    const current = this.connection + '/cancel?cancel_type=' + cancelType;
+    return this.http.post(current, { booking: booking }, { headers: this.headers })
+        .toPromise()
+        .then((response: Response) => {
+            if (response.status == 200) {
+              return true;
+            } else {
+              return false;
+            }
+        })
+        .catch(this.handleError);
+  }
+
   private handleError(error: any): Promise<any> {
       let errMsg = (error.message) ? error.message :
           error.status ? `${error.status} - ${error.statusText}` : 'Server error';

@@ -30,6 +30,6 @@ module.exports = function(app) {
 		.put(stripeHandlers.cancelBoookingFee);
 
 	// Route for getting payments associated with a booking		
-	app.route('/api/payments/bookingPaymentStatus')
+	app.route('/api/payments/bookingPayments')
 		.get(stripeHandlers.bookingPayments);
 };

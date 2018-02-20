@@ -263,12 +263,12 @@ exports.stripeTransfers = function (req, res) {
   
       res.sendStatus(200);
     });
-    
+
     res.sendStatus(500);
   };
 
-   /**
-  * GET /api/payments/bookingPaymentStatus
+  /**
+  * GET /api/payments/bookingPayments
   *
   * Sends back an array of payments associated with a booking via bid
   */
