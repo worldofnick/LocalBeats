@@ -40,9 +40,9 @@ import { ProfileOverviewComponent } from './profile-overview/profile-overview.co
 import { ProfileSettingsComponent } from './profile-settings/profile-settings.component';
 import { ProfileBlankComponent } from './profile-blank/profile-blank.component';
 import { ProfileRoutes } from "./profile.routing";
-import { ProfileEventsComponent } from './profile-events/profile-events.component';
+import { ProfileEventsComponent, ConfirmPaymentDialog } from './profile-events/profile-events.component';
 import { ProfileRequestComponent } from './profile-request/profile-request.component';
-import { ProfilePerformancesComponent } from './profile-performances/profile-performances/profile-performances.component';
+import { ProfilePerformancesComponent, RefundPaymentDialog } from './profile-performances/profile-performances/profile-performances.component';
 import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
@@ -92,6 +92,9 @@ import { ReactiveFormsModule } from '@angular/forms';
     CommonPipesModule,
     RouterModule.forChild(ProfileRoutes)
   ],
-  declarations: [ProfileComponent, ProfileOverviewComponent, ProfileSettingsComponent, ProfileBlankComponent, ProfileEventsComponent, ProfileRequestComponent, ProfilePerformancesComponent]
+  declarations: [ConfirmPaymentDialog, RefundPaymentDialog, ProfileComponent, ProfileOverviewComponent, ProfileSettingsComponent, ProfileBlankComponent, ProfileEventsComponent, ProfileRequestComponent, ProfilePerformancesComponent],
+  exports: [ConfirmPaymentDialog, RefundPaymentDialog],
+  providers: [],
+  entryComponents: [ConfirmPaymentDialog, RefundPaymentDialog]
 })
 export class ProfileModule { }

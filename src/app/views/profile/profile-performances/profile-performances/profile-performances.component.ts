@@ -1,15 +1,16 @@
 // Angular Modules
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { ActivatedRoute } from "@angular/router";
 import { NgForm } from '@angular/forms/src/directives/ng_form';
 import { Router } from "@angular/router";
-import { MatTabChangeEvent } from '@angular/material';
+import { MatTabChangeEvent, MatSnackBar, MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
 // Services
 import { UserService } from '../../../../services/auth/user.service';
 import { BookingService } from '../../../../services/booking/booking.service';
 import { EventService } from '../../../../services/event/event.service';
 import { SocketService } from 'app/services/chats/socket.service';
+import { StripeService } from 'app/services/payments/stripe.service';
 
 // Data Models
 import { User } from '../../../../models/user';
@@ -43,7 +44,8 @@ export class ProfilePerformancesComponent implements OnInit {
     private bookingService: BookingService,
     private route: ActivatedRoute,
     private router: Router,
-    private _socketService: SocketService
+    private _socketService: SocketService,
+    public dialog: MatDialog
     ) {
       // Set user model to the authenticated singleton user
       this.user = this.userService.user;
@@ -306,6 +308,51 @@ export class ProfilePerformancesComponent implements OnInit {
     };
     this.router.navigate(['/chat']);
     this._socketService.send(Action.REQUEST_MSG_FROM_PROFILE_BUTTON, message);
+  }
+
+  showRefundDialog(booking: Booking) {
+    let dialogRef: MatDialogRef<RefundPaymentDialog>;
+    dialogRef = this.dialog.open(RefundPaymentDialog, {
+        width: '250px',
+        disableClose: false,
+        data: { booking }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      this.getPerformances(); // refresh bookings
+    });
+  }
+
+}
+
+@Component({
+  selector: 'refund-confirm-dialog',
+  templateUrl: 'refund-confirm-dialog.html',
+})
+export class RefundPaymentDialog {
+
+  constructor(
+    public dialogRef: MatDialogRef<RefundPaymentDialog>, private stripeService: StripeService, public snackBar: MatSnackBar,
+    @Inject(MAT_DIALOG_DATA) public data: any) { }
+
+  onNoClick(): void {
+    this.dialogRef.close();
+  }
+
+  onOkClick(): void {
+    this.stripeService.charge
+    this.stripeService.refund(this.data.booking).then((success: boolean) => {
+      this.dialogRef.close();
+      if (success) {
+        let snackBarRef = this.snackBar.open('Refund sent!', "", {
+          duration: 1500,
+        });
+      } else {
+        let snackBarRef = this.snackBar.open('Refund failed, please try again.', "", {
+          duration: 1500,
+        });
+      }
+    });
   }
 
 }

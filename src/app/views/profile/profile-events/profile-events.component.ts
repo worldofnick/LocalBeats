@@ -1,15 +1,18 @@
 // Angular Modules
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { ActivatedRoute } from "@angular/router";
 import { NgForm } from '@angular/forms/src/directives/ng_form';
 import { Router } from "@angular/router";
 import { MatTabChangeEvent } from '@angular/material';
+import {MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatSnackBar} from '@angular/material';
+
 
 // Services
 import { UserService } from '../../../services/auth/user.service';
 import { BookingService } from '../../../services/booking/booking.service';
 import { EventService } from '../../../services/event/event.service';
 import { SocketService } from 'app/services/chats/socket.service';
+import { StripeService } from 'app/services/payments/stripe.service';
 
 // Data Models
 import { User } from '../../../models/user';
@@ -45,7 +48,8 @@ export class ProfileEventsComponent implements OnInit {
     private bookingService: BookingService,
     private route: ActivatedRoute,
     private router: Router,
-    private _socketService: SocketService
+    private _socketService: SocketService,
+    public dialog: MatDialog
   ) {
     // Set user model to the authenticated singleton user
     this.user = this.userService.user;
@@ -321,10 +325,48 @@ export class ProfileEventsComponent implements OnInit {
   }
 
   showPayDialog(booking: Booking) {
+    let dialogRef: MatDialogRef<ConfirmPaymentDialog>;
+    dialogRef = this.dialog.open(ConfirmPaymentDialog, {
+        width: '250px',
+        disableClose: false,
+        data: { booking }
+    });
 
+    dialogRef.afterClosed().subscribe(result => {
+      this.getEvents(); // refresh events
+    });
   }
 
-  showRefundDialog(booking: Booking) {
-    
+}
+
+@Component({
+  selector: 'payment-confirm-dialog',
+  templateUrl: 'payment-confirm-dialog.html',
+})
+export class ConfirmPaymentDialog {
+
+  constructor(
+    public dialogRef: MatDialogRef<ConfirmPaymentDialog>, private stripeService: StripeService, public snackBar: MatSnackBar,
+    @Inject(MAT_DIALOG_DATA) public data: any) { }
+
+  onNoClick(): void {
+    this.dialogRef.close();
   }
+
+  onOkClick(): void {
+    this.stripeService.charge
+    this.stripeService.charge(this.data.booking).then((success: boolean) => {
+      this.dialogRef.close();
+      if (success) {
+        let snackBarRef = this.snackBar.open('Payment sent!', "", {
+          duration: 1500,
+        });
+      } else {
+        let snackBarRef = this.snackBar.open('Payment failed, please try again.', "", {
+          duration: 1500,
+        });
+      }
+    });
+  }
+
 }
