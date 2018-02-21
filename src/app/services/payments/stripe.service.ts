@@ -122,6 +122,16 @@ export class StripeService {
         .toPromise()
         .then((response: Response) => {
             if (response.status == 200) {
+              let sender = booking.hostUser;
+              let rec = booking.performerUser;
+              if (cancelType == "artist_cancel") {
+                sender = booking.performerUser;
+                rec = booking.hostUser;
+              }
+              let message = booking.hostUser + " has paid you $" + booking.currentPrice +   " for cancelling " + booking.eventEID.eventName;
+              let notification = new Notification(sender, rec, booking.eventEID._id,
+                booking, null, message, "payment", ['/events', booking.eventEID._id]);
+              this._socketService.sendNotification(SocketEvent.SEND_NOTIFICATION, notification);
               return true;
             } else {
               return false;
