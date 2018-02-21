@@ -79,15 +79,9 @@ export class ProfileOverviewComponent implements OnInit {
       this.reviewService.getReviewsTo(this.user).then((reviewList: Review[]) => {
         this.reviews = reviewList;
       });
-    } 
+    }
   }
 
-
-  reviewUser() {
-    // const newReview: Review = new Review(null, 'best review', 'hello world', 4,
-    //                   this.userService.user, this.user, date, 0);
-   
-  }
 
   openDialog(): void {
 
@@ -95,9 +89,11 @@ export class ProfileOverviewComponent implements OnInit {
       width: '500px',
       data: { name: this.user.firstName}
     });
-    
-    
+
     dialogRef.afterClosed().subscribe(result => {
+      if(result == null){
+        return;
+      }
       let currentReview: Review = new Review();
       console.log('The dialog was closed', result);
       const date: Date = new Date();
@@ -112,6 +108,7 @@ export class ProfileOverviewComponent implements OnInit {
       console.log('about to create', currentReview);
       this.reviewService.createReview(currentReview).then((review: Review) => {
         console.log('created review ');
+        this.reviews.push(currentReview);
       });
     });
   }
@@ -143,6 +140,7 @@ export class ReviewDialogComponent {
     private _socketService: SocketService) { }
 
 
+  // this needs to be ngOnInit, not onInit.
   ngOnInit() {
     this.createForm();
   }
