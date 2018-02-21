@@ -29,6 +29,7 @@ import { Message } from '../../../services/chats/model/message';
 export class ProfileEventsComponent implements OnInit {
   // User Model
   user: User;
+  paymentStatues: string[];
   // Hosted Events of the User Model
   events: {
     event: Event,
@@ -83,6 +84,10 @@ export class ProfileEventsComponent implements OnInit {
               if(!booking.hostViewed) {
                 numConf++;
               }
+              this.paymentStatues = [];
+              this.bookingService.bookingPaymentStatus(booking).then((status: string) => {
+                this.paymentStatues.push(status);
+              });
             } else {
               // Check to see if the artist applied
               if(booking.bookingType == 'artist-apply') {

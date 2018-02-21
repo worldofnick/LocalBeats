@@ -91,8 +91,8 @@
             <mat-card-actions>
               <button (click)="openNegotiationDialog(booking, i, j)" mat-raised-button color="primary">Cancel Booking</button>
               <button (click)="messageArtist(booking)" mat-raised-button color="accent">Message Artist</button>
-              <button *ngIf="this.bookingService.bookingPaymentStatus(booking) != paid" (click)="payBooking(booking)" mat-raised-button color="primary">Pay Artist</button>
-              <button *ngIf="this.bookingService.bookingPaymentStatus(booking) == paid" (click)="refundBooking(booking)" mat-raised-button color="accent">Refund Artist</button>
+              <button *ngIf="this.paymentStatues[i] != 'paid' && this.paymentStatues[i] != 'cancellation'" (click)="showPayDialog(booking)" mat-raised-button color="primary">Pay Artist {{booking.currentPrice | currency}}</button>
+              <button *ngIf="this.paymentStatues[i] == 'paid' && this.paymentStatues[i] != 'cancellation'" (click)="showRefundDialog(booking)" mat-raised-button color="accent">Refund Artist {{booking.currentPrice | currency}}</button>
             </mat-card-actions>
           </mat-card>
         </mat-tab>

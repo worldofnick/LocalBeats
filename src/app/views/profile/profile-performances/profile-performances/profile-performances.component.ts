@@ -88,8 +88,6 @@ export class ProfilePerformancesComponent implements OnInit {
             }
             this.paymentStatues = [];
             this.bookingService.bookingPaymentStatus(booking).then((status: string) => {
-              console.log(status);
-              this.paymentStatues.push
               this.paymentStatues.push(status);
             }
           );
