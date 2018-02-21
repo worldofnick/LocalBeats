@@ -221,6 +221,8 @@ exports.stripeTransfers = function (req, res) {
        res.send({"status": "paid"});
      } else if (payment.type == "refund") {
        res.send({"status": "refund"});
+     } else if (payment.type == "cancellation") {
+      res.send({"status": "cancellation"});
      }
    });
    res.send({"status": "waiting"});

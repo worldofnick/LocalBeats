@@ -76,9 +76,10 @@
         <mat-card-content>
         </mat-card-content>
         <mat-card-actions>
-            <mat-chip *ngIf="this.bookingService.bookingPaymentStatus(booking) == paid" color="primary" selected="true">Paid</mat-chip>
-            <mat-chip *ngIf="this.bookingService.bookingPaymentStatus(booking) == unpaid" color ="accent" selected="true">Unpaid</mat-chip>
-            <mat-chip *ngIf="this.bookingService.bookingPaymentStatus(booking) == refunded" color ="accent" selected="true">Refunded</mat-chip>
+            <mat-chip *ngIf="this.paymentStatues[i] == 'paid'" color="primary" selected="true">Paid</mat-chip>
+            <mat-chip *ngIf="this.paymentStatues[i] == 'waiting'" color ="accent" selected="true">Unpaid</mat-chip>
+            <mat-chip *ngIf="this.paymentStatues[i] == 'refund'" color ="accent" selected="true">Refunded</mat-chip>
+            <mat-chip *ngIf="this.paymentStatues[i] == 'cancellation'" color ="accent" selected="true">Canceled</mat-chip>
           <button (click)="openNegotiationDialog(booking, i)" mat-raised-button color="primary">Cancel Booking</button>
           <button (click)="messageHost(booking)" mat-raised-button color="accent">Message Host</button>
         </mat-card-actions>

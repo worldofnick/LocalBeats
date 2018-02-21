@@ -111,9 +111,9 @@ export class BookingService {
     }
 
     public bookingPaymentStatus(booking: Booking): Promise<String> {
-        const current = this.paymentBookingConnection + '/' + booking._id
+        const current = this.paymentBookingConnection + '/?bid=' + booking._id
         
-        return this.http.put(current, { headers: this.headers })
+        return this.http.get(current, { headers: this.headers })
             .toPromise()
             .then((response: Response) => {
                 const data = response.json();

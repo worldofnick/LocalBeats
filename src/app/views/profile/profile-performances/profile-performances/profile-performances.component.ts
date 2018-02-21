@@ -28,6 +28,7 @@ import { Message } from '../../../../services/chats/model/message';
 export class ProfilePerformancesComponent implements OnInit {
   // User Model
   user: User;
+  paymentStatues: string[];
   // Performances of the User Model
   performances: {
     applications: Booking[],
@@ -85,6 +86,13 @@ export class ProfilePerformancesComponent implements OnInit {
             if(!booking.artViewed) {
               numConf++;
             }
+            this.paymentStatues = [];
+            this.bookingService.bookingPaymentStatus(booking).then((status: string) => {
+              console.log(status);
+              this.paymentStatues.push
+              this.paymentStatues.push(status);
+            }
+          );
         } else {
           // Check to see if the artist applied
           if(booking.bookingType == 'artist-apply') {
