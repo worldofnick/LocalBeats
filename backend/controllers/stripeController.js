@@ -148,17 +148,18 @@ exports.stripeTransfers = function (req, res) {
    if (!booking.approved) {
      res.sendStatus(403);
    }
-
   stripe.charges.create({
     amount: booking.currentPrice,
     currency: "usd",
-    source: "tok_visa",
+    source: "tok_visa_debit",
     destination: {
       account: booking.hostUser.stripeAccountId,
     },
-  }).then(function(charge) {
+  }).then(function(charge, err) {
+    if (err) {
+      res.sendStatus(500);
+    }
     // asynchronously called
-
     // Create new payment
     var payment = new Payments();
     payment.hostUser = booking.hostUser;
@@ -173,7 +174,6 @@ exports.stripeTransfers = function (req, res) {
 
     res.sendStatus(200);
   });
-  res.sendStatus(500);
  };
 
  /**
