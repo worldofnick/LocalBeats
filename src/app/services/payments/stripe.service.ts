@@ -88,20 +88,6 @@ export class StripeService {
         .catch(this.handleError);
   }
 
-  // Make a request to our backend to request the payment status for a booking
-  // public getBookingPaymentStatus(booking: Booking): Promise<string> {
-  //   const current = this.connectionPayments + '/bookingPaymentStatus/?bid=' + booking._id;
-  //   return this.http.get(current, { headers: this.headers })
-  //       .toPromise()
-  //       .then((response: Response) => {
-  //           const data = response.json();
-  //           const status = data["status"];
-  //           return status;
-  //       })
-  //       .catch(this.handleError);
-  // }
-
-
   public getBookingPayments(booking: Booking): Promise<Payment[]> {
     const current = this.connectionPayments + '/bookingPayments/?bid=' + booking._id;
     
