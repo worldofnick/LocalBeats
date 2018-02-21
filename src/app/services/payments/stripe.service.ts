@@ -2,10 +2,13 @@
 import { Injectable } from '@angular/core';
 import { Http, Headers, RequestOptions, Response, URLSearchParams } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
+import { SocketService } from '../../services/chats/socket.service';
 import { User } from 'app/models/user';
 import { Event } from 'app/models/event';
 import { Booking } from 'app/models/booking';
 import { Payment } from 'app/models/payment';
+import { Notification } from '../../models/notification'
+import { SocketEvent } from '../../services/chats/model/event'
 import { environment } from '../../../environments/environment';
 
 @Injectable()
@@ -15,7 +18,7 @@ export class StripeService {
   public connectionPayments: string = environment.apiURL + 'api/payments';
   private headers: Headers = new Headers({ 'Content-Type': 'application/json' });
 
-  constructor(private http: Http) { }
+  constructor(private http: Http, private _socketService: SocketService) { }
 
   // Send the user to the Stripe website
   public authorizeStripe(user: User): Promise<string> {
@@ -65,6 +68,11 @@ export class StripeService {
         .toPromise()
         .then((response: Response) => {
             if (response.status == 200) {
+            // Send notification
+            let message = booking.hostUser + " has refunded you $" + booking.currentPrice +   " for " + booking.eventEID.eventName;
+            let notification = new Notification(booking.hostUser, booking.performerUser, booking.eventEID._id,
+              booking, null, message, "payment", ['/events', booking.eventEID._id]);
+            this._socketService.sendNotification(SocketEvent.SEND_NOTIFICATION, notification);
               return true;
             } else {
               return false;
@@ -80,6 +88,11 @@ export class StripeService {
         .toPromise()
         .then((response: Response) => {
             if (response.status == 200) {
+              // Send notification
+              let message = payment.hostUser + " has paid you $" + payment.booking.currentPrice +   " for " + payment.booking.eventEID.eventName;
+              let notification = new Notification(payment.performerUser, payment.hostUser, payment.booking.eventEID._id,
+                payment.booking, null, message, "payment", ['/events', payment.booking.eventEID._id]);
+              this._socketService.sendNotification(SocketEvent.SEND_NOTIFICATION, notification);
               return true;
             } else {
               return false;
