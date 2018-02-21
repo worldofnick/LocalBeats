@@ -319,4 +319,12 @@ export class ProfileEventsComponent implements OnInit {
     this.router.navigate(['/chat']);
     this._socketService.send(Action.REQUEST_MSG_FROM_PROFILE_BUTTON, message);
   }
+
+  showPayDialog(booking: Booking) {
+
+  }
+
+  showRefundDialog(booking: Booking) {
+    
+  }
 }
