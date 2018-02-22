@@ -13,6 +13,14 @@ module.exports = {
       facebook: {
         clientID: '',
         clientSecret: '',
+      },
+      spotify: {
+        clientID: '',
+        clientSecret: '',
+      },
+      soundcloud: {
+        clientID: '',
+        clientSecret: '',
       }
     },
     'secret': 'pikachuineedyou',
