@@ -1,7 +1,6 @@
 'use strict';
 
 var mongoose    = require('mongoose');
-var bcrypt      = require('bcrypt');
 var Bookings      = mongoose.model('Bookings');
 var Events      = mongoose.model('Events');
 var Notifications  = mongoose.model('Notification');
