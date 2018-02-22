@@ -82,16 +82,16 @@ export class StripeService {
   }
 
   // Make a request to our backend to request the Stripe API to refund this payment
-  public refund(payment: Payment): Promise<boolean> {
+  public refund(booking: Booking): Promise<boolean> {
     const current = this.connection + '/refund';
-    return this.http.post(current, { payment: payment }, { headers: this.headers })
+    return this.http.post(current, { booking: booking }, { headers: this.headers })
         .toPromise()
         .then((response: Response) => {
             if (response.status == 200) {
               // Send notification
-              let message = payment.booking.performerUser.firstName + " " + payment.booking.performerUser.lastName + " has refunded you $" + payment.booking.currentPrice +   " for " + payment.booking.eventEID.eventName;
-              let notification = new Notification(payment.performerUser, payment.hostUser, payment.booking.eventEID._id,
-                payment.booking, null, message, "payment", ['/events', payment.booking.eventEID._id]);
+              let message = booking.performerUser.firstName + " " + booking.performerUser.lastName + " has refunded you $" + booking.currentPrice +   " for " + booking.eventEID.eventName;
+              let notification = new Notification(booking.performerUser, booking.hostUser, booking.eventEID._id,
+                booking, null, message, "payment", ['/events', booking.eventEID._id]);
               this._socketService.sendNotification(SocketEvent.SEND_NOTIFICATION, notification);
               return true;
             } else {

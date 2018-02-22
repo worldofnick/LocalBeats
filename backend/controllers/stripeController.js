@@ -182,13 +182,28 @@ exports.stripeTransfers = function (req, res) {
  * Issues a refund for the given transaction
  */
  exports.stripeRefund = function (req, res) {
-   const payment = req.body.payment;
-   const booking = payment.booking;
+   const booking = req.body.booking;
+   var sort = {_id: -1};
+   Payments.find({booking: booking._id}).limit(1).skip(0).sort(sort).exec(function (err, payment) {
+    if (payment.length == 0) {
+     res.sendStatus(500);
+     return;
+    }
+
+   var pay = payment[0];
+   if(pay.type != "payment") {
+     res.sendStatus(500);
+   }
 
    stripe.refunds.create({
-    charge: payment.stripeChargeId,
+    charge: pay.stripeChargeId,
     reverse_transfer: true,
-  }).then(function(refund) {
+   }).then(function(refund, err) {
+
+    if (err) {
+      res.sendStatus(500);
+    }
+
     // asynchronously called
     var payment = new Payments();
     payment.hostUser = booking.hostUser;
@@ -196,13 +211,14 @@ exports.stripeTransfers = function (req, res) {
     payment.booking =  booking
     payment.amount =  booking.currentPrice;
     payment.date = new Date();
-    payment.stripeChargeId = charge.id; // check if this is right
+    payment.stripeChargeId = charge.id;
     payment.type = "refund";
 
     payment.save();
     res.sendStatus(200);
   });
-  res.sendStatus(500);
+
+  });
  };
 
  /**
@@ -217,15 +233,20 @@ exports.stripeTransfers = function (req, res) {
    var sort = {_id: -1};
    
    Payments.find(query).limit(1).skip(0).sort(sort).exec(function (err, payment) {
-     if (payment.type == "payment") {
-       res.send({"status": "paid"});
-     } else if (payment.type == "refund") {
-       res.send({"status": "refund"});
-     } else if (payment.type == "cancellation") {
-      res.send({"status": "cancellation"});
+     if (payment.length == 0) {
+      res.send({"status": "waiting"});
+      return;
      }
+
+    var pay = payment[0];
+    if (pay.type == "charge") {
+       res.send({"status": "paid"});
+     } else if (pay.type == "refund") {
+       res.send({"status": "refund"});
+     } else if (pay.type == "cancellation") {
+      res.send({"status": "cancellation"});
+     } 
    });
-   res.send({"status": "waiting"});
  };
 
 
