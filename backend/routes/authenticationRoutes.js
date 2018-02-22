@@ -42,6 +42,10 @@ module.exports = function(app) {
 	 * /api/auth/authenticate/twitter
 	 * /api/auth/authenticate/spotify
 	 * /api/auth/authenticate/soundcloud
+	 * 
+	 * Sign up email verify confirmation, resend
+	 * /api/auth/verify
+	 * /api/auth/verify/resend
 	 */
 
 	
