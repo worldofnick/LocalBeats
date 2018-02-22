@@ -21,6 +21,19 @@ module.exports = function(app) {
 		.post(autheticationHandler.logout);
 
 	/**
+	 * Routes for 3rd party account link
+	 * 
+	 * /api/auth/link/google
+	 * /api/auth/link/facebook
+	 * /api/auth/link/twitter
+	 * /api/auth/link/spotify
+	 * /api/auth/link/soundcloud
+	 * 
+	 */
+
+	
+
+	/**
 	 * Authorization - the act of verifying the access rights of a user to 
 	 * interact with a resource. 
      * 
