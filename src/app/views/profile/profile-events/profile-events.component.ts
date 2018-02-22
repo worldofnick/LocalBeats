@@ -345,7 +345,7 @@ export class ProfileEventsComponent implements OnInit {
     let dialogRef: MatDialogRef<PaymentHistoryDialog>;
     this.stripeService.getBookingPayments(booking).then((payments: Payment[]) => {
       dialogRef = this.dialog.open(PaymentHistoryDialog, {
-          width: '350px',
+          width: '450px',
           disableClose: false,
           data: { payments, userID }
       });

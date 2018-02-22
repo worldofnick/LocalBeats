@@ -184,39 +184,32 @@ exports.stripeTransfers = function (req, res) {
  exports.stripeRefund = function (req, res) {
    const booking = req.body.booking;
    var sort = {_id: -1};
+
    Payments.find({booking: booking._id}).limit(1).skip(0).sort(sort).exec(function (err, payment) {
-    if (payment.length == 0) {
+    if (err || payment.length == 0 || payment[0].type != "charge") {
      res.sendStatus(500);
      return;
     }
 
    var pay = payment[0];
-   if(pay.type != "payment") {
-     res.sendStatus(500);
-   }
 
-   stripe.refunds.create({
-    charge: pay.stripeChargeId,
-    reverse_transfer: true,
-   }).then(function(refund, err) {
+  //  stripe.refunds.create({
+  //   charge: pay.stripeChargeId,
+  //   reverse_transfer: true,
+  //  }).then(function(refund, err) {
 
-    if (err) {
-      res.sendStatus(500);
-    }
-
-    // asynchronously called
     var payment = new Payments();
     payment.hostUser = booking.hostUser;
     payment.performerUser = booking.performerUser;
     payment.booking =  booking
     payment.amount =  booking.currentPrice;
     payment.date = new Date();
-    payment.stripeChargeId = charge.id;
+    payment.stripeChargeId = "stripeRefundTestID"
     payment.type = "refund";
 
     payment.save();
     res.sendStatus(200);
-  });
+  //});
 
   });
  };
