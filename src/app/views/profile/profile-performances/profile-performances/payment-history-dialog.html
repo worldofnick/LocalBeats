@@ -2,13 +2,14 @@
     <h3 mat-subheader>Payments</h3>
     <mat-list-item *ngFor="let payment of data.payments">
       <mat-icon mat-list-icon>payment</mat-icon>
-      <h4 *ngIf="payment.type == 'charge' && payment.toUser._id == data.user._id" mat-line>{{payment.fromUser.firstName}} {{payment.fromuser.lastName}} paid you {{payment.amount | currency}}.</h4>
-      <h4 *ngIf="payment.type == 'charge' && payment.toUser._id != data.user._id" mat-line>You paid {{payment.toUser.firstName}} {{payment.toUser.lastName}} {{payment.amount | currency}}.</h4>
-      <h4 *ngIf="payment.type == 'refund' && payment.toUser._id == data.user._id" mat-line>{{payment.fromUser.firstName}} {{payment.fromuser.lastName}} refunded you {{payment.amount | currency}}.</h4>
-      <h4 *ngIf="payment.type == 'refund' && payment.toUser._id != data.user._id" mat-line>You refunded {{payment.toUser.firstName}} {{payment.toUser.lastName}} {{payment.amount | currency}}.</h4>
-      <h4 *ngIf="payment.type == 'cancellation' && payment.toUser._id == data.user._id" mat-line>{{payment.fromUser.firstName}} {{payment.fromuser.lastName}} paid you a cancellation fee of {{payment.amount | currency}}.</h4>
-      <h4 *ngIf="payment.type == 'cancellation' && payment.toUser._id != data.user._id" mat-line>You paid {{payment.toUser.firstName}} {{payment.toUser.lastName}} a cancellation fee of {{payment.amount | currency}}.</h4>
-      <!-- <h4 mat-line>{{payment.amount | currency}}</h4> -->
+      <h4 *ngIf="payment.type == 'charge' && payment.performerUser._id == data.userID" mat-line>{{payment.hostUser.firstName}} {{payment.hostUser.lastName}} paid you {{payment.amount | currency}}.</h4>
+      <h4 *ngIf="payment.type == 'charge' && payment.hostUser._id == data.userID" mat-line>You paid {{payment.performerUser.firstName}} {{payment.performerUser.lastName}} {{payment.amount | currency}}.</h4>
+      <h4 *ngIf="payment.type == 'refund' && payment.hostUser._id == data.userID" mat-line>{{payment.performerUser.firstName}} {{payment.performerUser.lastName}} refunded you {{payment.amount | currency}}.</h4>
+      <h4 *ngIf="payment.type == 'refund' && payment.performerUser._id == data.userID" mat-line>You refunded {{payment.hostUser.firstName}} {{payment.hostUser.lastName}} {{payment.amount | currency}}.</h4>
+      <h4 *ngIf="payment.type == 'artist_cancel' && payment.hostUser._id == data.userID" mat-line>{{payment.fromUser.firstName}} {{payment.fromuser.lastName}} paid you a cancellation fee of {{payment.amount | currency}}.</h4>
+      <h4 *ngIf="payment.type == 'artist_cancel' && payment.performerUser._id == data.userID" mat-line>You paid {{payment.toUser.firstName}} {{payment.toUser.lastName}} a cancellation fee of {{payment.amount | currency}}.</h4>
+      <h4 *ngIf="payment.type == 'host_cancel' && payment.performerUser._id == data.userID" mat-line>{{payment.fromUser.firstName}} {{payment.fromuser.lastName}} paid you a cancellation fee of {{payment.amount | currency}}.</h4> 
+      <h4 *ngIf="payment.type == 'host_cancel' && payment.hostUser._id == data.userID" mat-line>You paid {{payment.toUser.firstName}} {{payment.toUser.lastName}} a cancellation fee of {{payment.amount | currency}}.</h4>
       <p mat-line> {{payment.date | date}} </p>
     </mat-list-item>
     <mat-divider></mat-divider>

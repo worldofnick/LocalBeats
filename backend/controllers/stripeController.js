@@ -243,7 +243,7 @@ exports.stripeTransfers = function (req, res) {
        res.send({"status": "paid"});
      } else if (pay.type == "refund") {
        res.send({"status": "refund"});
-     } else if (pay.type == "cancellation") {
+     } else if (pay.type == "host_cancel" || pay.type == "artist_cancel") {
       res.send({"status": "cancellation"});
      } 
    });
@@ -282,7 +282,7 @@ exports.stripeTransfers = function (req, res) {
       payment.amount =  booking.currentPrice;
       payment.date = new Date();
       payment.stripeChargeId = charge.id; // check if this is right
-      payment.type = "cancellation";
+      payment.type = req.query.cancel_type;
   
       payment.save();
   

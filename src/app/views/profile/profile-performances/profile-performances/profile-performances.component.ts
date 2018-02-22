@@ -326,13 +326,13 @@ export class ProfilePerformancesComponent implements OnInit {
   }
 
   showPaymentHistoryDialog(booking: Booking) {
-    let user = this.userService.user;
+    let userID = this.userService.user._id;
     let dialogRef: MatDialogRef<PaymentHistoryDialog>;
     this.stripeService.getBookingPayments(booking).then((payments: Payment[]) => {
       dialogRef = this.dialog.open(PaymentHistoryDialog, {
           width: '350px',
           disableClose: false,
-          data: { payments, user }
+          data: { payments, userID }
       });
 
     });
