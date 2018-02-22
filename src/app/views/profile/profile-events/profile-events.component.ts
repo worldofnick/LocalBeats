@@ -5,6 +5,7 @@ import { NgForm } from '@angular/forms/src/directives/ng_form';
 import { Router } from "@angular/router";
 import { MatTabChangeEvent } from '@angular/material';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatSnackBar} from '@angular/material';
+import { PaymentHistoryDialog } from '../profile-performances/profile-performances/profile-performances.component';
 
 
 // Services
@@ -22,6 +23,7 @@ import { Action } from '../../../services/chats/model/action';
 import { SocketEvent } from '../../../services/chats/model/event';
 import { Notification } from '../../../models/notification';
 import { Message } from '../../../services/chats/model/message';
+import { Payment } from '../../../models/payment';
 
 
 @Component({
@@ -49,6 +51,7 @@ export class ProfileEventsComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private _socketService: SocketService,
+    private stripeService: StripeService,
     public dialog: MatDialog
   ) {
     // Set user model to the authenticated singleton user
@@ -335,6 +338,20 @@ export class ProfileEventsComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       this.getEvents(); // refresh events
     });
+  }
+
+  showPaymentHistoryDialog(booking: Booking) {
+    let dialogRef: MatDialogRef<PaymentHistoryDialog>;
+    this.stripeService.getBookingPayments(booking).then((payments: Payment[]) => {
+      console.log(payments);
+      dialogRef = this.dialog.open(PaymentHistoryDialog, {
+          width: '350px',
+          disableClose: false,
+          data: { payments }
+      });
+
+    });
+
   }
 
 }
