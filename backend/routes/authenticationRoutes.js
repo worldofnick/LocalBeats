@@ -29,6 +29,14 @@ module.exports = function(app) {
 	 * /api/auth/link/spotify
 	 * /api/auth/link/soundcloud
 	 * 
+	 * Routes for 3rd party account unlink
+	 * /api/auth/unlink/google
+	 * /api/auth/unlink/facebook
+	 * /api/auth/unlink/twitter
+	 * /api/auth/unlink/spotify
+	 * /api/auth/unlink/soundcloud
+	 * 
+	 * 
 	 */
 
 	
