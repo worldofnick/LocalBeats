@@ -5,6 +5,16 @@
 module.exports = {
 
     JWT_SECRET: 'dsfh387hjfVQWxpsSMs8jsbjlJKHSJHD7b2jSY2bBSJKH01dhsbkSCH',
+    oauth: {
+      google: {
+        clientID: '',
+        clientSecret: '',
+      },
+      facebook: {
+        clientID: '',
+        clientSecret: '',
+      }
+    },
     'secret': 'pikachuineedyou',
     'database': 'mongodb://heroku_dmq914qm:v52suq480nk5qf4m6fh7p5v901@ds147265.mlab.com:47265/heroku_dmq914qm',
     'spotifyClientID' : '9b266aeaa5904de699d2864591f4e248',
