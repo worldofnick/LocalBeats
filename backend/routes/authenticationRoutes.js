@@ -36,7 +36,12 @@ module.exports = function(app) {
 	 * /api/auth/unlink/spotify
 	 * /api/auth/unlink/soundcloud
 	 * 
-	 * 
+	 * 3rd party logins
+	 * /api/auth/authenticate/google
+	 * /api/auth/authenticate/facebook
+	 * /api/auth/authenticate/twitter
+	 * /api/auth/authenticate/spotify
+	 * /api/auth/authenticate/soundcloud
 	 */
 
 	
