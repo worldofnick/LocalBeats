@@ -9,5 +9,5 @@ export class Payment {
   public date: Date
   public amount: number
   public stripeChargeId: string
-  public type: string // {"payment", "refund"}
+  public type: string // {"payment", "refund", "cancellation"}
 }

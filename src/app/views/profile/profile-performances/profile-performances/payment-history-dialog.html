@@ -1,0 +1,10 @@
+<mat-list>
+    <h3 mat-subheader>Payments</h3>
+    <mat-list-item *ngFor="let payment of data.payments">
+      <mat-icon mat-list-icon>payment</mat-icon>
+      <h4 mat-line>{{payment.amount | currency}}</h4>
+      <p mat-line> {{payment.date | date}} </p>
+    </mat-list-item>
+    <mat-divider></mat-divider>
+  </mat-list>
+  <button mat-button (click)="onNoClick()" cdkFocusInitial>Close</button>

@@ -20,6 +20,7 @@ import { Action } from '../../../../services/chats/model/action'
 import { SocketEvent } from '../../../../services/chats/model/event'
 import { Notification } from '../../../../models/notification'
 import { Message } from '../../../../services/chats/model/message';
+import { Payment } from '../../../../models/payment'
 
 @Component({
   selector: 'app-profile-performances',
@@ -45,6 +46,7 @@ export class ProfilePerformancesComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private _socketService: SocketService,
+    private stripeService: StripeService,
     public dialog: MatDialog
     ) {
       // Set user model to the authenticated singleton user
@@ -323,8 +325,23 @@ export class ProfilePerformancesComponent implements OnInit {
     });
   }
 
+  showPaymentHistoryDialog(booking: Booking) {
+    let dialogRef: MatDialogRef<PaymentHistoryDialog>;
+    this.stripeService.getBookingPayments(booking).then((payments: Payment[]) => {
+      console.log(payments);
+      dialogRef = this.dialog.open(PaymentHistoryDialog, {
+          width: '350px',
+          disableClose: false,
+          data: { payments }
+      });
+
+    });
+
+  }
+
 }
 
+// Refund dialog
 @Component({
   selector: 'refund-confirm-dialog',
   templateUrl: 'refund-confirm-dialog.html',
@@ -353,6 +370,23 @@ export class RefundPaymentDialog {
         });
       }
     });
+  }
+
+}
+
+// Payment History Dialog
+@Component({
+  selector: 'payment-history-dialog',
+  templateUrl: 'payment-history-dialog.html',
+})
+export class PaymentHistoryDialog {
+
+  constructor(
+    public dialogRef: MatDialogRef<RefundPaymentDialog>,
+    @Inject(MAT_DIALOG_DATA) public data: any) { }
+
+  onNoClick(): void {
+    this.dialogRef.close();
   }
 
 }

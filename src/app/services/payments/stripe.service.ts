@@ -103,13 +103,11 @@ export class StripeService {
 
   public getBookingPayments(booking: Booking): Promise<Payment[]> {
     const current = this.connectionPayments + '/bookingPayments/?bid=' + booking._id;
-    
     return this.http.get(current, { headers: this.headers })
         .toPromise()
         .then((response: Response) => {
-            const data = response.json();
-            const payments = data.payments as Payment[];
-            return payments
+            const data = response.json();           
+            return data.payments as Payment[];
         })
         .catch(this.handleError);
 }

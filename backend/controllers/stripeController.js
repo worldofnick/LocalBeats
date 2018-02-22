@@ -225,7 +225,7 @@ exports.stripeTransfers = function (req, res) {
   * GET /api/payments/bookingPaymentStatus
   *
   * Sends back the payment status for a bid.
-  * Either {"paid", "refunded", "waiting"}
+  * Either {"paid", "refunded", "waiting", "cancellation"}
   */
  exports.bookingPaymentStatus = function (req, res) {
    // Find the last payment associated with this event
@@ -269,9 +269,11 @@ exports.stripeTransfers = function (req, res) {
       destination: {
         account: stripeAccountId,
       },
-    }).then(function(charge) {
+    }).then(function(charge, err) {
       // asynchronously called
-  
+      if (err) {
+        res.sendStatus(500);
+      }
       // Create new payment
       var payment = new Payments();
       payment.hostUser = booking.hostUser;
@@ -287,7 +289,6 @@ exports.stripeTransfers = function (req, res) {
       res.sendStatus(200);
     });
 
-    res.sendStatus(500);
   };
 
   /**
@@ -299,12 +300,11 @@ exports.stripeTransfers = function (req, res) {
     // Find all payments associated with a booking
     var query = { booking: req.query.bid };
     
-    Payments.find(query).exec(function (err, payments) {
+    Payments.find(query).populate("hostUser").populate("performerUser").populate("booking").exec(function (err, payments) {
       if (err) {
         res.status(403).send({"error": "Error in MongoDB"});
       } else {
         res.send({"payments": payments})
       }
     });
-    res.send({"status": "waiting"});
   };
