@@ -1,8 +1,6 @@
 'use strict';
 
 var mongoose    = require('mongoose');
-var jwt         = require('jsonwebtoken');
-var bcrypt      = require('bcrypt');
 var Reviews      = mongoose.model('Review');
 var config    = require('../../config.js');
 

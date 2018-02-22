@@ -5,8 +5,6 @@ var config      = require('../../config.js');
 var stripe      = require("stripe")(config.stripe.secretKey);
 var querystring = require('querystring');
 var request     = require('request');
-var jwt         = require('jsonwebtoken');
-var bcrypt      = require('bcrypt');
 var User        = mongoose.model('User');
 var Payments        = mongoose.model('Payments');
 

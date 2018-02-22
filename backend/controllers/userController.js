@@ -1,7 +1,6 @@
 'use strict';
 
 var mongoose = require('mongoose');
-var jwt = require('jsonwebtoken');
 var bcrypt = require('bcrypt');
 var User = mongoose.model('User');
 var config = require('../../config.js');
@@ -44,7 +43,6 @@ exports.updateUserByID = function (req, res, next) {
     }
   });
 };
-
 
 exports.deleteUserByID = function (req, res) {
   User.findByIdAndRemove(req.params.uid, function (err, user) {

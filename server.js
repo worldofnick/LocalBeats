@@ -9,7 +9,6 @@ const mongoose    	= require('mongoose');
 const http          = require('http');
 const async         = require('async');
 const socketIO      = require('socket.io');
-const jwt           = require('jsonwebtoken');                // used to create, sign, and verify tokens
 
 const config        = require('./config');                    // get the config file
 const User          = require('./backend/models/userModel');  
