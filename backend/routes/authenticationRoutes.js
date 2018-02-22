@@ -46,6 +46,8 @@ module.exports = function(app) {
 	 * Sign up email verify confirmation, resend
 	 * /api/auth/verify
 	 * /api/auth/verify/resend
+	 * 
+	 * TODO: Handle Two-step authentication via email code on login route
 	 */
 
 	
