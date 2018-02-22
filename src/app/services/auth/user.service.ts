@@ -31,9 +31,6 @@ export class UserService {
     constructor(private http: Http, private _socketService: SocketService, private _httpClient: HttpClient) { this.initIoConnection(); }
 
     private initIoConnection(): void {
-        // this._socketService.initSocket();
-    
-        // TODO: can remove
         this.ioConnection = this._socketService.onEvent(SocketEvent.NEW_LOG_IN)
           .subscribe((message: Message) => {
             // this.messages.push(message);
