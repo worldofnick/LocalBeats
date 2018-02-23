@@ -66,9 +66,15 @@ export class ProfileEventsComponent implements OnInit {
         if (notification.response) {
           this.updateModel(notification.booking, notification.response);
         }
+        this.updatePaymentStatues();
     });
   }
 
+  private updatePaymentStatues() {
+    // Update payment status'
+    for (let e of this.events) {
+      this.paymentStatues = [];
+      for (let confirmed of e.confirmations) {
   private getEvents() {
     // Get all events associated with the user
     this.events = [];

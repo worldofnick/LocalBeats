@@ -68,9 +68,15 @@ export class ProfilePerformancesComponent implements OnInit {
         if (notification.response) {
           this.updateModel(notification.booking, notification.response);
         }
+        this.updatePaymentStatues();
     });
   }
 
+  private updatePaymentStatues() {
+      // Update payment status
+      this.paymentStatues = [];
+      for (let confirmed of this.performances.confirmations) {
+        this.bookingService.bookingPaymentStatus(confirmed).then((status: string) => {
   private getPerformances() {
     // Get all performances associated with the user
     this.bookingService.getUserBookings(this.userService.user, 'artist').then((bookings: Booking[]) => {
