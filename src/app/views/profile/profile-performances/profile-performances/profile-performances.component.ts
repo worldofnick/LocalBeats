@@ -77,6 +77,11 @@ export class ProfilePerformancesComponent implements OnInit {
       this.paymentStatues = [];
       for (let confirmed of this.performances.confirmations) {
         this.bookingService.bookingPaymentStatus(confirmed).then((status: string) => {
+          this.paymentStatues.push(status);
+      });
+    }
+  }
+
   private getPerformances() {
     // Get all performances associated with the user
     this.bookingService.getUserBookings(this.userService.user, 'artist').then((bookings: Booking[]) => {
@@ -329,7 +334,7 @@ export class ProfilePerformancesComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      this.getPerformances(); // refresh bookings
+      this.updatePaymentStatues();
     });
   }
 
@@ -391,7 +396,16 @@ export class PaymentHistoryDialog {
 
   constructor(
     public dialogRef: MatDialogRef<RefundPaymentDialog>,
-    @Inject(MAT_DIALOG_DATA) public data: any) { }
+    @Inject(MAT_DIALOG_DATA) public data: any, private _socketService: SocketService, private stripeService: StripeService) { }
+
+    ngOnInit() {
+      this._socketService.onEvent(SocketEvent.SEND_NOTIFICATION)
+        .subscribe((notification: Notification) => {
+          this.stripeService.getBookingPayments(notification.booking).then((payments: Payment[]) => {
+            this.data.payments = payments;
+          });
+      });
+    }
 
   onNoClick(): void {
     this.dialogRef.close();

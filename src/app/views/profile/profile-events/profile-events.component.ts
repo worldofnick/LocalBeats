@@ -75,6 +75,13 @@ export class ProfileEventsComponent implements OnInit {
     for (let e of this.events) {
       this.paymentStatues = [];
       for (let confirmed of e.confirmations) {
+        this.bookingService.bookingPaymentStatus(confirmed).then((status: string) => {
+          this.paymentStatues.push(status);
+        });
+      }
+    }
+  }
+
   private getEvents() {
     // Get all events associated with the user
     this.events = [];
@@ -344,7 +351,7 @@ export class ProfileEventsComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      this.getEvents(); // refresh events
+      this.updatePaymentStatues();
     });
   }
 
@@ -353,7 +360,7 @@ export class ProfileEventsComponent implements OnInit {
     let dialogRef: MatDialogRef<PaymentHistoryDialog>;
     this.stripeService.getBookingPayments(booking).then((payments: Payment[]) => {
       dialogRef = this.dialog.open(PaymentHistoryDialog, {
-          width: '450px',
+          width: '420px',
           disableClose: false,
           data: { payments, userID }
       });
