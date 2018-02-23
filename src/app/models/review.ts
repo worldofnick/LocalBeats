@@ -11,15 +11,4 @@ export class Review {
     public date: Date;
     public flagCount: number;
 
-    // constructor(
-    //     _id,
-    //     title,
-    //     text,
-    //     rating,
-    //     fromUser,
-    //     toUser,
-    //     date,
-    //     flagCount
-    // ) {}
-
 }
