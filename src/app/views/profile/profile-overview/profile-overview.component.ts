@@ -22,7 +22,7 @@ export class ProfileOverviewComponent implements OnInit {
 
   @Input() user: User;
   @Input() onOwnProfile: boolean;
-  
+
   animal: string;
   name: string;
 
@@ -85,83 +85,32 @@ export class ProfileOverviewComponent implements OnInit {
 
   openDialog(): void {
 
-    let dialogRef = this.dialog.open(ReviewDialogComponent, {
-      width: '500px',
-      data: { name: this.user.firstName}
-    });
+  //   let dialogRef = this.dialog.open(ReviewDialogComponent, {
+  //     width: '500px',
+  //     data: { name: this.user.firstName}
+  //   });
 
-    dialogRef.afterClosed().subscribe(result => {
-      if(result == null){
-        return;
-      }
-      let currentReview: Review = new Review();
-      console.log('The dialog was closed', result);
-      const date: Date = new Date();
-      currentReview._id = null;
-      currentReview.date = date;
-      currentReview.title = result.title.value;
-      currentReview.text = result.text.value;
-      currentReview.toUser = this.user;
-      currentReview.rating = 0;
-      currentReview.fromUser = this.userService.user;
-      currentReview.flagCount = 0;
-      console.log('about to create', currentReview);
-      this.reviewService.createReview(currentReview).then((review: Review) => {
-        console.log('created review ');
-        this.reviews.push(currentReview);
-      });
-    });
-  }
-
-}
-
-
-
-/*********************************************
- *********************************************
- *       Review Dialog Component
- *********************************************
- *********************************************/
-
-
-
-@Component({
-  selector: 'app-review-dialog',
-  templateUrl: 'review-dialog.html',
-})
-export class ReviewDialogComponent {
-
-  reviewForm: FormGroup;
-
-  constructor(
-    public dialogRef: MatDialogRef<ReviewDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any,
-    private formBuilder: FormBuilder,
-    private _socketService: SocketService) { }
-
-
-  // this needs to be ngOnInit, not onInit.
-  ngOnInit() {
-    this.createForm();
-  }
-
-  onNoClick(): void {
-    this.dialogRef.close();
-  }
-
-  onYesClick(form: NgForm): void {
-    this.dialogRef.close({title: this.reviewForm.get('title'), text: this.reviewForm.get('text')});
-  }
-
-  createForm() {
-    this.reviewForm = this.formBuilder.group({
-      title: new FormControl('', [
-        Validators.required
-      ]),
-      text: new FormControl('', [
-        Validators.required
-      ]),
-      });
-  }
+  //   dialogRef.afterClosed().subscribe(result => {
+  //     if(result == null){
+  //       return;
+  //     }
+  //     let currentReview: Review = new Review();
+  //     console.log('The dialog was closed', result);
+  //     const date: Date = new Date();
+  //     currentReview._id = null;
+  //     currentReview.date = date;
+  //     currentReview.title = result.title.value;
+  //     currentReview.text = result.text.value;
+  //     currentReview.toUser = this.user;
+  //     currentReview.rating = 0;
+  //     currentReview.fromUser = this.userService.user;
+  //     currentReview.flagCount = 0;
+  //     console.log('about to create', currentReview);
+  //     this.reviewService.createReview(currentReview).then((review: Review) => {
+  //       console.log('created review ');
+  //       this.reviews.push(currentReview);
+  //     });
+  //   });
+  // }
 
 }

@@ -1,11 +1,15 @@
 // 'use strict';
 import { Injectable } from '@angular/core';
 import { Http, Headers, RequestOptions, Response, URLSearchParams } from '@angular/http';
+import { MatDialogRef, MatDialog, MatDialogConfig } from '@angular/material';
+
 import { Observable } from 'rxjs/Observable';
 import { Review } from 'app/models/review';
+
 import { Event } from 'app/models/event';
 import { User } from 'app/models/user';
 import { environment } from '../../../environments/environment';
+import { ReviewDialogComponent } from 'app/views/review/review-dialog/review-dialog.component';
 
 const SERVER_URL = environment.apiURL;
 
@@ -21,7 +25,39 @@ export class ReviewService {
     private headers: Headers = new Headers({ 'Content-Type': 'application/json' });
 
 
-    constructor(private http: Http) { }
+    constructor(private http: Http,  private dialog: MatDialog) { }
+
+    public review(toUser: User, fromUser: User): Observable<{response: Review }> {
+        let dialogRef: MatDialogRef<ReviewDialogComponent>;
+        dialogRef = this.dialog.open(ReviewDialogComponent, {
+            width: '500px',
+            data: { name: toUser.firstName }
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            if (result == null) {
+                return;
+            }
+            let currentReview: Review = new Review();
+            console.log('The dialog was closed', result);
+            const date: Date = new Date();
+            currentReview._id = null;
+            currentReview.date = date;
+            currentReview.title = result.title.value;
+            currentReview.text = result.text.value;
+            currentReview.toUser = toUser;
+            currentReview.rating = 0;
+            currentReview.fromUser = fromUser;
+            currentReview.flagCount = 0;
+            console.log('about to create', currentReview);
+            this.createReview(currentReview).then((review: Review) => {
+                console.log('created review ');
+                //   this.reviews.push(currentReview);
+                return review;
+            });
+        });
+        return ;
+    }
 
     // POST Create review
     public createReview(newReview: Review): Promise<Review> {
@@ -82,28 +118,28 @@ export class ReviewService {
         console.log(user);
         const current = this.userReviewsToConnection + '/?uid=' + user._id;
         return this.http.get(current)
-        .toPromise()
-        .then((response: Response) => {
-            const data = response.json();
-            let reviews: Review[];
-            reviews = data.reviews as Review[];
-            return reviews;
-        })
-        .catch(this.handleError);
+            .toPromise()
+            .then((response: Response) => {
+                const data = response.json();
+                let reviews: Review[];
+                reviews = data.reviews as Review[];
+                return reviews;
+            })
+            .catch(this.handleError);
     }
 
     // GET gets all reviews left for this user
     public getReviewsFrom(user: User): Promise<Review[]> {
         const current = this.userReviewsFromConnection + '/?uid=' + user._id;
         return this.http.get(current)
-        .toPromise()
-        .then((response: Response) => {
-            const data = response.json();
-            let reviews:Review[];
-            reviews = data.reviews as Review[];
-            return reviews
-        })
-        .catch(this.handleError);
+            .toPromise()
+            .then((response: Response) => {
+                const data = response.json();
+                let reviews: Review[];
+                reviews = data.reviews as Review[];
+                return reviews
+            })
+            .catch(this.handleError);
     }
 
     // Can add flag review if needed

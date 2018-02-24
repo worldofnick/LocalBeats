@@ -2,8 +2,7 @@
   <div fxLayout="column" fxFlex="100" fxFlex.gt-md="50">
     <!-- Time line -->
     <mat-card *ngIf="reviews.length==0" class="default">
-      <mat-card-title *ngIf="reviews.length == 0 && !userService.isAuthenticated()">No reviews for {{user.firstName}}</mat-card-title>
-      <mat-card-title *ngIf="reviews.length == 0 && userService.isAuthenticated()">No reviews for {{user.firstName}}, be the first!</mat-card-title>
+      <mat-card-title *ngIf="reviews.length == 0 && userService.isAuthenticated()">No reviews for {{user.firstName}}</mat-card-title>
       <button *ngIf="!onOwnProfile && userService.isAuthenticated() && reviews.length == 0" (click)="openDialog()" mat-button class="half-width">Review {{user.firstName}}</button>
       <mat-card-title></mat-card-title>
     </mat-card>

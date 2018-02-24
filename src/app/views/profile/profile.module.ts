@@ -36,7 +36,6 @@ import { FileUploadModule } from 'ng2-file-upload/ng2-file-upload';
 import { CommonPipesModule } from "../../pipes/common/common-pipes.module";
 
 import { ProfileComponent } from "./profile.component";
-import { ProfileOverviewComponent, ReviewDialogComponent } from './profile-overview/profile-overview.component';
 import { ProfileSettingsComponent } from './profile-settings/profile-settings.component';
 import { ProfileBlankComponent } from './profile-blank/profile-blank.component';
 import { ProfileRoutes } from "./profile.routing";

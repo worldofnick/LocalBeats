@@ -9,6 +9,8 @@ import { AgmCoreModule, MapsAPILoader } from '@agm/core';
 import { rootRouterConfig } from './app.routes';
 import { AppCommonModule } from "./components/common/app-common.module";
 import { NegotiateModule } from './views/negotiate/negotiate.module';
+import { ReviewModule } from './views/review/review.module';
+
 import { AppComponent } from './app.component';
 
 import { RoutePartsService } from './services/route-parts/route-parts.service';
