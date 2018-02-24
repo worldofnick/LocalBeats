@@ -7,6 +7,8 @@ module.exports = function(app) {
      */
     var tokenVerificationHandler = require('../controllers/tokenVerificationController.js');
 	var autheticationHandler = require('../controllers/authenticationController.js');
+	const passport 		= require('passport');
+	const passportConf 	= require('../controllers/passport.js');
 
 	app.route('/api/auth/register')
 		.post(autheticationHandler.register);
@@ -60,5 +62,6 @@ module.exports = function(app) {
 	 * Need to pass JWT token in x-access-token header in the GET request
 	 */
 	app.route('/api/auth/whoami')
-		.get(tokenVerificationHandler.verifyToken, autheticationHandler.whoAmI);
+		// .get(tokenVerificationHandler.verifyToken, autheticationHandler.whoAmI);
+		.get(passport.authenticate('jwt', { session: false }), autheticationHandler.whoAmI);
 };
