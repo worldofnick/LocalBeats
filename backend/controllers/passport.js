@@ -6,6 +6,8 @@ const LocalStrategy     = require('passport-local').Strategy;
 const User              = mongoose.model('User');
 const config            = require('../../config.js');
 
+exports.verifyJWTWithPassport = passport.authenticate('jwt', { session: false });
+
 /**
  * JSON Web Tokens strategy
  * If the token is verified successfully, the user object can be 
