@@ -119,6 +119,27 @@ exports.register = function (req, res) {
   };
   
   /**
+   * This handler handles the Google OAuth user authentication.
+   */ 
+  exports.googleOAuth = function (req, res) {
+    console.log('In google oauth, user: ', req.user);
+    var token = signToken(req.user);
+    req.user.hashPassword = undefined;
+
+    // Update isOnline status
+    // TODO: move to a new middleware...
+    User.findByIdAndUpdate(req.user._id, { isOnline: true }, { new: true }, function (err, authUser) {
+      if (err) {
+        console.log('Cant change online status (auth controller)...');
+      }
+      authUser.hashPassword = undefined;
+      // console.log('Authenticated user: ', authUser);
+    });
+
+    res.status(200).send({ auth: 'Google Access Granted', token: token, user: req.user });
+  };
+
+  /**
    * This handler checks if the user is signed in. If it is, 
    * passes the control to the next in line. Else, breaks the 
    * control.
