@@ -1,3 +1,5 @@
+import { CANCELLED } from 'dns';
+
 var mongoose = require('mongoose');
 var bcrypt = require('bcrypt');
 var Schema = mongoose.Schema;
@@ -21,7 +23,8 @@ var BookingsSchema = new Schema({
     hostVerified    : {type: Boolean, default: null},
     artistVerified  : {type: Boolean, default: null},
     verifyComment   : {type: String, default: ''},
-    completed       : {type: Boolean, default: false}
+    completed       : {type: Boolean, default: false},
+    cancelled       : {type: Boolean, default: false}
 }, {strict: true});
 
 mongoose.model('Bookings', BookingsSchema);

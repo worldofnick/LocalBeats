@@ -219,7 +219,7 @@ export class ProfileRequestComponent implements OnInit {
   }
 
   newRequest(event: Event, eventIndex: number) {
-    let tempBooking = new Booking(undefined, 'host-request', event.hostUser, this.artist, event, false, false, false, StatusMessages.waitingOnArtist, StatusMessages.hostOffer, false, false, true, event.fixedPrice, null, null);
+    let tempBooking = new Booking(undefined, 'host-request', event.hostUser, this.artist, event, false, false, false, StatusMessages.waitingOnArtist, StatusMessages.hostOffer, false, true, event.fixedPrice, null, null);
     this.bookingService.negotiate(tempBooking, true).subscribe((result) => {
       if (result != undefined) {
         if (result.response == NegotiationResponses.new) {

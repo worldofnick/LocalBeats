@@ -37,7 +37,11 @@ export class ProfileEventsComponent implements OnInit {
     requests: Booking[],
     requestNotifications: number,
     confirmations: Booking[],
-    confirmationNotifications: number}[];
+    confirmationNotifications: number,
+    completed: Booking[],
+    completedNotifications: number,
+    cancelled: Booking[],
+    cancelledNotifications: number}[];
 
   constructor(private eventService: EventService,
     private userService: UserService,
@@ -71,13 +75,29 @@ export class ProfileEventsComponent implements OnInit {
         let applicationBookings: Booking[] = [];
         // Get the request bookings
         let requestBookings: Booking[] = [];
-        // Get the notification count for the applications
+        // Get the completed bookings
+        let completedBookings: Booking[] = [];
+        // Get the cancelled bookings
+        let cancelledBookings: Booking[] = [];
+        // Get the notification counts
         let numNotif: number = 0;
         let reqNotif: number = 0;
         let numConf: number = 0;
+        let numComp: number = 0;
+        let numCanc: number = 0;
         this.bookingService.getBooking(e).then((bookings: Booking[]) => {
           for(let booking of bookings) {
-            if(booking.approved) {
+            if(booking.completed) {
+              completedBookings.push(booking);
+              if(!booking.hostViewed) {
+                numComp++;
+              }
+            } else if(booking.cancelled) {
+              cancelledBookings.push(booking);
+              if(!booking.hostViewed) {
+                numCanc++;
+              }
+            } else if(booking.approved) {
               confirmedBookings.push(booking);
               // If the booking is confirmed and has not yet been viewed by the host, a new notification exists
               if(!booking.hostViewed) {
@@ -102,7 +122,8 @@ export class ProfileEventsComponent implements OnInit {
             }
           }
           this.events.push({event: e, applications: applicationBookings, applicationNotifications: numNotif,
-            requests: requestBookings, requestNotifications: reqNotif, confirmations: confirmedBookings, confirmationNotifications: numConf});
+            requests: requestBookings, requestNotifications: reqNotif, confirmations: confirmedBookings, confirmationNotifications: numConf,
+          completed: completedBookings, completedNotifications: numComp, cancelled: cancelledBookings, cancelledNotifications: numCanc});
         })
       }
     })

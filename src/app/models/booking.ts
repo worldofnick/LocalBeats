@@ -13,7 +13,6 @@ export class Booking {
     public hostViewed: boolean,
     public hostStatusMessage: StatusMessages,
     public artistStatusMessage: StatusMessages,
-    public completed: boolean,
     public artistApproved: boolean,
     public hostApproved: boolean, 
     public currentPrice: number,
@@ -21,9 +20,13 @@ export class Booking {
     public artistVerified: boolean
     ) {  
         this.verifyComment = '';
+        this.cancelled = false;
+        this.completed = false;
     }
 
     public verifyComment: string;
+    public cancelled: boolean;
+    public completed: boolean;
 }
 
 export enum StatusMessages {
