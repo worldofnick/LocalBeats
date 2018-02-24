@@ -9,6 +9,7 @@ module.exports = function(app) {
 	var autheticationHandler 	= require('../controllers/authenticationController.js');
 	const passport 				= require('passport');
 	const passportHandler 		= require('../controllers/passport.js');
+	const verifyGoogleSignInWithPassport = passport.authenticate('googleToken', { session: false });
 
 	app.route('/api/auth/register')
 		.post(autheticationHandler.register);
@@ -18,7 +19,7 @@ module.exports = function(app) {
 
 	app.route('/api/auth/authenticate/google')
 		// .post(passport.authenticate('googleToken', { scope: ['openid', 'profile', 'email'] }), autheticationHandler.signIn);
-		.post(passport.authenticate('googleToken', { session: false }), autheticationHandler.googleOAuth);
+		.post(verifyGoogleSignInWithPassport, autheticationHandler.googleOAuth);
 
 	app.route('/api/auth/passwordChange/:uid')
 		.put(autheticationHandler.changePassword);
