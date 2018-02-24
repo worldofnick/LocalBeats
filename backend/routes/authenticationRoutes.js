@@ -16,6 +16,10 @@ module.exports = function(app) {
 	app.route('/api/auth/authenticate')
 		.post(passportHandler.verifyLocalSignInWithPassport, autheticationHandler.signIn);
 
+	app.route('/api/auth/authenticate/google')
+		// .post(passport.authenticate('googleToken', { scope: ['openid', 'profile', 'email'] }), autheticationHandler.signIn);
+		.post(passport.authenticate('googleToken', { session: false }), autheticationHandler.signIn);
+
 	app.route('/api/auth/passwordChange/:uid')
 		.put(autheticationHandler.changePassword);
 
