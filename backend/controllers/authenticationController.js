@@ -6,7 +6,7 @@ var bcrypt      = require('bcrypt');
 var User        = mongoose.model('User');
 var config      = require('../../config.js');
 
-signToken = (user) => {
+var signToken = (user) => {
   return jwt.sign({
     iss: 'localBeats',
     sub: user._id,
@@ -24,7 +24,7 @@ signToken = (user) => {
 exports.register = function (req, res) {
 
     // Check if there is a user with the same email (asynchronously)
-    const foundUser = await User.findOne({ email: req.body.email });
+    const foundUser = User.findOne({ email: req.body.email });
     if (foundUser) { 
       return res.status(403).json({ error: 'Email is already in use. Register with a new email ID'}); //TODO: test in postman
     }
@@ -49,7 +49,7 @@ exports.register = function (req, res) {
         user.hashPassword = undefined;
         user.__v = undefined;
         // create a token
-        var token = jwt.sign({
+        const token = jwt.sign({
           user: {
             uid: user._id,
             firstName: user.firstName,
