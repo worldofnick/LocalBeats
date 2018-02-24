@@ -22,7 +22,14 @@ signToken = (user) => {
 }
 
 exports.register = function (req, res) {
-    var newUser = new User(req.body);
+
+    // Check if there is a user with the same email (asynchronously)
+    const foundUser = await User.findOne({ email: req.body.email });
+    if (foundUser) { 
+      return res.status(403).json({ error: 'Email is already in use. Register with a new email ID'}); //TODO: test in postman
+    }
+
+    const newUser = new User(req.body);
     newUser.hashPassword = bcrypt.hashSync(req.body.password, 10);   // save a hashed password to DB
     if(newUser._id == null) {
       newUser._id = undefined;
