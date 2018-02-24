@@ -17,6 +17,7 @@ export class User {
     public city: string;
     public state: string;
     public location: number[];
+    public stripeAccountId: string;
 
     // Chat properties
     public isOnline: boolean = false;
