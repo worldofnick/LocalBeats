@@ -42,7 +42,9 @@ passport.use(new JwtStrategy({
     }
 }));
 
-// Google OAuth Strategy
+/**
+ * Google OAuth Strategy
+ */
 passport.use('googleToken', new GooglePlusStrategy({
     clientID: config.oauth.google.clientID,
     clientSecret: config.oauth.google.clientSecret
@@ -54,21 +56,18 @@ passport.use('googleToken', new GooglePlusStrategy({
       console.log('accessToken: ', accessToken);
       console.log('refreshToken: ', refreshToken);
   
-    //   const existingUser = await User.findOne({ "google.id": profile.id });
-    //   if (existingUser) {
-    //     return done(null, existingUser);
-    //   }
-  
-    //   const newUser = new User({
-    //     method: 'google',
-    //     google: {
-    //       id: profile.id,
-    //       email: profile.emails[0].value
-    //     }
-    //   });
-  
-    //   await newUser.save();
-    //   done(null, newUser);
+      // If the user exists in the DB, return it
+      User.findOne({ "google.id": profile.id}, function(err, foundUser) {
+        console.log('Found User: ', foundUser);
+        
+        // If no user found, handle it. TODO: should I instead create a new user?
+        if (!foundUser) {
+            return done(null, false);
+        }
+        else {
+            return done(null, foundUser);
+        }
+      });
     } catch(error) {
       done(error, false, error.message);
     }
