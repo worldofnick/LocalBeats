@@ -3,6 +3,8 @@ const passport          = require('passport');
 const JwtStrategy       = require('passport-jwt').Strategy;
 const { ExtractJwt }    = require('passport-jwt');
 const LocalStrategy     = require('passport-local').Strategy;
+// const GooglePlusStrategy = require('passport-google-oauth').OAuth2Strategy;
+const GooglePlusStrategy = require('passport-google-plus-token');
 const User              = mongoose.model('User');
 const config            = require('../../config.js');
 
@@ -39,6 +41,38 @@ passport.use(new JwtStrategy({
         done(error, false);
     }
 }));
+
+// Google OAuth Strategy
+passport.use('googleToken', new GooglePlusStrategy({
+    clientID: config.oauth.google.clientID,
+    clientSecret: config.oauth.google.clientSecret
+    // callbackURL: 'http://localhost:8080'
+  }, async (accessToken, refreshToken, profile, done) => {
+    try {
+      // Should have full user profile over here
+      console.log('profile: ', profile);
+      console.log('accessToken: ', accessToken);
+      console.log('refreshToken: ', refreshToken);
+  
+    //   const existingUser = await User.findOne({ "google.id": profile.id });
+    //   if (existingUser) {
+    //     return done(null, existingUser);
+    //   }
+  
+    //   const newUser = new User({
+    //     method: 'google',
+    //     google: {
+    //       id: profile.id,
+    //       email: profile.emails[0].value
+    //     }
+    //   });
+  
+    //   await newUser.save();
+    //   done(null, newUser);
+    } catch(error) {
+      done(error, false, error.message);
+    }
+  }));
 
 /**
  * Local login strategy
