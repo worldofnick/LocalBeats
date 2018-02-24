@@ -24,10 +24,13 @@ var signToken = (user) => {
 exports.register = function (req, res) {
 
     // Check if there is a user with the same email (asynchronously)
-    const foundUser = User.findOne({ email: req.body.email });
-    if (foundUser) { 
-      return res.status(403).json({ error: 'Email is already in use. Register with a new email ID'}); //TODO: test in postman
-    }
+    console.log('Body: ', req.body);
+    User.findOne({ email: req.body.email }, function(err,foundUser) {
+      console.log('Found user:', foundUser);
+      if (foundUser) { 
+        return res.status(403).json({ error: 'Email is already in use. Register with a new email ID'}); //TODO: test in postman
+      }
+    });
 
     const newUser = new User(req.body);
     newUser.hashPassword = bcrypt.hashSync(req.body.password, 10);   // save a hashed password to DB
@@ -58,6 +61,7 @@ exports.register = function (req, res) {
           authUser.hashPassword = undefined;
         });
 
+        // TODO: add verify by email here later
         return res.status(200).send({ auth: true, token: token, user: user });
       }
     });
