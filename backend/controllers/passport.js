@@ -7,6 +7,7 @@ const User              = mongoose.model('User');
 const config            = require('../../config.js');
 
 exports.verifyJWTWithPassport = passport.authenticate('jwt', { session: false });
+exports.verifyLocalSignInWithPassport = passport.authenticate('local', { session: false });
 
 /**
  * JSON Web Tokens strategy
