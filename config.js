@@ -7,8 +7,8 @@ module.exports = {
     JWT_SECRET: 'dsfh387hjfVQWxpsSMs8jsbjlJKHSJHD7b2jSY2bBSJKH01dhsbkSCH',
     oauth: {
       google: {
-        clientID: '',
-        clientSecret: '',
+        clientID: '711608011009-hkpaqs61p6a0s7122qcko80sscd9odhu.apps.googleusercontent.com',
+        clientSecret: '8W_E7_JWXx3XgF1f9_A8AUrS',
       },
       facebook: {
         clientID: '',
