@@ -6,9 +6,9 @@ module.exports = function(app) {
      * Authetication - the act of logging a user in
      */
     var tokenVerificationHandler = require('../controllers/tokenVerificationController.js');
-	var autheticationHandler = require('../controllers/authenticationController.js');
-	const passport 		= require('passport');
-	const passportConf 	= require('../controllers/passport.js');
+	var autheticationHandler 	= require('../controllers/authenticationController.js');
+	const passport 				= require('passport');
+	const passportHandler 		= require('../controllers/passport.js');
 
 	app.route('/api/auth/register')
 		.post(autheticationHandler.register);
@@ -63,5 +63,5 @@ module.exports = function(app) {
 	 */
 	app.route('/api/auth/whoami')
 		// .get(tokenVerificationHandler.verifyToken, autheticationHandler.whoAmI);
-		.get(passport.authenticate('jwt', { session: false }), autheticationHandler.whoAmI);
+		.get(passportHandler.verifyJWTWithPassport, autheticationHandler.whoAmI);
 };
