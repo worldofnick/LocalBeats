@@ -4,7 +4,22 @@ var mongoose    = require('mongoose');
 var jwt         = require('jsonwebtoken');
 var bcrypt      = require('bcrypt');
 var User        = mongoose.model('User');
-var config    = require('../../config.js');
+var config      = require('../../config.js');
+
+signToken = (user) => {
+  return jwt.sign({
+    iss: 'localBeats',
+    sub: user._id,
+    iat: new Date().getTime(),                         // Issued at current time
+    exp: new Date().setDate(new Date().getDate() + 1), // Expries in (1 day from current time)
+    user: {
+      uid: user._id,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+    }
+  }, config.JWT_SECRET);
+}
 
 exports.register = function (req, res) {
     var newUser = new User(req.body);
