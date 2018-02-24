@@ -38,3 +38,31 @@ passport.use(new JwtStrategy({
         done(error, false);
     }
 }));
+
+/**
+ * Local login strategy
+ */
+passport.use(new LocalStrategy({
+    usernameField: 'email'
+}, async (email, password, done) => {
+    //   console.log('In local: ', email);
+    try {
+        // Find the user given the email
+        User.findOne({ email: email }, function (err, foundUser) {
+            console.log('Found User: ', foundUser);
+            // If no user found, handle it
+            if (!foundUser) {
+                return done(null, false);
+            }
+
+            // Verify password. If incorrect, handle it. 
+            // Else return the user
+            if (!foundUser.comparePassword(password)) {
+                return done(null, false);
+            }
+            done(null, foundUser);
+        });
+    } catch (error) {
+        done(error, false);
+    }
+}));
