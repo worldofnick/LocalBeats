@@ -8,6 +8,8 @@ const config            = require('../../config.js');
 
 /**
  * JSON Web Tokens strategy
+ * If the token is verified successfully, the user object can be 
+ * obtained from req.user in the subseqeuent middlewares or handlers
  */
 passport.use(new JwtStrategy({
     jwtFromRequest: ExtractJwt.fromHeader('x-access-token'),
@@ -32,6 +34,5 @@ passport.use(new JwtStrategy({
     }
     catch (error) {
         done(error, false);
-
     }
 }));
