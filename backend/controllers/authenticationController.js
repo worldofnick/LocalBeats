@@ -25,7 +25,7 @@ exports.register = function (req, res) {
 
     // Check if there is a user with the same email (asynchronously)
     console.log('Body: ', req.body);
-    User.findOne({ email: req.body.email }, function(err,foundUser) {
+    User.findOne({ email: req.body.email }, function(err, foundUser) {
       // console.log('Found user:', foundUser);
       if (foundUser) { 
         return res.status(403).json({ error: 'Email is already in use. Register with a new email ID'}); //TODO: test in postman
@@ -101,23 +101,21 @@ exports.register = function (req, res) {
    * The handler handles the user authentication.
    */ 
   exports.signIn = function (req, res) {
-    User.findOne({ email: req.body.email }, function (err, user) {
-      if (err) return res.status(500).send('Error on the sign-in server.');
-      if (!user) return res.status(404).send('No such user (' + req.body.email + ') in the database...');
-      if (!user.comparePassword(req.body.password)) return res.status(401).send({ auth: false, token: null });
-      var token = signToken(user);
-      user.hashPassword = undefined;
+    console.log('In singIN, user: ', req.user);
+    var token = signToken(req.user);
+    req.user.hashPassword = undefined;
 
-      User.findByIdAndUpdate(user._id, {isOnline: true}, {new: true}, function (err, authUser) {
-        if (err) {
-          console.log('Cant chnage online status (auth controller)...');
-        }
-        authUser.hashPassword = undefined;
-        console.log('Authenticated user: ', authUser);
-      });
-
-      res.status(200).send({ auth: true, token: token, user: user });
+    // Update isOnline status
+    // TODO: move to a new middleware...
+    User.findByIdAndUpdate(req.user._id, { isOnline: true }, { new: true }, function (err, authUser) {
+      if (err) {
+        console.log('Cant change online status (auth controller)...');
+      }
+      authUser.hashPassword = undefined;
+      // console.log('Authenticated user: ', authUser);
     });
+
+    res.status(200).send({ auth: 'Signature Verified', token: token, user: req.user });
   };
   
   /**
