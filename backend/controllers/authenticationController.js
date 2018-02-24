@@ -26,7 +26,7 @@ exports.register = function (req, res) {
     // Check if there is a user with the same email (asynchronously)
     console.log('Body: ', req.body);
     User.findOne({ email: req.body.email }, function(err,foundUser) {
-      console.log('Found user:', foundUser);
+      // console.log('Found user:', foundUser);
       if (foundUser) { 
         return res.status(403).json({ error: 'Email is already in use. Register with a new email ID'}); //TODO: test in postman
       }
@@ -94,12 +94,7 @@ exports.register = function (req, res) {
    * @param {*} res - Contains the result of the request
    */
   exports.whoAmI = function (req, res) {
-    User.findById(req.uid, { hashPassword: 0 }, function (err, user) {
-      if (err) return res.status(500).send("There was a problem finding the user.");
-      if (!user) return res.status(404).send("User not found (try logging in first).");
-  
-      return res.status(200).send({ auth: 'Signature Verified', user: user });
-    });
+    return res.status(200).send({ auth: 'Signature Verified', user: req.user });
   };
   
   /**
@@ -110,9 +105,7 @@ exports.register = function (req, res) {
       if (err) return res.status(500).send('Error on the sign-in server.');
       if (!user) return res.status(404).send('No such user (' + req.body.email + ') in the database...');
       if (!user.comparePassword(req.body.password)) return res.status(401).send({ auth: false, token: null });
-      var token = jwt.sign({ id: user._id }, config.secret, {
-        expiresIn: 86400 // expires in 24 hours
-      });
+      var token = signToken(user);
       user.hashPassword = undefined;
 
       User.findByIdAndUpdate(user._id, {isOnline: true}, {new: true}, function (err, authUser) {
