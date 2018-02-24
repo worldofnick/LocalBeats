@@ -98,7 +98,7 @@ exports.register = function (req, res) {
       if (err) return res.status(500).send("There was a problem finding the user.");
       if (!user) return res.status(404).send("User not found (try logging in first).");
   
-      return res.status(200).send(user);
+      return res.status(200).send({ auth: 'Signature Verified', user: user });
     });
   };
   
