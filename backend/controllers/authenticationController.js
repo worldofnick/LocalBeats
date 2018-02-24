@@ -49,19 +49,7 @@ exports.register = function (req, res) {
         user.hashPassword = undefined;
         user.__v = undefined;
         // create a token
-        const token = jwt.sign({
-          user: {
-            uid: user._id,
-            firstName: user.firstName,
-            lastName: user.lastName,
-            email: user.email,
-            joinDate: user.joinDate
-          }
-        },
-          config.secret, {
-            expiresIn: 86400 // expires in 24 hours
-          }
-        );
+        const token = signToken(user);
 
         User.findByIdAndUpdate(user._id, {isOnline: true}, {new: true}, function (err, authUser) {
           if (err) {
