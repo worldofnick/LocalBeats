@@ -9,12 +9,13 @@ module.exports = function(app) {
 	var autheticationHandler 	= require('../controllers/authenticationController.js');
 	const passport 				= require('passport');
 	const passportHandler 		= require('../controllers/passport.js');
+	const passportSignIn = passport.authenticate('local', { session: false });
 
 	app.route('/api/auth/register')
 		.post(autheticationHandler.register);
 
 	app.route('/api/auth/authenticate')
-		.post(autheticationHandler.signIn);
+		.post(passportSignIn, autheticationHandler.signIn);
 
 	app.route('/api/auth/passwordChange/:uid')
 		.put(autheticationHandler.changePassword);
