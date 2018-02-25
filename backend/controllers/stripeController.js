@@ -64,10 +64,7 @@ exports.stripeAuthorize = function (req, res) {
              res.redirect('https://localbeats.herokuapp.com/profile/stripe/?success=false');
            }
 
-           console.log(account.email);
-           console.log(body.stripe_user_id);
            User.findOne({email: account.email}, function (err, user) {
-             console.log("found user");
             user.stripeAccountId = body.stripe_user_id;
             user.save(function (err) {
               if(err) {
@@ -90,14 +87,14 @@ exports.stripeAuthorize = function (req, res) {
  *
  * Redirect to Stripe to view transfers and edit payment details.
  */
-exports.stripeTransfers = function (req, res) {
+exports.stripeTransfers = async function (req, res) {
   const user = req.body.user;
   if (!user.stripeAccountId) {
     res.send({"redirect_url": 'http://localbeats.herokuapp.com/auth'});
   }
   try {
     // Generate a unique login link for the associated Stripe account.
-    const loginLink = stripe.accounts.createLoginLink(user.stripeAccountId);
+    const loginLink = await stripe.accounts.createLoginLink(user.stripeAccountId);
     // Retrieve the URL from the response and redirect the user to Stripe.
     res.send({"redirect_url": loginLink.url});
   } catch (err) {
@@ -124,7 +121,7 @@ exports.stripeTransfers = function (req, res) {
         res.sendStatus(200);
         return;
       }
-      const payout = stripe.payouts.create({
+      const payout = await stripe.payouts.create({
         method: 'instant',
         amount: amount,
         currency: currency,
