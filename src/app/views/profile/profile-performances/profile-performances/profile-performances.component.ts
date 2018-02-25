@@ -14,7 +14,7 @@ import { SocketService } from 'app/services/chats/socket.service';
 // Data Models
 import { User } from '../../../../models/user';
 import { Event } from '../../../../models/event';
-import { Booking, StatusMessages, NegotiationResponses } from '../../../../models/booking';
+import { Booking, StatusMessages, NegotiationResponses, VerificationResponse } from '../../../../models/booking';
 import { Action } from '../../../../services/chats/model/action'
 import { SocketEvent } from '../../../../services/chats/model/event'
 import { Notification } from '../../../../models/notification'
@@ -254,6 +254,49 @@ export class ProfilePerformancesComponent implements OnInit {
         }
       }
     }
+  }
+
+  artistVerify(booking: Booking, bookingIndex: number) {
+    this.bookingService.verify(booking, true)
+    .subscribe((result)=> {
+      // Check to see if a response was recorded in the verification dialog box
+      if(result != undefined) {
+        // Check to see what the response was
+        booking.verifyComment = result.comment;
+        let notificationMessage: string = '';
+        let response:NegotiationResponses = null;
+        if(result.response == VerificationResponse.verify) {
+          // The artist has verified the host's attendance
+          booking.artistVerified = true;
+          // If host has verified, the booking is complete
+          if(booking.artistVerified) {
+            booking.completed = true;
+            booking.hostViewed = false;
+            booking.artViewed = false;
+            response = NegotiationResponses.complete;
+            notificationMessage = "Booking is complete";
+          } else {
+            booking.artViewed = true;
+            booking.hostViewed = false;
+            notificationMessage = booking.performerUser.firstName + " has verified you for the event " + booking.eventEID.eventName;
+            response = NegotiationResponses.verification;
+          }
+        } else {
+          // The host has rejected verification of the artist's attendance
+          booking.artViewed = false;
+          booking.hostViewed = true;
+          booking.hostVerified = false;
+          notificationMessage = booking.performerUser.firstName + " has invalidated you for the event " + booking.eventEID.eventName;
+          response = NegotiationResponses.verification;
+        }
+        // Update the booking asynchronously
+        this.bookingService.updateBooking(booking).then(() => {
+          // Send notification to artist
+          this.createNotificationForHost(booking, response, ['/profile', 'events'],
+              'event_available', notificationMessage);
+        });
+      }
+    })
   }
 
   openNegotiationDialog(booking: Booking, bookingIndex: number) {

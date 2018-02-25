@@ -29,8 +29,6 @@ export class EventSingletonComponent implements OnInit {
   public userBooking: Booking;
   public isCurrentUser: boolean = null;
   public hasApplied: boolean = null;
-  public currentBookings: Booking[] = [];
-  public approvedBookings: Booking[] = [];
   public dateInBar: Date;
   public zoom: number;
   public lat: number;

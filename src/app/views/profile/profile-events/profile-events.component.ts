@@ -283,7 +283,6 @@ export class ProfileEventsComponent implements OnInit {
         // Update the booking asynchronously
         this.bookingService.updateBooking(booking).then(() => {
           // Send notification to artist
-          this.events[eventIndex].applications[bookingIndex] = booking;
           this.createNotificationForArtist(booking, response, ['/profile', 'performances'],
               'event_available', notificationMessage);
         });
