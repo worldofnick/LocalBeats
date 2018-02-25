@@ -36,6 +36,7 @@ export enum StatusMessages {
     waitingOnHost = "Waiting for response from Host",
     waitingOnArtist = "Waiting for response from Artist",
     bookingConfirmed = "Booking Confirmed",
+    cancelled = "Booking has been cancelled",
 }
 
 export enum NegotiationResponses {
@@ -44,6 +45,9 @@ export enum NegotiationResponses {
     decline = 2, // Decline the current offer/bid/application/request
     nochange = 3, // No change on the user's current offer/bid/application/request
     cancel = 4, // Cancellation of a confirmed booking
+    payment = 5, // Payment
+    complete = 6, // A confirmed booking has been completed
+    verification = 7, // A booking has been verified
 }
 
 export enum VerificationResponse {

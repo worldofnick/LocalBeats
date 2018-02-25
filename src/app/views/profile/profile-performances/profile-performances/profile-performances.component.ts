@@ -35,7 +35,11 @@ export class ProfilePerformancesComponent implements OnInit {
     requests: Booking[],
     requestNotifications: number,
     confirmations: Booking[],
-    confirmationNotifications: number};
+    confirmationNotifications: number,
+    completed: Booking[],
+    completedNotifications: number,
+    cancellations: Booking[],
+    cancellationNotifications: number};
 
   constructor(private eventService: EventService, 
     private userService: UserService,
@@ -53,7 +57,11 @@ export class ProfilePerformancesComponent implements OnInit {
         requests: [],
         requestNotifications: 0,
         confirmations: [],
-        confirmationNotifications: 0};
+        confirmationNotifications: 0,
+        completed: [],
+        completedNotifications: 0,
+        cancellations: [],
+        cancellationNotifications: 0};
       this.getPerformances();
     }
 
@@ -73,18 +81,37 @@ export class ProfilePerformancesComponent implements OnInit {
       let applicationBookings: Booking[] = [];
       // Get the request bookings
       let requestBookings: Booking[] = [];
+      // Get the completed bookings
+      let completedBookings: Booking[] = [];
+      // Get the cancelled bookings
+      let cancelledBookings: Booking[] = [];
       // Get the notification counts
       let numNotif: number = 0;
       let reqNotif: number = 0;
       let numConf: number = 0;
-
+      let cancelNotif: number = 0;
+      let completeNotif: number = 0;
       for(let booking of bookings) {
         if(booking.approved) {
-          confirmedBookings.push(booking);
+          if(booking.completed) {
+            completedBookings.push(booking);
+            // If the booking is completed and has not yet been viewed by the artist, a new notification exists
+            if(!booking.artViewed) {
+              completeNotif++;
+            }
+          } else if(!booking.cancelled) {
+            confirmedBookings.push(booking);
             // If the booking is confirmed and has not yet been viewed by the artist, a new notification exists
             if(!booking.artViewed) {
               numConf++;
             }
+          } else {
+            cancelledBookings.push(booking);
+            if(!booking.artViewed) {
+              cancelNotif++;
+            }
+          }
+          
         } else {
           // Check to see if the artist applied
           if(booking.bookingType == 'artist-apply') {
@@ -109,7 +136,11 @@ export class ProfilePerformancesComponent implements OnInit {
         requests: requestBookings,
         requestNotifications: reqNotif,
         confirmations: confirmedBookings,
-        confirmationNotifications: numConf};
+        confirmationNotifications: numConf,
+        completed: completedBookings,
+        completedNotifications: completeNotif,
+        cancellations: cancelledBookings,
+        cancellationNotifications: cancelNotif};
     });
   }
 
@@ -175,7 +206,21 @@ export class ProfilePerformancesComponent implements OnInit {
       }
     } else if(response == NegotiationResponses.cancel) {
       confirmationIndex = this.performances.confirmations.findIndex(a => a._id == newBooking._id);
+      // The host has cancelled
       this.performances.confirmations.splice(confirmationIndex, 1);
+      this.performances.cancellationNotifications++;
+      this.performances.cancellations.push(newBooking);
+    } else if(response == NegotiationResponses.complete) {
+      confirmationIndex = this.performances.confirmations.findIndex(a => a._id == newBooking._id);
+      // The host has completed the booking
+      this.performances.confirmations.splice(confirmationIndex, 1);
+      this.performances.completedNotifications++;
+      this.performances.completed.push(newBooking);
+    } else if(response == NegotiationResponses.verification) {
+      confirmationIndex = this.performances.confirmations.findIndex(a => a._id == newBooking._id);
+      // The host has either verified or not, update the booking so the artist is aware
+      this.performances.confirmations[confirmationIndex] = newBooking;
+      this.performances.confirmationNotifications++;
     }
   }
 
@@ -187,6 +232,22 @@ export class ProfilePerformancesComponent implements OnInit {
     if(event.index == 2) {
       this.performances.confirmationNotifications = 0;
       for(let booking of this.performances.confirmations) {
+        if(!booking.artViewed) {
+          booking.artViewed = true;
+          this.bookingService.updateBooking(booking);
+        }
+      }
+    } else if(event.index == 3) {
+      this.performances.completedNotifications = 0;
+      for(let booking of this.performances.completed) {
+        if(!booking.artViewed) {
+          booking.artViewed = true;
+          this.bookingService.updateBooking(booking);
+        }
+      }
+    } else if(event.index == 4) {
+      this.performances.cancellationNotifications = 0;
+      for(let booking of this.performances.cancellations) {
         if(!booking.artViewed) {
           booking.artViewed = true;
           this.bookingService.updateBooking(booking);
@@ -271,16 +332,17 @@ export class ProfilePerformancesComponent implements OnInit {
         } else if(result.response == NegotiationResponses.cancel) {
           // Cancellation, the user cancelled a confirmed booking
           // Negate approvals for real-time notification to other user's component model
-          booking.artistApproved = false;
-          booking.hostApproved = false;
-          booking.approved = false;
-          // Asynchronously update
-          this.bookingService.declineBooking(booking).then(() => {
+          booking.cancelled = true;
+          booking.artViewed = true;
+          booking.hostViewed = false;
+          booking.hostStatusMessage = StatusMessages.cancelled;
+          booking.artistStatusMessage = StatusMessages.cancelled;
+          // Creat enotification for host
+          this.bookingService.updateBooking(booking).then(() => {
             // Update the model of the component
-            this.performances.confirmations.splice(bookingIndex, 1);
             this.createNotificationForHost(booking, result.response, ['/events', booking.eventEID._id],
-            'event_busy', booking.performerUser.firstName + " has cancelled the confirmed boking for " + booking.eventEID.eventName);
-          })
+            'import_export', booking.hostUser.firstName + " has cancelled the confirmed booking for " + booking.eventEID.eventName);
+          });
         } else {
           // No change, the user kept their confirmed booking
         }
