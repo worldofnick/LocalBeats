@@ -113,14 +113,17 @@ exports.stripeTransfers = function (req, res) {
  *
  * Generate an instant payout with Stripe for the available balance.
  */
- exports.stripePayout = function (req, res) {
+ exports.stripePayout = async function (req, res) {
     const user = req.body.user;
     try {
       // Fetch the account balance for find available funds.
-      const balance = stripe.balance.retrieve({ stripe_account: user.stripeAccountId });
-
+      const balance = await stripe.balance.retrieve({ stripe_account: user.stripeAccountId });
       const { amount, currency } = balance.available[0]; // USD only
       // Create the instant payout.
+      if (amount <= 0) {
+        res.sendStatus(200);
+        return;
+      }
       const payout = stripe.payouts.create({
         method: 'instant',
         amount: amount,
@@ -132,8 +135,6 @@ exports.stripeTransfers = function (req, res) {
     } catch (err) {
       res.sendStatus(500);
     }
-    // Give the OK
-    res.sendStatus(200);
  };
 
 
