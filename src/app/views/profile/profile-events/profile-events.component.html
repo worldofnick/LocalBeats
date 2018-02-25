@@ -89,7 +89,6 @@
             <mat-card-content>
             </mat-card-content>
             <mat-card-actions>
-              <div>{{item.paymentStatues[i]}}</div>
               <button *ngIf="item.paymentStatues[i] != 'paid'" (click)="openNegotiationDialog(booking, i, j)" mat-raised-button color="primary">Cancel Booking</button>
               <button (click)="messageArtist(booking)" mat-raised-button color="accent">Message Artist</button>
               <button *ngIf="item.paymentStatues[i] != 'waiting'" (click)="showPaymentHistoryDialog(booking)" mat-raised-button color="accent">View Payment History</button>
