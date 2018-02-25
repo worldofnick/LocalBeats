@@ -16,7 +16,9 @@ import { NgForm } from '@angular/forms/src/directives/ng_form';
 
 @Component({
     selector: 'app-review-dialog',
-    templateUrl: 'review-dialog.component.html',
+    templateUrl: './review-dialog.component.html',
+    styleUrls: ['./review-dialog.component.css']
+
   })
   export class ReviewDialogComponent implements OnInit {
     reviewForm: FormGroup;

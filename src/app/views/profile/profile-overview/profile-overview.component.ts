@@ -5,7 +5,7 @@ import { User } from '../../../models/user';
 import { Review } from '../../../models/review';
 import { ReviewService } from '../../../services/reviews/review.service';
 import { $ } from 'protractor';
-import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { FormGroup, FormControl, Validators, FormArray, FormBuilder } from '@angular/forms';
 import { SocketService } from '../../../services/chats/socket.service';
 import { SocketEvent } from '../../../services/chats/model/event';
@@ -67,10 +67,10 @@ export class ProfileOverviewComponent implements OnInit {
   }];
 
   constructor(private route: ActivatedRoute,
-              private userService: UserService,
-              private reviewService: ReviewService,
-              public dialog: MatDialog,
-              private _socketService: SocketService) { }
+    private userService: UserService,
+    private reviewService: ReviewService,
+    public dialog: MatDialog,
+    private _socketService: SocketService) { }
 
   ngOnInit() {
     // get reviews to this user.
@@ -85,32 +85,9 @@ export class ProfileOverviewComponent implements OnInit {
 
   openDialog(): void {
 
-  //   let dialogRef = this.dialog.open(ReviewDialogComponent, {
-  //     width: '500px',
-  //     data: { name: this.user.firstName}
-  //   });
+    this.reviewService.review(this.user, this.userService.user).subscribe((result) => {
+      console.log('fin');
+    });
 
-  //   dialogRef.afterClosed().subscribe(result => {
-  //     if(result == null){
-  //       return;
-  //     }
-  //     let currentReview: Review = new Review();
-  //     console.log('The dialog was closed', result);
-  //     const date: Date = new Date();
-  //     currentReview._id = null;
-  //     currentReview.date = date;
-  //     currentReview.title = result.title.value;
-  //     currentReview.text = result.text.value;
-  //     currentReview.toUser = this.user;
-  //     currentReview.rating = 0;
-  //     currentReview.fromUser = this.userService.user;
-  //     currentReview.flagCount = 0;
-  //     console.log('about to create', currentReview);
-  //     this.reviewService.createReview(currentReview).then((review: Review) => {
-  //       console.log('created review ');
-  //       this.reviews.push(currentReview);
-  //     });
-  //   });
-  // }
-
+  }
 }

@@ -34,8 +34,9 @@ import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { ChartsModule } from 'ng2-charts/ng2-charts';
 import { FileUploadModule } from 'ng2-file-upload/ng2-file-upload';
 import { CommonPipesModule } from "../../pipes/common/common-pipes.module";
-
+import { ReviewDialogComponent } from "../../views/review/review-dialog/review-dialog.component"
 import { ProfileComponent } from "./profile.component";
+import { ProfileOverviewComponent } from './profile-overview/profile-overview.component';
 import { ProfileSettingsComponent } from './profile-settings/profile-settings.component';
 import { ProfileBlankComponent } from './profile-blank/profile-blank.component';
 import { ProfileRoutes } from "./profile.routing";
@@ -91,8 +92,9 @@ import { ReactiveFormsModule } from '@angular/forms';
     CommonPipesModule,
     RouterModule.forChild(ProfileRoutes)
   ],
-  entryComponents: [ProfileOverviewComponent, ReviewDialogComponent ],
-  declarations: [ProfileComponent, ProfileOverviewComponent, ProfileSettingsComponent, ProfileBlankComponent, ProfileEventsComponent, ProfileRequestComponent, ProfilePerformancesComponent, ReviewDialogComponent]
-
+  declarations: [ProfileComponent, ProfileOverviewComponent,
+    ProfileSettingsComponent, ProfileBlankComponent, ProfileEventsComponent,
+    ProfileRequestComponent, ProfilePerformancesComponent],
+  // entryComponents: [ReviewDialogComponent]
 })
 export class ProfileModule { }

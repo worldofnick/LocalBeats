@@ -44,6 +44,7 @@ export function createTranslateLoader(http: Http) {
     HttpModule,
     AppCommonModule,
     NegotiateModule,
+    ReviewModule,
     TranslateModule.forRoot({
       provide: TranslateLoader,
       useFactory: (createTranslateLoader),

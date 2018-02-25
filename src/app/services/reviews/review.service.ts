@@ -56,7 +56,7 @@ export class ReviewService {
                 return review;
             });
         });
-        return ;
+        return dialogRef.afterClosed();
     }
 
     // POST Create review
