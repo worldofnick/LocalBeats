@@ -59,7 +59,7 @@ export class ProfileRequestComponent implements OnInit {
     this.getAvailableEvents();
     this._socketService.onEvent(SocketEvent.SEND_NOTIFICATION)
       .subscribe((notification: Notification) => {
-        if (notification.response) {
+        if (notification.response != NegotiationResponses.payment) {
           this.updateModel(notification.booking, notification.response);
         }
     });

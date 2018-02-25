@@ -5,7 +5,7 @@ import { Observable } from 'rxjs/Observable';
 import { SocketService } from '../../services/chats/socket.service';
 import { User } from 'app/models/user';
 import { Event } from 'app/models/event';
-import { Booking } from 'app/models/booking';
+import { Booking, NegotiationResponses } from 'app/models/booking';
 import { Payment } from 'app/models/payment';
 import { Notification } from '../../models/notification'
 import { SocketEvent } from '../../services/chats/model/event'
@@ -71,7 +71,7 @@ export class StripeService {
             // Send notification
             let message = booking.hostUser.firstName + " " + booking.hostUser.lastName + " has paid you $" + booking.currentPrice +   " for " + booking.eventEID.eventName;
             let notification = new Notification(booking.hostUser, booking.performerUser, booking.eventEID._id,
-              booking, null, message, "payment", ['/events', booking.eventEID._id]);
+              booking, NegotiationResponses.payment, message, "payment", ['/events', booking.eventEID._id]);
             this._socketService.sendNotification(SocketEvent.SEND_NOTIFICATION, notification);
               return true;
             } else {
@@ -91,7 +91,7 @@ export class StripeService {
               // Send notification
               let message = booking.performerUser.firstName + " " + booking.performerUser.lastName + " has refunded you $" + booking.currentPrice +   " for " + booking.eventEID.eventName;
               let notification = new Notification(booking.performerUser, booking.hostUser, booking.eventEID._id,
-                booking, null, message, "payment", ['/events', booking.eventEID._id]);
+                booking, NegotiationResponses.payment, message, "payment", ['/events', booking.eventEID._id]);
               this._socketService.sendNotification(SocketEvent.SEND_NOTIFICATION, notification);
               return true;
             } else {
@@ -128,7 +128,7 @@ export class StripeService {
               }
               let message = sender.firstName + " " + sender.lastName + " has paid you $" + booking.currentPrice +   " for cancelling " + booking.eventEID.eventName;
               let notification = new Notification(sender, rec, booking.eventEID._id,
-                booking, null, message, "payment", ['/events', booking.eventEID._id]);
+                booking, NegotiationResponses.payment, message, "payment", ['/events', booking.eventEID._id]);
               this._socketService.sendNotification(SocketEvent.SEND_NOTIFICATION, notification);
               return true;
             } else {

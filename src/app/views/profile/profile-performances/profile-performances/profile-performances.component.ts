@@ -20,7 +20,7 @@ import { Action } from '../../../../services/chats/model/action'
 import { SocketEvent } from '../../../../services/chats/model/event'
 import { Notification } from '../../../../models/notification'
 import { Message } from '../../../../services/chats/model/message';
-import { Payment } from '../../../../models/payment'
+import { Payment, PaymentStatus } from '../../../../models/payment'
 
 @Component({
   selector: 'app-profile-performances',
@@ -30,7 +30,6 @@ import { Payment } from '../../../../models/payment'
 export class ProfilePerformancesComponent implements OnInit {
   // User Model
   user: User;
-  paymentStatues: string[];
   // Performances of the User Model
   performances: {
     applications: Booking[],
@@ -38,7 +37,8 @@ export class ProfilePerformancesComponent implements OnInit {
     requests: Booking[],
     requestNotifications: number,
     confirmations: Booking[],
-    confirmationNotifications: number};
+    confirmationNotifications: number,
+    paymentStatues: PaymentStatus[]};
 
   constructor(private eventService: EventService, 
     private userService: UserService,
@@ -58,26 +58,28 @@ export class ProfilePerformancesComponent implements OnInit {
         requests: [],
         requestNotifications: 0,
         confirmations: [],
-        confirmationNotifications: 0};
+        confirmationNotifications: 0,
+        paymentStatues: []};
       this.getPerformances();
     }
 
   ngOnInit() {
     this._socketService.onEvent(SocketEvent.SEND_NOTIFICATION)
       .subscribe((notification: Notification) => {
-        if (notification.response) {
+        if (notification.response == NegotiationResponses.payment) {
+          this.updatePaymentStatues();
+        } else {
           this.updateModel(notification.booking, notification.response);
         }
-        this.updatePaymentStatues();
     });
   }
 
   private updatePaymentStatues() {
       // Update payment status
-      this.paymentStatues = [];
+      this.performances.paymentStatues = [];
       for (let confirmed of this.performances.confirmations) {
-        this.bookingService.bookingPaymentStatus(confirmed).then((status: string) => {
-          this.paymentStatues.push(status);
+        this.bookingService.bookingPaymentStatus(confirmed).then((status: PaymentStatus) => {
+          this.performances.paymentStatues.push(status);
       });
     }
   }
@@ -95,7 +97,7 @@ export class ProfilePerformancesComponent implements OnInit {
       let numNotif: number = 0;
       let reqNotif: number = 0;
       let numConf: number = 0;
-
+      let paymentStatues = [];
       for(let booking of bookings) {
         if(booking.approved) {
           confirmedBookings.push(booking);
@@ -103,9 +105,8 @@ export class ProfilePerformancesComponent implements OnInit {
             if(!booking.artViewed) {
               numConf++;
             }
-            this.paymentStatues = [];
-            this.bookingService.bookingPaymentStatus(booking).then((status: string) => {
-              this.paymentStatues.push(status);
+            this.bookingService.bookingPaymentStatus(booking).then((status: PaymentStatus) => {
+              paymentStatues.push(status);
             }
           );
         } else {
@@ -132,7 +133,8 @@ export class ProfilePerformancesComponent implements OnInit {
         requests: requestBookings,
         requestNotifications: reqNotif,
         confirmations: confirmedBookings,
-        confirmationNotifications: numConf};
+        confirmationNotifications: numConf,
+        paymentStatues: paymentStatues};
     });
   }
 

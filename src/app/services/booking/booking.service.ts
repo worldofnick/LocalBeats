@@ -6,6 +6,7 @@ import { Observable } from 'rxjs/Observable';
 import { Booking, NegotiationResponses } from 'app/models/booking';
 import { Event } from 'app/models/event';
 import { User } from 'app/models/user';
+import { PaymentStatus } from 'app/models/payment';
 import { NegotiateDialogComponent } from '../../views/negotiate/negotiate-dialog/negotiate-dialog.component';
 import { environment } from '../../../environments/environment';
 
@@ -110,7 +111,7 @@ export class BookingService {
             .catch(this.handleError);
     }
 
-    public bookingPaymentStatus(booking: Booking): Promise<String> {
+    public bookingPaymentStatus(booking: Booking): Promise<PaymentStatus> {
         const current = this.paymentBookingConnection + '/?bid=' + booking._id
         
         return this.http.get(current, { headers: this.headers })

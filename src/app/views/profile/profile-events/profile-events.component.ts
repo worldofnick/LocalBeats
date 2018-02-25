@@ -23,7 +23,7 @@ import { Action } from '../../../services/chats/model/action';
 import { SocketEvent } from '../../../services/chats/model/event';
 import { Notification } from '../../../models/notification';
 import { Message } from '../../../services/chats/model/message';
-import { Payment } from '../../../models/payment';
+import { Payment, PaymentStatus } from '../../../models/payment';
 
 
 @Component({
@@ -34,7 +34,6 @@ import { Payment } from '../../../models/payment';
 export class ProfileEventsComponent implements OnInit {
   // User Model
   user: User;
-  paymentStatues: string[];
   // Hosted Events of the User Model
   events: {
     event: Event,
@@ -43,7 +42,8 @@ export class ProfileEventsComponent implements OnInit {
     requests: Booking[],
     requestNotifications: number,
     confirmations: Booking[],
-    confirmationNotifications: number}[];
+    confirmationNotifications: number,
+    paymentStatues: PaymentStatus[]}[];
 
   constructor(private eventService: EventService,
     private userService: UserService,
@@ -63,20 +63,21 @@ export class ProfileEventsComponent implements OnInit {
   ngOnInit() {
     this._socketService.onEvent(SocketEvent.SEND_NOTIFICATION)
       .subscribe((notification: Notification) => {
-        if (notification.response) {
+        if (notification.response == NegotiationResponses.payment) {
+          this.updatePaymentStatues();
+        } else {
           this.updateModel(notification.booking, notification.response);
         }
-        this.updatePaymentStatues();
     });
   }
 
   private updatePaymentStatues() {
     // Update payment status'
     for (let e of this.events) {
-      this.paymentStatues = [];
+      e.paymentStatues = [];
       for (let confirmed of e.confirmations) {
-        this.bookingService.bookingPaymentStatus(confirmed).then((status: string) => {
-          this.paymentStatues.push(status);
+        this.bookingService.bookingPaymentStatus(confirmed).then((status: PaymentStatus) => {
+          e.paymentStatues.push(status);
         });
       }
     }
@@ -98,6 +99,7 @@ export class ProfileEventsComponent implements OnInit {
         let numNotif: number = 0;
         let reqNotif: number = 0;
         let numConf: number = 0;
+        let paymentStatues = [];  
         this.bookingService.getBooking(e).then((bookings: Booking[]) => {
           for(let booking of bookings) {
             if(booking.approved) {
@@ -106,9 +108,8 @@ export class ProfileEventsComponent implements OnInit {
               if(!booking.hostViewed) {
                 numConf++;
               }
-              this.paymentStatues = [];
               this.bookingService.bookingPaymentStatus(booking).then((status: string) => {
-                this.paymentStatues.push(status);
+                paymentStatues.push(status);
               });
             } else {
               // Check to see if the artist applied
@@ -129,7 +130,8 @@ export class ProfileEventsComponent implements OnInit {
             }
           }
           this.events.push({event: e, applications: applicationBookings, applicationNotifications: numNotif,
-            requests: requestBookings, requestNotifications: reqNotif, confirmations: confirmedBookings, confirmationNotifications: numConf});
+            requests: requestBookings, requestNotifications: reqNotif, confirmations: confirmedBookings, confirmationNotifications: numConf,
+            paymentStatues: paymentStatues});
         })
       }
     })
