@@ -3,6 +3,7 @@ import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AgmCoreModule, MapsAPILoader } from '@agm/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { CurrencyMaskModule } from "ng2-currency-mask";
 import { 
   MatInputModule,
   MatDatepickerModule, 
@@ -56,6 +57,7 @@ import { StripeDialog } from './event-singleton/event-singleton.component';
       apiKey: "AIzaSyBCko4eEq6azFCzCXVXAF4_jylVNw4ZM7Q"
     }),
     FormsModule,
+    CurrencyMaskModule,
     ReactiveFormsModule,
     MatInputModule,
     MatListModule,
