@@ -91,7 +91,7 @@
             <mat-card-actions>
               <button [disabled]="booking.hostVerified" *ngIf="!booking.completed" (click)="openNegotiationDialog(booking, i, j)" mat-raised-button color="primary">Cancel Booking</button>
               <button (click)="messageArtist(booking)" mat-raised-button color="accent">Message Artist</button>
-              <button [disabled]="booking.hostVerified" (click)="hostVerify(booking, i, j)" mat-raised-button color="accent">Verify Artist</button>
+              <button *ngIf="!booking.completed" [disabled]="booking.hostVerified" (click)="hostVerify(booking, i, j)" mat-raised-button color="accent">Verify Artist</button>
             </mat-card-actions>
           </mat-card>
         </mat-tab>
