@@ -1,12 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { ActivatedRoute } from "@angular/router";
 import { DatePipe } from '@angular/common'
 import { Router } from "@angular/router";
-
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
 import { UserService } from '../../../services/auth/user.service';
 import { BookingService } from '../../../services/booking/booking.service';
 import { EventService } from '../../../services/event/event.service';
+import { StripeService } from 'app/services/payments/stripe.service';
 import { User } from '../../../models/user';
 import { Event } from '../../../models/event';
 import { Booking, StatusMessages, NegotiationResponses } from '../../../models/booking';
@@ -45,7 +46,8 @@ export class EventSingletonComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private _socketService: SocketService,
-    public datepipe: DatePipe
+    public datepipe: DatePipe,
+    public dialog: MatDialog
   ) { }
 
   ngOnInit() {
@@ -155,6 +157,11 @@ export class EventSingletonComponent implements OnInit {
   }
 
   newApplication() {
+
+    if (!this.userService.user.stripeAccountId) {
+      this.showStripeDialog();
+    }
+
     this.userBooking = new Booking(undefined, 'artist-apply', this.model.hostUser, this.userService.user, this.model, false, false, false, StatusMessages.artistBid, StatusMessages.waitingOnHost, false, true, false, this.model.fixedPrice);
     this.bookingService.negotiate(this.userBooking, true).subscribe((result) => {
       if (result != undefined) {
@@ -271,4 +278,41 @@ export class EventSingletonComponent implements OnInit {
       booking, response, message, icon, route); 
     this._socketService.sendNotification(SocketEvent.SEND_NOTIFICATION, notification);
   }
+
+  showStripeDialog() {
+    let dialogRef: MatDialogRef<StripeDialog>;
+    dialogRef = this.dialog.open(StripeDialog, {
+        width: '250px',
+        disableClose: false,
+        data: { }
+    });
+
+    dialogRef.afterClosed();
+  }
+}
+
+// Setup Stripe Dialog
+@Component({
+  selector: 'stripe-dialog',
+  templateUrl: 'stripe-dialog.html',
+})
+export class StripeDialog {
+
+  constructor(
+    public dialogRef: MatDialogRef<StripeDialog>,
+    @Inject(MAT_DIALOG_DATA) public data: any, private _socketService: SocketService, private stripeService: StripeService,
+      private userService: UserService) { }
+
+    ngOnInit() { }
+  
+    onOkClick(): void {
+      this.stripeService.authorizeStripe(this.userService.user).then((url: string) => {
+        window.location.href = url;
+      });
+    }
+
+    onNoClick(): void {
+      this.dialogRef.close();
+    }
+
 }

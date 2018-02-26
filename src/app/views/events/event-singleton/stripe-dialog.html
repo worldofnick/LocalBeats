@@ -1,0 +1,17 @@
+<h1 matDialogTitle>Setup Payments</h1>
+<div mat-dialog-content>Before palying at an even you need to setup with Stripe so you can get paid!</div>
+<br>
+<div mat-dialog-actions>
+<button 
+type="button" 
+mat-raised-button
+color="primary" 
+(click)="onOkClick()">Setup Stripe</button>
+&nbsp;
+<span fxFlex></span>
+<button 
+type="button"
+color="accent"
+mat-raised-button 
+(click)="onNoClick()">Cancel</button>
+</div>
