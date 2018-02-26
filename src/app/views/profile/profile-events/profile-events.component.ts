@@ -261,12 +261,16 @@ export class ProfileEventsComponent implements OnInit {
           booking.hostVerified = true;
           // If Artist has verified, the booking is complete
           if(booking.artistVerified) {
+            booking.hostStatusMessage = StatusMessages.completed;
+            booking.artistStatusMessage = StatusMessages.completed;
             booking.completed = true;
             booking.hostViewed = false;
             booking.artViewed = false;
             response = NegotiationResponses.complete;
             notificationMessage = "Booking is complete";
           } else {
+            booking.hostStatusMessage = StatusMessages.waitingOnArtist;
+            booking.artistStatusMessage = StatusMessages.hostVerified;
             booking.artViewed = false;
             booking.hostViewed = true;
             notificationMessage = booking.hostUser.firstName + " has verified you for the event " + booking.eventEID.eventName;
@@ -274,6 +278,8 @@ export class ProfileEventsComponent implements OnInit {
           }
         } else {
           // The host has rejected verification of the artist's attendance
+          booking.hostStatusMessage = StatusMessages.hostRejected;
+          booking.artistStatusMessage = StatusMessages.hostRejected;
           booking.artViewed = false;
           booking.hostViewed = true;
           booking.hostVerified = false;
@@ -282,6 +288,12 @@ export class ProfileEventsComponent implements OnInit {
         }
         // Update the booking asynchronously
         this.bookingService.updateBooking(booking).then(() => {
+          if(booking.completed) {
+            this.events[eventIndex].confirmations[bookingIndex] = booking;
+            this.events[eventIndex].confirmationNotifications++;
+          } else {
+            this.events[eventIndex].confirmations[bookingIndex] = booking;
+          }
           // Send notification to artist
           this.createNotificationForArtist(booking, response, ['/profile', 'performances'],
               'event_available', notificationMessage);

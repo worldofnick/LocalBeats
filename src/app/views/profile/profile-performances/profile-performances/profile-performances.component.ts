@@ -269,29 +269,45 @@ export class ProfilePerformancesComponent implements OnInit {
           // The artist has verified the host's attendance
           booking.artistVerified = true;
           // If host has verified, the booking is complete
-          if(booking.artistVerified) {
+          if(booking.hostVerified) {
+            booking.hostStatusMessage = StatusMessages.completed;
+            booking.artistStatusMessage = StatusMessages.completed;
             booking.completed = true;
             booking.hostViewed = false;
             booking.artViewed = false;
             response = NegotiationResponses.complete;
             notificationMessage = "Booking is complete";
           } else {
+            booking.hostStatusMessage = StatusMessages.artistVerified;
+            booking.artistStatusMessage = StatusMessages.waitingOnHost;
             booking.artViewed = true;
             booking.hostViewed = false;
             notificationMessage = booking.performerUser.firstName + " has verified you for the event " + booking.eventEID.eventName;
             response = NegotiationResponses.verification;
           }
         } else {
+          console.log('rejected verification')
           // The host has rejected verification of the artist's attendance
-          booking.artViewed = false;
-          booking.hostViewed = true;
-          booking.hostVerified = false;
+          booking.hostStatusMessage = StatusMessages.hostRejected;
+          booking.artistStatusMessage = StatusMessages.hostRejected;
+          booking.artViewed = true;
+          booking.hostViewed = false;
+          booking.artistVerified = false;
           notificationMessage = booking.performerUser.firstName + " has invalidated you for the event " + booking.eventEID.eventName;
           response = NegotiationResponses.verification;
         }
         // Update the booking asynchronously
         this.bookingService.updateBooking(booking).then(() => {
-          // Send notification to artist
+          // If the booking is completed, move it into completed bookings
+          if(booking.completed) {
+            // remove from confirmations
+            this.performances.confirmations.splice(bookingIndex, 1);
+            this.performances.completed.push(booking);
+            this.performances.completedNotifications++;
+          } else {
+            this.performances.confirmations[bookingIndex] = booking;
+          }
+          // Send notification to host
           this.createNotificationForHost(booking, response, ['/profile', 'events'],
               'event_available', notificationMessage);
         });

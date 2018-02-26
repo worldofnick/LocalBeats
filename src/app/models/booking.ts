@@ -36,7 +36,12 @@ export enum StatusMessages {
     waitingOnHost = "Waiting for response from Host",
     waitingOnArtist = "Waiting for response from Artist",
     bookingConfirmed = "Booking Confirmed",
-    cancelled = "Booking has been cancelled",
+    artistVerified = "Artist Verified",
+    hostVerified = "Host Verified",
+    artistRejected = "Artist Rejected",
+    hostRejected = "Host Rejected",
+    completed = "Booking Completed",
+    cancelled = "Booking Cancelled",
 }
 
 export enum NegotiationResponses {
