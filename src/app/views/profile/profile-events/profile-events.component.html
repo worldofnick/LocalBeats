@@ -89,8 +89,17 @@
             <mat-card-content>
             </mat-card-content>
             <mat-card-actions>
-              <button (click)="openNegotiationDialog(booking, i, j)" mat-raised-button color="primary">Cancel Booking</button>
+              <button *ngIf="item.paymentStatues[i] != 'paid'" (click)="openNegotiationDialog(booking, i, j)" mat-raised-button color="primary">Cancel Booking</button>
               <button (click)="messageArtist(booking)" mat-raised-button color="accent">Message Artist</button>
+              <button *ngIf="item.paymentStatues[i] != 'waiting'" (click)="showPaymentHistoryDialog(booking)" mat-raised-button color="accent">View Payment History</button>
+              <!-- If the booking hasn't been paid or canceled then allow for a payment to be sent -->
+              <button *ngIf="item.paymentStatues[i] != 'paid' && (item.paymentStatues[i] != 'host_cancel' && item.paymentStatues[i] != 'artist_cancel')" (click)="showPayDialog(booking)" mat-raised-button color="primary">Pay Artist {{booking.currentPrice | currency}}</button>
+              <!-- If the booking has been paid show a paid chip -->
+              <mat-chip *ngIf="item.paymentStatues[i] == 'paid'" color="primary" selected="true">Paid</mat-chip>
+              <!-- If the booking has been refunded show a refunded chip -->
+              <mat-chip *ngIf="item.paymentStatues[i] == 'refund'" color ="accent" selected="true">Refunded</mat-chip>
+               <!-- If the booking has been canceled show a cancellation chip -->
+              <mat-chip *ngIf="item.paymentStatues[i] == 'host_cancel' || item.paymentStatues[i] == 'artist_cancel'" color ="accent" selected="true">Canceled</mat-chip>
             </mat-card-actions>
           </mat-card>
         </mat-tab>

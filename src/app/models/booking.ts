@@ -34,5 +34,6 @@ export enum NegotiationResponses {
     accept = 1, // Accepting the current offer/bid/application/request
     decline = 2, // Decline the current offer/bid/application/request
     nochange = 3, // No change on the user's current offer/bid/application/request
-    cancel = 4, // Cancellation of a confirmed booking
+    cancel = 4, // Cancellation of a confirmed 
+    payment = 5, // Payment
 }

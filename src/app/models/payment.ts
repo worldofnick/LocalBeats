@@ -9,5 +9,13 @@ export class Payment {
   public date: Date
   public amount: number
   public stripeChargeId: string
-  public type: string // {"payment", "refund"}
+  public type: PaymentStatus // {"payment", "refund", "cancellation"}
+}
+
+export enum PaymentStatus {
+  paid = "paid",
+  refund = "refund",
+  host_cancel = "host_cancel",
+  artist_cancel = "artist_cancel",
+  unpaid = "waiting"
 }

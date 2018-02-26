@@ -147,7 +147,6 @@ export class ProfileSettingsComponent implements OnInit {
   }
 
   unlinkStripe() {
-    console.log("unlink stripe");
     this.user.stripeAccountId = null;
     this.userService.onEditProfile(this.user).then((user: User) => {
       this.user = user;
