@@ -10,7 +10,7 @@
   <div *ngFor="let item of this.events; let j = index" class="example-card">
     <mat-card class="p-0">
       <mat-tab-group (selectedTabChange)="resetConfirmations($event, j)">
-        <mat-tab label="Event Details">
+        <mat-tab label="Details">
           <mat-card class="no-shadow">
             <mat-card-header>
               <img mat-card-avatar [src]="item.event.eventPicUrl">
@@ -30,7 +30,7 @@
         </mat-tab>
         <mat-tab>
           <ng-template mat-tab-label>
-              Artist Applicants <span *ngIf="item.applicationNotifications > 0" class="notification-value mat-bg-warn">{{item.applicationNotifications}}</span>
+              Applicants <span *ngIf="item.applicationNotifications > 0" class="notification-value mat-bg-warn">{{item.applicationNotifications}}</span>
           </ng-template>
           <mat-card *ngIf="item.applications.length == 0" class="example-card no-shadow">
             <mat-card-title>You have no applicants.</mat-card-title>
@@ -52,7 +52,7 @@
         </mat-tab>
         <mat-tab>
           <ng-template mat-tab-label>
-              Requested Artists <span *ngIf="item.requestNotifications > 0" class="notification-value mat-bg-warn">{{item.requestNotifications}}</span>
+              Requests <span *ngIf="item.requestNotifications > 0" class="notification-value mat-bg-warn">{{item.requestNotifications}}</span>
           </ng-template>
           <mat-card *ngIf="item.requests.length == 0" class="example-card no-shadow">
             <mat-card-title>You have not requested any artists.</mat-card-title>
@@ -74,7 +74,7 @@
         </mat-tab>
         <mat-tab>
           <ng-template mat-tab-label>
-            Booked Artists <span *ngIf="item.confirmationNotifications > 0" class="notification-value mat-bg-warn">{{item.confirmationNotifications}}</span>
+            Bookings <span *ngIf="item.confirmationNotifications > 0" class="notification-value mat-bg-warn">{{item.confirmationNotifications}}</span>
           </ng-template>
           <mat-card *ngIf="item.confirmations.length == 0" class="example-card no-shadow">
             <mat-card-title>You have no musicians booked.</mat-card-title>
@@ -89,17 +89,36 @@
             <mat-card-content>
             </mat-card-content>
             <mat-card-actions>
-              <button *ngIf="item.paymentStatues[i] != 'paid'" (click)="openNegotiationDialog(booking, i, j)" mat-raised-button color="primary">Cancel Booking</button>
+              <button *ngIf="!booking.completed" [disabled]="booking.hostVerified" (click)="openNegotiationDialog(booking, i, j)" mat-raised-button color="primary">Cancel Booking</button>
               <button (click)="messageArtist(booking)" mat-raised-button color="accent">Message Artist</button>
-              <button *ngIf="item.paymentStatues[i] != 'waiting'" (click)="showPaymentHistoryDialog(booking)" mat-raised-button color="accent">View Payment History</button>
+              <button *ngIf="!booking.completed" [disabled]="booking.hostVerified" (click)="hostVerify(booking, i, j)" mat-raised-button color="accent">Artist Verification and Payment</button>
+              <button *ngIf="booking.completed && item.paymentStatues[i] != 'waiting'" (click)="showPaymentHistoryDialog(booking)" mat-raised-button color="accent">View Payment History</button>
               <!-- If the booking hasn't been paid or canceled then allow for a payment to be sent -->
-              <button *ngIf="item.paymentStatues[i] != 'paid' && (item.paymentStatues[i] != 'host_cancel' && item.paymentStatues[i] != 'artist_cancel')" (click)="showPayDialog(booking)" mat-raised-button color="primary">Pay Artist {{booking.currentPrice | currency}}</button>
+              <button *ngIf="booking.completed && item.paymentStatues[i] != 'paid' && (item.paymentStatues[i] != 'host_cancel' && item.paymentStatues[i] != 'artist_cancel')" (click)="showPayDialog(booking)" mat-raised-button color="primary">Pay Artist {{booking.currentPrice | currency}}</button>
               <!-- If the booking has been paid show a paid chip -->
-              <mat-chip *ngIf="item.paymentStatues[i] == 'paid'" color="primary" selected="true">Paid</mat-chip>
+              <mat-chip *ngIf="booking.completed && item.paymentStatues[i] == 'paid'" color="primary" selected="true">Paid</mat-chip>
               <!-- If the booking has been refunded show a refunded chip -->
-              <mat-chip *ngIf="item.paymentStatues[i] == 'refund'" color ="accent" selected="true">Refunded</mat-chip>
-               <!-- If the booking has been canceled show a cancellation chip -->
-              <mat-chip *ngIf="item.paymentStatues[i] == 'host_cancel' || item.paymentStatues[i] == 'artist_cancel'" color ="accent" selected="true">Canceled</mat-chip>
+              <mat-chip *ngIf="booking.completed && item.paymentStatues[i] == 'refund'" color ="accent" selected="true">Refunded</mat-chip>
+            </mat-card-actions>
+          </mat-card>
+        </mat-tab>
+        <mat-tab>
+          <ng-template mat-tab-label>
+            Cancellations <span *ngIf="item.cancellationNotifications > 0" class="notification-value mat-bg-warn">{{item.cancellationNotifications}}</span>
+          </ng-template>
+          <mat-card *ngIf="item.cancellations.length == 0" class="example-card no-shadow">
+            <mat-card-title>You have no cancelled bookings.</mat-card-title>
+          </mat-card>
+          <mat-card *ngFor="let booking of item.cancellations; let i = index" class="example-card no-shadow">
+            <mat-card-header>
+              <img mat-card-avatar [src]="booking.performerUser.profilePicUrl">
+              <mat-card-title><a [routerLink]="['/profile', booking.performerUser._id]">{{booking.performerUser.firstName}} {{booking.performerUser.lastName}}</a></mat-card-title>
+              <mat-card-subtitle>{{booking.hostStatusMessage}}</mat-card-subtitle>
+              <mat-card-subtitle>{{booking.currentPrice | currency}}</mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-content>
+            </mat-card-content>
+            <mat-card-actions>
             </mat-card-actions>
           </mat-card>
         </mat-tab>

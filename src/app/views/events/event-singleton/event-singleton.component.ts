@@ -9,7 +9,7 @@ import { BookingService } from '../../../services/booking/booking.service';
 import { EventService } from '../../../services/event/event.service';
 import { User } from '../../../models/user';
 import { Event } from '../../../models/event';
-import { Booking, StatusMessages, NegotiationResponses } from '../../../models/booking';
+import { Booking, StatusMessages, NegotiationResponses, BookingType } from '../../../models/booking';
 import { Action } from '../../../services/chats/model/action'
 import { SocketEvent } from '../../../services/chats/model/event'
 import { Notification } from '../../../models/notification'
@@ -29,8 +29,6 @@ export class EventSingletonComponent implements OnInit {
   public userBooking: Booking;
   public isCurrentUser: boolean = null;
   public hasApplied: boolean = null;
-  public currentBookings: Booking[] = [];
-  public approvedBookings: Booking[] = [];
   public dateInBar: Date;
   public zoom: number;
   public lat: number;
@@ -155,7 +153,7 @@ export class EventSingletonComponent implements OnInit {
   }
 
   newApplication() {
-    this.userBooking = new Booking(undefined, 'artist-apply', this.model.hostUser, this.userService.user, this.model, false, false, false, StatusMessages.artistBid, StatusMessages.waitingOnHost, false, true, false, this.model.fixedPrice);
+    this.userBooking = new Booking(undefined, BookingType.artistApply, this.model.hostUser, this.userService.user, this.model, false, false, false, StatusMessages.artistBid, StatusMessages.waitingOnHost, true, false, this.model.fixedPrice, null, null);
     this.bookingService.negotiate(this.userBooking, true).subscribe((result) => {
       if (result != undefined) {
         if (result.response == NegotiationResponses.new) {

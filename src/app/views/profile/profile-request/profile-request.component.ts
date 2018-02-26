@@ -10,7 +10,7 @@ import { SocketService } from '../../../services/chats/socket.service';
 
 // Data Models
 import { User } from '../../../models/user';
-import { Booking, StatusMessages, NegotiationResponses } from '../../../models/booking';
+import { Booking, StatusMessages, NegotiationResponses, BookingType } from '../../../models/booking';
 import { Event } from '../../../models/event';
 import { Action } from '../../../services/chats/model/action'
 import { SocketEvent } from '../../../services/chats/model/event'
@@ -237,7 +237,7 @@ export class ProfileRequestComponent implements OnInit {
   }
 
   newRequest(event: Event, eventIndex: number) {
-    let tempBooking = new Booking(undefined, 'host-request', event.hostUser, this.artist, event, false, false, false, StatusMessages.waitingOnArtist, StatusMessages.hostOffer, false, false, true, event.fixedPrice);
+    let tempBooking = new Booking(undefined, BookingType.hostRequest, event.hostUser, this.artist, event, false, false, false, StatusMessages.waitingOnArtist, StatusMessages.hostOffer, false, true, event.fixedPrice, null, null);
     this.bookingService.negotiate(tempBooking, true).subscribe((result) => {
       if (result != undefined) {
         if (result.response == NegotiationResponses.new) {
