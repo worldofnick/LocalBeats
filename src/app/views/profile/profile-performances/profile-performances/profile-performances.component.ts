@@ -334,7 +334,7 @@ export class ProfilePerformancesComponent implements OnInit {
                   this.performances.confirmations.splice(bookingIndex, 1);
                   this.performances.paymentStatues.push(status);
                   this.performances.completed.push(booking);
-                  this.performances.completedNotifications++
+                  this.performances.completedNotifications++;
                   let snackBarRef = this.snackBar.open('Payment sent!', "", {
                     duration: 1500,
                   });
