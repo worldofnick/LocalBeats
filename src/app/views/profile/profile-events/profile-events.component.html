@@ -107,7 +107,7 @@
             Cancellations <span *ngIf="item.cancellationNotifications > 0" class="notification-value mat-bg-warn">{{item.cancellationNotifications}}</span>
           </ng-template>
           <mat-card *ngIf="item.cancellations.length == 0" class="example-card no-shadow">
-            <mat-card-title>You have no musicians booked.</mat-card-title>
+            <mat-card-title>You have no cancelled bookings.</mat-card-title>
           </mat-card>
           <mat-card *ngFor="let booking of item.cancellations; let i = index" class="example-card no-shadow">
             <mat-card-header>
