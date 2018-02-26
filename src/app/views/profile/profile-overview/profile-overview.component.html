@@ -60,6 +60,7 @@
               <div *ngIf="userService.isAuthenticated() && review.fromUser._id == userService.user._id" class="timeline-body-top" fxLayout="row">
                   <button mat-raised-button color="accent" (click)="editReview(review)" mat-button
                   class="half-width">Edit Review</button>
+                  
                 </div>
 
               <!-- <div class="timeline-body-actions">

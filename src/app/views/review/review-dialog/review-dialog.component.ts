@@ -23,7 +23,7 @@ import { NgForm } from '@angular/forms/src/directives/ng_form';
   export class ReviewDialogComponent implements OnInit {
     reviewForm: FormGroup;
     currentReview: Review =  new Review;
-    isEditing:boolean;
+    isEditing: boolean;
 
     constructor(
       public dialogRef: MatDialogRef<ReviewDialogComponent>,
@@ -36,7 +36,8 @@ import { NgForm } from '@angular/forms/src/directives/ng_form';
 
     // this needs to be ngOnInit, not onInit.
     ngOnInit() {
-      this.createForm();    }
+      this.createForm();
+    }
 
     onNoClick(): void {
       const emptyReview: Review = new Review;
@@ -49,17 +50,26 @@ import { NgForm } from '@angular/forms/src/directives/ng_form';
       this.currentReview.text = this.reviewForm.get('text').value;
       this.currentReview.rating = this.reviewForm.get('rating').value;
       if (!this.isEditing) {
-        //creating new review
+        // creating new review. if editing we have all of the data.
         this.currentReview.flagCount = 0;
         this.currentReview.date = new Date();
         this.currentReview._id = null;
       }
+      console.log('returning update');
       this.dialogRef.close(this.currentReview);
+    }
+
+    onDelete() {
+      const emptyReview: Review = new Review;
+      emptyReview._id = this.currentReview._id;
+      emptyReview.rating = -2; // code to delete event
+      console.log('returning -2')
+      this.dialogRef.close(emptyReview);
     }
 
     createForm() {
 
-      if(this.currentReview.rating){
+      if (this.currentReview.rating) {
         this.reviewForm = this.formBuilder.group({
           title: new FormControl(this.currentReview.title, [
             Validators.required
@@ -71,7 +81,7 @@ import { NgForm } from '@angular/forms/src/directives/ng_form';
             Validators.required
           ]),
           });
-      }else{
+      }else {
         this.reviewForm = this.formBuilder.group({
           title: new FormControl(this.currentReview.title, [
             Validators.required

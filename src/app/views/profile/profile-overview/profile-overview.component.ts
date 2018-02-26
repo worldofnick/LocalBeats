@@ -128,12 +128,27 @@ export class ProfileOverviewComponent implements OnInit {
 
   editReview(review: Review) {
     this.reviewService.review(review, true).subscribe((result) => {
-      if(result.rating == -1) {
+      console.log(result)
+      if (result.rating == -1) {
+        console.log('-1');
         return;
+      }else if (result.rating == -2) {
+        this.reviewService.deleteReviewByRID(result).then( () => {
+          this.setReviews();
+        });
+      }else {
+        console.log('else');
+        this.reviewService.updateReview(review).then( () => {
+          this.setReviews();
+        });
       }
-      this.reviewService.updateReview(review);
     });
   }
+
+  deleteReview(review: Review) {
+
+  }
+
 
   updateModel(id: any) {
     this.userService.getUserByID(id).then( (user: User) => {

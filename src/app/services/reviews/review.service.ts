@@ -81,6 +81,7 @@ export class ReviewService {
 
     // DELETE delete a review by id
     public deleteReviewByRID(reviewToDelete: Review): Promise<Number> {
+        console.log('deleting review', reviewToDelete);
         const current = this.connection + '/' + reviewToDelete._id;
         return this.http.delete(current)
             .toPromise()

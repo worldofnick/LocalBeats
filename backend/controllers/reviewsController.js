@@ -66,13 +66,19 @@ exports.updateReviewByID = function (req, res) {
 };
 
 exports.deleteReviewByID = function (req, res) {
-    Reviews.findByIdAndRemove(req.params.bid, function (err, review) {
+    console.log(req.params);
+    Reviews.findByIdAndRemove(req.params.rid, function (err, review) {
         if (err) {
+            console.log('err delete review');
+
             return res.status(500).send("There was a problem deleting the review.");
         } else {
             if (review == null) {
+                console.log('null review');
+
                 return res.status(200).send("Review was already deleted.");
             } else {
+                console.log('removed review');
                 return res.status(200).send("Review removed");
             }
         }
