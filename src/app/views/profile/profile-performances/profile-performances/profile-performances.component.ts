@@ -257,7 +257,7 @@ export class ProfilePerformancesComponent implements OnInit {
   }
 
   artistVerify(booking: Booking, bookingIndex: number) {
-    this.bookingService.verify(booking, true)
+    this.bookingService.verify(booking, false)
     .subscribe((result)=> {
       // Check to see if a response was recorded in the verification dialog box
       if(result != undefined) {
