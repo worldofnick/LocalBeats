@@ -51,7 +51,8 @@ export class ProfilePerformancesComponent implements OnInit {
     private router: Router,
     private _socketService: SocketService,
     private stripeService: StripeService,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    public snackBar: MatSnackBar
     ) {
       // Set user model to the authenticated singleton user
       this.user = this.userService.user;
@@ -74,11 +75,7 @@ export class ProfilePerformancesComponent implements OnInit {
   ngOnInit() {
     this._socketService.onEvent(SocketEvent.SEND_NOTIFICATION)
       .subscribe((notification: Notification) => {
-        if (notification.response == NegotiationResponses.payment) {
-          this.updatePaymentStatues(notification.booking);
-        } else {
-          this.updateModel(notification.booking, notification.response);
-        }
+        this.updateModel(notification.booking, notification.response);
     });
   }
 
@@ -233,12 +230,22 @@ export class ProfilePerformancesComponent implements OnInit {
       this.performances.confirmations.splice(confirmationIndex, 1);
       this.performances.cancellationNotifications++;
       this.performances.cancellations.push(newBooking);
-    } else if(response == NegotiationResponses.complete) {
+    } else if(response == NegotiationResponses.payment) {
       confirmationIndex = this.performances.confirmations.findIndex(a => a._id == newBooking._id);
-      // The host has completed the booking
-      this.performances.confirmations.splice(confirmationIndex, 1);
-      this.performances.completedNotifications++;
-      this.performances.completed.push(newBooking);
+      if(confirmationIndex >= 0) {
+        // The host has completed the booking
+        this.performances.confirmations.splice(confirmationIndex, 1);
+        this.performances.completedNotifications++;
+        this.performances.completed.push(newBooking);
+        // Update payment status
+        this.bookingService.bookingPaymentStatus(newBooking).then((status: PaymentStatus) => {
+          this.performances.paymentStatues.push(status);
+        });
+      } else {
+        this.performances.completedNotifications++;
+        this.updatePaymentStatues(newBooking);
+      }
+      
     } else if(response == NegotiationResponses.verification) {
       confirmationIndex = this.performances.confirmations.findIndex(a => a._id == newBooking._id);
       // The host has either verified or not, update the booking so the artist is aware
@@ -295,11 +302,9 @@ export class ProfilePerformancesComponent implements OnInit {
           if(booking.hostVerified) {
             booking.hostStatusMessage = StatusMessages.completed;
             booking.artistStatusMessage = StatusMessages.completed;
-            booking.completed = true;
             booking.hostViewed = false;
             booking.artViewed = false;
-            response = NegotiationResponses.complete;
-            notificationMessage = "Booking is complete";
+            // Don't need a notification sent from component because stripe service will send it
           } else {
             booking.hostStatusMessage = StatusMessages.artistVerified;
             booking.artistStatusMessage = StatusMessages.waitingOnHost;
@@ -309,10 +314,9 @@ export class ProfilePerformancesComponent implements OnInit {
             response = NegotiationResponses.verification;
           }
         } else {
-          console.log('rejected verification')
-          // The host has rejected verification of the artist's attendance
-          booking.hostStatusMessage = StatusMessages.hostRejected;
-          booking.artistStatusMessage = StatusMessages.hostRejected;
+          // The artist has rejected verification of the host
+          booking.hostStatusMessage = StatusMessages.artistRejected;
+          booking.artistStatusMessage = StatusMessages.artistRejected;
           booking.artViewed = true;
           booking.hostViewed = false;
           booking.artistVerified = false;
@@ -321,18 +325,31 @@ export class ProfilePerformancesComponent implements OnInit {
         }
         // Update the booking asynchronously
         this.bookingService.updateBooking(booking).then(() => {
-          // If the booking is completed, move it into completed bookings
+          // If the booking is verified, now wait for payment
           if(booking.completed) {
-            // remove from confirmations
-            this.performances.confirmations.splice(bookingIndex, 1);
-            this.performances.completed.push(booking);
-            this.performances.completedNotifications++;
+            this.stripeService.charge(booking).then((success: boolean) => {
+              if (success) {
+                this.bookingService.bookingPaymentStatus(booking).then((status: PaymentStatus) => {
+                  this.performances.confirmations.splice(bookingIndex, 1);
+                  this.performances.paymentStatues.push(status);
+                  this.performances.completed.push(booking);
+                  this.performances.completedNotifications++
+                  let snackBarRef = this.snackBar.open('Payment sent!', "", {
+                    duration: 1500,
+                  });
+                });
+              } else {
+                let snackBarRef = this.snackBar.open('Payment failed, please try again.', "", {
+                  duration: 1500,
+                });
+              }
+            });
           } else {
             this.performances.confirmations[bookingIndex] = booking;
+            // Send notification to host
+            this.createNotificationForHost(booking, response, ['/profile', 'events'],
+            'event_available', notificationMessage);
           }
-          // Send notification to host
-          this.createNotificationForHost(booking, response, ['/profile', 'events'],
-              'event_available', notificationMessage);
         });
       }
     })

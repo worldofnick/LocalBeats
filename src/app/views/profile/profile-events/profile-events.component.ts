@@ -7,7 +7,6 @@ import { MatTabChangeEvent } from '@angular/material';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatSnackBar} from '@angular/material';
 import { PaymentHistoryDialog } from '../profile-performances/profile-performances/profile-performances.component';
 
-
 // Services
 import { UserService } from '../../../services/auth/user.service';
 import { BookingService } from '../../../services/booking/booking.service';
@@ -54,7 +53,8 @@ export class ProfileEventsComponent implements OnInit {
     private router: Router,
     private _socketService: SocketService,
     private stripeService: StripeService,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    public snackBar: MatSnackBar
   ) {
     // Set user model to the authenticated singleton user
     this.user = this.userService.user;
@@ -65,11 +65,7 @@ export class ProfileEventsComponent implements OnInit {
   ngOnInit() {
     this._socketService.onEvent(SocketEvent.SEND_NOTIFICATION)
       .subscribe((notification: Notification) => {
-        if (notification.response == NegotiationResponses.payment) {
-          this.updatePaymentStatues(notification.booking);
-        } else {
           this.updateModel(notification.booking, notification.response);
-        }
     });
   }
 
@@ -111,15 +107,15 @@ export class ProfileEventsComponent implements OnInit {
                 if(!booking.hostViewed) {
                   numConf++;
                 }
+                this.bookingService.bookingPaymentStatus(booking).then((status: string) => {
+                  paymentStatues.push(status);
+                });
               } else {
                 cancelledBookings.push(booking);
                 if(!booking.hostViewed) {
                   cancelNotif++;
                 }
               }
-              this.bookingService.bookingPaymentStatus(booking).then((status: string) => {
-                paymentStatues.push(status);
-              });
             } else {
               // Check to see if the artist applied
               if(booking.bookingType == 'artist-apply') {
@@ -215,6 +211,7 @@ export class ProfileEventsComponent implements OnInit {
       eventIndex = this.events.findIndex(e => e.event._id == newBooking.eventEID._id);
       confirmationIndex = this.events[eventIndex].confirmations.findIndex(a => a._id == newBooking._id);
       // The artist has cancelled
+      this.events[eventIndex].paymentStatues.splice(confirmationIndex, 1);
       this.events[eventIndex].cancellations.push(newBooking);
       this.events[eventIndex].cancellationNotifications++;
       this.events[eventIndex].confirmations.splice(confirmationIndex,1);
@@ -233,6 +230,15 @@ export class ProfileEventsComponent implements OnInit {
       // The artist has verified and now waiting on host verification
       this.events[eventIndex].confirmationNotifications++;
       this.events[eventIndex].confirmations[confirmationIndex] = newBooking;
+    } else if(response == NegotiationResponses.payment) {
+      // Update payment status
+      eventIndex = this.events.findIndex(e => e.event._id == newBooking.eventEID._id);
+      confirmationIndex = this.events[eventIndex].confirmations.findIndex(a => a._id == newBooking._id);
+      this.bookingService.bookingPaymentStatus(newBooking).then((status: PaymentStatus) => {
+        this.events[eventIndex].confirmations[confirmationIndex] = newBooking;
+        this.events[eventIndex].confirmationNotifications++;
+        this.events[eventIndex].paymentStatues[confirmationIndex] = status;
+      });
     }
   }
 
@@ -288,11 +294,9 @@ export class ProfileEventsComponent implements OnInit {
           if(booking.artistVerified) {
             booking.hostStatusMessage = StatusMessages.completed;
             booking.artistStatusMessage = StatusMessages.completed;
-            booking.completed = true;
             booking.hostViewed = false;
             booking.artViewed = false;
-            response = NegotiationResponses.complete;
-            notificationMessage = "Booking is complete";
+            // No notification needed here because payment service will send notification
           } else {
             booking.hostStatusMessage = StatusMessages.waitingOnArtist;
             booking.artistStatusMessage = StatusMessages.hostVerified;
@@ -311,17 +315,31 @@ export class ProfileEventsComponent implements OnInit {
           notificationMessage = booking.hostUser.firstName + " has invalidated you for the event " + booking.eventEID.eventName;
           response = NegotiationResponses.verification;
         }
-        // Update the booking asynchronously
+        // Update the booking and payment asynchronously
         this.bookingService.updateBooking(booking).then(() => {
           if(booking.completed) {
-            this.events[eventIndex].confirmations[bookingIndex] = booking;
-            this.events[eventIndex].confirmationNotifications++;
+            // Notification will come through stripe service on payment
+            this.stripeService.charge(booking).then((success: boolean) => {
+              if (success) {
+                this.bookingService.bookingPaymentStatus(booking).then((status: PaymentStatus) => {
+                  this.events[eventIndex].paymentStatues[bookingIndex] = status;
+                  this.events[eventIndex].confirmations[bookingIndex] = booking;
+                  let snackBarRef = this.snackBar.open('Payment sent!', "", {
+                    duration: 1500,
+                  });
+                });
+              } else {
+                let snackBarRef = this.snackBar.open('Payment failed, please try again.', "", {
+                  duration: 1500,
+                });
+              }
+            });
           } else {
             this.events[eventIndex].confirmations[bookingIndex] = booking;
+            // Send notification to artist
+            this.createNotificationForArtist(booking, response, ['/profile', 'performances'],
+            'event_available', notificationMessage);
           }
-          // Send notification to artist
-          this.createNotificationForArtist(booking, response, ['/profile', 'performances'],
-              'event_available', notificationMessage);
         });
       }
     })
@@ -479,7 +497,6 @@ export class ConfirmPaymentDialog {
   }
 
   onOkClick(): void {
-    this.stripeService.charge
     this.stripeService.charge(this.data.booking).then((success: boolean) => {
       this.dialogRef.close();
       if (success) {
