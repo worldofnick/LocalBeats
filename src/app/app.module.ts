@@ -11,6 +11,7 @@ import { AppCommonModule } from "./components/common/app-common.module";
 import { NegotiateModule } from './views/negotiate/negotiate.module';
 import { ReviewModule } from './views/review/review.module';
 
+import {MatDialogModule} from '@angular/material/dialog';
 import { AppComponent } from './app.component';
 
 import { RoutePartsService } from './services/route-parts/route-parts.service';
@@ -26,6 +27,7 @@ import { ChatsService} from './services/chats/chats.service';
 import { ReviewService } from './services/reviews/review.service';
 import { SocketService } from './services/chats/socket.service';
 import { DatePipe } from '@angular/common'
+import { StripeService } from './services/payments/stripe.service';
 
 
 export function createTranslateLoader(http: Http) {
@@ -35,6 +37,7 @@ export function createTranslateLoader(http: Http) {
 @NgModule({
   imports: [
     BrowserModule,
+    MatDialogModule,
     BrowserAnimationsModule,
     AgmCoreModule.forRoot({
       apiKey: "AIzaSyBCko4eEq6azFCzCXVXAF4_jylVNw4ZM7Q",
@@ -65,7 +68,8 @@ export function createTranslateLoader(http: Http) {
     EventService,
     UserGuard,
     DatePipe,
-    ImgurService
+    ImgurService,
+    StripeService
   ],
   bootstrap: [AppComponent]
 })

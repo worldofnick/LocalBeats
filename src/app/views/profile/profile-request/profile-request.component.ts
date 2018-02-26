@@ -10,11 +10,12 @@ import { SocketService } from '../../../services/chats/socket.service';
 
 // Data Models
 import { User } from '../../../models/user';
-import { Booking, StatusMessages, NegotiationResponses } from '../../../models/booking';
+import { Booking, StatusMessages, NegotiationResponses, BookingType } from '../../../models/booking';
 import { Event } from '../../../models/event';
 import { Action } from '../../../services/chats/model/action'
 import { SocketEvent } from '../../../services/chats/model/event'
 import { Notification } from '../../../models/notification'
+import { PaymentStatus } from '../../../models/payment'
 
 @Component({
   selector: 'app-profile-request',
@@ -37,7 +38,8 @@ export class ProfileRequestComponent implements OnInit {
     requests: Booking[],
     requestNotifications: number,
     confirmations: Booking[],
-    confirmationNotifications: number};
+    confirmationNotifications: number,
+    paymentStatues: PaymentStatus[]};
 
   constructor(private eventService: EventService,
     private userService: UserService,
@@ -51,7 +53,8 @@ export class ProfileRequestComponent implements OnInit {
       requests: [],
       requestNotifications: 0,
       confirmations: [],
-      confirmationNotifications: 0
+      confirmationNotifications: 0,
+      paymentStatues: []
     }
   }
 
@@ -59,7 +62,18 @@ export class ProfileRequestComponent implements OnInit {
     this.getAvailableEvents();
     this._socketService.onEvent(SocketEvent.SEND_NOTIFICATION)
       .subscribe((notification: Notification) => {
-        this.updateModel(notification.booking, notification.response);
+        if (notification.response != NegotiationResponses.payment) {
+          this.updateModel(notification.booking, notification.response);
+        } else {
+          this.updatePaymentStatues(notification.booking);
+        }
+    });
+  }
+
+  private updatePaymentStatues(booking: Booking) {
+    let index = this.hostedEvents.confirmations.findIndex(b => b._id == booking._id);
+    this.bookingService.bookingPaymentStatus(booking).then((status: PaymentStatus) => {
+      this.hostedEvents.paymentStatues[index] = status;
     });
   }
 
@@ -88,6 +102,9 @@ export class ProfileRequestComponent implements OnInit {
           if(booking.approved) {
             confirmedBookings.push(booking);
             // If the booking is confirmed and has not yet been viewed by the host, a new notification exists
+            this.bookingService.bookingPaymentStatus(booking).then((status: PaymentStatus) => {
+              this.hostedEvents.paymentStatues.push(status);
+            });
             if(!booking.hostViewed) {
               numConf++;
             }
@@ -130,7 +147,8 @@ export class ProfileRequestComponent implements OnInit {
       requests: requestBookings,
       requestNotifications: reqNotif,
       confirmations: confirmedBookings,
-      confirmationNotifications: numConf};
+      confirmationNotifications: numConf, 
+      paymentStatues: []};
   }
 
   private updateModel(newBooking: Booking, response: NegotiationResponses) {
@@ -219,7 +237,7 @@ export class ProfileRequestComponent implements OnInit {
   }
 
   newRequest(event: Event, eventIndex: number) {
-    let tempBooking = new Booking(undefined, 'host-request', event.hostUser, this.artist, event, false, false, false, StatusMessages.waitingOnArtist, StatusMessages.hostOffer, false, false, true, event.fixedPrice);
+    let tempBooking = new Booking(undefined, BookingType.hostRequest, event.hostUser, this.artist, event, false, false, false, StatusMessages.waitingOnArtist, StatusMessages.hostOffer, false, true, event.fixedPrice, null, null);
     this.bookingService.negotiate(tempBooking, true).subscribe((result) => {
       if (result != undefined) {
         if (result.response == NegotiationResponses.new) {

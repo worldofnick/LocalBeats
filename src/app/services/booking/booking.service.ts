@@ -3,10 +3,12 @@ import { Injectable } from '@angular/core';
 import { Http, Headers, RequestOptions, Response, URLSearchParams } from '@angular/http';
 import { MatDialogRef, MatDialog, MatDialogConfig } from '@angular/material';
 import { Observable } from 'rxjs/Observable';
-import { Booking, NegotiationResponses } from 'app/models/booking';
+import { Booking, NegotiationResponses, VerificationResponse } from 'app/models/booking';
 import { Event } from 'app/models/event';
 import { User } from 'app/models/user';
+import { PaymentStatus } from 'app/models/payment';
 import { NegotiateDialogComponent } from '../../views/negotiate/negotiate-dialog/negotiate-dialog.component';
+import { VerifyDialogComponent } from '../../views/negotiate/verify-dialog/verify-dialog.component';
 import { environment } from '../../../environments/environment';
 
 @Injectable()
@@ -16,6 +18,7 @@ export class BookingService {
     public userBooking: string = environment.apiURL + 'api/userBookings/'
     public acceptBookingConnection: string = environment.apiURL + 'api/acceptBooking'
     public declineBookingConnection: string = environment.apiURL + 'api/declineBooking'
+    public paymentBookingConnection: string = environment.apiURL + 'api/payments/bookingPaymentStatus'
 
     private headers: Headers = new Headers({ 'Content-Type': 'application/json' });
 
@@ -27,6 +30,16 @@ export class BookingService {
             width: '380px',
             disableClose: false,
             data: {booking, initial}
+        });
+        return dialogRef.afterClosed();
+    }
+
+    public verify(booking: Booking, isHost: boolean): Observable<{response: VerificationResponse, comment: string}> {
+        let dialogRef: MatDialogRef<VerifyDialogComponent>;
+        dialogRef = this.dialog.open(VerifyDialogComponent, {
+            width: '380px',
+            disableClose: false,
+            data: {booking, isHost}
         });
         return dialogRef.afterClosed();
     }
@@ -105,6 +118,18 @@ export class BookingService {
                 const data = response.json();
                 const booking = data.booking as Booking;
                 return booking
+            })
+            .catch(this.handleError);
+    }
+
+    public bookingPaymentStatus(booking: Booking): Promise<PaymentStatus> {
+        const current = this.paymentBookingConnection + '/?bid=' + booking._id
+        
+        return this.http.get(current, { headers: this.headers })
+            .toPromise()
+            .then((response: Response) => {
+                const data = response.json();
+                return data["status"];
             })
             .catch(this.handleError);
     }

@@ -9,8 +9,11 @@ import { ImgurService } from 'app/services/image/imgur.service';
 import { MatTabChangeEvent } from '@angular/material';
 import { FormGroup, FormControl, Validators, FormArray, FormBuilder } from '@angular/forms';
 import { SocketService } from '../../../services/chats/socket.service';
+import { StripeService } from '../../../services/payments/stripe.service';
 import { Action } from '../../../services/chats/model/action';
 import { Message } from '../../../services/chats/model/message';
+import { MatSnackBar } from '@angular/material';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-profile-settings',
@@ -27,9 +30,10 @@ export class ProfileSettingsComponent implements OnInit {
   nowArtist = false;
   public uploader: FileUploader = new FileUploader({ url: 'upload_url' });
   public hasBaseDropZoneOver: boolean = false;
-  constructor(private router: ActivatedRoute, private userService: UserService, 
+  constructor(private route: ActivatedRoute, private userService: UserService, private router : Router,
               private imgurService: ImgurService, private formBuilder: FormBuilder,
-              private _socketService: SocketService) { }
+              private _socketService: SocketService, public snackBar: MatSnackBar, private stripeService: StripeService) { 
+              }
 
 
   ngOnInit() {
@@ -88,13 +92,15 @@ export class ProfileSettingsComponent implements OnInit {
 
 
   onChange(event: EventTarget) {
-      this.progressBar.mode = 'indeterminate';
       let eventObj: MSInputMethodContext = <MSInputMethodContext> event;
       let target: HTMLInputElement = <HTMLInputElement> eventObj.target;
       let files: FileList = target.files;
       let file: File = files[0];
       let blob = file as Blob;
-
+      if (!blob) {
+        return;
+      }
+      this.progressBar.mode = 'indeterminate';
       this.imgurService.uploadToImgur(file).then(link => {
         this.user.profilePicUrl = link as string;
       }).then(link => {
@@ -110,6 +116,45 @@ export class ProfileSettingsComponent implements OnInit {
           this.progressBar.mode = 'determinate';
           //this.router.navigate(['/profile']); //this will go back to my events.
       });
+  }
+
+   // STRIPE
+   authorizeStripe() {
+    this.stripeService.authorizeStripe(this.user).then((url: string) => {
+      window.location.href = url;
+    });
+
+  }
+
+  viewStripeTransfers() {
+    this.stripeService.authorizeStripe(this.user).then((url: string) => {
+      window.open(url);
+    });
+  }
+
+  requestPayout() {
+    this.stripeService.payoutUser(this.user).then((success: boolean) => {
+      if (success) {
+        let snackBarRef = this.snackBar.open('Payout Request Successful!', "", {
+          duration: 1500,
+        });
+      } else {
+        let snackBarRef = this.snackBar.open('Payout Request Failed.', "", {
+          duration: 1500,
+        });
+      }
+    });
+  }
+
+  unlinkStripe() {
+    this.user.stripeAccountId = null;
+    this.userService.onEditProfile(this.user).then((user: User) => {
+      this.user = user;
+      this.userService.user = this.user
+      let snackBarRef = this.snackBar.open('Stripe Account Unlinked', "", {
+        duration: 1500,
+      });
+    });
   }
 
 }

@@ -75,10 +75,6 @@ export class ProfileOverviewComponent implements OnInit {
     private router: Router) { }
 
   ngOnInit() {
-    // get reviews to this user.
-    this.route.params.subscribe(params => {
-      this.updateModel(params['id']);
-    });
     if (this.user) {
       this.setReviews();
     }
@@ -118,10 +114,18 @@ export class ProfileOverviewComponent implements OnInit {
       if(user._id == this.userService.user._id) {
         this.router.navigate(['/profile']);
       }else {
-        this.router.navigate(['/profile', user._id])
+        this.userService.getUserByID(user._id).then( (user: User) => {
+          this.user = user;
+          this._socketService.sendToProfile('updateProfile', this.user);
+        });
+        this.router.navigate(['/profile', user._id]);
       }
     }else {
-      this.router.navigate(['/profile', user._id])
+      this.userService.getUserByID(user._id).then( (user: User) => {
+      this.user = user;
+      this._socketService.sendToProfile('updateProfile', this.user);
+    });
+      this.router.navigate(['/profile', user._id]);
     }
 
   }
@@ -144,15 +148,5 @@ export class ProfileOverviewComponent implements OnInit {
       }
     });
   }
-
-  updateModel(id: any) {
-    this.userService.getUserByID(id).then( (user: User) => {
-      this.user = user;
-      this._socketService.sendToProfile('updateProfile', this.user);
-    });
-
-  }
-
-
 
 }

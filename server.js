@@ -18,6 +18,7 @@ const Bookings      = require('./backend/models/bookingsModel');
 const Notification  = require('./backend/models/notificationModel');
 const Message       = require('./backend/models/messageModel');
 const Review        = require('./backend/models/reviewsModel');
+var Payments = require('./backend/models/paymentModel');
 
 var distDir = __dirname + "/dist/";
 app.use(express.static(distDir));           // Create link to Angular build directory
@@ -52,7 +53,7 @@ app.set('io', io);
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Cache-Control");
-  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,PATCH,OPTIONS');
   next();
 });
 
@@ -69,6 +70,7 @@ var notificationRoutes 		= require('./backend/routes/notificationRoutes.js');
 var messagesRoutes 		    = require('./backend/routes/messageRoutes.js');
 var reviewsRoutes   		    = require('./backend/routes/reviewsRoutes.js');
 
+var stripeRoutes 		      = require('./backend/routes/stripeRoutes.js');
 userRoutes(app);
 authenticationRoutes(app);
 eventsRoutes(app);
@@ -77,6 +79,7 @@ spotifyRoutes(app);
 notificationRoutes(app);
 messagesRoutes(app);
 reviewsRoutes(app)
+stripeRoutes(app);
 
 var privateChatSocket     = require('./backend/socket/chatSocket.js');
 privateChatSocket(io);
@@ -87,6 +90,15 @@ privateChatSocket(io);
 app.get('/', function(req, res) {
   res.send('Welcome the EXPRESS Server! This API is at http://localhost:' + port + '/api');
 });
+
+app.get('/profile/stripe/', function(req, res) {
+  res.redirect('/profile/settings/?success=' + req.query.success);
+});
+
+app.get('*', function(req, res) {
+  res.redirect('/?success=' + req.query.success);
+});
+
 console.log('Magic happens at http://localhost:' + port);
 
 module.exports = app;
