@@ -102,7 +102,10 @@ export class ProfileOverviewComponent implements OnInit {
 
   openDialog(): void {
 
-    this.reviewService.review(this.user, this.userService.user).subscribe((result) => {
+    let review: Review = new Review;
+    review.toUser = this.user;
+    review.fromUser = this.userService.user;
+    this.reviewService.review(review, false).subscribe((result) => {
         // setTimeout(this.setReviews(), 60000 );
         // this.setReviews();
         //should update this.reviews if the review is being added from the profile.
@@ -121,6 +124,12 @@ export class ProfileOverviewComponent implements OnInit {
       this.router.navigate(['/profile', user._id])
     }
 
+  }
+
+  editReview(review: Review) {
+    this.reviewService.review(review, true).subscribe((result) => {
+        //should update this.reviews if the review is being added from the profile.
+    });
   }
 
   updateModel(id: any) {

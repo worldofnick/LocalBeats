@@ -23,12 +23,15 @@ import { NgForm } from '@angular/forms/src/directives/ng_form';
   export class ReviewDialogComponent implements OnInit {
     reviewForm: FormGroup;
     currentReview: Review =  new Review;
+    isEditing:boolean;
 
     constructor(
       public dialogRef: MatDialogRef<ReviewDialogComponent>,
       @Inject(MAT_DIALOG_DATA) public data: any,
       private formBuilder: FormBuilder) {
         this.currentReview = data.review;
+        this.isEditing = data.isEditing;
+
        }
 
     // this needs to be ngOnInit, not onInit.
@@ -53,16 +56,32 @@ import { NgForm } from '@angular/forms/src/directives/ng_form';
     }
 
     createForm() {
-      this.reviewForm = this.formBuilder.group({
-        title: new FormControl('', [
-          Validators.required
-        ]),
-        text: new FormControl('', [
-          Validators.required
-        ]),
-        rating: new FormControl('', [
-          Validators.required
-        ]),
-        });
+
+      if(this.currentReview.rating){
+        this.reviewForm = this.formBuilder.group({
+          title: new FormControl(this.currentReview.title, [
+            Validators.required
+          ]),
+          text: new FormControl(this.currentReview.text, [
+            Validators.required
+          ]),
+          rating: new FormControl(this.currentReview.rating.toString(), [
+            Validators.required
+          ]),
+          });
+      }else{
+        this.reviewForm = this.formBuilder.group({
+          title: new FormControl(this.currentReview.title, [
+            Validators.required
+          ]),
+          text: new FormControl(this.currentReview.text, [
+            Validators.required
+          ]),
+          rating: new FormControl('', [
+            Validators.required
+          ]),
+          });
+      }
+
     }
 }

@@ -27,14 +27,12 @@ export class ReviewService {
 
     constructor(private http: Http,  private dialog: MatDialog) { }
 
-    public review(toUser: User, fromUser: User): Observable<{response: Review }> {
-        let newReview: Review = new Review;
-        newReview.toUser = toUser;
-        newReview.fromUser = fromUser;
+    public review(review: Review, isEditing: boolean): Observable<{response: Review }> {
+
         let dialogRef: MatDialogRef<ReviewDialogComponent>;
         dialogRef = this.dialog.open(ReviewDialogComponent, {
             width: '500px',
-            data: { review: newReview }
+            data: { review: review, isEditing: isEditing }
         });
 
         dialogRef.afterClosed().subscribe(result => {
@@ -42,7 +40,7 @@ export class ReviewService {
                 return;
             }
 
-            this.createReview(result).then((review: Review) => {
+            this.createReview(result).then((createdReview: Review) => {
                 return dialogRef.afterClosed();
             });
         });
