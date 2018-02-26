@@ -145,11 +145,6 @@ export class ProfileOverviewComponent implements OnInit {
     });
   }
 
-  deleteReview(review: Review) {
-
-  }
-
-
   updateModel(id: any) {
     this.userService.getUserByID(id).then( (user: User) => {
       this.user = user;
