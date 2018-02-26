@@ -81,7 +81,7 @@ export class ProfilePerformancesComponent implements OnInit {
 
   private updatePaymentStatues(booking: Booking) {
       // Update payment status
-    let idx = this.performances.confirmations.findIndex(b => b._id == booking._id);
+    let idx = this.performances.completed.findIndex(b => b._id == booking._id);
     this.bookingService.bookingPaymentStatus(booking).then((status: PaymentStatus) => {
       this.performances.paymentStatues[idx] = status;
     });
