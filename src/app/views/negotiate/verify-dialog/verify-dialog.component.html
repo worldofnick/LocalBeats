@@ -1,5 +1,6 @@
 <h1 matDialogTitle>{{title}}</h1>
 <div mat-dialog-content>{{subtext}}</div>
+<div *ngIf="!hasStripe" mat-dialog-content>Please go and link your profile to Stripe before verification and payment</div>
 <br>
 <form mat-dialog-content [formGroup]="verificationForm" (ngSubmit)="submit()">
     <mat-form-field class="full-width">
@@ -7,7 +8,8 @@
     </mat-form-field>
 </form>
 <div mat-dialog-actions>
-<button 
+<button
+[disabled]="!hasStripe" 
 type="button" 
 mat-raised-button
 color="primary" 
@@ -15,6 +17,7 @@ color="primary"
 &nbsp;
 <span fxFlex></span>
 <button 
+[disabled]="!hasStripe"
 type="button"
 color="accent"
 mat-raised-button 

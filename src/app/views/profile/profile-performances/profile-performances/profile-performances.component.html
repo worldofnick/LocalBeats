@@ -78,7 +78,7 @@
         <mat-card-actions>
           <button [disabled]="booking.artistVerified" (click)="openNegotiationDialog(booking, i)" mat-raised-button color="primary">Cancel Booking</button>
           <button (click)="messageHost(booking)" mat-raised-button color="accent">Message Host</button>
-          <button *ngIf="!booking.completed" [disabled]="booking.artistVerified" (click)="artistVerify(booking, i)" mat-raised-button color="accent">Verify Host</button>
+          <button *ngIf="!booking.completed" [disabled]="booking.artistVerified" (click)="artistVerify(booking, i)" mat-raised-button color="accent">Host Verification and Payment</button>
         </mat-card-actions>
       </mat-card>
     </mat-tab>
