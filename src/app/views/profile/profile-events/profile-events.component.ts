@@ -64,23 +64,20 @@ export class ProfileEventsComponent implements OnInit {
     this._socketService.onEvent(SocketEvent.SEND_NOTIFICATION)
       .subscribe((notification: Notification) => {
         if (notification.response == NegotiationResponses.payment) {
-          this.updatePaymentStatues();
+          this.updatePaymentStatues(notification.booking);
         } else {
           this.updateModel(notification.booking, notification.response);
         }
     });
   }
 
-  private updatePaymentStatues() {
+  private updatePaymentStatues(booking: Booking) {
     // Update payment status'
-    for (let e of this.events) {
-      e.paymentStatues = [];
-      for (let confirmed of e.confirmations) {
-        this.bookingService.bookingPaymentStatus(confirmed).then((status: PaymentStatus) => {
-          e.paymentStatues.push(status);
-        });
-      }
-    }
+    let eventIndex = this.events.findIndex(e => e.event._id == booking.eventEID._id);
+    let confirmationIndex = this.events[eventIndex].confirmations.findIndex(b => b._id == booking._id);
+    this.bookingService.bookingPaymentStatus(booking).then((status: PaymentStatus) => {
+      this.events[eventIndex].paymentStatues[confirmationIndex] = status;
+    });
   }
 
   private getEvents() {
@@ -353,7 +350,7 @@ export class ProfileEventsComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      this.updatePaymentStatues();
+      this.updatePaymentStatues(booking);
     });
   }
 

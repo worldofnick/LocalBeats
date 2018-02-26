@@ -67,21 +67,19 @@ export class ProfilePerformancesComponent implements OnInit {
     this._socketService.onEvent(SocketEvent.SEND_NOTIFICATION)
       .subscribe((notification: Notification) => {
         if (notification.response == NegotiationResponses.payment) {
-          this.updatePaymentStatues();
+          this.updatePaymentStatues(notification.booking);
         } else {
           this.updateModel(notification.booking, notification.response);
         }
     });
   }
 
-  private updatePaymentStatues() {
+  private updatePaymentStatues(booking: Booking) {
       // Update payment status
-      this.performances.paymentStatues = [];
-      for (let confirmed of this.performances.confirmations) {
-        this.bookingService.bookingPaymentStatus(confirmed).then((status: PaymentStatus) => {
-          this.performances.paymentStatues.push(status);
-      });
-    }
+    let idx = this.performances.confirmations.findIndex(b => b._id == booking._id);
+    this.bookingService.bookingPaymentStatus(booking).then((status: PaymentStatus) => {
+      this.performances.paymentStatues[idx] = status;
+    });
   }
 
   private getPerformances() {
@@ -336,7 +334,7 @@ export class ProfilePerformancesComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      this.updatePaymentStatues();
+      this.updatePaymentStatues(booking);
     });
   }
 
