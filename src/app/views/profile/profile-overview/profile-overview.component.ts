@@ -10,6 +10,7 @@ import { FormGroup, FormControl, Validators, FormArray, FormBuilder } from '@ang
 import { SocketService } from '../../../services/chats/socket.service';
 import { SocketEvent } from '../../../services/chats/model/event';
 import { NgForm } from '@angular/forms/src/directives/ng_form';
+import { Router } from "@angular/router";
 
 
 
@@ -23,8 +24,8 @@ export class ProfileOverviewComponent implements OnInit {
   @Input() user: User;
   @Input() onOwnProfile: boolean;
 
-  animal: string;
-  name: string;
+  averageRating: any;
+
 
   userID: any = null;
   reviews: Review[] = [];
@@ -70,14 +71,26 @@ export class ProfileOverviewComponent implements OnInit {
     private userService: UserService,
     private reviewService: ReviewService,
     public dialog: MatDialog,
-    private _socketService: SocketService) { }
+    private _socketService: SocketService,
+    private router: Router) { }
 
   ngOnInit() {
     // get reviews to this user.
+    this.route.params.subscribe(params => {
+      this.updateModel(params['id']);
+    });
     if (this.user) {
       console.log(this.onOwnProfile);
       this.reviewService.getReviewsTo(this.user).then((reviewList: Review[]) => {
         this.reviews = reviewList;
+
+        let sum = 0;
+        for (let review of this.reviews){
+          sum += review.rating;
+        }
+
+        this.averageRating = sum / this.reviews.length;
+        this.averageRating = this.averageRating.toFixed(1);
       });
     }
   }
@@ -86,8 +99,38 @@ export class ProfileOverviewComponent implements OnInit {
   openDialog(): void {
 
     this.reviewService.review(this.user, this.userService.user).subscribe((result) => {
-      console.log('fin');
+      console.log('returned result', result);
+      let newReview: Review;
+      // newReview.rating = result.response.rating;
+      // newReview.text = result.response.text;
+      // newReview.title = result.response
+      // newReview = result.response;
+      // this.reviews.push(newReview);
     });
 
   }
+
+  clickedReviewer(user: User) {
+    if(this.userService.isAuthenticated()) {
+      if(user._id == this.userService.user._id) {
+        this.router.navigate(['/profile']);
+      }else {
+        this.router.navigate(['/profile', user._id])
+      }
+    }else {
+      this.router.navigate(['/profile', user._id])
+    }
+
+  }
+
+  updateModel(id: any) {
+    this.userService.getUserByID(id).then( (user: User) => {
+      this.user = user;
+      this._socketService.sendToProfile('updateProfile', this.user);
+    });
+
+  }
+
+
+
 }

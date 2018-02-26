@@ -32,15 +32,16 @@ import { NgForm } from '@angular/forms/src/directives/ng_form';
     ngOnInit() {
       this.createForm();
     }
-  
+
     onNoClick(): void {
       this.dialogRef.close();
     }
-  
+
     onYesClick(form: NgForm): void {
-      this.dialogRef.close({title: this.reviewForm.get('title'), text: this.reviewForm.get('text')});
+      console.log('printing rating: ', this.reviewForm.get('rating'));
+      this.dialogRef.close({title: this.reviewForm.get('title'), text: this.reviewForm.get('text'), rating: this.reviewForm.get('rating')});
     }
-  
+
     createForm() {
       this.reviewForm = this.formBuilder.group({
         title: new FormControl('', [
@@ -49,7 +50,9 @@ import { NgForm } from '@angular/forms/src/directives/ng_form';
         text: new FormControl('', [
           Validators.required
         ]),
+        rating: new FormControl('', [
+          Validators.required
+        ]),
         });
     }
-  
-  }
+}

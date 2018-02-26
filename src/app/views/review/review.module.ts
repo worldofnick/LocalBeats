@@ -6,6 +6,7 @@ import {
   MatCardModule,
   MatInputModule,
   MatButtonModule,
+  MatSelectModule,
   MatProgressBarModule,
   MatCheckboxModule
  } from '@angular/material';
@@ -21,6 +22,7 @@ import { ReviewDialogComponent } from './review-dialog/review-dialog.component';
     CurrencyMaskModule,
     MatDialogModule,
     MatButtonModule,
+    MatSelectModule,
     MatCardModule,
     MatInputModule,
     MatIconModule,

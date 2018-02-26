@@ -28,6 +28,7 @@ export class ReviewService {
     constructor(private http: Http,  private dialog: MatDialog) { }
 
     public review(toUser: User, fromUser: User): Observable<{response: Review }> {
+        let newReview: Review;
         let dialogRef: MatDialogRef<ReviewDialogComponent>;
         dialogRef = this.dialog.open(ReviewDialogComponent, {
             width: '500px',
@@ -39,20 +40,18 @@ export class ReviewService {
                 return;
             }
             let currentReview: Review = new Review();
-            console.log('The dialog was closed', result);
             const date: Date = new Date();
             currentReview._id = null;
             currentReview.date = date;
             currentReview.title = result.title.value;
             currentReview.text = result.text.value;
             currentReview.toUser = toUser;
-            currentReview.rating = 0;
+            currentReview.rating = result.rating.value;
             currentReview.fromUser = fromUser;
             currentReview.flagCount = 0;
-            console.log('about to create', currentReview);
+            newReview = currentReview;
             this.createReview(currentReview).then((review: Review) => {
-                console.log('created review ');
-                //   this.reviews.push(currentReview);
+                console.log(review);
                 return review;
             });
         });
@@ -76,7 +75,6 @@ export class ReviewService {
     // GET a review via _id
     public getReview(review: Review): Promise<Review> {
         const current = this.connection + '/' + review._id;
-
         return this.http.get(current, { headers: this.headers })
             .toPromise()
             .then((response: Response) => {
@@ -90,7 +88,6 @@ export class ReviewService {
     // PUT update a review
     public updateReview(review: Review): Promise<Review> {
         const current = this.connection + '/' + review._id;
-
         return this.http.put(current, { headers: this.headers })
             .toPromise()
             .then((response: Response) => {
@@ -115,7 +112,6 @@ export class ReviewService {
 
     // GET gets all reviews left for this user
     public getReviewsTo(user: User): Promise<Review[]> {
-        console.log(user);
         const current = this.userReviewsToConnection + '/?uid=' + user._id;
         return this.http.get(current)
             .toPromise()
