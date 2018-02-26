@@ -11,6 +11,7 @@ import { CustomValidators } from 'ng2-validation';
 import { ActivatedRoute } from "@angular/router";
 import { Router } from "@angular/router";
 import { ImgurService } from 'app/services/image/imgur.service';
+import { StripeService } from 'app/services/payments/stripe.service';
 import 'rxjs/add/operator/startWith';
 import 'rxjs/add/operator/map';
 import { } from 'googlemaps';
@@ -90,10 +91,18 @@ export class CreateEventsComponent implements OnInit {
               public snackBar: MatSnackBar,
               private mapsAPILoader: MapsAPILoader,
               private ngZone: NgZone,
+              private stripeService: StripeService
               ) { }
 
               
   ngOnInit() {
+    // If they don't have a payment method setup redirect them to stripe first
+    if (!this.userService.user.stripeAccountId) {
+      this.stripeService.authorizeStripe(this.user).then((url: string) => {
+        window.location.href = url;
+      });
+    }
+
     this.event.eventType = "Wedding"
   
     // this.openSnackBar();
