@@ -27,7 +27,7 @@ export class ReviewService {
 
     constructor(private http: Http,  private dialog: MatDialog) { }
 
-    public review(review: Review, isEditing: boolean): Observable<{response: Review }> {
+    public review(review: Review, isEditing: boolean): Observable<Review> {
 
         let dialogRef: MatDialogRef<ReviewDialogComponent>;
         dialogRef = this.dialog.open(ReviewDialogComponent, {
@@ -35,15 +35,6 @@ export class ReviewService {
             data: { review: review, isEditing: isEditing }
         });
 
-        dialogRef.afterClosed().subscribe(result => {
-            if (result == null) {
-                return;
-            }
-
-            this.createReview(result).then((createdReview: Review) => {
-                return dialogRef.afterClosed();
-            });
-        });
         return dialogRef.afterClosed();
     }
 
@@ -76,8 +67,9 @@ export class ReviewService {
 
     // PUT update a review
     public updateReview(review: Review): Promise<Review> {
+        console.log('updating', review);
         const current = this.connection + '/' + review._id;
-        return this.http.put(current, { headers: this.headers })
+        return this.http.put(current, {review: review}, { headers: this.headers })
             .toPromise()
             .then((response: Response) => {
                 const data = response.json();

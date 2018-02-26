@@ -36,22 +36,24 @@ import { NgForm } from '@angular/forms/src/directives/ng_form';
 
     // this needs to be ngOnInit, not onInit.
     ngOnInit() {
-      this.createForm();
-      console.log(this.currentReview)
-    }
+      this.createForm();    }
 
     onNoClick(): void {
-      this.dialogRef.close();
+      const emptyReview: Review = new Review;
+      emptyReview.rating = -1;
+      this.dialogRef.close(emptyReview);
     }
 
     onYesClick(form: NgForm): void {
-      console.log('printing rating: ', this.reviewForm.get('rating'));
       this.currentReview.title = this.reviewForm.get('title').value;
       this.currentReview.text = this.reviewForm.get('text').value;
       this.currentReview.rating = this.reviewForm.get('rating').value;
-      this.currentReview.date = new Date();
-      this.currentReview.flagCount = 0;
-      this.currentReview._id = null;
+      if (!this.isEditing) {
+        //creating new review
+        this.currentReview.flagCount = 0;
+        this.currentReview.date = new Date();
+        this.currentReview._id = null;
+      }
       this.dialogRef.close(this.currentReview);
     }
 

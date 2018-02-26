@@ -80,7 +80,6 @@ export class ProfileOverviewComponent implements OnInit {
       this.updateModel(params['id']);
     });
     if (this.user) {
-      console.log(this.onOwnProfile);
       this.setReviews();
     }
   }
@@ -88,12 +87,10 @@ export class ProfileOverviewComponent implements OnInit {
   setReviews() {
     this.reviewService.getReviewsTo(this.user).then((reviewList: Review[]) => {
       this.reviews = reviewList;
-      console.log(this.reviews);
       let sum = 0;
       for (let review of this.reviews){
         sum += review.rating;
       }
-
       this.averageRating = sum / this.reviews.length;
       this.averageRating = this.averageRating.toFixed(1);
     });
@@ -106,9 +103,12 @@ export class ProfileOverviewComponent implements OnInit {
     review.toUser = this.user;
     review.fromUser = this.userService.user;
     this.reviewService.review(review, false).subscribe((result) => {
-        // setTimeout(this.setReviews(), 60000 );
-        // this.setReviews();
-        //should update this.reviews if the review is being added from the profile.
+      if(result.rating == -1) {
+        return;
+      }
+      this.reviewService.createReview(result).then( (newReview: Review) => {
+          this.setReviews();
+      });
     });
 
   }
@@ -128,7 +128,10 @@ export class ProfileOverviewComponent implements OnInit {
 
   editReview(review: Review) {
     this.reviewService.review(review, true).subscribe((result) => {
-        //should update this.reviews if the review is being added from the profile.
+      if(result.rating == -1) {
+        return;
+      }
+      this.reviewService.updateReview(review);
     });
   }
 
