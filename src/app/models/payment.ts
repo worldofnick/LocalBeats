@@ -13,8 +13,9 @@ export class Payment {
 }
 
 export enum PaymentStatus {
-  charge = "charge",
+  paid = "paid",
   refund = "refund",
   host_cancel = "host_cancel",
   artist_cancel = "artist_cancel",
+  unpaid = "waiting"
 }
