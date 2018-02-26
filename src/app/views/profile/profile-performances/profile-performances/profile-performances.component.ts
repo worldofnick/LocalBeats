@@ -302,6 +302,7 @@ export class ProfilePerformancesComponent implements OnInit {
           if(booking.hostVerified) {
             booking.hostStatusMessage = StatusMessages.completed;
             booking.artistStatusMessage = StatusMessages.completed;
+            booking.completed = true;
             booking.hostViewed = false;
             booking.artViewed = false;
             // Don't need a notification sent from component because stripe service will send it

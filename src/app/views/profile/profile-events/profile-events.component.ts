@@ -294,6 +294,7 @@ export class ProfileEventsComponent implements OnInit {
           if(booking.artistVerified) {
             booking.hostStatusMessage = StatusMessages.completed;
             booking.artistStatusMessage = StatusMessages.completed;
+            booking.completed = true;
             booking.hostViewed = false;
             booking.artViewed = false;
             // No notification needed here because payment service will send notification
