@@ -1,6 +1,6 @@
 <h1 matDialogTitle>{{title}}</h1>
-<div mat-dialog-content>{{subtext}}</div>
-<div *ngIf="!hasStripe" mat-dialog-content>Please go and link your profile to Stripe before verification and payment</div>
+<div *ngIf="hasStripe" mat-dialog-content>{{subtext}}</div>
+<div *ngIf="!hasStripe" mat-dialog-content class="form-error-msg">Please go and link your profile to Stripe before verification and payment</div>
 <br>
 <form mat-dialog-content [formGroup]="verificationForm" (ngSubmit)="submit()">
     <mat-form-field class="full-width">

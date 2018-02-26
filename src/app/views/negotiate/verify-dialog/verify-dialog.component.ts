@@ -22,13 +22,6 @@ export class VerifyDialogComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data:{booking: Booking, isHost: boolean},
     private formBuilder: FormBuilder
   ) {
-    if(this.data.isHost && this.data.booking.hostUser.stripeAccountId != null) {
-      this.hasStripe = true;
-    } else if(!this.data.isHost && this.data.booking.performerUser.stripeAccountId != null) {
-      this.hasStripe = true;
-    } else {
-      this.hasStripe = false;
-    }
   }
 
   ngOnInit() {
@@ -36,8 +29,18 @@ export class VerifyDialogComponent implements OnInit {
       this.subtext = "Have you arrived at the event and are the host's terms as agreed upon?  If so, please click yes to process payment."
     }
     this.verificationForm = this.formBuilder.group({
-      comment: new FormControl()
+      comment: new FormControl({disabled: false})
     });
+    if(this.data.isHost && this.data.booking.hostUser.stripeAccountId != null) {
+      this.hasStripe = true;
+    } else if(!this.data.isHost && this.data.booking.performerUser.stripeAccountId != null) {
+      this.hasStripe = true;
+    } else {
+      this.hasStripe = false;
+      this.verificationForm.controls['comment'].disable();
+    }
+
+    
   }
 
   verify() {
