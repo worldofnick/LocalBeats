@@ -1,15 +1,16 @@
 // Angular Modules
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { ActivatedRoute } from "@angular/router";
 import { NgForm } from '@angular/forms/src/directives/ng_form';
 import { Router } from "@angular/router";
-import { MatTabChangeEvent } from '@angular/material';
+import { MatTabChangeEvent, MatSnackBar, MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
 // Services
 import { UserService } from '../../../../services/auth/user.service';
 import { BookingService } from '../../../../services/booking/booking.service';
 import { EventService } from '../../../../services/event/event.service';
 import { SocketService } from 'app/services/chats/socket.service';
+import { StripeService } from 'app/services/payments/stripe.service';
 
 // Data Models
 import { User } from '../../../../models/user';
@@ -19,6 +20,7 @@ import { Action } from '../../../../services/chats/model/action'
 import { SocketEvent } from '../../../../services/chats/model/event'
 import { Notification } from '../../../../models/notification'
 import { Message } from '../../../../services/chats/model/message';
+import { Payment, PaymentStatus } from '../../../../models/payment'
 
 @Component({
   selector: 'app-profile-performances',
@@ -39,14 +41,17 @@ export class ProfilePerformancesComponent implements OnInit {
     completed: Booking[],
     completedNotifications: number,
     cancellations: Booking[],
-    cancellationNotifications: number};
+    cancellationNotifications: number,
+    paymentStatues: PaymentStatus[]};
 
   constructor(private eventService: EventService, 
     private userService: UserService,
     private bookingService: BookingService,
     private route: ActivatedRoute,
     private router: Router,
-    private _socketService: SocketService
+    private _socketService: SocketService,
+    private stripeService: StripeService,
+    public dialog: MatDialog
     ) {
       // Set user model to the authenticated singleton user
       this.user = this.userService.user;
@@ -61,14 +66,27 @@ export class ProfilePerformancesComponent implements OnInit {
         completed: [],
         completedNotifications: 0,
         cancellations: [],
-        cancellationNotifications: 0};
+        cancellationNotifications: 0,
+        paymentStatues: []};
       this.getPerformances();
     }
 
   ngOnInit() {
     this._socketService.onEvent(SocketEvent.SEND_NOTIFICATION)
       .subscribe((notification: Notification) => {
-        this.updateModel(notification.booking, notification.response);
+        if (notification.response == NegotiationResponses.payment) {
+          this.updatePaymentStatues(notification.booking);
+        } else {
+          this.updateModel(notification.booking, notification.response);
+        }
+    });
+  }
+
+  private updatePaymentStatues(booking: Booking) {
+      // Update payment status
+    let idx = this.performances.confirmations.findIndex(b => b._id == booking._id);
+    this.bookingService.bookingPaymentStatus(booking).then((status: PaymentStatus) => {
+      this.performances.paymentStatues[idx] = status;
     });
   }
 
@@ -91,6 +109,7 @@ export class ProfilePerformancesComponent implements OnInit {
       let numConf: number = 0;
       let cancelNotif: number = 0;
       let completeNotif: number = 0;
+      let paymentStatues = [];
       for(let booking of bookings) {
         if(booking.approved) {
           if(booking.completed) {
@@ -99,6 +118,9 @@ export class ProfilePerformancesComponent implements OnInit {
             if(!booking.artViewed) {
               completeNotif++;
             }
+            this.bookingService.bookingPaymentStatus(booking).then((status: PaymentStatus) => {
+              paymentStatues.push(status);
+            });
           } else if(!booking.cancelled) {
             confirmedBookings.push(booking);
             // If the booking is confirmed and has not yet been viewed by the artist, a new notification exists
@@ -140,7 +162,8 @@ export class ProfilePerformancesComponent implements OnInit {
         completed: completedBookings,
         completedNotifications: completeNotif,
         cancellations: cancelledBookings,
-        cancellationNotifications: cancelNotif};
+        cancellationNotifications: cancelNotif,
+        paymentStatues: paymentStatues};
     });
   }
 
@@ -421,6 +444,92 @@ export class ProfilePerformancesComponent implements OnInit {
     };
     this.router.navigate(['/chat']);
     this._socketService.send(Action.REQUEST_MSG_FROM_PROFILE_BUTTON, message);
+  }
+
+  showRefundDialog(booking: Booking) {
+    let dialogRef: MatDialogRef<RefundPaymentDialog>;
+    dialogRef = this.dialog.open(RefundPaymentDialog, {
+        width: '250px',
+        disableClose: false,
+        data: { booking }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      this.updatePaymentStatues(booking);
+    });
+  }
+
+  showPaymentHistoryDialog(booking: Booking) {
+    let userID = this.userService.user._id;
+    let dialogRef: MatDialogRef<PaymentHistoryDialog>;
+    this.stripeService.getBookingPayments(booking).then((payments: Payment[]) => {
+      dialogRef = this.dialog.open(PaymentHistoryDialog, {
+          width: '420px',
+          disableClose: false,
+          data: { payments, userID }
+      });
+
+    });
+
+  }
+
+}
+
+// Refund dialog
+@Component({
+  selector: 'refund-confirm-dialog',
+  templateUrl: 'refund-confirm-dialog.html',
+})
+export class RefundPaymentDialog {
+
+  constructor(
+    public dialogRef: MatDialogRef<RefundPaymentDialog>, private stripeService: StripeService, public snackBar: MatSnackBar,
+    @Inject(MAT_DIALOG_DATA) public data: any) { }
+
+  onNoClick(): void {
+    this.dialogRef.close();
+  }
+
+  onOkClick(): void {
+    this.stripeService.charge
+    this.stripeService.refund(this.data.booking).then((success: boolean) => {
+      this.dialogRef.close();
+      if (success) {
+        let snackBarRef = this.snackBar.open('Refund sent!', "", {
+          duration: 1500,
+        });
+      } else {
+        let snackBarRef = this.snackBar.open('Refund failed, please try again.', "", {
+          duration: 1500,
+        });
+      }
+    });
+  }
+
+}
+
+// Payment History Dialog
+@Component({
+  selector: 'payment-history-dialog',
+  templateUrl: 'payment-history-dialog.html',
+})
+export class PaymentHistoryDialog {
+
+  constructor(
+    public dialogRef: MatDialogRef<RefundPaymentDialog>,
+    @Inject(MAT_DIALOG_DATA) public data: any, private _socketService: SocketService, private stripeService: StripeService) { }
+
+    ngOnInit() {
+      this._socketService.onEvent(SocketEvent.SEND_NOTIFICATION)
+        .subscribe((notification: Notification) => {
+          this.stripeService.getBookingPayments(notification.booking).then((payments: Payment[]) => {
+            this.data.payments = payments;
+          });
+      });
+    }
+
+  onNoClick(): void {
+    this.dialogRef.close();
   }
 
 }

@@ -68,7 +68,11 @@ export class EventSingletonComponent implements OnInit {
         this.getBooking()
         this._socketService.onEvent(SocketEvent.SEND_NOTIFICATION)
         .subscribe((notification: Notification) => {
-          this.updateModel(notification.booking, notification.response);
+          
+          if (notification.response != NegotiationResponses.payment) {
+            this.updateModel(notification.booking, notification.response);
+          }
+          
         });
       }
     });

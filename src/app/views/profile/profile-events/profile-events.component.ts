@@ -1,15 +1,19 @@
 // Angular Modules
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { ActivatedRoute } from "@angular/router";
 import { NgForm } from '@angular/forms/src/directives/ng_form';
 import { Router } from "@angular/router";
 import { MatTabChangeEvent } from '@angular/material';
+import {MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatSnackBar} from '@angular/material';
+import { PaymentHistoryDialog } from '../profile-performances/profile-performances/profile-performances.component';
+
 
 // Services
 import { UserService } from '../../../services/auth/user.service';
 import { BookingService } from '../../../services/booking/booking.service';
 import { EventService } from '../../../services/event/event.service';
 import { SocketService } from 'app/services/chats/socket.service';
+import { StripeService } from 'app/services/payments/stripe.service';
 
 // Data Models
 import { User } from '../../../models/user';
@@ -19,6 +23,7 @@ import { Action } from '../../../services/chats/model/action';
 import { SocketEvent } from '../../../services/chats/model/event';
 import { Notification } from '../../../models/notification';
 import { Message } from '../../../services/chats/model/message';
+import { Payment, PaymentStatus } from '../../../models/payment';
 
 
 @Component({
@@ -39,14 +44,17 @@ export class ProfileEventsComponent implements OnInit {
     confirmations: Booking[],
     confirmationNotifications: number,
     cancellations: Booking[],
-    cancellationNotifications: number}[];
+    cancellationNotifications: number,
+    paymentStatues: PaymentStatus[]}[];
 
   constructor(private eventService: EventService,
     private userService: UserService,
     private bookingService: BookingService,
     private route: ActivatedRoute,
     private router: Router,
-    private _socketService: SocketService
+    private _socketService: SocketService,
+    private stripeService: StripeService,
+    public dialog: MatDialog
   ) {
     // Set user model to the authenticated singleton user
     this.user = this.userService.user;
@@ -57,7 +65,20 @@ export class ProfileEventsComponent implements OnInit {
   ngOnInit() {
     this._socketService.onEvent(SocketEvent.SEND_NOTIFICATION)
       .subscribe((notification: Notification) => {
-        this.updateModel(notification.booking, notification.response);
+        if (notification.response == NegotiationResponses.payment) {
+          this.updatePaymentStatues(notification.booking);
+        } else {
+          this.updateModel(notification.booking, notification.response);
+        }
+    });
+  }
+
+  private updatePaymentStatues(booking: Booking) {
+    // Update payment status'
+    let eventIndex = this.events.findIndex(e => e.event._id == booking.eventEID._id);
+    let confirmationIndex = this.events[eventIndex].confirmations.findIndex(b => b._id == booking._id);
+    this.bookingService.bookingPaymentStatus(booking).then((status: PaymentStatus) => {
+      this.events[eventIndex].paymentStatues[confirmationIndex] = status;
     });
   }
 
@@ -80,6 +101,7 @@ export class ProfileEventsComponent implements OnInit {
         let reqNotif: number = 0;
         let numConf: number = 0;
         let cancelNotif: number = 0;
+        let paymentStatues = [];  
         this.bookingService.getBooking(e).then((bookings: Booking[]) => {
           for(let booking of bookings) {
             if(booking.approved) {
@@ -95,6 +117,9 @@ export class ProfileEventsComponent implements OnInit {
                   cancelNotif++;
                 }
               }
+              this.bookingService.bookingPaymentStatus(booking).then((status: string) => {
+                paymentStatues.push(status);
+              });
             } else {
               // Check to see if the artist applied
               if(booking.bookingType == 'artist-apply') {
@@ -115,7 +140,7 @@ export class ProfileEventsComponent implements OnInit {
           }
           this.events.push({event: e, applications: applicationBookings, applicationNotifications: numNotif,
             requests: requestBookings, requestNotifications: reqNotif, confirmations: confirmedBookings, confirmationNotifications: numConf,
-            cancellations: cancelledBookings, cancellationNotifications: cancelNotif});
+            cancellations: cancelledBookings, cancellationNotifications: cancelNotif, paymentStatues: paymentStatues});
         })
       }
     })
@@ -409,4 +434,64 @@ export class ProfileEventsComponent implements OnInit {
     this.router.navigate(['/chat']);
     this._socketService.send(Action.REQUEST_MSG_FROM_PROFILE_BUTTON, message);
   }
+
+  showPayDialog(booking: Booking) {
+    let dialogRef: MatDialogRef<ConfirmPaymentDialog>;
+    dialogRef = this.dialog.open(ConfirmPaymentDialog, {
+        width: '250px',
+        disableClose: false,
+        data: { booking }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      this.updatePaymentStatues(booking);
+    });
+  }
+
+  showPaymentHistoryDialog(booking: Booking) {
+    let userID = this.userService.user._id;
+    let dialogRef: MatDialogRef<PaymentHistoryDialog>;
+    this.stripeService.getBookingPayments(booking).then((payments: Payment[]) => {
+      dialogRef = this.dialog.open(PaymentHistoryDialog, {
+          width: '420px',
+          disableClose: false,
+          data: { payments, userID }
+      });
+
+    });
+
+  }
+
+}
+
+@Component({
+  selector: 'payment-confirm-dialog',
+  templateUrl: 'payment-confirm-dialog.html',
+})
+export class ConfirmPaymentDialog {
+
+  constructor(
+    public dialogRef: MatDialogRef<ConfirmPaymentDialog>, private stripeService: StripeService, public snackBar: MatSnackBar,
+    @Inject(MAT_DIALOG_DATA) public data: any) { }
+
+  onNoClick(): void {
+    this.dialogRef.close();
+  }
+
+  onOkClick(): void {
+    this.stripeService.charge
+    this.stripeService.charge(this.data.booking).then((success: boolean) => {
+      this.dialogRef.close();
+      if (success) {
+        let snackBarRef = this.snackBar.open('Payment sent!', "", {
+          duration: 1500,
+        });
+      } else {
+        let snackBarRef = this.snackBar.open('Payment failed, please try again.', "", {
+          duration: 1500,
+        });
+      }
+    });
+  }
+
 }

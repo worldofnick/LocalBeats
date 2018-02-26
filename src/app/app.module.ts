@@ -9,6 +9,7 @@ import { AgmCoreModule, MapsAPILoader } from '@agm/core';
 import { rootRouterConfig } from './app.routes';
 import { AppCommonModule } from "./components/common/app-common.module";
 import { NegotiateModule } from './views/negotiate/negotiate.module';
+import {MatDialogModule} from '@angular/material/dialog';
 import { AppComponent } from './app.component';
 
 import { RoutePartsService } from './services/route-parts/route-parts.service';
@@ -33,6 +34,7 @@ export function createTranslateLoader(http: Http) {
 @NgModule({
   imports: [
     BrowserModule,
+    MatDialogModule,
     BrowserAnimationsModule,
     AgmCoreModule.forRoot({
       apiKey: "AIzaSyBCko4eEq6azFCzCXVXAF4_jylVNw4ZM7Q",
