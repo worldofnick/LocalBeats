@@ -28,31 +28,22 @@ export class ReviewService {
     constructor(private http: Http,  private dialog: MatDialog) { }
 
     public review(toUser: User, fromUser: User): Observable<{response: Review }> {
-        let newReview: Review;
+        let newReview: Review = new Review;
+        newReview.toUser = toUser;
+        newReview.fromUser = fromUser;
         let dialogRef: MatDialogRef<ReviewDialogComponent>;
         dialogRef = this.dialog.open(ReviewDialogComponent, {
             width: '500px',
-            data: { name: toUser.firstName }
+            data: { review: newReview }
         });
 
         dialogRef.afterClosed().subscribe(result => {
             if (result == null) {
                 return;
             }
-            let currentReview: Review = new Review();
-            const date: Date = new Date();
-            currentReview._id = null;
-            currentReview.date = date;
-            currentReview.title = result.title.value;
-            currentReview.text = result.text.value;
-            currentReview.toUser = toUser;
-            currentReview.rating = result.rating.value;
-            currentReview.fromUser = fromUser;
-            currentReview.flagCount = 0;
-            newReview = currentReview;
-            this.createReview(currentReview).then((review: Review) => {
-                console.log(review);
-                return review;
+
+            this.createReview(result).then((review: Review) => {
+                return dialogRef.afterClosed();
             });
         });
         return dialogRef.afterClosed();

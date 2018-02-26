@@ -31,14 +31,15 @@ exports.createReview = function (req, res) {
     // console.log(req.body.review);
     var newReview = new Reviews(req.body.review);
     newReview.save(function (err, review) {
-        console.log(review);
+        console.log('revew',review);
         if (err) {
             return res.status(400).send({
                 message: err,
                 description: "Failed to create a review"
             });
         } else {
-            Reviews.findById(review._id).populate("fromUser").populate("toUser").exec(function (err, review) {
+            console.log('newreview', newReview);
+            Reviews.findById(newReview._id).populate("fromUser").populate("toUser").exec(function (err, review) {
                 if (err) {
                     return res.status(500).send("Failed to create review");
                 } else {

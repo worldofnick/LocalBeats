@@ -81,31 +81,31 @@ export class ProfileOverviewComponent implements OnInit {
     });
     if (this.user) {
       console.log(this.onOwnProfile);
-      this.reviewService.getReviewsTo(this.user).then((reviewList: Review[]) => {
-        this.reviews = reviewList;
-
-        let sum = 0;
-        for (let review of this.reviews){
-          sum += review.rating;
-        }
-
-        this.averageRating = sum / this.reviews.length;
-        this.averageRating = this.averageRating.toFixed(1);
-      });
+      this.setReviews();
     }
+  }
+
+  setReviews() {
+    this.reviewService.getReviewsTo(this.user).then((reviewList: Review[]) => {
+      this.reviews = reviewList;
+      console.log(this.reviews);
+      let sum = 0;
+      for (let review of this.reviews){
+        sum += review.rating;
+      }
+
+      this.averageRating = sum / this.reviews.length;
+      this.averageRating = this.averageRating.toFixed(1);
+    });
   }
 
 
   openDialog(): void {
 
     this.reviewService.review(this.user, this.userService.user).subscribe((result) => {
-      console.log('returned result', result);
-      let newReview: Review;
-      // newReview.rating = result.response.rating;
-      // newReview.text = result.response.text;
-      // newReview.title = result.response
-      // newReview = result.response;
-      // this.reviews.push(newReview);
+        // setTimeout(this.setReviews(), 60000 );
+        // this.setReviews();
+        //should update this.reviews if the review is being added from the profile.
     });
 
   }

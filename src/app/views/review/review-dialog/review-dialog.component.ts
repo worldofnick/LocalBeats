@@ -22,15 +22,19 @@ import { NgForm } from '@angular/forms/src/directives/ng_form';
   })
   export class ReviewDialogComponent implements OnInit {
     reviewForm: FormGroup;
+    currentReview: Review =  new Review;
 
     constructor(
       public dialogRef: MatDialogRef<ReviewDialogComponent>,
       @Inject(MAT_DIALOG_DATA) public data: any,
-      private formBuilder: FormBuilder) { }
+      private formBuilder: FormBuilder) {
+        this.currentReview = data.review;
+       }
 
     // this needs to be ngOnInit, not onInit.
     ngOnInit() {
       this.createForm();
+      console.log(this.currentReview)
     }
 
     onNoClick(): void {
@@ -39,7 +43,13 @@ import { NgForm } from '@angular/forms/src/directives/ng_form';
 
     onYesClick(form: NgForm): void {
       console.log('printing rating: ', this.reviewForm.get('rating'));
-      this.dialogRef.close({title: this.reviewForm.get('title'), text: this.reviewForm.get('text'), rating: this.reviewForm.get('rating')});
+      this.currentReview.title = this.reviewForm.get('title').value;
+      this.currentReview.text = this.reviewForm.get('text').value;
+      this.currentReview.rating = this.reviewForm.get('rating').value;
+      this.currentReview.date = new Date();
+      this.currentReview.flagCount = 0;
+      this.currentReview._id = null;
+      this.dialogRef.close(this.currentReview);
     }
 
     createForm() {

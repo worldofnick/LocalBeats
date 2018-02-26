@@ -1,5 +1,5 @@
 <form [formGroup]="reviewForm" (ngSubmit)="onYesClick()">
-    <h2 mat-dialog-title>Leave a review for: {{data.name}}</h2>
+    <h2 mat-dialog-title>Leave a review for: {{currentReview.toUser.firstName}}</h2>
     <mat-form-field class="full-width">
         <input matInput name="title" placeholder="Title:" formControlName="title">
     </mat-form-field>
