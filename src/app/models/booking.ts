@@ -4,7 +4,7 @@ import { Event } from 'app/models/event';
 export class Booking { 
     constructor(
     public _id: string,
-    public bookingType: string,
+    public bookingType: BookingType,
     public hostUser: User,
     public performerUser: User,
     public eventEID: Event,
@@ -27,6 +27,11 @@ export class Booking {
     public verifyComment: string;
     public cancelled: boolean;
     public completed: boolean;
+}
+
+export enum BookingType {
+    artistApply = "artist-apply",
+    hostRequest = "host-request"
 }
 
 export enum StatusMessages {
