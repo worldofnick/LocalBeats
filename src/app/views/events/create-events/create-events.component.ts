@@ -1,5 +1,5 @@
 import { Component, ElementRef,OnInit, ViewChild, NgZone } from '@angular/core';
-import { MatProgressBar, MatButton, MatSnackBar, MatDialog, MatDialogRef} from '@angular/material';
+import { MatProgressBar, MatButton, MatSnackBar} from '@angular/material';
 import { UserService } from '../../../services/auth/user.service';
 import { BookingService } from '../../../services/booking/booking.service';
 import { EventService } from '../../../services/event/event.service';
@@ -12,7 +12,6 @@ import { ActivatedRoute } from "@angular/router";
 import { Router } from "@angular/router";
 import { ImgurService } from 'app/services/image/imgur.service';
 import { StripeService } from 'app/services/payments/stripe.service';
-import { StripeDialogComponent } from '../event-singleton/stripe-dialog.component';
 import 'rxjs/add/operator/startWith';
 import 'rxjs/add/operator/map';
 import { } from 'googlemaps';
@@ -92,22 +91,11 @@ export class CreateEventsComponent implements OnInit {
               public snackBar: MatSnackBar,
               private mapsAPILoader: MapsAPILoader,
               private ngZone: NgZone,
-              private stripeService: StripeService,
-              public dialog: MatDialog
+              private stripeService: StripeService
               ) { }
 
               
   ngOnInit() {
-    // If they don't have a payment method setup redirect them to stripe first
-    if (!this.userService.user.stripeAccountId) {
-      let dialogRef: MatDialogRef<StripeDialogComponent>;
-      dialogRef = this.dialog.open(StripeDialogComponent, {
-          width: '250px',
-          disableClose: false,
-          data: { }
-      });
-      return dialogRef.afterClosed();
-    }
 
     this.event.eventType = "Wedding"
   

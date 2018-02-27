@@ -93,6 +93,7 @@
   <span fxFlex></span>
   <div *ngIf="userService.isAuthenticated(); else login">
     <button 
+    *ngIf="userService.user.stripeAccountId"
     mat-icon-button
     matTooltip="Create Event" 
     [style.overflow]="'visible'"
@@ -100,6 +101,17 @@
     class="topbar-button-right">
       <mat-icon>event</mat-icon>
     </button>
+
+    <button 
+    mat-icon-button
+    *ngIf="!userService.user.stripeAccountId"
+    matTooltip="Create Event" 
+    [style.overflow]="'visible'"
+    (click)="authorizeStripe()"
+    class="topbar-button-right">
+      <mat-icon>event</mat-icon>
+    </button>
+
      <!-- CHat toggle button -->
      <button 
      mat-icon-button
