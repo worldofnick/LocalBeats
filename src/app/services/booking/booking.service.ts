@@ -25,15 +25,8 @@ export class BookingService {
     constructor(private http: Http, private dialog: MatDialog) { }
 
     public negotiate(booking: Booking, initial: boolean, view: string): Observable<{response: NegotiationResponses, price: number}> {
-
         if ((view == "artist" && !booking.performerUser.stripeAccountId || view == "host" && !booking.hostUser.stripeAccountId)) {
-            let dialogRef: MatDialogRef<StripeDialogComponent>;
-            dialogRef = this.dialog.open(StripeDialogComponent, {
-                width: '250px',
-                disableClose: false,
-                data: { }
-            });
-            return dialogRef.afterClosed();
+            return this.showStripeDialog().afterClosed();
         }
 
         let dialogRef: MatDialogRef<NegotiateDialogComponent>;
@@ -43,6 +36,16 @@ export class BookingService {
             data: {booking, initial, view}
         });
         return dialogRef.afterClosed();
+    }
+
+    private showStripeDialog(): MatDialogRef<StripeDialogComponent> {
+        let dialogRef: MatDialogRef<StripeDialogComponent>;
+        dialogRef = this.dialog.open(StripeDialogComponent, {
+            width: '250px',
+            disableClose: false,
+            data: { }
+        });
+        return dialogRef;
     }
 
     // post("/api/events/create")
@@ -110,7 +113,11 @@ export class BookingService {
             .catch(this.handleError);
     }
 
-    public acceptBooking(booking: Booking): Promise<any> {
+    public acceptBooking(booking: Booking, view: string): Promise<any> {
+        if ((view == "artist" && !booking.performerUser.stripeAccountId || view == "host" && !booking.hostUser.stripeAccountId)) {
+            return this.showStripeDialog().afterClosed().toPromise();
+        }
+
         const current = this.acceptBookingConnection + '/' + booking._id
         
         return this.http.put(current, { headers: this.headers })
