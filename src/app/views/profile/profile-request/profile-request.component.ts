@@ -10,7 +10,7 @@ import { SocketService } from '../../../services/chats/socket.service';
 
 // Data Models
 import { User } from '../../../models/user';
-import { Booking, StatusMessages, NegotiationResponses } from '../../../models/booking';
+import { Booking, StatusMessages, NegotiationResponses, BookingType } from '../../../models/booking';
 import { Event } from '../../../models/event';
 import { Action } from '../../../services/chats/model/action'
 import { SocketEvent } from '../../../services/chats/model/event'

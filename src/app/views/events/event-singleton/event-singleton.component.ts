@@ -8,7 +8,7 @@ import { BookingService } from '../../../services/booking/booking.service';
 import { EventService } from '../../../services/event/event.service';
 import { User } from '../../../models/user';
 import { Event } from '../../../models/event';
-import { Booking, StatusMessages, NegotiationResponses } from '../../../models/booking';
+import { Booking, StatusMessages, NegotiationResponses, BookingType } from '../../../models/booking';
 import { Action } from '../../../services/chats/model/action'
 import { SocketEvent } from '../../../services/chats/model/event'
 import { Notification } from '../../../models/notification'
@@ -28,8 +28,6 @@ export class EventSingletonComponent implements OnInit {
   public userBooking: Booking;
   public isCurrentUser: boolean = null;
   public hasApplied: boolean = null;
-  public currentBookings: Booking[] = [];
-  public approvedBookings: Booking[] = [];
   public dateInBar: Date;
   public zoom: number;
   public lat: number;
