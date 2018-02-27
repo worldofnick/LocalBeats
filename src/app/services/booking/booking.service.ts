@@ -10,7 +10,6 @@ import { PaymentStatus } from 'app/models/payment';
 import { NegotiateDialogComponent } from '../../views/negotiate/negotiate-dialog/negotiate-dialog.component';
 import { StripeDialogComponent } from '../../views/events/event-singleton/stripe-dialog.component';
 import { VerifyDialogComponent } from '../../views/negotiate/verify-dialog/verify-dialog.component';
-
 import { environment } from '../../../environments/environment';
 
 @Injectable()
