@@ -3,13 +3,12 @@ import { Injectable } from '@angular/core';
 import { Http, Headers, RequestOptions, Response, URLSearchParams } from '@angular/http';
 import { MatDialogRef, MatDialog, MatDialogConfig } from '@angular/material';
 import { Observable } from 'rxjs/Observable';
-import { Booking, NegotiationResponses, VerificationResponse } from 'app/models/booking';
+import { Booking, NegotiationResponses } from 'app/models/booking';
 import { Event } from 'app/models/event';
 import { User } from 'app/models/user';
 import { PaymentStatus } from 'app/models/payment';
 import { NegotiateDialogComponent } from '../../views/negotiate/negotiate-dialog/negotiate-dialog.component';
 import { StripeDialogComponent } from '../../views/events/event-singleton/stripe-dialog.component';
-import { VerifyDialogComponent } from '../../views/negotiate/verify-dialog/verify-dialog.component';
 import { environment } from '../../../environments/environment';
 
 @Injectable()
@@ -39,7 +38,6 @@ export class BookingService {
         return dialogRef.afterClosed();
     }
 
-
     private showStripeDialog(): MatDialogRef<StripeDialogComponent> {
         let dialogRef: MatDialogRef<StripeDialogComponent>;
         dialogRef = this.dialog.open(StripeDialogComponent, {
@@ -48,16 +46,6 @@ export class BookingService {
             data: { }
         });
         return dialogRef;
-    }
-  
-    public verify(booking: Booking, isHost: boolean): Observable<{response: VerificationResponse, comment: string}> {
-        let dialogRef: MatDialogRef<VerifyDialogComponent>;
-        dialogRef = this.dialog.open(VerifyDialogComponent, {
-            width: '380px',
-            disableClose: false,
-            data: {booking, isHost}
-        });
-        return dialogRef.afterClosed();
     }
 
     // post("/api/events/create")
