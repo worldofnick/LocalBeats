@@ -8,6 +8,7 @@ import { Event } from 'app/models/event';
 import { User } from 'app/models/user';
 import { PaymentStatus } from 'app/models/payment';
 import { NegotiateDialogComponent } from '../../views/negotiate/negotiate-dialog/negotiate-dialog.component';
+import { StripeDialogComponent } from '../../views/events/event-singleton/stripe-dialog.component';
 import { environment } from '../../../environments/environment';
 
 @Injectable()
@@ -24,6 +25,17 @@ export class BookingService {
     constructor(private http: Http, private dialog: MatDialog) { }
 
     public negotiate(booking: Booking, initial: boolean, view: string): Observable<{response: NegotiationResponses, price: number}> {
+
+        if ((view == "artist" && !booking.performerUser.stripeAccountId || view == "host" && !booking.hostUser.stripeAccountId)) {
+            let dialogRef: MatDialogRef<StripeDialogComponent>;
+            dialogRef = this.dialog.open(StripeDialogComponent, {
+                width: '250px',
+                disableClose: false,
+                data: { }
+            });
+            return dialogRef.afterClosed();
+        }
+
         let dialogRef: MatDialogRef<NegotiateDialogComponent>;
         dialogRef = this.dialog.open(NegotiateDialogComponent, {
             width: '380px',

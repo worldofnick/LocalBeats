@@ -157,10 +157,6 @@ export class EventSingletonComponent implements OnInit {
   }
 
   newApplication() {
-    if (!this.userService.user.stripeAccountId) {
-      this.showStripeDialog();
-      return;
-    }
     this.userBooking = new Booking(undefined, 'artist-apply', this.model.hostUser, this.userService.user, this.model, false, false, false, StatusMessages.artistBid, StatusMessages.waitingOnHost, false, true, false, this.model.fixedPrice);
     this.bookingService.negotiate(this.userBooking, true, "artist").subscribe((result) => {
       if (result != undefined) {
@@ -187,11 +183,6 @@ export class EventSingletonComponent implements OnInit {
   }
 
   openNegotiationDialog() {
-    if (!this.userService.user.stripeAccountId) {
-      this.showStripeDialog();
-      return;
-    }
-    
     let view = this.eventService.event.hostUser._id == this.userService.user._id ? "host" : "artist";
     this.bookingService.negotiate(this.userBooking, false, view)
     .subscribe((result) => {
@@ -283,41 +274,5 @@ export class EventSingletonComponent implements OnInit {
       booking, response, message, icon, route); 
     this._socketService.sendNotification(SocketEvent.SEND_NOTIFICATION, notification);
   }
-
-  showStripeDialog() {
-    let dialogRef: MatDialogRef<StripeDialog>;
-    dialogRef = this.dialog.open(StripeDialog, {
-        width: '250px',
-        disableClose: false,
-        data: { }
-    });
-
-    dialogRef.afterClosed();
-  }
-}
-
-// Setup Stripe Dialog
-@Component({
-  selector: 'stripe-dialog',
-  templateUrl: 'stripe-dialog.html',
-})
-export class StripeDialog {
-
-  constructor(
-    public dialogRef: MatDialogRef<StripeDialog>,
-    @Inject(MAT_DIALOG_DATA) public data: any, private _socketService: SocketService, private stripeService: StripeService,
-      private userService: UserService) { }
-
-    ngOnInit() { }
-  
-    onOkClick(): void {
-      this.stripeService.authorizeStripe(this.userService.user).then((url: string) => {
-        window.location.href = url;
-      });
-    }
-
-    onNoClick(): void {
-      this.dialogRef.close();
-    }
 
 }

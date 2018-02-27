@@ -4,7 +4,6 @@ import { ActivatedRoute } from "@angular/router";
 import { NgForm } from '@angular/forms/src/directives/ng_form';
 import { Router } from "@angular/router";
 import { MatTabChangeEvent, MatSnackBar, MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { StripeDialog } from '../../../events/event-singleton/event-singleton.component';
 
 // Services
 import { UserService } from '../../../../services/auth/user.service';
@@ -221,11 +220,6 @@ export class ProfilePerformancesComponent implements OnInit {
   }
 
   openNegotiationDialog(booking: Booking, bookingIndex: number) {
-    if (!this.userService.user.stripeAccountId) {
-      this.showStripeDialog();
-      return;
-    }
-
     let view = this.eventService.event.hostUser._id == this.userService.user._id ? "host" : "artist";
     this.bookingService.negotiate(booking, false, view)
     .subscribe((result) => {
@@ -360,17 +354,6 @@ export class ProfilePerformancesComponent implements OnInit {
 
     });
 
-  }
-
-  showStripeDialog() {
-    let dialogRef: MatDialogRef<StripeDialog>;
-    dialogRef = this.dialog.open(StripeDialog, {
-        width: '250px',
-        disableClose: false,
-        data: { }
-    });
-
-    dialogRef.afterClosed();
   }
 
 }

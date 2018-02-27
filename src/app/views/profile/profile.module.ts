@@ -43,7 +43,6 @@ import { ProfileRoutes } from "./profile.routing";
 import { ProfileEventsComponent, ConfirmPaymentDialog } from './profile-events/profile-events.component';
 import { ProfileRequestComponent } from './profile-request/profile-request.component';
 import { ProfilePerformancesComponent, RefundPaymentDialog, PaymentHistoryDialog } from './profile-performances/profile-performances/profile-performances.component';
-import { StripeDialog } from '../events/event-singleton/event-singleton.component';
 import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
@@ -93,9 +92,9 @@ import { ReactiveFormsModule } from '@angular/forms';
     CommonPipesModule,
     RouterModule.forChild(ProfileRoutes)
   ],
-  declarations: [ConfirmPaymentDialog, RefundPaymentDialog, PaymentHistoryDialog, StripeDialog, ProfileComponent, ProfileOverviewComponent, ProfileSettingsComponent, ProfileBlankComponent, ProfileEventsComponent, ProfileRequestComponent, ProfilePerformancesComponent],
-  exports: [ConfirmPaymentDialog, RefundPaymentDialog, PaymentHistoryDialog, StripeDialog],
+  declarations: [ConfirmPaymentDialog, RefundPaymentDialog, PaymentHistoryDialog, ProfileComponent, ProfileOverviewComponent, ProfileSettingsComponent, ProfileBlankComponent, ProfileEventsComponent, ProfileRequestComponent, ProfilePerformancesComponent],
+  exports: [ConfirmPaymentDialog, RefundPaymentDialog, PaymentHistoryDialog],
   providers: [],
-  entryComponents: [ConfirmPaymentDialog, RefundPaymentDialog, PaymentHistoryDialog, StripeDialog]
+  entryComponents: [ConfirmPaymentDialog, RefundPaymentDialog, PaymentHistoryDialog]
 })
 export class ProfileModule { }

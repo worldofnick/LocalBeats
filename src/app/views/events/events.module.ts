@@ -48,7 +48,6 @@ import { CreateEventsComponent } from './create-events/create-events.component';
 import { EventRoutes } from "./events.routing";
 import { EventSingletonComponent } from './event-singleton/event-singleton.component';
 import { CommonPipesModule } from "../../pipes/common/common-pipes.module";
-import { StripeDialog } from './event-singleton/event-singleton.component';
 
 @NgModule({
   imports: [
@@ -109,8 +108,6 @@ import { StripeDialog } from './event-singleton/event-singleton.component';
     CommonPipesModule,
     RouterModule.forChild(EventRoutes)
   ],
-  declarations: [CreateEventsComponent, EventSingletonComponent, StripeDialog],
-  entryComponents: [StripeDialog],
-  exports: [StripeDialog]
+  declarations: [CreateEventsComponent, EventSingletonComponent],
 })
 export class EventsModule { }
