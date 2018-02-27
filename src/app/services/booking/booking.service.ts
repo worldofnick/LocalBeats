@@ -61,7 +61,6 @@ export class BookingService {
         return dialogRef.afterClosed();
     }
 
-
     // post("/api/events/create")
     public createBooking(newBooking: Booking): Promise<Booking> {
         const current = this.connection + '/create';
