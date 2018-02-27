@@ -106,7 +106,7 @@
           <button *ngIf="booking.completed && performances.paymentStatues[i] != 'waiting'" (click)="showPaymentHistoryDialog(booking)" mat-raised-button color="accent">View Payment History</button>
           <mat-chip *ngIf="booking.completed && performances.paymentStatues[i] == 'paid'" color="primary" selected="true">Paid</mat-chip>
           <mat-chip *ngIf="booking.completed && performances.paymentStatues[i] == 'waiting'" color ="accent" selected="true">Unpaid</mat-chip>
-          <mat-chip *ngIf="booking.completed && performances.paymentStatues[i] == 'refund'" color ="accent" selected="true">Refunded</mat-chip>
+          <mat-chip [disabled]="this.canRefund" *ngIf="booking.completed && performances.paymentStatues[i] == 'refund'" color ="accent" selected="true">Refunded</mat-chip>
         </mat-card-actions>
       </mat-card>
     </mat-tab>

@@ -30,6 +30,7 @@ import { Payment, PaymentStatus } from '../../../../models/payment'
 export class ProfilePerformancesComponent implements OnInit {
   // User Model
   user: User;
+  private canRefund: boolean = true;
   // Performances of the User Model
   performances: {
     applications: Booking[],
@@ -466,6 +467,7 @@ export class ProfilePerformancesComponent implements OnInit {
   }
 
   showRefundDialog(booking: Booking) {
+    this.canRefund = false;
     let dialogRef: MatDialogRef<RefundPaymentDialog>;
     dialogRef = this.dialog.open(RefundPaymentDialog, {
         width: '250px',
@@ -475,6 +477,7 @@ export class ProfilePerformancesComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       this.updatePaymentStatues(booking);
+      this.canRefund = true;
     });
   }
 

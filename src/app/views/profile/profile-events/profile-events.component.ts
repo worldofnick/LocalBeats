@@ -33,6 +33,7 @@ import { Payment, PaymentStatus } from '../../../models/payment';
 export class ProfileEventsComponent implements OnInit {
   // User Model
   user: User;
+  private canPay: boolean = true;
   // Hosted Events of the User Model
   events: {
     event: Event,
@@ -456,6 +457,7 @@ export class ProfileEventsComponent implements OnInit {
   }
 
   showPayDialog(booking: Booking) {
+    this.canPay = false;
     let dialogRef: MatDialogRef<ConfirmPaymentDialog>;
     dialogRef = this.dialog.open(ConfirmPaymentDialog, {
         width: '250px',
@@ -465,6 +467,7 @@ export class ProfileEventsComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       this.updatePaymentStatues(booking);
+      this.canPay = true;
     });
   }
 
