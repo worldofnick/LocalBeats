@@ -165,4 +165,8 @@ export class ProfileSettingsComponent implements OnInit {
       window.open(url);
     });
   }
+
+  callbackTest() {
+    this.router.navigate(['/callback', 'spotify']);
+  }
 }
