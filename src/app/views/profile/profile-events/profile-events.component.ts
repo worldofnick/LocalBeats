@@ -285,7 +285,7 @@ export class ProfileEventsComponent implements OnInit {
       // Check to see if a response was recorded in the verification dialog box
       if(result != undefined) {
         // Check to see what the response was
-        booking.verifyComment = result.comment;
+        booking.hostComment = result.comment;
         let notificationMessage: string = '';
         let response:NegotiationResponses = null;
         if(result.response == VerificationResponse.verify) {
