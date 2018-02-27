@@ -19,12 +19,14 @@ export class Booking {
     public hostVerified: boolean,
     public artistVerified: boolean
     ) {  
-        this.verifyComment = '';
+        this.hostComment = '';
+        this.artistComment = '';
         this.cancelled = false;
         this.completed = false;
     }
 
-    public verifyComment: string;
+    public hostComment: string;
+    public artistComment: string;
     public cancelled: boolean;
     public completed: boolean;
 }
