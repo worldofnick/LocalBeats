@@ -160,8 +160,8 @@ export class EventSingletonComponent implements OnInit {
 
     if (!this.userService.user.stripeAccountId) {
       this.showStripeDialog();
+      return;
     }
-
     this.userBooking = new Booking(undefined, 'artist-apply', this.model.hostUser, this.userService.user, this.model, false, false, false, StatusMessages.artistBid, StatusMessages.waitingOnHost, false, true, false, this.model.fixedPrice);
     this.bookingService.negotiate(this.userBooking, true, "artist").subscribe((result) => {
       if (result != undefined) {
@@ -189,6 +189,10 @@ export class EventSingletonComponent implements OnInit {
 
   openNegotiationDialog() {
     let view = this.eventService.event.hostUser._id == this.userService.user._id ? "host" : "artist";
+    if (view == "artist" && !this.userService.user.stripeAccountId) {
+      this.showStripeDialog();
+      return;
+    }
     this.bookingService.negotiate(this.userBooking, false, view)
     .subscribe((result) => {
       // Check to see if a response was recorded in the negotiation dialog box
