@@ -48,7 +48,6 @@ export class BookingService {
             data: { }
         });
         return dialogRef;
-    
     }
   
     public verify(booking: Booking, isHost: boolean): Observable<{response: VerificationResponse, comment: string}> {
