@@ -1,13 +1,11 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from "@angular/router";
 import { DatePipe } from '@angular/common'
 import { Router } from "@angular/router";
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
 import { UserService } from '../../../services/auth/user.service';
 import { BookingService } from '../../../services/booking/booking.service';
 import { EventService } from '../../../services/event/event.service';
-import { StripeService } from 'app/services/payments/stripe.service';
 import { User } from '../../../models/user';
 import { Event } from '../../../models/event';
 import { Booking, StatusMessages, NegotiationResponses } from '../../../models/booking';
@@ -46,8 +44,7 @@ export class EventSingletonComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private _socketService: SocketService,
-    public datepipe: DatePipe,
-    public dialog: MatDialog
+    public datepipe: DatePipe
   ) { }
 
   ngOnInit() {
