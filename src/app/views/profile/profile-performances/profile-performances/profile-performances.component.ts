@@ -104,13 +104,55 @@ export class ProfilePerformancesComponent implements OnInit {
     }
 
     this.reviewService.review(review, false).subscribe((result) => {
-      if(result.rating == -1) {
+      if (result.rating == -1) {
         return;
       }
       this.reviewService.createReview(result).then( (newReview: Review) => {
-          // this.setReviews();
+          if (isArtist) {
+            booking.beenReviewedByArtist = true;
+          }else{
+            booking.beenReviewedByHost = false;
+          }
+
+          this.bookingService.updateBooking(booking);
       });
     });
+
+  }
+
+  editReview(booking: Booking) {
+
+    let reviewToEdit: Review = new Review;
+
+    this.reviewService.getReviewsFrom(booking.performerUser).then( (reviews) => {
+
+      for (let review of reviews){
+        if (review.bookingID == booking._id){
+          reviewToEdit = review;
+        }
+      }
+
+      this.reviewService.review(reviewToEdit, true).subscribe((result) => {
+        if (result.rating == null) {
+          return;
+        }
+        if (result.rating == -1) {
+          // if the user pressed cancel when editing
+          return;
+        }else if (result.rating == -2) {
+          // if the user pressed delete when editing
+          this.reviewService.deleteReviewByRID(result).then( () => {
+            // this.setReviews();
+            booking.beenReviewedByArtist = false;
+            this.bookingService.updateBooking(booking);
+          });
+        }else {
+          this.reviewService.updateReview(reviewToEdit);
+        }
+      });
+
+
+    }); 
 
   }
 

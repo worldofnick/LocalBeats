@@ -122,7 +122,7 @@ exports.getUserReviewsByUIDFrom = function (req, res) {
       skip = parseInt(req.query.skip);
   }
 
-  Reviews.find({fromUID: req.query.uid}).limit(limit).skip(skip).populate("fromUser").populate("toUser").exec(function (err, doc) {
+  Reviews.find({fromUser: req.query.uid}).limit(limit).skip(skip).populate("fromUser").populate("toUser").exec(function (err, doc) {
       if (err) {
           return res.status(500).send("Failed to get user reviews");
       } else {

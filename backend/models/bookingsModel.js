@@ -22,7 +22,11 @@ var BookingsSchema = new Schema({
     artistVerified  : {type: Boolean, default: null},
     verifyComment   : {type: String, default: ''},
     completed       : {type: Boolean, default: false},
-    cancelled       : {type: Boolean, default: false}
+    cancelled       : {type: Boolean, default: false},
+    beenReviewedByArtist     : {type: Boolean, default: false},
+    beenReviewedByHost       : {type: Boolean, default: false}
+
+
 }, {strict: true});
 
 mongoose.model('Bookings', BookingsSchema);
