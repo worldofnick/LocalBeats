@@ -3,12 +3,12 @@ import { Injectable } from '@angular/core';
 import { Http, Headers, RequestOptions, Response, URLSearchParams } from '@angular/http';
 import { MatDialogRef, MatDialog, MatDialogConfig } from '@angular/material';
 import { Observable } from 'rxjs/Observable';
-import { Booking, NegotiationResponses, VerificationResponse } from 'app/models/booking';
+import { Booking, NegotiationResponses } from 'app/models/booking';
 import { Event } from 'app/models/event';
 import { User } from 'app/models/user';
 import { PaymentStatus } from 'app/models/payment';
 import { NegotiateDialogComponent } from '../../views/negotiate/negotiate-dialog/negotiate-dialog.component';
-import { VerifyDialogComponent } from '../../views/negotiate/verify-dialog/verify-dialog.component';
+import { StripeDialogComponent } from '../../views/events/event-singleton/stripe-dialog.component';
 import { environment } from '../../../environments/environment';
 
 @Injectable()
@@ -24,24 +24,28 @@ export class BookingService {
 
     constructor(private http: Http, private dialog: MatDialog) { }
 
-    public negotiate(booking: Booking, initial: boolean): Observable<{response: NegotiationResponses, price: number}> {
+    public negotiate(booking: Booking, initial: boolean, view: string): Observable<{response: NegotiationResponses, price: number}> {
+        if ((view == "artist" && !booking.performerUser.stripeAccountId || view == "host" && !booking.hostUser.stripeAccountId)) {
+            return this.showStripeDialog().afterClosed();
+        }
+
         let dialogRef: MatDialogRef<NegotiateDialogComponent>;
         dialogRef = this.dialog.open(NegotiateDialogComponent, {
             width: '380px',
             disableClose: false,
-            data: {booking, initial}
+            data: {booking, initial, view}
         });
         return dialogRef.afterClosed();
     }
 
-    public verify(booking: Booking, isHost: boolean): Observable<{response: VerificationResponse, comment: string}> {
-        let dialogRef: MatDialogRef<VerifyDialogComponent>;
-        dialogRef = this.dialog.open(VerifyDialogComponent, {
-            width: '380px',
+    private showStripeDialog(): MatDialogRef<StripeDialogComponent> {
+        let dialogRef: MatDialogRef<StripeDialogComponent>;
+        dialogRef = this.dialog.open(StripeDialogComponent, {
+            width: '250px',
             disableClose: false,
-            data: {booking, isHost}
+            data: { }
         });
-        return dialogRef.afterClosed();
+        return dialogRef;
     }
 
     // post("/api/events/create")
@@ -109,7 +113,11 @@ export class BookingService {
             .catch(this.handleError);
     }
 
-    public acceptBooking(booking: Booking): Promise<any> {
+    public acceptBooking(booking: Booking, view: string): Promise<any> {
+        if ((view == "artist" && !booking.performerUser.stripeAccountId || view == "host" && !booking.hostUser.stripeAccountId)) {
+            return this.showStripeDialog().afterClosed().toPromise();
+        }
+
         const current = this.acceptBookingConnection + '/' + booking._id
         
         return this.http.put(current, { headers: this.headers })

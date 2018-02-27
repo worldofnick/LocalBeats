@@ -3,6 +3,7 @@ import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AgmCoreModule, MapsAPILoader } from '@agm/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { CurrencyMaskModule } from "ng2-currency-mask";
 import { 
   MatInputModule,
   MatDatepickerModule, 
@@ -48,7 +49,6 @@ import { EventRoutes } from "./events.routing";
 import { EventSingletonComponent } from './event-singleton/event-singleton.component';
 import { CommonPipesModule } from "../../pipes/common/common-pipes.module";
 
-
 @NgModule({
   imports: [
     CommonModule,
@@ -56,6 +56,7 @@ import { CommonPipesModule } from "../../pipes/common/common-pipes.module";
       apiKey: "AIzaSyBCko4eEq6azFCzCXVXAF4_jylVNw4ZM7Q"
     }),
     FormsModule,
+    CurrencyMaskModule,
     ReactiveFormsModule,
     MatInputModule,
     MatListModule,
@@ -107,6 +108,6 @@ import { CommonPipesModule } from "../../pipes/common/common-pipes.module";
     CommonPipesModule,
     RouterModule.forChild(EventRoutes)
   ],
-  declarations: [CreateEventsComponent, EventSingletonComponent]
+  declarations: [CreateEventsComponent, EventSingletonComponent],
 })
 export class EventsModule { }

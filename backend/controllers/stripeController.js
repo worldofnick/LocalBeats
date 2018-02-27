@@ -8,7 +8,7 @@ var request     = require('request');
 var jwt         = require('jsonwebtoken');
 var bcrypt      = require('bcrypt');
 var User        = mongoose.model('User');
-var Payments    = mongoose.model('Payments');
+var Payments        = mongoose.model('Payments');
 
 // ====== STRIPE ROUTES ======
 

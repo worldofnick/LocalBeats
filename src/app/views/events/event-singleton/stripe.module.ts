@@ -1,10 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { CurrencyMaskModule } from "ng2-currency-mask";
 import { 
   MatDialogModule,
   MatIconModule,
   MatCardModule,
-  MatInputModule,
   MatButtonModule,
   MatProgressBarModule,
   MatCheckboxModule
@@ -13,16 +11,14 @@ import { NgModule } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 
-import { NegotiateDialogComponent } from './negotiate-dialog/negotiate-dialog.component';
+import { StripeDialogComponent } from './stripe-dialog.component';
 
 @NgModule({
   imports: [
     CommonModule,
-    CurrencyMaskModule,
     MatDialogModule,
     MatButtonModule,
     MatCardModule,
-    MatInputModule,
     MatIconModule,
     MatProgressBarModule,
     MatCheckboxModule,
@@ -30,9 +26,9 @@ import { NegotiateDialogComponent } from './negotiate-dialog/negotiate-dialog.co
     FormsModule,
     ReactiveFormsModule
   ],
-  exports: [NegotiateDialogComponent],
-  declarations: [NegotiateDialogComponent],
+  exports: [StripeDialogComponent],
+  declarations: [StripeDialogComponent],
   providers: [],
-  entryComponents: [NegotiateDialogComponent]
+  entryComponents: [StripeDialogComponent]
 })
-export class NegotiateModule { }
+export class StripeModule { }

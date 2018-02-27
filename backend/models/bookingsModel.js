@@ -18,11 +18,7 @@ var BookingsSchema = new Schema({
     artistApproved  : {type: Boolean, default: false},
     hostApproved    : {type: Boolean, default: false},
     currentPrice    : {type: Number, required: true},
-    hostVerified    : {type: Boolean, default: null},
-    artistVerified  : {type: Boolean, default: null},
-    verifyComment   : {type: String, default: ''},
-    completed       : {type: Boolean, default: false},
-    cancelled       : {type: Boolean, default: false}
+    completed       : {type: Boolean, default: false} // Has the event had the 2 factor auth go through?
 }, {strict: true});
 
 mongoose.model('Bookings', BookingsSchema);

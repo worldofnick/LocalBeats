@@ -7,6 +7,7 @@ import { MatTabChangeEvent } from '@angular/material';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatSnackBar} from '@angular/material';
 import { PaymentHistoryDialog } from '../profile-performances/profile-performances/profile-performances.component';
 
+
 // Services
 import { UserService } from '../../../services/auth/user.service';
 import { BookingService } from '../../../services/booking/booking.service';
@@ -17,7 +18,7 @@ import { StripeService } from 'app/services/payments/stripe.service';
 // Data Models
 import { User } from '../../../models/user';
 import { Event } from '../../../models/event';
-import { Booking, StatusMessages, NegotiationResponses, VerificationResponse } from '../../../models/booking';
+import { Booking, StatusMessages, NegotiationResponses } from '../../../models/booking';
 import { Action } from '../../../services/chats/model/action';
 import { SocketEvent } from '../../../services/chats/model/event';
 import { Notification } from '../../../models/notification';
@@ -33,6 +34,7 @@ import { Payment, PaymentStatus } from '../../../models/payment';
 export class ProfileEventsComponent implements OnInit {
   // User Model
   user: User;
+  private submitted: boolean = false;
   // Hosted Events of the User Model
   events: {
     event: Event,
@@ -42,8 +44,6 @@ export class ProfileEventsComponent implements OnInit {
     requestNotifications: number,
     confirmations: Booking[],
     confirmationNotifications: number,
-    cancellations: Booking[],
-    cancellationNotifications: number,
     paymentStatues: PaymentStatus[]}[];
 
   constructor(private eventService: EventService,
@@ -53,8 +53,7 @@ export class ProfileEventsComponent implements OnInit {
     private router: Router,
     private _socketService: SocketService,
     private stripeService: StripeService,
-    public dialog: MatDialog,
-    public snackBar: MatSnackBar
+    public dialog: MatDialog
   ) {
     // Set user model to the authenticated singleton user
     this.user = this.userService.user;
@@ -65,7 +64,11 @@ export class ProfileEventsComponent implements OnInit {
   ngOnInit() {
     this._socketService.onEvent(SocketEvent.SEND_NOTIFICATION)
       .subscribe((notification: Notification) => {
+        if (notification.response == NegotiationResponses.payment) {
+          this.updatePaymentStatues(notification.booking);
+        } else {
           this.updateModel(notification.booking, notification.response);
+        }
     });
   }
 
@@ -84,38 +87,28 @@ export class ProfileEventsComponent implements OnInit {
     this.eventService.getEventsByUID(this.user._id).then((events: Event[]) => {
       for(let e of events) {
         // Get the bookings associated with each event
-        // Get the confirmed bookings, which could be cancelled, verified, or not
+        // Get the confirmed bookings
         let confirmedBookings: Booking[] = [];
         // Get the application bookings
         let applicationBookings: Booking[] = [];
         // Get the request bookings
         let requestBookings: Booking[] = [];
-        // Get the cancelled bookings
-        let cancelledBookings: Booking[] = [];
-        // Get the notification counts
+        // Get the notification count for the applications
         let numNotif: number = 0;
         let reqNotif: number = 0;
         let numConf: number = 0;
-        let cancelNotif: number = 0;
         let paymentStatues = [];  
         this.bookingService.getBooking(e).then((bookings: Booking[]) => {
           for(let booking of bookings) {
             if(booking.approved) {
-              if(!booking.cancelled) {
-                confirmedBookings.push(booking);
-                // If the booking is confirmed and has not yet been viewed by the host, a new notification exists
-                if(!booking.hostViewed) {
-                  numConf++;
-                }
-                this.bookingService.bookingPaymentStatus(booking).then((status: string) => {
-                  paymentStatues.push(status);
-                });
-              } else {
-                cancelledBookings.push(booking);
-                if(!booking.hostViewed) {
-                  cancelNotif++;
-                }
+              confirmedBookings.push(booking);
+              // If the booking is confirmed and has not yet been viewed by the host, a new notification exists
+              if(!booking.hostViewed) {
+                numConf++;
               }
+              this.bookingService.bookingPaymentStatus(booking).then((status: string) => {
+                paymentStatues.push(status);
+              });
             } else {
               // Check to see if the artist applied
               if(booking.bookingType == 'artist-apply') {
@@ -136,7 +129,7 @@ export class ProfileEventsComponent implements OnInit {
           }
           this.events.push({event: e, applications: applicationBookings, applicationNotifications: numNotif,
             requests: requestBookings, requestNotifications: reqNotif, confirmations: confirmedBookings, confirmationNotifications: numConf,
-            cancellations: cancelledBookings, cancellationNotifications: cancelNotif, paymentStatues: paymentStatues});
+            paymentStatues: paymentStatues});
         })
       }
     })
@@ -207,38 +200,10 @@ export class ProfileEventsComponent implements OnInit {
         this.events[eventIndex].requests.splice(requestIndex, 1);
       }
     } else if(response == NegotiationResponses.cancel) {
-      // Find it in confirmations
+      // Find it in confirmations and remove it
       eventIndex = this.events.findIndex(e => e.event._id == newBooking.eventEID._id);
       confirmationIndex = this.events[eventIndex].confirmations.findIndex(a => a._id == newBooking._id);
-      // The artist has cancelled
-      this.events[eventIndex].paymentStatues.splice(confirmationIndex, 1);
-      this.events[eventIndex].cancellations.push(newBooking);
-      this.events[eventIndex].cancellationNotifications++;
-      this.events[eventIndex].confirmations.splice(confirmationIndex,1);
-    } else if(response == NegotiationResponses.complete) {
-      // Find it in confirmations
-      eventIndex = this.events.findIndex(e => e.event._id == newBooking.eventEID._id);
-      confirmationIndex = this.events[eventIndex].confirmations.findIndex(a => a._id == newBooking._id);
-      // The artist has verified and the booking is complete
-      this.events[eventIndex].confirmationNotifications++;
-      this.events[eventIndex].confirmations[confirmationIndex] = newBooking;
-      // Send payment here [placeholder]
-    } else if(response == NegotiationResponses.verification) {
-      // Find it in confirmations
-      eventIndex = this.events.findIndex(e => e.event._id == newBooking.eventEID._id);
-      confirmationIndex = this.events[eventIndex].confirmations.findIndex(a => a._id == newBooking._id);
-      // The artist has verified and now waiting on host verification
-      this.events[eventIndex].confirmationNotifications++;
-      this.events[eventIndex].confirmations[confirmationIndex] = newBooking;
-    } else if(response == NegotiationResponses.payment) {
-      // Update payment status
-      eventIndex = this.events.findIndex(e => e.event._id == newBooking.eventEID._id);
-      confirmationIndex = this.events[eventIndex].confirmations.findIndex(a => a._id == newBooking._id);
-      this.bookingService.bookingPaymentStatus(newBooking).then((status: PaymentStatus) => {
-        this.events[eventIndex].confirmations[confirmationIndex] = newBooking;
-        this.events[eventIndex].confirmationNotifications++;
-        this.events[eventIndex].paymentStatues[confirmationIndex] = status;
-      });
+      this.events[eventIndex].confirmations.splice(confirmationIndex, 1);
     }
   }
 
@@ -246,14 +211,6 @@ export class ProfileEventsComponent implements OnInit {
     if(event.index == 3) {
       this.events[eventIndex].confirmationNotifications = 0;
       for(let booking of this.events[eventIndex].confirmations) {
-        if(!booking.hostViewed) {
-          booking.hostViewed = true;
-          this.bookingService.updateBooking(booking);
-        }
-      }
-    } else if(event.index == 4) {
-      this.events[eventIndex].cancellationNotifications = 0;
-      for(let booking of this.events[eventIndex].cancellations) {
         if(!booking.hostViewed) {
           booking.hostViewed = true;
           this.bookingService.updateBooking(booking);
@@ -278,76 +235,9 @@ export class ProfileEventsComponent implements OnInit {
     this.router.navigate(['/events', event._id]);
   }
 
-  hostVerify(booking: Booking, bookingIndex: number, eventIndex: number) {
-    this.bookingService.verify(booking, true)
-    .subscribe((result)=> {
-      // Check to see if a response was recorded in the verification dialog box
-      if(result != undefined) {
-        // Check to see what the response was
-        booking.verifyComment = result.comment;
-        let notificationMessage: string = '';
-        let response:NegotiationResponses = null;
-        if(result.response == VerificationResponse.verify) {
-          // The host has verified the artist's attendance
-          booking.hostVerified = true;
-          // If Artist has verified, the booking is complete
-          if(booking.artistVerified) {
-            booking.hostStatusMessage = StatusMessages.completed;
-            booking.artistStatusMessage = StatusMessages.completed;
-            booking.completed = true;
-            booking.hostViewed = false;
-            booking.artViewed = false;
-            // No notification needed here because payment service will send notification
-          } else {
-            booking.hostStatusMessage = StatusMessages.waitingOnArtist;
-            booking.artistStatusMessage = StatusMessages.hostVerified;
-            booking.artViewed = false;
-            booking.hostViewed = true;
-            notificationMessage = booking.hostUser.firstName + " has verified you for the event " + booking.eventEID.eventName;
-            response = NegotiationResponses.verification;
-          }
-        } else {
-          // The host has rejected verification of the artist's attendance
-          booking.hostStatusMessage = StatusMessages.hostRejected;
-          booking.artistStatusMessage = StatusMessages.hostRejected;
-          booking.artViewed = false;
-          booking.hostViewed = true;
-          booking.hostVerified = false;
-          notificationMessage = booking.hostUser.firstName + " has invalidated you for the event " + booking.eventEID.eventName;
-          response = NegotiationResponses.verification;
-        }
-        // Update the booking and payment asynchronously
-        this.bookingService.updateBooking(booking).then(() => {
-          if(booking.completed) {
-            // Notification will come through stripe service on payment
-            this.stripeService.charge(booking).then((success: boolean) => {
-              if (success) {
-                this.bookingService.bookingPaymentStatus(booking).then((status: PaymentStatus) => {
-                  this.events[eventIndex].paymentStatues[bookingIndex] = status;
-                  this.events[eventIndex].confirmations[bookingIndex] = booking;
-                  let snackBarRef = this.snackBar.open('Payment sent!', "", {
-                    duration: 1500,
-                  });
-                });
-              } else {
-                let snackBarRef = this.snackBar.open('Payment failed, please try again.', "", {
-                  duration: 1500,
-                });
-              }
-            });
-          } else {
-            this.events[eventIndex].confirmations[bookingIndex] = booking;
-            // Send notification to artist
-            this.createNotificationForArtist(booking, response, ['/profile', 'performances'],
-            'event_available', notificationMessage);
-          }
-        });
-      }
-    })
-  }
-
   openNegotiationDialog(booking: Booking, bookingIndex: number, eventIndex: number) {
-    this.bookingService.negotiate(booking, false)
+    let view = booking.eventEID.hostUser._id == this.userService.user._id ? "host" : "artist";
+    this.bookingService.negotiate(booking, false, view)
     .subscribe((result) => {
       // Check to see if a response was recorded in the negotiation dialog box
       if (result != undefined) {
@@ -385,7 +275,7 @@ export class ProfileEventsComponent implements OnInit {
             booking.hostStatusMessage = StatusMessages.bookingConfirmed;
             booking.artistStatusMessage = StatusMessages.bookingConfirmed;
             // Asynchronously update
-            this.bookingService.acceptBooking(booking).then(() => {
+            this.bookingService.acceptBooking(booking, view).then(() => {
               // Update the model of the component
               if(booking.bookingType == 'artist-apply') {
                 this.events[eventIndex].applications.splice(bookingIndex, 1);
@@ -421,18 +311,17 @@ export class ProfileEventsComponent implements OnInit {
           })
         } else if(result.response == NegotiationResponses.cancel) {
           // Cancellation, the user cancelled a confirmed booking
-          booking.cancelled = true;
-          booking.artViewed = false;
-          booking.hostViewed = true;
-          booking.hostStatusMessage = StatusMessages.cancelled;
-          booking.artistStatusMessage = StatusMessages.cancelled;
+          // Negate approvals for real-time notification to other user's component model
+          booking.artistApproved = false;
+          booking.hostApproved = false;
+          booking.approved = false;
           // Asynchronously update
-          // Update the booking asynchronously
-          this.bookingService.updateBooking(booking).then(() => {
+          this.bookingService.declineBooking(booking).then(() => {
             // Update the model of the component
+            this.events[eventIndex].confirmations.splice(bookingIndex, 1);
             this.createNotificationForArtist(booking, result.response, ['/events', booking.eventEID._id],
-            'import_export', booking.hostUser.firstName + " has cancelled the confirmed booking for " + booking.eventEID.eventName);
-          });
+            'event_busy', booking.hostUser.firstName + " has cancelled the confirmed boking for " + booking.eventEID.eventName);
+          })
         } else {
           // No change, the user kept their confirmed booking
         }
@@ -455,6 +344,7 @@ export class ProfileEventsComponent implements OnInit {
   }
 
   showPayDialog(booking: Booking) {
+    this.submitted = true;
     let dialogRef: MatDialogRef<ConfirmPaymentDialog>;
     dialogRef = this.dialog.open(ConfirmPaymentDialog, {
         width: '250px',
@@ -464,6 +354,7 @@ export class ProfileEventsComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       this.updatePaymentStatues(booking);
+      this.submitted = false;
     });
   }
 
@@ -498,6 +389,7 @@ export class ConfirmPaymentDialog {
   }
 
   onOkClick(): void {
+    this.stripeService.charge
     this.stripeService.charge(this.data.booking).then((success: boolean) => {
       this.dialogRef.close();
       if (success) {
