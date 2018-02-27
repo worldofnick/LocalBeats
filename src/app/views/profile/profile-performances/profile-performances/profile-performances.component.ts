@@ -8,6 +8,7 @@ import { MatTabChangeEvent, MatSnackBar, MatDialog, MatDialogRef, MAT_DIALOG_DAT
 // Services
 import { UserService } from '../../../../services/auth/user.service';
 import { BookingService } from '../../../../services/booking/booking.service';
+import { ReviewService } from 'app/services/reviews/review.service';
 import { EventService } from '../../../../services/event/event.service';
 import { SocketService } from 'app/services/chats/socket.service';
 import { StripeService } from 'app/services/payments/stripe.service';
@@ -15,6 +16,8 @@ import { StripeService } from 'app/services/payments/stripe.service';
 // Data Models
 import { User } from '../../../../models/user';
 import { Event } from '../../../../models/event';
+import { Review } from '../../../../models/review';
+
 import { Booking, StatusMessages, NegotiationResponses, VerificationResponse } from '../../../../models/booking';
 import { Action } from '../../../../services/chats/model/action'
 import { SocketEvent } from '../../../../services/chats/model/event'
@@ -52,7 +55,8 @@ export class ProfilePerformancesComponent implements OnInit {
     private _socketService: SocketService,
     private stripeService: StripeService,
     public dialog: MatDialog,
-    public snackBar: MatSnackBar
+    public snackBar: MatSnackBar,
+    private reviewService: ReviewService
     ) {
       // Set user model to the authenticated singleton user
       this.user = this.userService.user;
@@ -85,6 +89,29 @@ export class ProfilePerformancesComponent implements OnInit {
     this.bookingService.bookingPaymentStatus(booking).then((status: PaymentStatus) => {
       this.performances.paymentStatues[idx] = status;
     });
+  }
+
+  openReviewDialog(booking: Booking, isArtist: boolean): void {
+
+    let review: Review = new Review;
+
+    if (isArtist){
+      review.toUser = booking.hostUser;
+      review.fromUser = booking.performerUser;
+    }else {
+      review.toUser = booking.performerUser;
+      review.fromUser = booking.hostUser;
+    }
+
+    this.reviewService.review(review, false).subscribe((result) => {
+      if(result.rating == -1) {
+        return;
+      }
+      this.reviewService.createReview(result).then( (newReview: Review) => {
+          // this.setReviews();
+      });
+    });
+
   }
 
   private getPerformances() {

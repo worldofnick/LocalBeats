@@ -11,12 +11,6 @@
     <mat-card *ngIf="reviews.length > 0" class="default">
       <mat-card-title *ngIf="reviews.length > 0">Reviews for {{user.firstName}}:</mat-card-title>
       <mat-card-title *ngIf="reviews.length > 0">Average rating: {{averageRating}} out of 5 from {{reviews.length}} reviews</mat-card-title>
-      <mat-card-title *ngIf="!onOwnProfile && userService.isAuthenticated()">
-        <mat-card-actions>
-          <button mat-raised-button color="accent"  (click)="openDialog()" mat-button
-            class="half-width">Review User</button>
-        </mat-card-actions>
-      </mat-card-title>
 
       <mat-card-content>
         <div class="timeline">
@@ -63,10 +57,6 @@
                   
                 </div>
 
-              <!-- <div class="timeline-body-actions">
-                <a href="#" class="mr-1 text-muted">Like</a>
-                <a href="#" class="text-muted">Comment</a>
-              </div> -->
             </div>
           </div>
         </div>
