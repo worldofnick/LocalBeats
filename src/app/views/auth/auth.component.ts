@@ -9,7 +9,6 @@ import { NotificationService } from '../../services/notification/notification.se
 import * as socketIO from 'socket.io-client';
 import { Notification } from 'app/models/notification';
 
-
 @Component({
   selector: 'app-auth',
   templateUrl: './auth.component.html'
@@ -26,15 +25,53 @@ export class AuthComponent implements OnInit {
     private router: Router,
   private notificationService: NotificationService) { }
 
+  private myClientId: string = '711608011009-hkpaqs61p6a0s7122qcko80sscd9odhu.apps.googleusercontent.com';
+
+  handleGoogleSuccess(googleUser: gapi.auth2.GoogleUser) {
+    console.log('Success: ', googleUser);
+  }
+
+  handleGoogleFailure(error) {
+    console.log('Error: ', error);
+  }
+
   ngOnInit() {
 
-
+    gapi.load('auth2', () => {
+      gapi.auth2.init({
+        client_id: this.myClientId,
+        cookie_policy: 'single_host_origin',
+        scope: 'profile email'
+        // hosted_domain: this.hostedDomain,
+        // openid_realm: this.openidRealm
+      }).then(this.successCB, this.failCB);
+    });
 
     this.signinForm = new FormGroup({
       username: new FormControl('', Validators.required),
       password: new FormControl('', Validators.required),
       rememberMe: new FormControl(false)
     });
+  }
+
+  successCB() {
+    console.log('Done google init: ',gapi.auth2.getAuthInstance());
+    gapi.signin2.render(
+      'g-signin', {
+        'scope': 'profile email',
+        'width': 328,
+        'height': 50,
+        'longtitle': true,
+        'theme': 'dark',
+        'onsuccess': (googleUser: gapi.auth2.GoogleUser) => this.handleGoogleSuccess(googleUser)
+        // onsuccess: (googleUser: gapi.auth2.GoogleUser) => this.onSuccess(googleUser),
+        // onfailure: () => this.handleFailure()
+      });
+  }
+
+  
+  failCB() {
+    console.log('Failed google init: ');
   }
 
   signin() {
@@ -67,6 +104,10 @@ export class AuthComponent implements OnInit {
       this.userService.getNotificationsForUser(user._id);
       this.router.navigate(['/']);
     });
+
+  }
+
+  onSignIn() {
 
   }
 
