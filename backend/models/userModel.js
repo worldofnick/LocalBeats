@@ -64,13 +64,10 @@ var UserSchema = new Schema({
         }
     },
     spotify: {
-        id: {
-          type: String
-        },
-        email: {
-          type: String,
-          lowercase: true
-        }
+        id              : { type: String },
+        email           : { type: String, lowercase: true },
+        uri             : { type: String },
+        external_urls   : { type: String }
     }
 }, {strict: true}, {versionKey: false});
 
