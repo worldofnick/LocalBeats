@@ -134,14 +134,15 @@ export class ProfileOverviewComponent implements OnInit {
     this.reviewService.review(review, true).subscribe((result) => {
       console.log(result)
       if (result.rating == -1) {
-        console.log('-1');
+        // user has clicked no in the edit menu
         return;
       }else if (result.rating == -2) {
+        // user is deleting the event
         this.reviewService.deleteReviewByRID(result).then( () => {
           this.setReviews();
         });
       }else {
-        console.log('else');
+        // user has updated the review
         this.reviewService.updateReview(review).then( () => {
           this.setReviews();
         });

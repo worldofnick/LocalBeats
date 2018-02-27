@@ -18,10 +18,10 @@ const SERVER_URL = environment.apiURL;
 export class ReviewService {
 
     //TODO: change these URLs.
-    public connection: string = 'http://localhost:8080/api/reviews';
-    public userReviewsToConnection: string = 'http://localhost:8080/api/userReviewsTo';
-    public userReviewsFromConnection: string = 'http://localhost:8080/api/userReviewsFrom';
-    public FlagReviewFromConnection: string = 'http://localhost:8080/api/userReviewsFrom';
+    public connection: string = SERVER_URL + 'api/reviews';
+    public userReviewsToConnection: string = SERVER_URL + 'api/userReviewsTo';
+    public userReviewsFromConnection: string = SERVER_URL + 'api/userReviewsFrom';
+    public FlagReviewFromConnection: string = SERVER_URL + 'api/userReviewsFrom';
     private headers: Headers = new Headers({ 'Content-Type': 'application/json' });
 
 
@@ -32,6 +32,7 @@ export class ReviewService {
         let dialogRef: MatDialogRef<ReviewDialogComponent>;
         dialogRef = this.dialog.open(ReviewDialogComponent, {
             width: '500px',
+            disableClose: true,
             data: { review: review, isEditing: isEditing }
         });
 

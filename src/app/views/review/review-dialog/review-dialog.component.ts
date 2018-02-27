@@ -63,7 +63,6 @@ import { NgForm } from '@angular/forms/src/directives/ng_form';
       const emptyReview: Review = new Review;
       emptyReview._id = this.currentReview._id;
       emptyReview.rating = -2; // code to delete event
-      console.log('returning -2')
       this.dialogRef.close(emptyReview);
     }
 

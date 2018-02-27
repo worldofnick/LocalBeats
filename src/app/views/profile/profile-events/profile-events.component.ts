@@ -13,9 +13,11 @@ import { BookingService } from '../../../services/booking/booking.service';
 import { EventService } from '../../../services/event/event.service';
 import { SocketService } from 'app/services/chats/socket.service';
 import { StripeService } from 'app/services/payments/stripe.service';
+import { ReviewService } from 'app/services/reviews/review.service';
 
 // Data Models
 import { User } from '../../../models/user';
+import { Review } from '../../../models/review';
 import { Event } from '../../../models/event';
 import { Booking, StatusMessages, NegotiationResponses, VerificationResponse } from '../../../models/booking';
 import { Action } from '../../../services/chats/model/action';
@@ -54,7 +56,8 @@ export class ProfileEventsComponent implements OnInit {
     private _socketService: SocketService,
     private stripeService: StripeService,
     public dialog: MatDialog,
-    public snackBar: MatSnackBar
+    public snackBar: MatSnackBar,
+    private reviewService: ReviewService
   ) {
     // Set user model to the authenticated singleton user
     this.user = this.userService.user;
@@ -68,6 +71,64 @@ export class ProfileEventsComponent implements OnInit {
           this.updateModel(notification.booking, notification.response);
     });
   }
+
+
+  reviewDialog(booking: Booking) {
+    let review: Review = new Review;
+    review.bookingID = booking._id;
+
+    review.toUser = booking.performerUser;
+    review.fromUser = booking.hostUser;
+  
+
+    this.reviewService.review(review, false).subscribe((result) => {
+      if (result.rating == -1) {
+        // user clicked cancel in the review dialog.
+        return;
+      }
+      this.reviewService.createReview(result).then( (newReview: Review) => {
+          booking.beenReviewedByHost = true;
+          this.bookingService.updateBooking(booking);
+      });
+    });
+  }
+
+  editReview(booking: Booking) {
+
+    let reviewToEdit: Review = new Review;
+
+    this.reviewService.getReviewsFrom(booking.hostUser).then( (reviews) => {
+
+      for (let review of reviews){
+        if (review.bookingID == booking._id){
+          reviewToEdit = review;
+        }
+      }
+
+      this.reviewService.review(reviewToEdit, true).subscribe((result) => {
+        if (result.rating == null) {
+          return;
+        }
+        if (result.rating == -1) {
+          // if the user pressed cancel when editing
+          return;
+        }else if (result.rating == -2) {
+          // if the user pressed delete when editing
+          this.reviewService.deleteReviewByRID(result).then( () => {
+            // this.setReviews();
+            booking.beenReviewedByHost = false;
+            this.bookingService.updateBooking(booking);
+          });
+        }else {
+          this.reviewService.updateReview(reviewToEdit);
+        }
+      });
+
+
+    }); 
+
+  }
+
 
   private updatePaymentStatues(booking: Booking) {
     // Update payment status'

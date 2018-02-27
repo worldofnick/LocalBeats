@@ -105,6 +105,7 @@ export class ProfilePerformancesComponent implements OnInit {
 
     this.reviewService.review(review, false).subscribe((result) => {
       if (result.rating == -1) {
+        // user clicked cancel in the review dialog.
         return;
       }
       this.reviewService.createReview(result).then( (newReview: Review) => {
