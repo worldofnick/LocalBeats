@@ -70,4 +70,11 @@ export class AuthComponent implements OnInit {
 
   }
 
+  spotifyLogin() {
+    this.userService.spotifyLogin().subscribe(
+      (data) => {
+        console.log('Done logging spotify...', data);
+      }
+    );
+  }
 }
