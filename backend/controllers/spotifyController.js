@@ -4,6 +4,8 @@ var config = require('../../config');
 var spotifyWebApi = require('spotify-web-api-node');
 var mongoose = require('mongoose');
 var User = mongoose.model('User');
+var querystring = require('querystring');
+var request     = require('request');
 
 /**
  * Set the credentials given on Spotify's My Applications page.
@@ -19,8 +21,23 @@ var isResultEmpty = function isEmptyObject(obj) {
   return !Object.keys(obj).length;
 }
 
+exports.spotifyAuthorizeClient = function (req, res) {
+  console.log('In spotify Authorize!');
+  // Prepare the authorize spotify parameters.
+  let parameters = {
+    client_id: config.spotify.clientID,
+    response_type: 'code',
+    redirect_uri: 'http://localhost:4200/profile/settings', //TODO: change to heroku, etc
+    scope: 'user-read-private user-read-email'
+  };
+
+  // Redirect to spotify to ask for permissions.
+  console.log('Authorize SPotify URL : ',config.spotify.authorizeUri + '?' + querystring.stringify(parameters) )
+  res.send({"redirect_url": config.spotify.authorizeUri + '?' + querystring.stringify(parameters)});
+}
+
 /**
- * Retrieve an access token
+ * Retrieve server side only access token
  */
 exports.grantClientCredentials = function () {
   spotifyApi.clientCredentialsGrant()
