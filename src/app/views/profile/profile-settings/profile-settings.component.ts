@@ -10,6 +10,7 @@ import { MatTabChangeEvent } from '@angular/material';
 import { FormGroup, FormControl, Validators, FormArray, FormBuilder } from '@angular/forms';
 import { SocketService } from '../../../services/chats/socket.service';
 import { StripeService } from '../../../services/payments/stripe.service';
+import { SpotifyClientService } from '../../../services/music/spotify-client.service';
 import { Action } from '../../../services/chats/model/action';
 import { Message } from '../../../services/chats/model/message';
 import { MatSnackBar } from '@angular/material';
@@ -32,7 +33,8 @@ export class ProfileSettingsComponent implements OnInit {
   public hasBaseDropZoneOver: boolean = false;
   constructor(private route: ActivatedRoute, private userService: UserService, private router : Router,
               private imgurService: ImgurService, private formBuilder: FormBuilder,
-              private _socketService: SocketService, public snackBar: MatSnackBar, private stripeService: StripeService) { 
+              private _socketService: SocketService, public snackBar: MatSnackBar, private stripeService: StripeService,
+            private _spotifyClientService: SpotifyClientService) { 
               }
 
 
@@ -157,4 +159,10 @@ export class ProfileSettingsComponent implements OnInit {
     });
   }
 
+  // SPOTIFY
+  authorizeSpotify() {
+    this._spotifyClientService.authorizeStripe().then((url: string) => {
+      window.location.href = url;
+    });
+  }
 }
