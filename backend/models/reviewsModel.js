@@ -12,7 +12,8 @@ var ReviewSchema = new Schema({
     toUser          : {type: Schema.Types.ObjectId, ref: 'User' },
     fromUser        : {type: Schema.Types.ObjectId, ref: 'User' },
     date            : {type: Date, default: Date.now},
-    flagCount       : {type: Number, default: 0}
+    flagCount       : {type: Number, default: 0},
+    bookingID       : {type: String, required: true},
 }, {strict: true}, {versionKey: false});
 
 mongoose.model('Review', ReviewSchema);

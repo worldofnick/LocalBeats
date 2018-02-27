@@ -10,5 +10,6 @@ export class Review {
     public toUser: User;
     public date: Date;
     public flagCount: number;
+    public bookingID: string;
 
 }

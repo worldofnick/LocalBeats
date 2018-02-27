@@ -94,7 +94,7 @@ export class ProfilePerformancesComponent implements OnInit {
   openReviewDialog(booking: Booking, isArtist: boolean): void {
 
     let review: Review = new Review;
-
+    review.bookingID = booking._id;
     if (isArtist){
       review.toUser = booking.hostUser;
       review.fromUser = booking.performerUser;

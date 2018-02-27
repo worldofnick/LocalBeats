@@ -3,8 +3,6 @@
     <!-- Time line -->
     <mat-card *ngIf="reviews.length == 0" class="default">
       <mat-card-title>No reviews for {{user.firstName}}</mat-card-title>
-      <button mat-raised-button color="accent" *ngIf="!onOwnProfile && userService.isAuthenticated()" (click)="openDialog()" mat-button
-      class="half-width">Review User</button>
       <mat-card-title></mat-card-title>
     </mat-card>
 
