@@ -21,6 +21,10 @@ module.exports = function(app) {
 		// .post(passport.authenticate('googleToken', { scope: ['openid', 'profile', 'email'] }), autheticationHandler.signIn);
 		.post(verifyGoogleSignInWithPassport, autheticationHandler.googleOAuth);
 
+	app.route('/api/auth/authenticate/twitter')
+		// .post(passport.authenticate('googleToken', { scope: ['openid', 'profile', 'email'] }), autheticationHandler.signIn);
+		.post(passport.authenticate('twitterToken', { session: false }), autheticationHandler.googleOAuth);
+
 	app.route('/api/auth/passwordChange/:uid')
 		.put(autheticationHandler.changePassword);
 

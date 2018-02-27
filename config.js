@@ -14,6 +14,10 @@ module.exports = {
         clientID: '',
         clientSecret: '',
       },
+      twitter: {
+        consumerKey: 'oRwNmvtFnwz9Fgrv3jvG8I9GY',
+        consumerSecret : 'yqPvCUHldKysBQOHRK0YiScQM7JEXodtVCZIH7trM9jst3Mfdj'
+      },
       spotify: {
         clientID: '',
         clientSecret: '',
