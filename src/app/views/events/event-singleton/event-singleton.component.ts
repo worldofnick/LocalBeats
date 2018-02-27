@@ -154,7 +154,7 @@ export class EventSingletonComponent implements OnInit {
 
   newApplication() {
     this.userBooking = new Booking(undefined, BookingType.artistApply, this.model.hostUser, this.userService.user, this.model, false, false, false, StatusMessages.artistBid, StatusMessages.waitingOnHost, true, false, this.model.fixedPrice, null, null);
-    this.bookingService.negotiate(this.userBooking, true).subscribe((result) => {
+    this.bookingService.negotiate(this.userBooking, true, "artist").subscribe((result) => {
       if (result != undefined) {
         if (result.response == NegotiationResponses.new) {
           this.userBooking.currentPrice = result.price;
@@ -179,7 +179,8 @@ export class EventSingletonComponent implements OnInit {
   }
 
   openNegotiationDialog() {
-    this.bookingService.negotiate(this.userBooking, false)
+    let view = this.eventService.event.hostUser._id == this.userService.user._id ? "host" : "artist";
+    this.bookingService.negotiate(this.userBooking, false, view)
     .subscribe((result) => {
       // Check to see if a response was recorded in the negotiation dialog box
       if (result != undefined) {
@@ -213,7 +214,7 @@ export class EventSingletonComponent implements OnInit {
             this.userBooking.hostStatusMessage = StatusMessages.bookingConfirmed;
             this.userBooking.artistStatusMessage = StatusMessages.bookingConfirmed;
             // Asynchronously update
-            this.bookingService.acceptBooking(this.userBooking).then(() => {
+            this.bookingService.acceptBooking(this.userBooking, view).then(() => {
               // Update the model of the component
               this.buttonText = "Cancel Booking";
               this.createNotificationForHost(this.userBooking, result.response, ['/profile', 'events'],
@@ -269,4 +270,5 @@ export class EventSingletonComponent implements OnInit {
       booking, response, message, icon, route); 
     this._socketService.sendNotification(SocketEvent.SEND_NOTIFICATION, notification);
   }
+
 }

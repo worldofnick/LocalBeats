@@ -9,6 +9,7 @@ import { AgmCoreModule, MapsAPILoader } from '@agm/core';
 import { rootRouterConfig } from './app.routes';
 import { AppCommonModule } from "./components/common/app-common.module";
 import { NegotiateModule } from './views/negotiate/negotiate.module';
+import { StripeModule } from './views/events/event-singleton/stripe.module';
 import {MatDialogModule} from '@angular/material/dialog';
 import { AppComponent } from './app.component';
 
@@ -44,6 +45,7 @@ export function createTranslateLoader(http: Http) {
     HttpModule,
     AppCommonModule,
     NegotiateModule,
+    StripeModule,
     TranslateModule.forRoot({
       provide: TranslateLoader,
       useFactory: (createTranslateLoader),

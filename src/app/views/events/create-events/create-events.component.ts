@@ -1,5 +1,5 @@
 import { Component, ElementRef,OnInit, ViewChild, NgZone } from '@angular/core';
-import { MatProgressBar, MatButton, MatSnackBar } from '@angular/material';
+import { MatProgressBar, MatButton, MatSnackBar} from '@angular/material';
 import { UserService } from '../../../services/auth/user.service';
 import { BookingService } from '../../../services/booking/booking.service';
 import { EventService } from '../../../services/event/event.service';
@@ -11,6 +11,7 @@ import { CustomValidators } from 'ng2-validation';
 import { ActivatedRoute } from "@angular/router";
 import { Router } from "@angular/router";
 import { ImgurService } from 'app/services/image/imgur.service';
+import { StripeService } from 'app/services/payments/stripe.service';
 import 'rxjs/add/operator/startWith';
 import 'rxjs/add/operator/map';
 import { } from 'googlemaps';
@@ -90,10 +91,12 @@ export class CreateEventsComponent implements OnInit {
               public snackBar: MatSnackBar,
               private mapsAPILoader: MapsAPILoader,
               private ngZone: NgZone,
+              private stripeService: StripeService
               ) { }
 
               
   ngOnInit() {
+
     this.event.eventType = "Wedding"
   
     // this.openSnackBar();

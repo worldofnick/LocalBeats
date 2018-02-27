@@ -1,6 +1,7 @@
 import { Component, OnInit, EventEmitter, Input, Output, ElementRef, NgZone, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { Validators, FormGroup, FormControl, FormArray, FormBuilder } from '@angular/forms';
+import { MatDialog, MatDialogRef} from '@angular/material';
 // import { Socket } from 'ng-socket-io';
 import 'rxjs/add/operator/startWith';
 import 'rxjs/add/operator/map';
@@ -17,8 +18,7 @@ import { User } from '../../../models/user';
 import { Event } from '../../../models/event';
 import { SocketService } from '../../../services/chats/socket.service';
 import { SocketEvent } from         '../../../services/chats/model/event';
-
-
+import { StripeDialogComponent } from '../../../views/events/event-singleton/stripe-dialog.component';
 
 @Component({
   selector: 'topbar',
@@ -68,7 +68,8 @@ export class TopbarComponent implements OnInit {
     private mapsAPILoader: MapsAPILoader,
     private ngZone: NgZone,
     private changeDetector: ChangeDetectorRef,
-    private _socketService: SocketService
+    private _socketService: SocketService,
+    public dialog: MatDialog
     ) {
   }
 
@@ -238,6 +239,17 @@ export class TopbarComponent implements OnInit {
   goToMessages(){
     this.router.navigate(['/chat']);
   }
+
+  private authorizeStripe() {
+    let dialogRef: MatDialogRef<StripeDialogComponent>;
+    dialogRef = this.dialog.open(StripeDialogComponent, {
+        width: '250px',
+        disableClose: false,
+        data: {}
+    });
+    return dialogRef.afterClosed();
+  }
+
   // Collapses the side navigation menu
   toggleCollapse() {
     let appBody = document.body;
