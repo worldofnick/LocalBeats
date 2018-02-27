@@ -98,7 +98,7 @@ export class CreateEventsComponent implements OnInit {
   ngOnInit() {
     // If they don't have a payment method setup redirect them to stripe first
     if (!this.userService.user.stripeAccountId) {
-      this.stripeService.authorizeStripe(this.user).then((url: string) => {
+      this.stripeService.authorizeStripe(this.userService.user).then((url: string) => {
         window.location.href = url;
       });
     }
