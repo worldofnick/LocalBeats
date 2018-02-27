@@ -237,7 +237,7 @@ export class ProfileRequestComponent implements OnInit {
   }
 
   newRequest(event: Event, eventIndex: number) {
-    let view = this.eventService.event.hostUser._id == this.userService.user._id ? "host" : "artist";
+    let view = event.hostUser._id == this.userService.user._id ? "host" : "artist";
     let tempBooking = new Booking(undefined, 'host-request', event.hostUser, this.artist, event, false, false, false, StatusMessages.waitingOnArtist, StatusMessages.hostOffer, false, false, true, event.fixedPrice);
     this.bookingService.negotiate(tempBooking, true, view).subscribe((result) => {
       if (result != undefined) {
@@ -258,7 +258,7 @@ export class ProfileRequestComponent implements OnInit {
   }
 
   openNegotiationDialog(booking: Booking, bookingIndex: number) {
-    let view = this.eventService.event.hostUser._id == this.userService.user._id ? "host" : "artist";
+    let view = booking.eventEID.hostUser._id == this.userService.user._id ? "host" : "artist";
     this.bookingService.negotiate(booking, false, view)
     .subscribe((result) => {
       // Check to see if a response was recorded in the negotiation dialog box
