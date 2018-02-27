@@ -215,7 +215,7 @@ export class EventSingletonComponent implements OnInit {
             this.userBooking.hostStatusMessage = StatusMessages.bookingConfirmed;
             this.userBooking.artistStatusMessage = StatusMessages.bookingConfirmed;
             // Asynchronously update
-            this.bookingService.acceptBooking(this.userBooking).then(() => {
+            this.bookingService.acceptBooking(this.userBooking, view).then(() => {
               // Update the model of the component
               this.buttonText = "Cancel Booking";
               this.createNotificationForHost(this.userBooking, result.response, ['/profile', 'events'],

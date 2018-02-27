@@ -275,7 +275,7 @@ export class ProfileEventsComponent implements OnInit {
             booking.hostStatusMessage = StatusMessages.bookingConfirmed;
             booking.artistStatusMessage = StatusMessages.bookingConfirmed;
             // Asynchronously update
-            this.bookingService.acceptBooking(booking).then(() => {
+            this.bookingService.acceptBooking(booking, view).then(() => {
               // Update the model of the component
               if(booking.bookingType == 'artist-apply') {
                 this.events[eventIndex].applications.splice(bookingIndex, 1);
