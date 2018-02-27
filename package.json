@@ -33,6 +33,7 @@
     "angular-calendar": "0.21.3",
     "angular2-off-click": "^1.0.4",
     "async": "^2.6.0",
+    "auth0-js": "^9.3.0",
     "bcrypt": "^1.0.3",
     "body-parser": "^1.18.2",
     "chart.js": "2.5.0",
