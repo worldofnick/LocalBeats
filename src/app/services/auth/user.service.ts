@@ -40,17 +40,6 @@ export class UserService {
         });
       }
 
-    spotifyLogin() {
-        const spotify_server = 'https://accounts.spotify.com/authorize';
-        var params = {
-                        client_id: '9b266aeaa5904de699d2864591f4e248',
-                        redirect_uri: 'http://localhost:4200/auth',
-                        scope: 'user-read-private playlist-read-private playlist-modify-private playlist-modify-public',
-                        response_type: 'code'
-                    };
-        return this._httpClient.get(spotify_server + '?' +  this.toQueryString(params));
-    }
-
     // post("api/auth/passwordChange/:uid')
     public signupUser(newUser: User): Promise<User> {
         const current = this.connection + '/register';
@@ -270,43 +259,7 @@ export class UserService {
         console.error(errMsg); // log to console
         return Promise.reject(errMsg);
     }
-    //  spotifyLogin() {
-    //     var _this = this;
-    //     var promise = new Promise(function (resolve, reject) {
-    //         var w = 400, h = 500, left = (screen.width / 2) - (w / 2), top = (screen.height / 2) - (h / 2);
-    //         var params = {
-    //             client_id: '9b266aeaa5904de699d2864591f4e248',
-    //             redirect_uri: 'http://localhost:4200/home',
-    //             scope: 'user-read-private playlist-read-private playlist-modify-private playlist-modify-public' || '',
-    //             response_type: 'token'
-    //         };
-    //         var authCompleted = false;
-    //         var authWindow = _this.openDialog('https://accounts.spotify.com/authorize?' + 
-    //         _this.toQueryString(params), 'Spotify', 'menubar=no,location=no,resizable=yes,scrollbars=yes,status=no,width=' 
-    //         + w + ',height=' + h + ',top=' + top + ',left=' + left, function () {
-    //             if (!authCompleted) {
-    //                 return reject('Login rejected error');
-    //             } else {
-    //                 console.log('Router: ', this.router.url);
-    //                 console.log('Window: ', window.location.pathname);
-    //             }
-    //         });
-    //         // var storageChanged = function (e) {
-    //         //     if (e.key === 'angular2-spotify-token') {
-    //         //         if (authWindow) {
-    //         //             authWindow.close();
-    //         //         }
-    //         //         authCompleted = true;
-    //         //         var authToken = e.newValue;
-    //         //         window.removeEventListener('storage', storageChanged, false);
-    //         //         return resolve(e.newValue);
-    //         //     }
-    //         // };
-    //         // window.addEventListener('storage', storageChanged, false);
-    //     });
-    //     return Observable.fromPromise(promise).catch(this.handleError);
-    // }
-
+    
     private openDialog = function (uri, name, options, cb) {
         var win = window.open(uri, name, options);
         var interval = window.setInterval(function () {
