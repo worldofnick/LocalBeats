@@ -8,6 +8,7 @@ import { Event } from 'app/models/event';
 import { User } from 'app/models/user';
 import { PaymentStatus } from 'app/models/payment';
 import { NegotiateDialogComponent } from '../../views/negotiate/negotiate-dialog/negotiate-dialog.component';
+import { StripeDialogComponent } from '../../views/events/event-singleton/stripe-dialog.component';
 import { VerifyDialogComponent } from '../../views/negotiate/verify-dialog/verify-dialog.component';
 import { environment } from '../../../environments/environment';
 
@@ -24,16 +25,31 @@ export class BookingService {
 
     constructor(private http: Http, private dialog: MatDialog) { }
 
-    public negotiate(booking: Booking, initial: boolean): Observable<{response: NegotiationResponses, price: number}> {
+    public negotiate(booking: Booking, initial: boolean, view: string): Observable<{response: NegotiationResponses, price: number, comment: string}> {
+        if ((view == "artist" && !booking.performerUser.stripeAccountId || view == "host" && !booking.hostUser.stripeAccountId)) {
+            return this.showStripeDialog().afterClosed();
+        }
+
         let dialogRef: MatDialogRef<NegotiateDialogComponent>;
         dialogRef = this.dialog.open(NegotiateDialogComponent, {
             width: '380px',
             disableClose: false,
-            data: {booking, initial}
+            data: {booking, initial, view}
         });
         return dialogRef.afterClosed();
     }
 
+
+    private showStripeDialog(): MatDialogRef<StripeDialogComponent> {
+        let dialogRef: MatDialogRef<StripeDialogComponent>;
+        dialogRef = this.dialog.open(StripeDialogComponent, {
+            width: '250px',
+            disableClose: false,
+            data: { }
+        });
+        return dialogRef;
+    }
+  
     public verify(booking: Booking, isHost: boolean): Observable<{response: VerificationResponse, comment: string}> {
         let dialogRef: MatDialogRef<VerifyDialogComponent>;
         dialogRef = this.dialog.open(VerifyDialogComponent, {
@@ -109,7 +125,11 @@ export class BookingService {
             .catch(this.handleError);
     }
 
-    public acceptBooking(booking: Booking): Promise<any> {
+    public acceptBooking(booking: Booking, view: string): Promise<any> {
+        if ((view == "artist" && !booking.performerUser.stripeAccountId || view == "host" && !booking.hostUser.stripeAccountId)) {
+            return this.showStripeDialog().afterClosed().toPromise();
+        }
+
         const current = this.acceptBookingConnection + '/' + booking._id
         
         return this.http.put(current, { headers: this.headers })

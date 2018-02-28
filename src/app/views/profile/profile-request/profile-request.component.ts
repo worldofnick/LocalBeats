@@ -238,8 +238,9 @@ export class ProfileRequestComponent implements OnInit {
 
   newRequest(event: Event, eventIndex: number) {
     let tempBooking = new Booking(undefined, BookingType.hostRequest, event.hostUser, this.artist, event, false, false, false, StatusMessages.waitingOnArtist, StatusMessages.hostOffer, false, true, event.fixedPrice, null, null);
-    this.bookingService.negotiate(tempBooking, true).subscribe((result) => {
+    this.bookingService.negotiate(tempBooking, true, "host").subscribe((result) => {
       if (result != undefined) {
+        tempBooking.hostComment = result.comment;
         if (result.response == NegotiationResponses.new) {
           tempBooking.currentPrice = result.price;
           this.bookingService.createBooking(tempBooking).then((booking: Booking) => {
@@ -257,10 +258,13 @@ export class ProfileRequestComponent implements OnInit {
   }
 
   openNegotiationDialog(booking: Booking, bookingIndex: number) {
-    this.bookingService.negotiate(booking, false)
+    let view = "host";
+    this.bookingService.negotiate(booking, false, view)
     .subscribe((result) => {
       // Check to see if a response was recorded in the negotiation dialog box
       if (result != undefined) {
+        booking.hostComment = result.comment;
+        booking.artistComment = "";
         // Check to see what the response was
         if (result.response == NegotiationResponses.new) {
           // New, the user offered a new monetary amount to the artist
@@ -295,7 +299,7 @@ export class ProfileRequestComponent implements OnInit {
             booking.hostStatusMessage = StatusMessages.bookingConfirmed;
             booking.artistStatusMessage = StatusMessages.bookingConfirmed;
             // Asynchronously update
-            this.bookingService.acceptBooking(booking).then(() => {
+            this.bookingService.acceptBooking(booking, view).then(() => {
               // Update the model of the component
               if(booking.bookingType == 'artist-apply') {
                 this.hostedEvents.applications.splice(bookingIndex, 1);

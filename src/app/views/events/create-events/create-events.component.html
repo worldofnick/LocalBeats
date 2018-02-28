@@ -41,7 +41,7 @@
           <!-- event price input field. still needs to be formatted for numbers -->
           <div class="pb-1">
             <mat-form-field class="full-width">
-              <input matInput [(ngModel)]="this.event.fixedPrice" name="fixedPrice" formControlName="fixedPrice" placeholder="Event Price"
+              <input matInput currencyMask  [options]="{ align: 'left' }" [(ngModel)]="this.event.fixedPrice" name="fixedPrice" formControlName="fixedPrice" placeholder="Event Price"
                 value="">
             </mat-form-field>
           </div>
@@ -54,7 +54,7 @@
 
           <div class="pb-1">
             <mat-form-field class="full-width">
-              <input matInput [(ngModel)]="this.event.toDate" name="date" formControlName="date" 
+              <input matInput [(ngModel)]="this.event.toDate" name="date" readonly="readonly" formControlName="date" 
               placeholder="Date" [min]="minDate" [max]="maxDate"
               [matDatepicker]="appDatepicker">
 
