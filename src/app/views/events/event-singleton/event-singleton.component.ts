@@ -156,6 +156,7 @@ export class EventSingletonComponent implements OnInit {
     this.userBooking = new Booking(undefined, BookingType.artistApply, this.model.hostUser, this.userService.user, this.model, false, false, false, StatusMessages.artistBid, StatusMessages.waitingOnHost, true, false, this.model.fixedPrice, null, null);
     this.bookingService.negotiate(this.userBooking, true, "artist").subscribe((result) => {
       if (result != undefined) {
+        this.userBooking.artistComment = result.comment;
         if (result.response == NegotiationResponses.new) {
           this.userBooking.currentPrice = result.price;
           this.bookingService.createBooking(this.userBooking).then((booking: Booking) => {
@@ -179,11 +180,13 @@ export class EventSingletonComponent implements OnInit {
   }
 
   openNegotiationDialog() {
-    let view = this.eventService.event.hostUser._id == this.userService.user._id ? "host" : "artist";
+    let view = "artist";
     this.bookingService.negotiate(this.userBooking, false, view)
     .subscribe((result) => {
       // Check to see if a response was recorded in the negotiation dialog box
       if (result != undefined) {
+        this.userBooking.artistComment = result.comment;
+        this.userBooking.hostComment = "";
         // Check to see what the response was
         if (result.response == NegotiationResponses.new) {
           // New, the user offered a new monetary amount to the host
