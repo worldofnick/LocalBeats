@@ -19,26 +19,73 @@ const httpOptions = {
 export class UserService {
     public connection: string = environment.apiURL + 'api/auth';
     public userConnection: string = environment.apiURL + 'api/users';
+    private headers: Headers = new Headers({ 'Content-Type': 'application/json' });
 
     public accessToken: string = null;
     public user: User = null;
     ioConnection: any;
     action = Action;
 
-    private headers: Headers = new Headers({ 'Content-Type': 'application/json' });
+    // Authentication Properties
+    loggedIn: boolean;
 
-    constructor(private http: Http, private _socketService: SocketService, private _httpClient: HttpClient) { this.initIoConnection(); }
+    constructor(private http: Http, private _socketService: SocketService, private _httpClient: HttpClient) { 
+        if (this.isAuthenticated()) {
+            const token = localStorage.getItem('jwtToken');
+            const user: User = JSON.parse(localStorage.getItem('loggedInUser'));
+            this._setSession(token, user);
+        } else {
+            this._deleteSession(null);
+        }
+        this.initIoConnection();
+    }
 
-    private initIoConnection(): void {
-        // this._socketService.initSocket();
-    
-        // TODO: can remove
-        this.ioConnection = this._socketService.onEvent(SocketEvent.NEW_LOG_IN)
-          .subscribe((message: Message) => {
-            // this.messages.push(message);
-            console.log('Server Msg to auth.component ', message);
-        });
+    // ================================================
+    // Session Persistence methods
+    // ================================================
+    setLoggedIn(value: boolean) {
+        // Update login status subject
+        this.loggedIn = value;
+    }
+
+    private _setSession(jwtAccessToken, user) {
+        console.log('JWT Access Token: ', jwtAccessToken);
+        console.log('Logged in user: ', user);
+        localStorage.setItem('jwtToken', jwtAccessToken);
+        localStorage.setItem('loggedInUser', JSON.stringify(user));
+        this.user = user;
+        this.accessToken = jwtAccessToken;
+
+        this.notifyNewUserLoginToServer(user);
+        this.setLoggedIn(true);
       }
+
+      private _deleteSession(user) {
+        localStorage.removeItem('jwtToken');
+        localStorage.removeItem('loggedInUser');
+        this.user = null;                       //TODO: change to undefined later based on what's preferred by Auth0
+        this.accessToken = null;
+
+        if (user !== null) {
+            this.notifyUserLoggedOutToServer(user);
+        }
+        this.setLoggedIn(true);
+      }
+
+    public isAuthenticated() {
+        // TODO: Check if current date is greater than expiration and if localSTrage token is not null
+        // const expiresAt = JSON.parse(localStorage.getItem('expires_at'));
+        // return Date.now() < expiresAt;
+        const jwtToken = localStorage.getItem('jwtToken');
+        if (jwtToken === null) {
+            return false;
+        } else {
+            this.accessToken = jwtToken;
+            return true;
+        }
+    }
+
+    // ===============================================
 
     // post("api/auth/passwordChange/:uid')
     public signupUser(newUser: User): Promise<User> {
@@ -48,15 +95,7 @@ export class UserService {
             .toPromise()
             .then((response: Response) => {
                 const data = response.json();
-                this.accessToken = data.token;
-                sessionStorage.setItem('token', JSON.stringify({ accessToken: this.accessToken }))
-                this.user = data.user as User;
-
-                // Notify server that a new user user logged in
-                this._socketService.send(Action.NEW_LOG_IN, {
-                    from: this.user,
-                    action: Action.NEW_LOG_IN
-                });
+                this._setSession(data.token, (data.user as User));
 
                 this.notifyServerToAddGreetBot(this.user);
 
@@ -78,13 +117,6 @@ export class UserService {
             .catch(this.handleError);
     }
 
-    private notifyServerToAddGreetBot(to: User) {
-        this._socketService.send(Action.GREET_WITH_BEATBOT, {
-            to: this.user,
-            action: Action.GREET_WITH_BEATBOT
-        });
-    }
-
     // post("/api/authenticate")
     public signinUser(returningUser: User): Promise<User> {
         // this.connection = 'http://localhost:8080/api/auth/authenticate';
@@ -94,15 +126,7 @@ export class UserService {
             .toPromise()
             .then((response: Response) => {
                 const data = response.json();
-                this.accessToken = data.token;
-                sessionStorage.setItem('token', JSON.stringify({ accessToken: this.accessToken }))
-                this.user = data.user as User;
-
-                // Notify server that a new user user logged in
-                this._socketService.send(Action.NEW_LOG_IN, {
-                    from: this.user,
-                    action: Action.NEW_LOG_IN
-                });
+                this._setSession(data.token, (data.user as User));
 
                 return this.user;
             })
@@ -160,27 +184,45 @@ export class UserService {
         return this.http.post(current, this.user, { headers: this.headers })
             .toPromise()
             .then((response: Response) => {
-
-                this.accessToken = null;
-                this.user = null;
-                sessionStorage.clear();
-
-                // Notify server that a new user user logged in
-                this._socketService.send(Action.SMN_LOGGED_OUT, {
-                    from: from,
-                    action: Action.SMN_LOGGED_OUT
-                });
+                this._deleteSession(from);
             })
             .catch(this.handleError);
     }
 
-    public isAuthenticated() {
-        return this.accessToken != null;
+    // ====================================
+    // Socket events methods
+    // ====================================
+
+    private initIoConnection(): void {
+        this.ioConnection = this._socketService.onEvent(SocketEvent.NEW_LOG_IN)
+          .subscribe((message: Message) => {
+            // this.messages.push(message);
+            console.log('Server Msg to auth.component ', message);
+        });
+      }
+
+      private notifyNewUserLoginToServer(user) {
+        // Notify server that a new user user logged in
+        this._socketService.send(Action.NEW_LOG_IN, {
+            from: user,
+            action: Action.NEW_LOG_IN
+        });
     }
 
-
-
-
+    private notifyUserLoggedOutToServer(user) {
+        // Notify server that a new user user logged in
+        this._socketService.send(Action.SMN_LOGGED_OUT, {
+            from: user,
+            action: Action.SMN_LOGGED_OUT
+        });
+    }
+    
+    private notifyServerToAddGreetBot(to: User) {
+        this._socketService.send(Action.GREET_WITH_BEATBOT, {
+            to: this.user,
+            action: Action.GREET_WITH_BEATBOT
+        });
+    }
 
     /***********************
      * 
