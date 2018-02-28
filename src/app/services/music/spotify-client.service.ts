@@ -16,7 +16,7 @@ export class SpotifyClientService {
   constructor(private http: Http, private _socketService: SocketService) { }
 
   // Redirect user to stripe website
-  public authorizeStripe(): Promise<string> {
+  public authorizeSpotify(): Promise<string> {
     const current = this.authorizeConnection + '/authorize';
     console.log('Spotify AUth server url: ', current);
     return this.http.post(current, { headers: this.headers })
