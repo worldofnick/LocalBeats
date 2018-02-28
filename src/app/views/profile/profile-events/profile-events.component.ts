@@ -86,15 +86,31 @@ export class ProfileEventsComponent implements OnInit {
         // user clicked cancel in the review dialog.
         return;
       }
-      if (booking.beenReviewedByArtist) {
-        review.bothReviewed = true;
-      }
+
       this.reviewService.createReview(result).then( (newReview: Review) => {
           booking.beenReviewedByHost = true;
           if(booking.beenReviewedByArtist){
             booking.bothReviewed = true;
           }
-          this.bookingService.updateBooking(booking);
+          this.bookingService.updateBooking(booking).then( () => {
+            // new review is null right here.
+            if (review.booking.bothReviewed) {
+              // send notification to artist
+              const profile: string[] = ['/profile'];
+
+              const notificationToArtist = new Notification(review.fromUser, review.toUser,
+                review.booking.eventEID._id, review.booking, NegotiationResponses.review,
+                  'You have been reviewed by ' + review.fromUser.firstName, 'rate_review', profile);
+
+              const notificationToMusician = new Notification(review.toUser, review.fromUser,
+                review.booking.eventEID._id, review.booking, NegotiationResponses.review,
+                  'You have been reviewed by ' + review.toUser.firstName, 'rate_review', profile);
+
+              this._socketService.sendNotification(SocketEvent.SEND_NOTIFICATION, notificationToArtist);
+              this._socketService.sendNotification(SocketEvent.SEND_NOTIFICATION, notificationToMusician);
+
+          }
+          });
       });
     });
   }

@@ -56,7 +56,8 @@ export class ProfilePerformancesComponent implements OnInit {
     private stripeService: StripeService,
     public dialog: MatDialog,
     public snackBar: MatSnackBar,
-    private reviewService: ReviewService
+    private reviewService: ReviewService,
+    private socketService: SocketService
     ) {
       // Set user model to the authenticated singleton user
       this.user = this.userService.user;
@@ -104,15 +105,30 @@ export class ProfilePerformancesComponent implements OnInit {
         // user clicked cancel in the review dialog.
         return;
       }
-      if (booking.beenReviewedByHost) {
-        review.bothReviewed = true;
-      }
+
       this.reviewService.createReview(result).then( (newReview: Review) => {
           booking.beenReviewedByArtist = true;
           if (booking.beenReviewedByHost) {
             booking.bothReviewed = true;
           }
-          this.bookingService.updateBooking(booking);
+          this.bookingService.updateBooking(booking).then( () => {
+            if (newReview.booking.bothReviewed) {
+              // send notification to artist
+              const profile: string[] = ['/profile'];
+
+              const notificationToArtist = new Notification(newReview.fromUser, newReview.toUser,
+                  newReview.booking.eventEID._id, newReview.booking, NegotiationResponses.review,
+                  'You have been reviewed by ' + newReview.fromUser.firstName, 'rate_review', profile);
+
+              const notificationToMusician = new Notification(newReview.toUser, newReview.fromUser,
+                  newReview.booking.eventEID._id, newReview.booking, NegotiationResponses.review,
+                  'You have been reviewed by ' + newReview.toUser.firstName, 'rate_review', profile);
+
+              this.socketService.sendNotification(SocketEvent.SEND_NOTIFICATION, notificationToArtist);
+              this.socketService.sendNotification(SocketEvent.SEND_NOTIFICATION, notificationToMusician);
+
+          }
+          });
       });
     });
 
