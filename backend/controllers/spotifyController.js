@@ -21,8 +21,49 @@ var isResultEmpty = function isEmptyObject(obj) {
   return !Object.keys(obj).length;
 }
 
+exports.getMeAndSavetoDB = function(req, res) {
+  console.log('Me body: ', req.body);
+  // Get the user profile from /v1/me and add it to this user's model
+  var authOptions = {
+    url : 'https://api.spotify.com/v1/me',
+    headers: {
+      'Authorization': 'Bearer ' + req.body.access_token
+    }
+  }
+  request.get(authOptions, function(err, response, body) {
+    if (err === null && response.statusCode === 200) {
+      console.log('Profile body received: ', body);
+      let payload = {
+        'user' : {
+          'spotify' : {
+            'id' : body.id,
+            'email' : body.email,
+            'uri' : body.uri,
+            'href' : body.href
+          }
+        }
+      }
+      User.findByIdAndUpdate(req.body.user._id, payload, { new: true }, function (err, user) {
+        if (err) {
+          // return res.status(520).send({ message: "Error finding the user from this UID...", error: err });
+          console.log('Error saving the spotify profile data to user object');
+        }
+    
+        user.hashPassword = undefined;
+        res.send( {
+          user: user
+        });
+      });
+      
+    } else {
+      console.log('Error getting spotify user profile', err, ', Code: ', response.statusCode, response.body);    
+    }
+  });
+}
+
 exports.getAccessRefreshTokens = function (req, res) {
   console.log('Token req is: ', req.body);
+  var spotifyUserProfile = undefined;
   var authOptions = { 
     url : config.spotify.tokenUri,
     form: {
@@ -41,11 +82,49 @@ exports.getAccessRefreshTokens = function (req, res) {
       console.log('Access Token Spotify: ', body.access_token,
         '\nRefresh token: ', body.refresh_token,
         '\nExpires_in:', body.expires_in);
+
+      // Get the user profile from /v1/me and add it to this user's model
+      authOptions = {
+        url : 'https://api.spotify.com/v1/me',
+        headers: {
+          'Authorization': 'Bearer ' + body.access_token
+        }
+      }
+      // request.get(authOptions, function(err, response, body) {
+      //   if (err === null && response.statusCode === 200) {
+      //     console.log('Profile body received: ', body);
+      //     let payload = {
+      //       'user' : {
+      //         'spotify' : {
+      //           'id' : body.id,
+      //           'email' : body.email,
+      //           'uri' : body.uri,
+      //           'href' : body.href
+      //         }
+      //       }
+      //     }
+
+      //     // User.findByIdAndUpdate
+      //     // Save the spotify info in the user object
+      //       User.findByIdAndUpdate(req.body.user._id, payload, { new: true }, function (err, user) {
+      //         if (err) {
+      //           // return res.status(520).send({ message: "Error finding the user from this UID...", error: err });
+      //           console.log('Error saving the spotify profile data to user object');
+      //         }
+          
+      //         user.hashPassword = undefined;
+      //         spotifyUserProfile = user;
+      //       });
+      //   } else {
+      //     console.log('Error getting spotify user profile', err, ', Code: ', response.statusCode);    
+      //   }
+      // });
       res.send(
         {
           access_token: body.access_token,
           refresh_token: body.refresh_token,
-          expires_in: body.expires_in
+          expires_in: body.expires_in,
+          user: spotifyUserProfile
         }
       );
     } else {
