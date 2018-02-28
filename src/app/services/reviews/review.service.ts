@@ -5,7 +5,10 @@ import { MatDialogRef, MatDialog, MatDialogConfig } from '@angular/material';
 
 import { Observable } from 'rxjs/Observable';
 import { Review } from 'app/models/review';
-
+import { Booking, NegotiationResponses } from 'app/models/booking';
+import { Notification } from 'app/models/notification';
+import { SocketService } from 'app/services/chats/socket.service';
+import { SocketEvent } from 'app/services/chats/model/event';
 import { Event } from 'app/models/event';
 import { User } from 'app/models/user';
 import { environment } from '../../../environments/environment';
@@ -25,7 +28,7 @@ export class ReviewService {
     private headers: Headers = new Headers({ 'Content-Type': 'application/json' });
 
 
-    constructor(private http: Http,  private dialog: MatDialog) { }
+    constructor(private http: Http, private dialog: MatDialog, private socketService: SocketService) { }
 
     public review(review: Review, isEditing: boolean): Observable<Review> {
 
@@ -46,6 +49,23 @@ export class ReviewService {
         return this.http.post(current, { review: newReview }, { headers: this.headers })
             .toPromise()
             .then((response: Response) => {
+
+                if (newReview.booking.bothReviewed) {
+                    // send notification to artist
+                    const profile: string[] = ['/profile'];
+
+                    const notificationToArtist = new Notification(newReview.fromUser, newReview.toUser,
+                        newReview.booking.eventEID._id, newReview.booking, NegotiationResponses.review,
+                        'You have been reviewed by ' + newReview.fromUser.firstName, 'rate_review', profile);
+
+                    const notificationToMusician = new Notification(newReview.toUser, newReview.fromUser,
+                        newReview.booking.eventEID._id, newReview.booking, NegotiationResponses.review,
+                        'You have been reviewed by ' + newReview.toUser.firstName, 'rate_review', profile);
+
+                    this.socketService.sendNotification(SocketEvent.SEND_NOTIFICATION, notificationToArtist);
+                    this.socketService.sendNotification(SocketEvent.SEND_NOTIFICATION, notificationToMusician);
+
+                }
                 const data = response.json();
                 const review = data.review as Review;
                 return review;
@@ -70,7 +90,7 @@ export class ReviewService {
     public updateReview(review: Review): Promise<Review> {
         console.log('updating', review);
         const current = this.connection + '/' + review._id;
-        return this.http.put(current, {review: review}, { headers: this.headers })
+        return this.http.put(current, { review: review }, { headers: this.headers })
             .toPromise()
             .then((response: Response) => {
                 const data = response.json();

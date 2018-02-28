@@ -62,6 +62,7 @@ export enum NegotiationResponses {
     payment = 5, // Payment
     complete = 6, // A confirmed booking has been completed
     verification = 7, // A booking has been verified
+    review = 8
 }
 
 export enum VerificationResponse {
