@@ -311,6 +311,10 @@ export class ProfileEventsComponent implements OnInit {
         this.events[eventIndex].confirmationNotifications++;
         this.events[eventIndex].paymentStatues[confirmationIndex] = status;
       });
+    } else if (response == NegotiationResponses.review) {
+      eventIndex = this.events.findIndex(e => e.event._id == newBooking.eventEID._id);
+      confirmationIndex = this.events[eventIndex].confirmations.findIndex(a => a._id == newBooking._id);
+      this.events[eventIndex].confirmations[confirmationIndex] = newBooking;
     }
   }
 

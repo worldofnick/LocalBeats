@@ -47,7 +47,7 @@ export class ProfilePerformancesComponent implements OnInit {
     cancellationNotifications: number,
     paymentStatues: PaymentStatus[]};
 
-  constructor(private eventService: EventService, 
+  constructor(private eventService: EventService,
     private userService: UserService,
     private bookingService: BookingService,
     private route: ActivatedRoute,
@@ -324,6 +324,9 @@ export class ProfilePerformancesComponent implements OnInit {
       // The host has either verified or not, update the booking so the artist is aware
       this.performances.confirmations[confirmationIndex] = newBooking;
       this.performances.confirmationNotifications++;
+    } else if (response == NegotiationResponses.review) {
+      confirmationIndex = this.performances.completed.findIndex(a => a._id == newBooking._id);
+      this.performances.completed[confirmationIndex] = newBooking;
     }
   }
 
