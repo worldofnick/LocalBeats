@@ -39,8 +39,9 @@
             <mat-card-header>
               <img mat-card-avatar [src]="application.performerUser.profilePicUrl">
               <mat-card-title><a [routerLink]="['/profile', application.performerUser._id]">{{application.performerUser.firstName}} {{application.performerUser.lastName}} </a><mat-icon *ngIf="application.artistApproved">music_note</mat-icon></mat-card-title>
-              <mat-card-subtitle>{{application.hostStatusMessage}}</mat-card-subtitle>
               <mat-card-subtitle>{{application.currentPrice | currency}}</mat-card-subtitle>
+              <mat-card-subtitle>{{application.hostStatusMessage}}</mat-card-subtitle>
+              <mat-card-subtitle>{{application.artistComment}}</mat-card-subtitle>
             </mat-card-header>
             <mat-card-content>
             </mat-card-content>
@@ -61,8 +62,9 @@
             <mat-card-header>
               <img mat-card-avatar [src]="request.performerUser.profilePicUrl">
               <mat-card-title><a [routerLink]="['/profile', request.performerUser._id]">{{request.performerUser.firstName}} {{request.performerUser.lastName}} </a><mat-icon *ngIf="request.artistApproved">music_note</mat-icon></mat-card-title>
-              <mat-card-subtitle>{{request.hostStatusMessage}}</mat-card-subtitle>
               <mat-card-subtitle>{{request.currentPrice | currency}}</mat-card-subtitle>
+              <mat-card-subtitle>{{request.hostStatusMessage}}</mat-card-subtitle>
+              <mat-card-subtitle>{{request.artistComment}}</mat-card-subtitle>
             </mat-card-header>
             <mat-card-content>
             </mat-card-content>
@@ -83,8 +85,9 @@
             <mat-card-header>
               <img mat-card-avatar [src]="booking.performerUser.profilePicUrl">
               <mat-card-title><a [routerLink]="['/profile', booking.performerUser._id]">{{booking.performerUser.firstName}} {{booking.performerUser.lastName}}</a></mat-card-title>
-              <mat-card-subtitle>{{booking.hostStatusMessage}}</mat-card-subtitle>
               <mat-card-subtitle>{{booking.currentPrice | currency}}</mat-card-subtitle>
+              <mat-card-subtitle>{{booking.hostStatusMessage}}</mat-card-subtitle>
+              <mat-card-subtitle>{{booking.artistComment}}</mat-card-subtitle>
             </mat-card-header>
             <mat-card-content>
             </mat-card-content>
@@ -113,8 +116,9 @@
             <mat-card-header>
               <img mat-card-avatar [src]="booking.performerUser.profilePicUrl">
               <mat-card-title><a [routerLink]="['/profile', booking.performerUser._id]">{{booking.performerUser.firstName}} {{booking.performerUser.lastName}}</a></mat-card-title>
-              <mat-card-subtitle>{{booking.hostStatusMessage}}</mat-card-subtitle>
               <mat-card-subtitle>{{booking.currentPrice | currency}}</mat-card-subtitle>
+              <mat-card-subtitle>{{booking.hostStatusMessage}}</mat-card-subtitle>
+              <mat-card-subtitle>{{booking.artistComment}}</mat-card-subtitle>
             </mat-card-header>
             <mat-card-content>
             </mat-card-content>

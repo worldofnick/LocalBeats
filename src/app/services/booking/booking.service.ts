@@ -25,7 +25,7 @@ export class BookingService {
 
     constructor(private http: Http, private dialog: MatDialog) { }
 
-    public negotiate(booking: Booking, initial: boolean, view: string): Observable<{response: NegotiationResponses, price: number}> {
+    public negotiate(booking: Booking, initial: boolean, view: string): Observable<{response: NegotiationResponses, price: number, comment: string}> {
         if ((view == "artist" && !booking.performerUser.stripeAccountId || view == "host" && !booking.hostUser.stripeAccountId)) {
             return this.showStripeDialog().afterClosed();
         }

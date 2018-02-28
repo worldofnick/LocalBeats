@@ -293,7 +293,7 @@ export class ProfilePerformancesComponent implements OnInit {
       // Check to see if a response was recorded in the verification dialog box
       if(result != undefined) {
         // Check to see what the response was
-        booking.verifyComment = result.comment;
+        booking.artistComment = result.comment;
         let notificationMessage: string = '';
         let response:NegotiationResponses = null;
         if(result.response == VerificationResponse.verify) {
@@ -358,11 +358,13 @@ export class ProfilePerformancesComponent implements OnInit {
   }
 
   openNegotiationDialog(booking: Booking, bookingIndex: number) {
-    let view = booking.eventEID.hostUser._id == this.userService.user._id ? "host" : "artist";
+    let view = "artist";
     this.bookingService.negotiate(booking, false, view)
     .subscribe((result) => {
       // Check to see if a response was recorded in the negotiation dialog box
       if (result != undefined) {
+        booking.artistComment = result.comment;
+        booking.hostComment = "";
         // Check to see what the response was
         if (result.response == NegotiationResponses.new) {
           // New, the user offered a new monetary amount to the host

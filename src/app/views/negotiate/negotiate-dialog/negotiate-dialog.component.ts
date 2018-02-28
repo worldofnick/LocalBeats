@@ -31,11 +31,13 @@ export class NegotiateDialogComponent implements OnInit {
     // Check if the booking has been approved and if it's negotiable
     if(this.negotiable && !this.data.booking.approved) {
       this.negotiationForm = this.formBuilder.group({
-        price: new FormControl({value: this.initialPrice, disabled: false}, [Validators.required, Validators.min(0), Validators.pattern("^[0-9]+(\.[0-9][0-9])?$")])
+        price: new FormControl({value: this.initialPrice, disabled: false}, [Validators.required, Validators.min(0), Validators.pattern("^[0-9]+(\.[0-9][0-9])?$")]),
+        comment: new FormControl()
       });
     } else {
       this.negotiationForm = this.formBuilder.group({
-        price: new FormControl({value: this.initialPrice, disabled: true}, [Validators.required])
+        price: new FormControl({value: this.initialPrice, disabled: true}, [Validators.required]),
+        comment: new FormControl()
       });
     }
     // Check whether it's an initial booking application or request
@@ -134,21 +136,21 @@ export class NegotiateDialogComponent implements OnInit {
 
   accept() {
     if(this.data.booking.approved) {
-      this.dialogRef.close({response: NegotiationResponses.nochange, price: this.initialPrice});
+      this.dialogRef.close({response: NegotiationResponses.nochange, price: this.initialPrice, comment: this.negotiationForm.get('comment').value});
     } else {
       if(this.negotiationForm.get('price').value != this.initialPrice || this.data.initial) {
-        this.dialogRef.close({response: NegotiationResponses.new, price: this.negotiationForm.get('price').value});
+        this.dialogRef.close({response: NegotiationResponses.new, price: this.negotiationForm.get('price').value, comment: this.negotiationForm.get('comment').value});
       } else {
-        this.dialogRef.close({response: NegotiationResponses.accept, price: this.negotiationForm.get('price').value});
+        this.dialogRef.close({response: NegotiationResponses.accept, price: this.negotiationForm.get('price').value, comment: this.negotiationForm.get('comment').value});
       }
     }
   }
 
   decline() {
     if(this.data.booking.approved) {
-      this.dialogRef.close({response: NegotiationResponses.cancel, price: this.initialPrice});
+      this.dialogRef.close({response: NegotiationResponses.cancel, price: this.initialPrice, comment: this.negotiationForm.get('comment').value});
     } else {
-      this.dialogRef.close({response: NegotiationResponses.decline, price: this.initialPrice});
+      this.dialogRef.close({response: NegotiationResponses.decline, price: this.initialPrice, comment: this.negotiationForm.get('comment').value});
     }
   }
 
