@@ -116,6 +116,7 @@ export class ReviewService {
                 const data = response.json();
                 let reviews: Review[];
                 reviews = data.reviews as Review[];
+                console.log('review from', reviews);
                 return reviews
             })
             .catch(this.handleError);

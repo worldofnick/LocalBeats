@@ -94,7 +94,7 @@ export class ProfilePerformancesComponent implements OnInit {
   openReviewDialog(booking: Booking): void {
 
     let review: Review = new Review;
-    review.bookingID = booking._id;
+    review.booking = booking;
     review.toUser = booking.hostUser;
     review.fromUser = booking.performerUser;
   
@@ -125,7 +125,7 @@ export class ProfilePerformancesComponent implements OnInit {
     this.reviewService.getReviewsFrom(booking.performerUser).then( (reviews) => {
 
       for (let review of reviews){
-        if (review.bookingID == booking._id){
+        if (review.booking._id == booking._id){
           reviewToEdit = review;
         }
       }

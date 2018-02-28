@@ -75,7 +75,7 @@ export class ProfileEventsComponent implements OnInit {
 
   reviewDialog(booking: Booking) {
     let review: Review = new Review;
-    review.bookingID = booking._id;
+    review.booking = booking;
 
     review.toUser = booking.performerUser;
     review.fromUser = booking.hostUser;
@@ -106,7 +106,7 @@ export class ProfileEventsComponent implements OnInit {
     this.reviewService.getReviewsFrom(booking.hostUser).then( (reviews) => {
 
       for (let review of reviews){
-        if (review.bookingID == booking._id){
+        if (review.booking._id == booking._id){
           reviewToEdit = review;
         }
       }

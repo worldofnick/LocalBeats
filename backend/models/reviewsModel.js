@@ -13,7 +13,7 @@ var ReviewSchema = new Schema({
     fromUser        : {type: Schema.Types.ObjectId, ref: 'User' },
     date            : {type: Date, default: Date.now},
     flagCount       : {type: Number, default: 0},
-    bookingID       : {type: String, required: true},
+    booking        : {type: Schema.Types.ObjectId, ref: 'Booking' },
     bothReviewed    : {type: Boolean, required: true, default: false},
 }, {strict: true}, {versionKey: false});
 

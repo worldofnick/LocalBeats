@@ -1,5 +1,6 @@
 import { User } from 'app/models/user';
 import { Event } from 'app/models/event';
+import { Booking } from 'app/models/booking';
 
 export class Review {
     public _id: string;
@@ -10,7 +11,7 @@ export class Review {
     public toUser: User;
     public date: Date;
     public flagCount: number;
-    public bookingID: string;
+    public booking: Booking;
     public bothReviewed: boolean;
 
 }
