@@ -1,24 +1,24 @@
 <div *ngIf="this.user" fxLayout="row" fxLayoutWrap="wrap">
   <div fxLayout="column" fxFlex="100" fxFlex.gt-md="50">
     <!-- Time line -->
-    <mat-card *ngIf="reviews.length == 0" class="default">
+    <mat-card *ngIf="numberCompletedReviews == 0" class="default">
       <mat-card-title>No reviews for {{user.firstName}}</mat-card-title>
       <mat-card-title></mat-card-title>
     </mat-card>
 
-    <mat-card *ngIf="reviews.length > 0" class="default">
-      <mat-card-title *ngIf="reviews.length > 0">Reviews for {{user.firstName}}:</mat-card-title>
-      <mat-card-title *ngIf="reviews.length > 0">Average rating: {{averageRating}} out of 5 from {{reviews.length}} reviews</mat-card-title>
+    <mat-card *ngIf="numberCompletedReviews > 0" class="default">
+      <mat-card-title *ngIf="numberCompletedReviews > 0">Reviews for {{user.firstName}}:</mat-card-title>
+      <mat-card-title *ngIf="numberCompletedReviews > 0">Average rating: {{averageRating}} out of 5 from {{numberCompletedReviews}} reviews</mat-card-title>
 
       <mat-card-content>
         <div class="timeline">
           <div class="timeline-item" *ngFor="let review of reviews">
 
-            <div class="timeline-body">
+            <div *ngIf="review.bothReviewed" class="timeline-body">
               <div class="timeline-body-top" fxLayout="row">
                 <div class="timeline-body-title mr-1">
                   <mat-icon mat-list-icon>
-                    <img (click)="clickedReviewer(review.fromUser)"mat-list-avatar [src]="review.fromUser.profilePicUrl" alt="No picture" style="
+                    <img (click)="clickedReviewer(review.fromUser)" mat-list-avatar [src]="review.fromUser.profilePicUrl" alt="No picture" style="
                     border-radius: 50%;
                     ">
                   </mat-icon>
@@ -49,11 +49,11 @@
 
               </div>
 
-              <div *ngIf="userService.isAuthenticated() && review.fromUser._id == userService.user._id" class="timeline-body-top" fxLayout="row">
+              <!-- <div *ngIf="userService.isAuthenticated() && review.fromUser._id == userService.user._id" class="timeline-body-top" fxLayout="row">
                   <button mat-raised-button color="accent" (click)="editReview(review)" mat-button
                   class="half-width">Edit Review</button>
                   
-                </div>
+              </div> -->
 
             </div>
           </div>

@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, Inject } from '@angular/core';
 import { ActivatedRoute } from "@angular/router";
 import { UserService } from '../../../services/auth/user.service';
+import { BookingService } from '../../../services/booking/booking.service';
 import { User } from '../../../models/user';
 import { Review } from '../../../models/review';
 import { ReviewService } from '../../../services/reviews/review.service';
@@ -25,7 +26,7 @@ export class ProfileOverviewComponent implements OnInit {
   @Input() onOwnProfile: boolean;
 
   averageRating: any;
-
+  numberCompletedReviews: any = 0;
 
   userID: any = null;
   reviews: Review[] = [];
@@ -72,7 +73,8 @@ export class ProfileOverviewComponent implements OnInit {
     private reviewService: ReviewService,
     public dialog: MatDialog,
     private _socketService: SocketService,
-    private router: Router) { }
+    private router: Router,
+    private bookingService: BookingService) { }
 
   ngOnInit() {
     if (this.user) {
@@ -85,9 +87,12 @@ export class ProfileOverviewComponent implements OnInit {
       this.reviews = reviewList;
       let sum = 0;
       for (let review of this.reviews){
-        sum += review.rating;
+        if(review.bothReviewed){
+          sum += review.rating;
+          this.numberCompletedReviews++;
+        }
       }
-      this.averageRating = sum / this.reviews.length;
+      this.averageRating = sum / this.numberCompletedReviews;
       this.averageRating = this.averageRating.toFixed(1);
     });
   }
@@ -138,7 +143,9 @@ export class ProfileOverviewComponent implements OnInit {
         return;
       }else if (result.rating == -2) {
         // user is deleting the event
+        // this.bookingService.getBooking()
         this.reviewService.deleteReviewByRID(result).then( () => {
+
           this.setReviews();
         });
       }else {

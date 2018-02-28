@@ -58,7 +58,7 @@ export class BookingService {
     }
 
     public getBooking(event: Event): Promise<any[]> {
-        const current = this.eventBooking + '?eid=' +event._id;
+        const current = this.eventBooking + '?eid=' + event._id;
 
         return this.http.get(current, { headers: this.headers })
             .toPromise()
@@ -69,6 +69,7 @@ export class BookingService {
             })
             .catch(this.handleError);
     }
+
 
     public getUserBookings(user: User, type: string): Promise<any[]> {
         const current = this.userBooking

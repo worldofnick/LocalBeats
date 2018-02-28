@@ -14,6 +14,7 @@ var ReviewSchema = new Schema({
     date            : {type: Date, default: Date.now},
     flagCount       : {type: Number, default: 0},
     bookingID       : {type: String, required: true},
+    bothReviewed    : {type: Boolean, required: true, default: false},
 }, {strict: true}, {versionKey: false});
 
 mongoose.model('Review', ReviewSchema);

@@ -18,7 +18,7 @@
     matAutosizeMinRows="5" matAutosizeMaxRows="10" name="text" formControlName="text"></textarea>
     <div mat-dialog-actions>
         <button type="button" mat-raised-button (click)="onNoClick()">Cancel</button>
-        <button type="button" color="primary" *ngIf="isEditing" (click)="onDelete()" mat-raised-button>Delete Review</button>
+        <!-- <button type="button" color="primary" *ngIf="isEditing" (click)="onDelete()" mat-raised-button>Delete Review</button> -->
         <button color="accent" *ngIf="!isEditing" mat-raised-button>Submit Review</button>
         <button color="accent" *ngIf="isEditing" mat-raised-button>Submit Edit</button>
     </div>
