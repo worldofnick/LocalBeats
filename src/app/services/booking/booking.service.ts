@@ -10,6 +10,7 @@ import { Notification } from 'app/models/notification';
 import { User } from 'app/models/user';
 import { PaymentStatus } from 'app/models/payment';
 import { NegotiateDialogComponent } from '../../views/negotiate/negotiate-dialog/negotiate-dialog.component';
+import { StripeDialogComponent } from '../../views/events/event-singleton/stripe-dialog.component';
 import { VerifyDialogComponent } from '../../views/negotiate/verify-dialog/verify-dialog.component';
 import { environment } from '../../../environments/environment';
 import { SocketService } from 'app/services/chats/socket.service';
@@ -29,17 +30,32 @@ export class BookingService {
 
     constructor(private http: Http, private dialog: MatDialog, private socketService: SocketService) { }
 
-    public negotiate(booking: Booking, initial: boolean): Observable<{ response: NegotiationResponses, price: number }> {
+    public negotiate(booking: Booking, initial: boolean, view: string): Observable<{response: NegotiationResponses, price: number, comment: string}> {
+        if ((view == "artist" && !booking.performerUser.stripeAccountId || view == "host" && !booking.hostUser.stripeAccountId)) {
+            return this.showStripeDialog().afterClosed();
+        }
+
         let dialogRef: MatDialogRef<NegotiateDialogComponent>;
         dialogRef = this.dialog.open(NegotiateDialogComponent, {
             width: '380px',
             disableClose: false,
-            data: { booking, initial }
+            data: {booking, initial, view}
         });
         return dialogRef.afterClosed();
     }
 
-    public verify(booking: Booking, isHost: boolean): Observable<{ response: VerificationResponse, comment: string }> {
+
+    private showStripeDialog(): MatDialogRef<StripeDialogComponent> {
+        let dialogRef: MatDialogRef<StripeDialogComponent>;
+        dialogRef = this.dialog.open(StripeDialogComponent, {
+            width: '250px',
+            disableClose: false,
+            data: { }
+        });
+        return dialogRef;
+    }
+  
+    public verify(booking: Booking, isHost: boolean): Observable<{response: VerificationResponse, comment: string}> {
         let dialogRef: MatDialogRef<VerifyDialogComponent>;
         dialogRef = this.dialog.open(VerifyDialogComponent, {
             width: '380px',
@@ -76,8 +92,6 @@ export class BookingService {
     }
 
     public sendNotificationsToBoth(review: Review) {
-        console.log('review received', review);
-
         if (review.booking.bothReviewed) {
             // send notification to artist and host
             const profile: string[] = ['/profile'];
@@ -97,23 +111,18 @@ export class BookingService {
     }
 
     public sendNotificationsToArtist(review: Review) {
-        console.log('review received', review);
         // send notification to artist
         const profile: string[] = ['/profile', 'performances'];
 
         const notificationToArtist = new Notification(review.fromUser, review.toUser,
             review.booking.eventEID._id, review.booking, NegotiationResponses.review,
             'You have been reviewed by ' + review.fromUser.firstName + ' click here to leave your review', 'hearing', profile);
-        console.log('notificaiton created ', notificationToArtist);
 
         this.socketService.sendNotification(SocketEvent.SEND_NOTIFICATION, notificationToArtist);
 
     }
 
     public sendNotificationsToHost(review: Review) {
-        console.log('review received', review);
-
-
         // send notification to artist
         // this path should be changed with the new managment UI most likely
         const profile: string[] = ['/profile', 'events'];
@@ -122,13 +131,11 @@ export class BookingService {
             review.booking.eventEID._id, review.booking, NegotiationResponses.review,
             'You have been reviewed by ' + review.fromUser.firstName + ' click here to leave your review', 'hearing', profile);
 
-        console.log('notificaiton created ', notificationToHost);
-
         this.socketService.sendNotification(SocketEvent.SEND_NOTIFICATION, notificationToHost);
 
     }
     public getUserBookings(user: User, type: string): Promise<any[]> {
-        const current = this.userBooking
+        const current = this.userBooking;
 
         let params: URLSearchParams = new URLSearchParams();
         params.set('uid', user._id)
@@ -166,9 +173,13 @@ export class BookingService {
             .catch(this.handleError);
     }
 
-    public acceptBooking(booking: Booking): Promise<any> {
-        const current = this.acceptBookingConnection + '/' + booking._id;
+    public acceptBooking(booking: Booking, view: string): Promise<any> {
+        if ((view == "artist" && !booking.performerUser.stripeAccountId || view == "host" && !booking.hostUser.stripeAccountId)) {
+            return this.showStripeDialog().afterClosed().toPromise();
+        }
 
+        const current = this.acceptBookingConnection + '/' + booking._id
+        
         return this.http.put(current, { headers: this.headers })
             .toPromise()
             .then((response: Response) => {

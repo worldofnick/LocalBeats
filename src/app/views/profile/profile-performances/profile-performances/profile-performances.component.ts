@@ -33,6 +33,7 @@ import { Payment, PaymentStatus } from '../../../../models/payment'
 export class ProfilePerformancesComponent implements OnInit {
   // User Model
   user: User;
+  private canRefund: boolean = true;
   // Performances of the User Model
   performances: {
     applications: Booking[],
@@ -368,7 +369,7 @@ export class ProfilePerformancesComponent implements OnInit {
       // Check to see if a response was recorded in the verification dialog box
       if(result != undefined) {
         // Check to see what the response was
-        booking.verifyComment = result.comment;
+        booking.artistComment = result.comment;
         let notificationMessage: string = '';
         let response:NegotiationResponses = null;
         if(result.response == VerificationResponse.verify) {
@@ -433,10 +434,13 @@ export class ProfilePerformancesComponent implements OnInit {
   }
 
   openNegotiationDialog(booking: Booking, bookingIndex: number) {
-    this.bookingService.negotiate(booking, false)
+    let view = "artist";
+    this.bookingService.negotiate(booking, false, view)
     .subscribe((result) => {
       // Check to see if a response was recorded in the negotiation dialog box
       if (result != undefined) {
+        booking.artistComment = result.comment;
+        booking.hostComment = "";
         // Check to see what the response was
         if (result.response == NegotiationResponses.new) {
           // New, the user offered a new monetary amount to the host
@@ -471,7 +475,7 @@ export class ProfilePerformancesComponent implements OnInit {
             booking.hostStatusMessage = StatusMessages.bookingConfirmed;
             booking.artistStatusMessage = StatusMessages.bookingConfirmed;
             // Asynchronously update
-            this.bookingService.acceptBooking(booking).then(() => {
+            this.bookingService.acceptBooking(booking, view).then(() => {
               // Update the model of the component
               if(booking.bookingType == 'artist-apply') {
                 this.performances.applications.splice(bookingIndex, 1);
@@ -541,6 +545,7 @@ export class ProfilePerformancesComponent implements OnInit {
   }
 
   showRefundDialog(booking: Booking) {
+    this.canRefund = false;
     let dialogRef: MatDialogRef<RefundPaymentDialog>;
     dialogRef = this.dialog.open(RefundPaymentDialog, {
         width: '250px',
@@ -550,6 +555,7 @@ export class ProfilePerformancesComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       this.updatePaymentStatues(booking);
+      this.canRefund = true;
     });
   }
 

@@ -39,8 +39,9 @@
             <mat-card-header>
               <img mat-card-avatar [src]="application.performerUser.profilePicUrl">
               <mat-card-title><a [routerLink]="['/profile', application.performerUser._id]">{{application.performerUser.firstName}} {{application.performerUser.lastName}} </a><mat-icon *ngIf="application.artistApproved">music_note</mat-icon></mat-card-title>
-              <mat-card-subtitle>{{application.hostStatusMessage}}</mat-card-subtitle>
               <mat-card-subtitle>{{application.currentPrice | currency}}</mat-card-subtitle>
+              <mat-card-subtitle>{{application.hostStatusMessage}}</mat-card-subtitle>
+              <mat-card-subtitle>{{application.artistComment}}</mat-card-subtitle>
             </mat-card-header>
             <mat-card-content>
             </mat-card-content>
@@ -61,8 +62,9 @@
             <mat-card-header>
               <img mat-card-avatar [src]="request.performerUser.profilePicUrl">
               <mat-card-title><a [routerLink]="['/profile', request.performerUser._id]">{{request.performerUser.firstName}} {{request.performerUser.lastName}} </a><mat-icon *ngIf="request.artistApproved">music_note</mat-icon></mat-card-title>
-              <mat-card-subtitle>{{request.hostStatusMessage}}</mat-card-subtitle>
               <mat-card-subtitle>{{request.currentPrice | currency}}</mat-card-subtitle>
+              <mat-card-subtitle>{{request.hostStatusMessage}}</mat-card-subtitle>
+              <mat-card-subtitle>{{request.artistComment}}</mat-card-subtitle>
             </mat-card-header>
             <mat-card-content>
             </mat-card-content>
@@ -83,8 +85,9 @@
             <mat-card-header>
               <img mat-card-avatar [src]="booking.performerUser.profilePicUrl">
               <mat-card-title><a [routerLink]="['/profile', booking.performerUser._id]">{{booking.performerUser.firstName}} {{booking.performerUser.lastName}}</a></mat-card-title>
-              <mat-card-subtitle>{{booking.hostStatusMessage}}</mat-card-subtitle>
               <mat-card-subtitle>{{booking.currentPrice | currency}}</mat-card-subtitle>
+              <mat-card-subtitle>{{booking.hostStatusMessage}}</mat-card-subtitle>
+              <mat-card-subtitle>{{booking.artistComment}}</mat-card-subtitle>
             </mat-card-header>
             <mat-card-content>
             </mat-card-content>
@@ -105,6 +108,7 @@
               (click)="editReview(booking) " mat-raised-button color="accent">Edit Review about {{ booking.performerUser.firstName }}</button>
 
 
+              <button [disabled]="this.canPay" *ngIf="booking.completed && item.paymentStatues[i] != 'paid' && (item.paymentStatues[i] != 'host_cancel' && item.paymentStatues[i] != 'artist_cancel')" (click)="showPayDialog(booking)" mat-raised-button color="primary">Pay Artist {{booking.currentPrice | currency}}</button>
               <!-- If the booking has been paid show a paid chip -->
               <mat-chip *ngIf="booking.completed && item.paymentStatues[i] == 'paid'" color="primary" selected="true">Paid</mat-chip>
               <!-- If the booking has been refunded show a refunded chip -->
@@ -123,8 +127,9 @@
             <mat-card-header>
               <img mat-card-avatar [src]="booking.performerUser.profilePicUrl">
               <mat-card-title><a [routerLink]="['/profile', booking.performerUser._id]">{{booking.performerUser.firstName}} {{booking.performerUser.lastName}}</a></mat-card-title>
-              <mat-card-subtitle>{{booking.hostStatusMessage}}</mat-card-subtitle>
               <mat-card-subtitle>{{booking.currentPrice | currency}}</mat-card-subtitle>
+              <mat-card-subtitle>{{booking.hostStatusMessage}}</mat-card-subtitle>
+              <mat-card-subtitle>{{booking.artistComment}}</mat-card-subtitle>
             </mat-card-header>
             <mat-card-content>
             </mat-card-content>

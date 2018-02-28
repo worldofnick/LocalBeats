@@ -35,6 +35,7 @@ import { Payment, PaymentStatus } from '../../../models/payment';
 export class ProfileEventsComponent implements OnInit {
   // User Model
   user: User;
+  private canPay: boolean = true;
   // Hosted Events of the User Model
   events: {
     event: Event,
@@ -360,7 +361,7 @@ export class ProfileEventsComponent implements OnInit {
       // Check to see if a response was recorded in the verification dialog box
       if(result != undefined) {
         // Check to see what the response was
-        booking.verifyComment = result.comment;
+        booking.hostComment = result.comment;
         let notificationMessage: string = '';
         let response:NegotiationResponses = null;
         if(result.response == VerificationResponse.verify) {
@@ -423,11 +424,14 @@ export class ProfileEventsComponent implements OnInit {
   }
 
   openNegotiationDialog(booking: Booking, bookingIndex: number, eventIndex: number) {
-    this.bookingService.negotiate(booking, false)
+    let view = "host";
+    this.bookingService.negotiate(booking, false, view)
     .subscribe((result) => {
       // Check to see if a response was recorded in the negotiation dialog box
       if (result != undefined) {
         // Check to see what the response was
+        booking.hostComment = result.comment;
+        booking.artistComment = "";
         if (result.response == NegotiationResponses.new) {
           // New, the user offered a new monetary amount to the artist
           // Set the new price
@@ -461,7 +465,7 @@ export class ProfileEventsComponent implements OnInit {
             booking.hostStatusMessage = StatusMessages.bookingConfirmed;
             booking.artistStatusMessage = StatusMessages.bookingConfirmed;
             // Asynchronously update
-            this.bookingService.acceptBooking(booking).then(() => {
+            this.bookingService.acceptBooking(booking, view).then(() => {
               // Update the model of the component
               if(booking.bookingType == 'artist-apply') {
                 this.events[eventIndex].applications.splice(bookingIndex, 1);
@@ -531,6 +535,7 @@ export class ProfileEventsComponent implements OnInit {
   }
 
   showPayDialog(booking: Booking) {
+    this.canPay = false;
     let dialogRef: MatDialogRef<ConfirmPaymentDialog>;
     dialogRef = this.dialog.open(ConfirmPaymentDialog, {
         width: '250px',
@@ -540,6 +545,7 @@ export class ProfileEventsComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       this.updatePaymentStatues(booking);
+      this.canPay = true;
     });
   }
 

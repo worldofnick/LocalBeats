@@ -10,7 +10,7 @@ const http          = require('http');
 const async         = require('async');
 const socketIO      = require('socket.io');
 const jwt           = require('jsonwebtoken');                // used to create, sign, and verify tokens
-
+var cors            = require('cors')
 const config        = require('./config');                    // get the config file
 const User          = require('./backend/models/userModel');  
 const Events        = require('./backend/models/eventsModel');
@@ -48,14 +48,16 @@ server.listen(port, function () {
 app.set('io', io);
 
 // =================================================================
-// Compatibility fix
+// CORS Compatibility fix
 // =================================================================
 app.use(function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Cache-Control");
-  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,PATCH,OPTIONS');
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Headers', '*');
+  res.header('Access-Control-Allow-Methods', '*');
   next();
 });
+// app.use(cors());
+// app.options('*', cors())
 
 // =================================================================
 // API Routes and Socket Handlers

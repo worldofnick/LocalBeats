@@ -154,8 +154,9 @@ export class EventSingletonComponent implements OnInit {
 
   newApplication() {
     this.userBooking = new Booking(undefined, BookingType.artistApply, this.model.hostUser, this.userService.user, this.model, false, false, false, StatusMessages.artistBid, StatusMessages.waitingOnHost, true, false, this.model.fixedPrice, null, null);
-    this.bookingService.negotiate(this.userBooking, true).subscribe((result) => {
+    this.bookingService.negotiate(this.userBooking, true, "artist").subscribe((result) => {
       if (result != undefined) {
+        this.userBooking.artistComment = result.comment;
         if (result.response == NegotiationResponses.new) {
           this.userBooking.currentPrice = result.price;
           this.bookingService.createBooking(this.userBooking).then((booking: Booking) => {
@@ -179,10 +180,13 @@ export class EventSingletonComponent implements OnInit {
   }
 
   openNegotiationDialog() {
-    this.bookingService.negotiate(this.userBooking, false)
+    let view = "artist";
+    this.bookingService.negotiate(this.userBooking, false, view)
     .subscribe((result) => {
       // Check to see if a response was recorded in the negotiation dialog box
       if (result != undefined) {
+        this.userBooking.artistComment = result.comment;
+        this.userBooking.hostComment = "";
         // Check to see what the response was
         if (result.response == NegotiationResponses.new) {
           // New, the user offered a new monetary amount to the host
@@ -213,7 +217,7 @@ export class EventSingletonComponent implements OnInit {
             this.userBooking.hostStatusMessage = StatusMessages.bookingConfirmed;
             this.userBooking.artistStatusMessage = StatusMessages.bookingConfirmed;
             // Asynchronously update
-            this.bookingService.acceptBooking(this.userBooking).then(() => {
+            this.bookingService.acceptBooking(this.userBooking, view).then(() => {
               // Update the model of the component
               this.buttonText = "Cancel Booking";
               this.createNotificationForHost(this.userBooking, result.response, ['/profile', 'events'],
@@ -269,4 +273,5 @@ export class EventSingletonComponent implements OnInit {
       booking, response, message, icon, route); 
     this._socketService.sendNotification(SocketEvent.SEND_NOTIFICATION, notification);
   }
+
 }

@@ -8,6 +8,13 @@ module.exports = {
     'spotifyClientID' : '9b266aeaa5904de699d2864591f4e248',
     'spotifyClientSecret' : 'ced120445fe74bdca660090161898476',
 
+    spotify: {
+      clientID : '9b266aeaa5904de699d2864591f4e248',
+      clientSecret : 'ced120445fe74bdca660090161898476',
+      authorizeUri: 'https://accounts.spotify.com/authorize',
+      tokenUri: 'https://accounts.spotify.com/api/token',
+      redirectUri : 'https://localbeats.herokuapp.com/callback/spotify'  //TODO: CHANGE_ROUTE change to heroku.localbeats
+    },
     // Configuration for Stripe.
     stripe: {
       secretKey: 'sk_test_XnYNA52kavV92IkcJyh1dQBw',
