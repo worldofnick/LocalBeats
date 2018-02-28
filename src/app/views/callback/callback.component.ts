@@ -31,9 +31,11 @@ export class CallbackComponent implements OnInit {
         const codeStartIndex = callbackURL.indexOf('?code=');
         const code = callbackURL.substr(codeStartIndex+6);
         console.log("Code: ", code);
+        return code;
       } else if (callbackURL.indexOf('?error=') >= 0 ) {
         //TODO: no code, handle error (or just redirect to the profile/setting)
         this.router.navigate(['/profile', 'settings']);
+        return '';
       }
     }
   }
