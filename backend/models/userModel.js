@@ -31,7 +31,9 @@ var UserSchema = new Schema({
         id              : { type: String },
         email           : { type: String, lowercase: true },
         uri             : { type: String },
-        href            : { type: String }
+        href            : { type: String },
+        refreshToken    : { type: String },
+        accessToken     : { type: String }
     }
 }, {strict: true}, {versionKey: false});
 
