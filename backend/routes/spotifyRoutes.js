@@ -11,8 +11,15 @@ module.exports = function(app) {
 
     app.route('/api/spotify/authorize')
         .post(spotifyHandler.spotifyAuthorizeClient);      //Add token verification
+    
+    // Gets access, refresh tokens
     app.route('/api/spotify/getAuthTokens')
         .post(spotifyHandler.getAccessRefreshTokens);
+    
+    // Get the user profile for the passed access token and saves it to DB
+    // Header: access_token : Authorization Bearer <access_token>
+    app.route('/api/spotify/me')
+        .post(spotifyHandler.getMeAndSavetoDB)
 
     // Routes using the SPOTIFY_USERNAME
 	app.route('/api/users/spotify/:username/playlists/')
