@@ -9,6 +9,11 @@ module.exports = function(app) {
     var spotifyHandler = require('../controllers/spotifyController.js');
     spotifyHandler.grantClientCredentials();
 
+    app.route('/api/spotify/authorize')
+        .post(spotifyHandler.spotifyAuthorizeClient);      //Add token verification
+    app.route('/api/spotify/getAuthTokens')
+        .post(spotifyHandler.getAccessRefreshTokens);
+
     // Routes using the SPOTIFY_USERNAME
 	app.route('/api/users/spotify/:username/playlists/')
         .get(spotifyHandler.getAllPlaylists);
