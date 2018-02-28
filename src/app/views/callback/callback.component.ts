@@ -19,6 +19,17 @@ export class CallbackComponent implements OnInit {
 
   ngOnInit() {
     this.spotifyCode = this.extractSpotifyCode();
+    this.getTokens();
+  }
+
+  getTokens() {
+    this._spotifyClientService.requestRefreshAndAccessTokens(this.spotifyCode).then((data: any) => {
+      console.log('Callback token data: ', data);
+      this.router.navigate(['/profile', 'settings']);  //TODO: change to profile/settings after persistent sign in
+      //TODO: save it to localStorage
+      // TODO: Chnage proifle button to linked (check)
+
+    });
   }
 
   extractSpotifyCode(): string {
