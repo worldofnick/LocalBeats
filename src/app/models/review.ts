@@ -12,6 +12,4 @@ export class Review {
     public date: Date;
     public flagCount: number;
     public booking: Booking;
-    public bothReviewed: boolean;
-
 }
