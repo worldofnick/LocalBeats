@@ -29,22 +29,22 @@ export class BookingService {
 
     constructor(private http: Http, private dialog: MatDialog, private socketService: SocketService) { }
 
-    public negotiate(booking: Booking, initial: boolean): Observable<{response: NegotiationResponses, price: number}> {
+    public negotiate(booking: Booking, initial: boolean): Observable<{ response: NegotiationResponses, price: number }> {
         let dialogRef: MatDialogRef<NegotiateDialogComponent>;
         dialogRef = this.dialog.open(NegotiateDialogComponent, {
             width: '380px',
             disableClose: false,
-            data: {booking, initial}
+            data: { booking, initial }
         });
         return dialogRef.afterClosed();
     }
 
-    public verify(booking: Booking, isHost: boolean): Observable<{response: VerificationResponse, comment: string}> {
+    public verify(booking: Booking, isHost: boolean): Observable<{ response: VerificationResponse, comment: string }> {
         let dialogRef: MatDialogRef<VerifyDialogComponent>;
         dialogRef = this.dialog.open(VerifyDialogComponent, {
             width: '380px',
             disableClose: false,
-            data: {booking, isHost}
+            data: { booking, isHost }
         });
         return dialogRef.afterClosed();
     }
@@ -76,47 +76,56 @@ export class BookingService {
     }
 
     public sendNotificationsToBoth(review: Review) {
+        console.log('review received', review);
+
         if (review.booking.bothReviewed) {
             // send notification to artist and host
             const profile: string[] = ['/profile'];
 
             const notificationToArtist = new Notification(review.fromUser, review.toUser,
-              review.booking.eventEID._id, review.booking, NegotiationResponses.review,
-                'You have been reviewed by ' + review.fromUser.firstName, 'rate_review', profile);
+                review.booking.eventEID._id, review.booking, NegotiationResponses.review,
+                'You have been reviewed by ' + review.fromUser.firstName + ' and now your review is published', 'rate_review', profile);
 
             const notificationToHost = new Notification(review.toUser, review.fromUser,
-              review.booking.eventEID._id, review.booking, NegotiationResponses.review,
-                'You have been reviewed by ' + review.toUser.firstName, 'rate_review', profile);
+                review.booking.eventEID._id, review.booking, NegotiationResponses.review,
+                'You have been reviewed by ' + review.toUser.firstName + ' and now your review is published', 'rate_review', profile);
 
+            console.log('sending reviews notif to both');
             this.socketService.sendNotification(SocketEvent.SEND_NOTIFICATION, notificationToArtist);
             this.socketService.sendNotification(SocketEvent.SEND_NOTIFICATION, notificationToHost);
         }
     }
 
     public sendNotificationsToArtist(review: Review) {
-        if (review.booking.bothReviewed) {
-            // send notification to artist
-            const profile: string[] = ['/profile'];
+        console.log('review received', review);
+        // send notification to artist
+        const profile: string[] = ['/profile', 'performances'];
 
-            const notificationToArtist = new Notification(review.fromUser, review.toUser,
-              review.booking.eventEID._id, review.booking, NegotiationResponses.review,
-                'You have been reviewed by ' + review.fromUser.firstName + ' click here to leave your review', 'hearing', profile);
+        const notificationToArtist = new Notification(review.fromUser, review.toUser,
+            review.booking.eventEID._id, review.booking, NegotiationResponses.review,
+            'You have been reviewed by ' + review.fromUser.firstName + ' click here to leave your review', 'hearing', profile);
+        console.log('notificaiton created ', notificationToArtist);
 
-            this.socketService.sendNotification(SocketEvent.SEND_NOTIFICATION, notificationToArtist);
-        }
+        this.socketService.sendNotification(SocketEvent.SEND_NOTIFICATION, notificationToArtist);
+
     }
 
     public sendNotificationsToHost(review: Review) {
-        if (review.booking.bothReviewed) {
-            // send notification to artist
-            const profile: string[] = ['/profile'];
+        console.log('review received', review);
 
-            const notificationToArtist = new Notification(review.toUser, review.fromUser,
-              review.booking.eventEID._id, review.booking, NegotiationResponses.review,
-                'You have been reviewed by ' + review.toUser.firstName, 'hearing', profile);
-                
-            this.socketService.sendNotification(SocketEvent.SEND_NOTIFICATION, notificationToArtist);
-        }
+
+        // send notification to artist
+        // this path should be changed with the new managment UI most likely
+        const profile: string[] = ['/profile', 'events'];
+
+        const notificationToHost = new Notification(review.fromUser, review.toUser,
+            review.booking.eventEID._id, review.booking, NegotiationResponses.review,
+            'You have been reviewed by ' + review.fromUser.firstName + ' click here to leave your review', 'hearing', profile);
+
+        console.log('notificaiton created ', notificationToHost);
+
+        this.socketService.sendNotification(SocketEvent.SEND_NOTIFICATION, notificationToHost);
+
     }
     public getUserBookings(user: User, type: string): Promise<any[]> {
         const current = this.userBooking
@@ -124,8 +133,8 @@ export class BookingService {
         let params: URLSearchParams = new URLSearchParams();
         params.set('uid', user._id)
         params.set('user_type', type)
-        
-        return this.http.get(current, { headers: this.headers, search: params  })
+
+        return this.http.get(current, { headers: this.headers, search: params })
             .toPromise()
             .then((response: Response) => {
                 const data = response.json();
@@ -137,7 +146,7 @@ export class BookingService {
 
     public updateBooking(newBooking: Booking) {
         const current = this.connection + '/' + newBooking._id;
-        return this.http.put(current, {booking: newBooking}, { headers: this.headers })
+        return this.http.put(current, { booking: newBooking }, { headers: this.headers })
             .toPromise()
             .then((response: Response) => {
                 const data = response.json();

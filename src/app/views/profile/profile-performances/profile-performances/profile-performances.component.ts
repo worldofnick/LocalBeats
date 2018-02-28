@@ -111,12 +111,13 @@ export class ProfilePerformancesComponent implements OnInit {
           if (booking.beenReviewedByHost) {
             booking.bothReviewed = true;
           }
+          // maybe this should be in reference to reesult.booking instead of booking.
           this.bookingService.updateBooking(booking).then( () => {
-            if (newReview.booking.bothReviewed) {
+            if (booking.bothReviewed) {
                 this.bookingService.sendNotificationsToBoth(review);
-          }else {
-              this.bookingService.sendNotificationsToArtist(review);
-          }
+            }else {
+                this.bookingService.sendNotificationsToHost(review);
+            }
           });
       });
     });
