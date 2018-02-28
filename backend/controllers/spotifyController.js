@@ -27,7 +27,7 @@ exports.spotifyAuthorizeClient = function (req, res) {
   let parameters = {
     client_id: config.spotify.clientID,
     response_type: 'code',
-    redirect_uri: 'http://localhost:4200/profile/settings', //TODO: change to heroku, etc
+    redirect_uri: 'http://localhost:4200/callback/spotify', //TODO: change to heroku, etc
     scope: 'user-read-private user-read-email'
   };
 
