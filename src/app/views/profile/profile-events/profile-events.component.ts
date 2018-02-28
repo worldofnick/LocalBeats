@@ -79,7 +79,7 @@ export class ProfileEventsComponent implements OnInit {
 
     review.toUser = booking.performerUser;
     review.fromUser = booking.hostUser;
-  
+
 
     this.reviewService.review(review, false).subscribe((result) => {
       if (result.rating == -1) {
@@ -94,22 +94,11 @@ export class ProfileEventsComponent implements OnInit {
           }
           this.bookingService.updateBooking(booking).then( () => {
             // new review is null right here.
-            if (review.booking.bothReviewed) {
-              // send notification to artist
-              const profile: string[] = ['/profile'];
-
-              const notificationToArtist = new Notification(review.fromUser, review.toUser,
-                review.booking.eventEID._id, review.booking, NegotiationResponses.review,
-                  'You have been reviewed by ' + review.fromUser.firstName, 'rate_review', profile);
-
-              const notificationToMusician = new Notification(review.toUser, review.fromUser,
-                review.booking.eventEID._id, review.booking, NegotiationResponses.review,
-                  'You have been reviewed by ' + review.toUser.firstName, 'rate_review', profile);
-
-              this._socketService.sendNotification(SocketEvent.SEND_NOTIFICATION, notificationToArtist);
-              this._socketService.sendNotification(SocketEvent.SEND_NOTIFICATION, notificationToMusician);
-
-          }
+            if (booking.bothReviewed) {
+              this.bookingService.sendNotificationsToBoth(review);
+            }else{
+              this.bookingService.sendNotificationsToArtist(review);
+            }
           });
       });
     });

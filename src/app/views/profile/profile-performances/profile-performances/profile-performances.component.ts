@@ -113,20 +113,9 @@ export class ProfilePerformancesComponent implements OnInit {
           }
           this.bookingService.updateBooking(booking).then( () => {
             if (newReview.booking.bothReviewed) {
-              // send notification to artist
-              const profile: string[] = ['/profile'];
-
-              const notificationToArtist = new Notification(newReview.fromUser, newReview.toUser,
-                  newReview.booking.eventEID._id, newReview.booking, NegotiationResponses.review,
-                  'You have been reviewed by ' + newReview.fromUser.firstName, 'rate_review', profile);
-
-              const notificationToMusician = new Notification(newReview.toUser, newReview.fromUser,
-                  newReview.booking.eventEID._id, newReview.booking, NegotiationResponses.review,
-                  'You have been reviewed by ' + newReview.toUser.firstName, 'rate_review', profile);
-
-              this.socketService.sendNotification(SocketEvent.SEND_NOTIFICATION, notificationToArtist);
-              this.socketService.sendNotification(SocketEvent.SEND_NOTIFICATION, notificationToMusician);
-
+                this.bookingService.sendNotificationsToBoth(review);
+          }else {
+              this.bookingService.sendNotificationsToArtist(review);
           }
           });
       });
