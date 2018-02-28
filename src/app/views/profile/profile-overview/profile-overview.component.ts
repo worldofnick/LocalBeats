@@ -87,7 +87,7 @@ export class ProfileOverviewComponent implements OnInit {
       this.reviews = reviewList;
       let sum = 0;
       for (let review of this.reviews){
-        if(review.bothReviewed){
+        if(review.booking.bothReviewed){
           sum += review.rating;
           this.numberCompletedReviews++;
         }

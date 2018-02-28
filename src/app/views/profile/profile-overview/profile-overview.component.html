@@ -14,7 +14,7 @@
         <div class="timeline">
           <div class="timeline-item" *ngFor="let review of reviews">
 
-            <div *ngIf="review.bothReviewed" class="timeline-body">
+            <div *ngIf="review.booking.bothReviewed" class="timeline-body">
               <div class="timeline-body-top" fxLayout="row">
                 <div class="timeline-body-title mr-1">
                   <mat-icon mat-list-icon>
