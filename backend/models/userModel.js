@@ -26,7 +26,13 @@ var UserSchema = new Schema({
     location: {
         type: [Number],  // [<longitude>, <latitude>]
         index: '2d'      // create the geospatial index
-      }
+      },
+    spotify: {
+        id              : { type: String },
+        email           : { type: String, lowercase: true },
+        uri             : { type: String },
+        href            : { type: String }
+    }
 }, {strict: true}, {versionKey: false});
 
 /**
