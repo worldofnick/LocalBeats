@@ -9,6 +9,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 //TODO: change
 import { CallbackComponent } from './callback.component';
 import { CallbackRoutes } from "./callback.routing";
+import { SpotifyCallbackComponent } from './spotify-callback/spotify-callback.component';
 
 
 @NgModule({
@@ -31,6 +32,6 @@ import { CallbackRoutes } from "./callback.routing";
     RouterModule.forChild(CallbackRoutes) //TODO: change
   ],
   entryComponents: [CallbackComponent],
-  declarations: [CallbackComponent]
+  declarations: [CallbackComponent, SpotifyCallbackComponent]
 })
 export class CallbackModule { }

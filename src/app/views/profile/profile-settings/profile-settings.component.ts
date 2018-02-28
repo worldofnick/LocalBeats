@@ -161,7 +161,7 @@ export class ProfileSettingsComponent implements OnInit {
 
   // SPOTIFY
   authorizeSpotify() {
-    this._spotifyClientService.authorizeStripe().then((url: string) => {
+    this._spotifyClientService.authorizeSpotify().then((url: string) => {
       window.open(url);
     });
   }
