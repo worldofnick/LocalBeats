@@ -44,7 +44,6 @@ export class ReviewService {
 
     // POST Create review
     public createReview(newReview: Review): Promise<Review> {
-        console.log('printing review in create review', newReview);
         const current = this.connection + '/create';
         return this.http.post(current, { review: newReview }, { headers: this.headers })
             .toPromise()
@@ -72,7 +71,6 @@ export class ReviewService {
 
     // PUT update a review
     public updateReview(review: Review): Promise<Review> {
-        console.log('updating', review);
         const current = this.connection + '/' + review._id;
         return this.http.put(current, { review: review }, { headers: this.headers })
             .toPromise()
@@ -86,7 +84,6 @@ export class ReviewService {
 
     // DELETE delete a review by id
     public deleteReviewByRID(reviewToDelete: Review): Promise<Number> {
-        console.log('deleting review', reviewToDelete);
         const current = this.connection + '/' + reviewToDelete._id;
         return this.http.delete(current)
             .toPromise()
@@ -120,8 +117,7 @@ export class ReviewService {
                 const data = response.json();
                 let reviews: Review[];
                 reviews = data.reviews as Review[];
-                console.log('review from', reviews);
-                return reviews
+                return reviews;
             })
             .catch(this.handleError);
     }

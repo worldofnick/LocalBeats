@@ -49,18 +49,13 @@ export class SocketService {
   }
 
   public addedReview(eventName: string, review: Review): void {
-    console.log("emitting ", eventName, ' ' , review);
     this.socket.emit(eventName, review);
   }
 
   public sendNotification(eventName: SocketEvent, notificationPayload: SocketNotification):void {
-    //save notification to db.
+    // save notification to db.
     let body = JSON.stringify(notificationPayload);
-    console.log("emitting a send notification event for :")
-    console.log(notificationPayload);
-    console.log(SERVER_URL)
     this.http.post(SERVER_URL + 'api/notification/', body, httpOptions);
-    
     this.socket.emit(eventName, notificationPayload);
   }
 

@@ -55,7 +55,6 @@ import { NgForm } from '@angular/forms/src/directives/ng_form';
         this.currentReview.date = new Date();
         this.currentReview._id = null;
       }
-      console.log('returning update');
       this.dialogRef.close(this.currentReview);
     }
 

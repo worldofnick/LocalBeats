@@ -104,7 +104,6 @@ export class BookingService {
                 review.booking.eventEID._id, review.booking, NegotiationResponses.review,
                 'You have been reviewed by ' + review.toUser.firstName + ' and now your review is published', 'rate_review', profile);
 
-            console.log('sending reviews notif to both');
             this.socketService.sendNotification(SocketEvent.SEND_NOTIFICATION, notificationToArtist);
             this.socketService.sendNotification(SocketEvent.SEND_NOTIFICATION, notificationToHost);
         }
@@ -178,8 +177,8 @@ export class BookingService {
             return this.showStripeDialog().afterClosed().toPromise();
         }
 
-        const current = this.acceptBookingConnection + '/' + booking._id
-        
+        const current = this.acceptBookingConnection + '/' + booking._id;
+
         return this.http.put(current, { headers: this.headers })
             .toPromise()
             .then((response: Response) => {
@@ -191,7 +190,7 @@ export class BookingService {
     }
 
     public bookingPaymentStatus(booking: Booking): Promise<PaymentStatus> {
-        const current = this.paymentBookingConnection + '/?bid=' + booking._id
+        const current = this.paymentBookingConnection + '/?bid=' + booking._id;
 
         return this.http.get(current, { headers: this.headers })
             .toPromise()
