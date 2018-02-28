@@ -30,7 +30,6 @@ export class SpotifyClientService {
   }
 
   public requestRefreshAndAccessTokens(code: string): Promise<any> {
-
     const current = this.authorizeConnection + '/getAuthTokens';
     console.log('Spotify Token server url: ', current);
     return this.http.post(current, {user: this._userService.user, code: code}, { headers: this.headers })
@@ -41,28 +40,19 @@ export class SpotifyClientService {
           return data;
         })
         .catch(this.handleError);
+  }
 
-    // const current = 'https://accounts.spotify.com/api/token';
-    // let parameters = {
-    //   grant_type: 'authorization_code',
-    //   code: code,
-    //   redirect_uri: environment.apiURL + 'callback/spotify', //TODO: change to heroku, etc
-    //   json: true
-    // };
-    // let newHeaders:Headers = new Headers({
-    //   'Content-Type': 'application/json',
-    //   'client_id': '9b266aeaa5904de699d2864591f4e248',
-    //   'client_secret': 'ced120445fe74bdca660090161898476'
-    // });
-    // console.log('Spotify Token Request url: ', current);
-    // return this.http.post(current, {} , { headers: this.headers })
-    //     .toPromise()
-    //     .then((response: Response) => {
-    //       const data = response.json();
-    //       console.log('Tokens Data (Spotify): ', data);
-    //       return data;
-    //     })
-    //     .catch(this.handleError);
+  public requestSpotifyMyProfile(code: string): Promise<any> {
+    const current = this.authorizeConnection + '/me';
+    console.log('Spotify Token server url: ', current);
+    return this.http.post(current, {user: this._userService.user, code: code}, { headers: this.headers })
+        .toPromise()
+        .then((response: Response) => {
+          const data = response.json();
+          console.log('Tokens recieved: ', data);
+          return data;
+        })
+        .catch(this.handleError);
   }
 
   private handleError(error: any): Promise<any> {
