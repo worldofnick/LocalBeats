@@ -137,7 +137,6 @@ export class ProfileOverviewComponent implements OnInit {
 
   editReview(review: Review) {
     this.reviewService.review(review, true).subscribe((result) => {
-      console.log(result)
       if (result.rating == -1) {
         // user has clicked no in the edit menu
         return;
