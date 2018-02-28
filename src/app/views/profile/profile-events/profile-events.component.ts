@@ -86,8 +86,14 @@ export class ProfileEventsComponent implements OnInit {
         // user clicked cancel in the review dialog.
         return;
       }
+      if (booking.beenReviewedByArtist) {
+        review.bothReviewed = true;
+      }
       this.reviewService.createReview(result).then( (newReview: Review) => {
           booking.beenReviewedByHost = true;
+          if(booking.beenReviewedByArtist){
+            booking.bothReviewed = true;
+          }
           this.bookingService.updateBooking(booking);
       });
     });

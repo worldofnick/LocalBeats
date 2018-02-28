@@ -97,11 +97,11 @@
               <button *ngIf="booking.completed && item.paymentStatues[i] != 'paid' && (item.paymentStatues[i] != 'host_cancel' && item.paymentStatues[i] != 'artist_cancel')" 
               (click)="showPayDialog(booking)" mat-raised-button color="primary">Pay Artist {{booking.currentPrice | currency}}</button>
               <!-- Allow host to review user. -->
-              <button *ngIf="booking.completed && item.paymentStatues[i] != 'waiting' && booking.beenReviewedByHost" 
+              <button *ngIf="booking.completed && item.paymentStatues[i] != 'waiting' && !booking.beenReviewedByHost" 
               (click)="reviewDialog(booking) " mat-raised-button color="accent">Review {{ booking.performerUser.firstName }}</button>
 
               <!-- Allow host to edit review on user. -->
-              <button *ngIf="booking.completed && item.paymentStatues[i] != 'waiting' && booking.beenReviewedByHost && !(booking.beenReviewedByArtist && booking.beenReviewedByHost)" 
+              <button *ngIf="booking.completed && item.paymentStatues[i] != 'waiting' && booking.beenReviewedByHost && !booking.bothReviewed" 
               (click)="editReview(booking) " mat-raised-button color="accent">Edit Review about {{ booking.performerUser.firstName }}</button>
 
 

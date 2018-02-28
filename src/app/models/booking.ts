@@ -29,6 +29,7 @@ export class Booking {
     public completed: boolean;
     public beenReviewedByHost: boolean;
     public beenReviewedByArtist: boolean;
+    public bothReviewed: boolean;
 }
 
 export enum BookingType {

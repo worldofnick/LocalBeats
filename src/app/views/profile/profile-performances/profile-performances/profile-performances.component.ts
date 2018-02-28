@@ -91,30 +91,27 @@ export class ProfilePerformancesComponent implements OnInit {
     });
   }
 
-  openReviewDialog(booking: Booking, isArtist: boolean): void {
+  openReviewDialog(booking: Booking): void {
 
     let review: Review = new Review;
     review.bookingID = booking._id;
-    if (isArtist){
-      review.toUser = booking.hostUser;
-      review.fromUser = booking.performerUser;
-    }else {
-      review.toUser = booking.performerUser;
-      review.fromUser = booking.hostUser;
-    }
+    review.toUser = booking.hostUser;
+    review.fromUser = booking.performerUser;
+  
 
     this.reviewService.review(review, false).subscribe((result) => {
       if (result.rating == -1) {
         // user clicked cancel in the review dialog.
         return;
       }
+      if (booking.beenReviewedByHost) {
+        review.bothReviewed = true;
+      }
       this.reviewService.createReview(result).then( (newReview: Review) => {
-          if (isArtist) {
-            booking.beenReviewedByArtist = true;
-          }else{
-            booking.beenReviewedByHost = false;
+          booking.beenReviewedByArtist = true;
+          if (booking.beenReviewedByHost) {
+            booking.bothReviewed = true;
           }
-
           this.bookingService.updateBooking(booking);
       });
     });
