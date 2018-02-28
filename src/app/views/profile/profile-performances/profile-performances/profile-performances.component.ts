@@ -363,6 +363,7 @@ export class ProfilePerformancesComponent implements OnInit {
     .subscribe((result) => {
       // Check to see if a response was recorded in the negotiation dialog box
       if (result != undefined) {
+        booking.artistComment = result.comment;
         // Check to see what the response was
         if (result.response == NegotiationResponses.new) {
           // New, the user offered a new monetary amount to the host

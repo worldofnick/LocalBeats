@@ -354,6 +354,7 @@ export class ProfileEventsComponent implements OnInit {
       // Check to see if a response was recorded in the negotiation dialog box
       if (result != undefined) {
         // Check to see what the response was
+        booking.hostComment = result.comment;
         if (result.response == NegotiationResponses.new) {
           // New, the user offered a new monetary amount to the artist
           // Set the new price
