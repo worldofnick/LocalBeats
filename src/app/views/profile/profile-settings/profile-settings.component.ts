@@ -159,7 +159,10 @@ export class ProfileSettingsComponent implements OnInit {
     });
   }
 
-  // SPOTIFY
+  // ======================================
+  // Social Accounts Tab Methods
+  // ======================================
+  //TODO: add unlink spotify and other here
   authorizeSpotify() {
     this._spotifyClientService.authorizeSpotify().then((url: string) => {
       window.open(url);
