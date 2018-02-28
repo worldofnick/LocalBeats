@@ -21,13 +21,46 @@ var isResultEmpty = function isEmptyObject(obj) {
   return !Object.keys(obj).length;
 }
 
+exports.getAccessRefreshTokens = function (req, res) {
+  console.log('Token req is: ', req.body);
+  var authOptions = { 
+    url : config.spotify.tokenUri,
+    form: {
+      grant_type: 'authorization_code',
+      code: req.body.code,
+      redirect_uri: config.spotify.redirectUri
+    },
+    headers: {
+      'Authorization': 'Basic ' + (new Buffer(config.spotify.clientID + ':' + config.spotify.clientSecret).toString('base64'))
+    },
+    json: true
+  };
+  request.post(authOptions, function (err, response, body) {
+    if (err === null && response.statusCode === 200) {
+      //TODO: get the user id, save it and then return the user id along with the tokens
+      console.log('Access Token Spotify: ', body.access_token,
+        '\nRefresh token: ', body.refresh_token,
+        '\nExpires_in:', body.expires_in);
+      res.send(
+        {
+          access_token: body.access_token,
+          refresh_token: body.refresh_token,
+          expires_in: body.expires_in
+        }
+      );
+    } else {
+      console.log('Error getting spotify tokens', err, ', Code: ', response.statusCode);
+    }
+  });
+}
+
 exports.spotifyAuthorizeClient = function (req, res) {
   console.log('In spotify Authorize!');
   // Prepare the authorize spotify parameters.
   let parameters = {
     client_id: config.spotify.clientID,
     response_type: 'code',
-    redirect_uri: 'http://localhost:4200/callback/spotify', //TODO: change to heroku, etc
+    redirect_uri: config.spotify.redirectUri,
     scope: 'user-read-private user-read-email'
   };
 
