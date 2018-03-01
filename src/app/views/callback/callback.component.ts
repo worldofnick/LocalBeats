@@ -23,13 +23,17 @@ export class CallbackComponent implements OnInit {
   }
 
   getTokens() {
-    this._spotifyClientService.requestRefreshAndAccessTokens(this.spotifyCode).then((data: any) => {
-      console.log('Callback token data: ', data);
-      return data;
-    }).then( (data: any) => {
-      console.log('Next promise\'s token data received: ', data);
+    this._spotifyClientService.requestRefreshAndAccessTokens(this.spotifyCode).then((tokens: any) => {
+      console.log('Callback token data: ', tokens);
+      return tokens;
+    }).then( (tokens: any) => {
+      console.log('Next promise\'s token data received: ', tokens);
 
-
+      // Get the spotify profile data of this user
+      this._spotifyClientService.requestSpotifyMyProfile(tokens).then((userObjectWithProfileData: any) => {
+        console.log('My spotify profile: ', userObjectWithProfileData);
+        return userObjectWithProfileData;
+      });
       // TODO: 
       // 1. request the profile data here. Will get the tokens and the user object
       // 1.1 Get the albums of this user (uri, name, id, href, release_date)
