@@ -21,7 +21,15 @@ var isResultEmpty = function isEmptyObject(obj) {
   return !Object.keys(obj).length;
 }
 
-exports.refreshAccessToken = function(req, res) {
+exports.sendTokens = function(req, res) {
+  res.send({
+      access_token: req.body.access_token,
+      refresh_token: req.body.refresh_token,
+      expires_in: req.body.expires_in
+  });
+}
+
+exports.refreshAccessTokenMiddleware = function(req, res, next) {
   console.log('Token req is: ', req.body);
   var spotifyUserProfile = undefined;
   var authOptions = { 
@@ -42,12 +50,12 @@ exports.refreshAccessToken = function(req, res) {
         '\nRefresh token: ', body.refresh_token,
         '\nExpires_in:', body.expires_in);
 
-      res.send({
-          access_token: body.access_token,
-          expires_in: body.expires_in
-      });
+      req.body.access_token = body.access_token;
+      req.body.expires_in = body.expires_in;
+      next();
     } else {
       console.log('Error refreshing spotify token', err, ', Code: ', response.statusCode, response.body);
+      return res.status(500).send({ auth: false, message: 'Failed to refresh Spotify Token' });
     }
   });
 }
@@ -64,16 +72,16 @@ exports.getMeAndSavetoDB = function(req, res) {
   request.get(authOptions, function(err, response, body) {
     if (err === null && response.statusCode === 200) {
       console.log('Profile body received: ', body);
+      const spotifyProfileObject = JSON.parse(body);
       let payload = {
-        'user' : {
-          'spotify' : {
-            'id' : body.id,
-            'email' : body.email,
-            'uri' : body.uri,
-            'href' : body.href
-          }
-        }
+            'spotify.id' : spotifyProfileObject.id,
+            'spotify.email' : spotifyProfileObject.email,
+            'spotify.uri' : spotifyProfileObject.uri,
+            'spotify.href' : spotifyProfileObject.href,
+            'spotify.accessToken' : req.body.access_token,
+            'spotify.refreshToken' : req.body.refresh_token
       }
+      
       User.findByIdAndUpdate(req.body.user._id, payload, { new: true }, function (err, user) {
         if (err) {
           // return res.status(520).send({ message: "Error finding the user from this UID...", error: err });
