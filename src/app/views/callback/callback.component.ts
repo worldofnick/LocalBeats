@@ -30,9 +30,15 @@ export class CallbackComponent implements OnInit {
       console.log('Next promise\'s token data received: ', tokens);
 
       // Get the spotify profile data of this user
-      this._spotifyClientService.requestSpotifyMyProfile(tokens).then((userObjectWithProfileData: any) => {
-        console.log('My spotify profile: ', userObjectWithProfileData);
-        return userObjectWithProfileData;
+      this._spotifyClientService.requestSpotifyMyProfile(tokens).then((responseWithUserPayload: any) => {
+        console.log('My spotify profile: ', responseWithUserPayload);
+        return responseWithUserPayload;
+      }).then( (responseWithUserPayload: any) => {
+        console.log('Getting the albums of ' + responseWithUserPayload.user.spotify.email);
+        this._spotifyClientService.requestAlbumsOwnedByAnArtist(responseWithUserPayload.user)
+          .then( (listOfSpotifyAlbumObjects: any) => {
+            console.log('List of albums: ', listOfSpotifyAlbumObjects);
+          });
       });
       // TODO: 
       // 1. request the profile data here. Will get the tokens and the user object
