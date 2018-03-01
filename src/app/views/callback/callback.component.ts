@@ -38,6 +38,19 @@ export class CallbackComponent implements OnInit {
         this._spotifyClientService.requestAlbumsOwnedByAnArtist(responseWithUserPayload.user)
           .then( (listOfSpotifyAlbumObjects: any) => {
             console.log('List of albums: ', listOfSpotifyAlbumObjects);
+
+            const spotifyObject = {
+              email: responseWithUserPayload.user.spotify.email,
+              id: responseWithUserPayload.user.spotify.id,
+              uri: responseWithUserPayload.user.spotify.uri,
+              href: responseWithUserPayload.user.spotify.href,
+              albums: listOfSpotifyAlbumObjects.albums.items
+            };
+            console.log('Spotify Object to save: ', spotifyObject);
+            
+            // Save the spotify profile and the albums to user service object
+            this.userService.user.spotify = spotifyObject;
+            
           });
       });
       // TODO: 
@@ -47,13 +60,6 @@ export class CallbackComponent implements OnInit {
       // 3. Redirect
 
       // 4. Then in profile/ code, since user now has spotify.id, can request playlist and load the widget
-
-      
-      // this.router.navigate(['/profile', 'settings']);  //TODO: change to profile/settings after persistent sign in
-      
-      //TODO: save it to localStorage
-      // TODO: Chnage proifle button to linked (check)
-
     });
   }
 
