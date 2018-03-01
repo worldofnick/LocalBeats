@@ -61,9 +61,10 @@ export class SpotifyClientService {
     // const current = this.authorizeConnection + '/artists/' + userObject.spotify.id + '/albums';
     const current = this.authorizeConnection + '/artists/0TnOYISbd1XYRBk9myaseg/albums';
     console.log('Spotify Token server url: ', current);
+    console.log('Albums request user received: ', userObject);
     return this.http.post(current, {user: this._userService.user,
-                                    access_token: userObject.accessToken,
-                                    refresh_token: userObject.refreshToken}, { headers: this.headers })
+                                    access_token: userObject.spotify.accessToken,
+                                    refresh_token: userObject.spotify.refreshToken}, { headers: this.headers })
         .toPromise()
         .then((response: Response) => {
           const listOfSpotifyAlbumObjects = response.json();
