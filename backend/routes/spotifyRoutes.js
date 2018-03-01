@@ -7,7 +7,7 @@ module.exports = function(app) {
      */
     var tokenVerificationHandler = require('../controllers/tokenVerificationController.js');
     var spotifyHandler = require('../controllers/spotifyController.js');
-    spotifyHandler.grantClientCredentials();
+    // spotifyHandler.grantClientCredentials();
 
     app.route('/api/spotify/authorize')
         .post(spotifyHandler.spotifyAuthorizeClient);      //Add token verification
@@ -17,12 +17,13 @@ module.exports = function(app) {
         .post(spotifyHandler.getAccessRefreshTokens);
     
     app.route('/api/spotify/refreshAccessToken')
-        .post(spotifyHandler.refreshAccessToken)
+        .post(spotifyHandler.refreshAccessTokenMiddleware, spotifyHandler.sendTokens)
     
     // Get the user profile for the passed access token and saves it to DB
-    // Header: access_token : Authorization Bearer <access_token>
+    // If the sent token has expired, the MW will automatically refresh and new token 
+    // before processing the request
     app.route('/api/spotify/me')
-        .post(spotifyHandler.getMeAndSavetoDB)
+        .post(spotifyHandler.refreshAccessTokenMiddleware, spotifyHandler.getMeAndSavetoDB)
 
     // Routes using the SPOTIFY_USERNAME
 	app.route('/api/users/spotify/:username/playlists/')
