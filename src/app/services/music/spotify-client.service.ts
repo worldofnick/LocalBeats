@@ -42,15 +42,17 @@ export class SpotifyClientService {
         .catch(this.handleError);
   }
 
-  public requestSpotifyMyProfile(code: string): Promise<any> {
+  public requestSpotifyMyProfile(tokens: any): Promise<any> {
     const current = this.authorizeConnection + '/me';
     console.log('Spotify Token server url: ', current);
-    return this.http.post(current, {user: this._userService.user, code: code}, { headers: this.headers })
+    return this.http.post(current, {user: this._userService.user,
+                                    access_token: tokens.access_token,
+                                    refresh_token: tokens.refresh_token}, { headers: this.headers })
         .toPromise()
         .then((response: Response) => {
-          const data = response.json();
-          console.log('Tokens recieved: ', data);
-          return data;
+          const userObjectWithProfileData = response.json();
+          console.log('User Object with Profile recieved: ', userObjectWithProfileData);
+          return userObjectWithProfileData;
         })
         .catch(this.handleError);
   }
