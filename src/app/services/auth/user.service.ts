@@ -44,6 +44,8 @@ export class UserService {
             const token = localStorage.getItem('jwtToken');
             const user: User = JSON.parse(localStorage.getItem('loggedInUser'));
             this._setSession(token, user);
+            this.getNotificationsCountForUser(user._id);
+            this.getNotificationsForUser(user._id);
         } else {
             this._deleteSession(null);
         }
