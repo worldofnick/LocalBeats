@@ -51,6 +51,8 @@ export class CallbackComponent implements OnInit {
             // Save the spotify profile and the albums to user service object
             this.userService.user.spotify = spotifyObject;
             
+            // Redirect to the profile page to setup and display the spotify widget
+            this.router.navigate(['/profile', 'overview']);
           });
       });
       // TODO: 
