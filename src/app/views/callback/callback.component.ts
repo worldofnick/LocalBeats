@@ -33,12 +33,7 @@ export class CallbackComponent implements OnInit {
       this._spotifyClientService.requestSpotifyMyProfile(tokens).then((responseWithUserPayload: any) => {
         console.log('My spotify profile: ', responseWithUserPayload);
         return responseWithUserPayload;
-      }).then( (responseWithUserPayload: any) => {
-        console.log('Getting the albums of ' + responseWithUserPayload.user.spotify.email);
-        this._spotifyClientService.requestAlbumsOwnedByAnArtist(responseWithUserPayload.user)
-          .then( (listOfSpotifyAlbumObjects: any) =>
-                    this.saveAndRedirect(responseWithUserPayload, listOfSpotifyAlbumObjects) );
-      });
+      }).then( (responseWithUserPayload: any) => this.getAlbums(responseWithUserPayload) );
       // TODO: 
       // 1. request the profile data here. Will get the tokens and the user object
       // 1.1 Get the albums of this user (uri, name, id, href, release_date)
@@ -54,11 +49,13 @@ export class CallbackComponent implements OnInit {
   }
 
   getAlbums(responseWithUserPayload: any) {
-
+    console.log('Getting the albums of ' + responseWithUserPayload.user.spotify.email);
+    this._spotifyClientService.requestAlbumsOwnedByAnArtist(responseWithUserPayload.user)
+      .then( (listOfSpotifyAlbumObjects: any) => this.saveToUserAndRedirect(responseWithUserPayload,
+                                                                      listOfSpotifyAlbumObjects) );
   }
 
-  saveAndRedirect(responseWithUserPayload: any, listOfSpotifyAlbumObjects: any) {
-    // 
+  saveToUserAndRedirect(responseWithUserPayload: any, listOfSpotifyAlbumObjects: any) {
       console.log('List of albums: ', listOfSpotifyAlbumObjects);
 
       const spotifyObject = {
@@ -69,13 +66,10 @@ export class CallbackComponent implements OnInit {
         albums: listOfSpotifyAlbumObjects.albums.items
       };
       console.log('Spotify Object to save: ', spotifyObject);
-      
       // Save the spotify profile and the albums to user service object
       this.userService.user.spotify = spotifyObject;
-      
       // Redirect to the profile page to setup and display the spotify widget
       this.router.navigate(['/profile', 'overview']);
-    // }
   }
 
   extractSpotifyCode(): string {
