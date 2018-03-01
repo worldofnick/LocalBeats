@@ -29,22 +29,22 @@ module.exports = function(app) {
         .post(spotifyHandler.refreshAccessTokenMiddleware, spotifyHandler.getAllAlbumsOfArtist)
 
     // Routes using the SPOTIFY_USERNAME
-	app.route('/api/users/spotify/:username/playlists/')
-        .get(spotifyHandler.getAllPlaylists);
+	// app.route('/api/users/spotify/:username/playlists/')
+    //     .get(spotifyHandler.getAllPlaylists);
         
-    app.route('/api/users/spotify/:username/playlist/first/')
-        .get(spotifyHandler.getFirstPlaylist);
+    // app.route('/api/users/spotify/:username/playlist/first/')
+    //     .get(spotifyHandler.getFirstPlaylist);
         
-    app.route('/api/users/spotify/:username/playlist/:playlist_id')
-        .get(spotifyHandler.getPlaylistByID);
+    // app.route('/api/users/spotify/:username/playlist/:playlist_id')
+    //     .get(spotifyHandler.getPlaylistByID);
         
-    // Routes using the normal UID
-    app.route('/api/users/spotify/users/:uid/playlists/')
-        .get(spotifyHandler.getAllPlaylistsByUID);
+    // // Routes using the normal UID
+    // app.route('/api/users/spotify/users/:uid/playlists/')
+    //     .get(spotifyHandler.getAllPlaylistsByUID);
 
-    app.route('/api/users/spotify/users/:uid/playlist/first')
-        .get(spotifyHandler.getFirstPlaylistByUID);
+    // app.route('/api/users/spotify/users/:uid/playlist/first')
+    //     .get(spotifyHandler.getFirstPlaylistByUID);
 
-    app.route('/api/users/spotify/users/:uid/playlist/:playlist_id')
-        .get(spotifyHandler.getPlaylistByUIDandPID);
+    // app.route('/api/users/spotify/users/:uid/playlist/:playlist_id')
+    //     .get(spotifyHandler.getPlaylistByUIDandPID);
 };
