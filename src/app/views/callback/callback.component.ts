@@ -36,24 +36,8 @@ export class CallbackComponent implements OnInit {
       }).then( (responseWithUserPayload: any) => {
         console.log('Getting the albums of ' + responseWithUserPayload.user.spotify.email);
         this._spotifyClientService.requestAlbumsOwnedByAnArtist(responseWithUserPayload.user)
-          .then( (listOfSpotifyAlbumObjects: any) => {
-            console.log('List of albums: ', listOfSpotifyAlbumObjects);
-
-            const spotifyObject = {
-              email: responseWithUserPayload.user.spotify.email,
-              id: responseWithUserPayload.user.spotify.id,
-              uri: responseWithUserPayload.user.spotify.uri,
-              href: responseWithUserPayload.user.spotify.href,
-              albums: listOfSpotifyAlbumObjects.albums.items
-            };
-            console.log('Spotify Object to save: ', spotifyObject);
-            
-            // Save the spotify profile and the albums to user service object
-            this.userService.user.spotify = spotifyObject;
-            
-            // Redirect to the profile page to setup and display the spotify widget
-            this.router.navigate(['/profile', 'overview']);
-          });
+          .then( (listOfSpotifyAlbumObjects: any) =>
+                    this.saveAndRedirect(responseWithUserPayload, listOfSpotifyAlbumObjects) );
       });
       // TODO: 
       // 1. request the profile data here. Will get the tokens and the user object
@@ -63,6 +47,35 @@ export class CallbackComponent implements OnInit {
 
       // 4. Then in profile/ code, since user now has spotify.id, can request playlist and load the widget
     });
+  }
+
+  getProfile(tokens: any) {
+
+  }
+
+  getAlbums(responseWithUserPayload: any) {
+
+  }
+
+  saveAndRedirect(responseWithUserPayload: any, listOfSpotifyAlbumObjects: any) {
+    // 
+      console.log('List of albums: ', listOfSpotifyAlbumObjects);
+
+      const spotifyObject = {
+        email: responseWithUserPayload.user.spotify.email,
+        id: responseWithUserPayload.user.spotify.id,
+        uri: responseWithUserPayload.user.spotify.uri,
+        href: responseWithUserPayload.user.spotify.href,
+        albums: listOfSpotifyAlbumObjects.albums.items
+      };
+      console.log('Spotify Object to save: ', spotifyObject);
+      
+      // Save the spotify profile and the albums to user service object
+      this.userService.user.spotify = spotifyObject;
+      
+      // Redirect to the profile page to setup and display the spotify widget
+      this.router.navigate(['/profile', 'overview']);
+    // }
   }
 
   extractSpotifyCode(): string {
