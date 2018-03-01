@@ -10,7 +10,7 @@ import { User } from 'app/models/user';
 @Injectable()
 export class SpotifyClientService {
 
-  public authorizeConnection: string = environment.apiURL + 'api/spotify'; 
+  public authorizeConnection: string = environment.apiURL + 'api/spotify';
   private headers: Headers = new Headers({ 'Content-Type': 'application/json' });
 
   constructor(private http: Http, private _socketService: SocketService, private _userService: UserService) { }
@@ -53,6 +53,22 @@ export class SpotifyClientService {
           const userObjectWithProfileData = response.json();
           console.log('User Object with Profile recieved: ', userObjectWithProfileData);
           return userObjectWithProfileData;
+        })
+        .catch(this.handleError);
+  }
+
+  public requestAlbumsOwnedByAnArtist(userObject: any): Promise<any> {
+    // const current = this.authorizeConnection + '/artists/' + userObject.spotify.id + '/albums';
+    const current = this.authorizeConnection + '/artists/0TnOYISbd1XYRBk9myaseg/albums';
+    console.log('Spotify Token server url: ', current);
+    return this.http.post(current, {user: this._userService.user,
+                                    access_token: userObject.accessToken,
+                                    refresh_token: userObject.refreshToken}, { headers: this.headers })
+        .toPromise()
+        .then((response: Response) => {
+          const listOfSpotifyAlbumObjects = response.json();
+          console.log('Albums recieved: ', listOfSpotifyAlbumObjects);
+          return listOfSpotifyAlbumObjects;
         })
         .catch(this.handleError);
   }
