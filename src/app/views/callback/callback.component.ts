@@ -19,42 +19,48 @@ export class CallbackComponent implements OnInit {
 
   ngOnInit() {
     this.spotifyCode = this.extractSpotifyCode();
-    this.getTokens();
+    this.getTokensProfileAndAlbums();
   }
 
-  getTokens() {
+  /**
+   * Gets the spotify tokens, then profile data, then albums and
+   * saves it to the logged in user object.
+   */
+  getTokensProfileAndAlbums() {
     this._spotifyClientService.requestRefreshAndAccessTokens(this.spotifyCode).then((tokens: any) => {
       console.log('Callback token data: ', tokens);
       return tokens;
-    }).then( (tokens: any) => {
-      console.log('Next promise\'s token data received: ', tokens);
-
-      // Get the spotify profile data of this user
-      this._spotifyClientService.requestSpotifyMyProfile(tokens).then((responseWithUserPayload: any) => {
-        console.log('My spotify profile: ', responseWithUserPayload);
-        return responseWithUserPayload;
-      }).then( (responseWithUserPayload: any) => this.getAlbums(responseWithUserPayload) );
-      // TODO: 
-      // 1. request the profile data here. Will get the tokens and the user object
-      // 1.1 Get the albums of this user (uri, name, id, href, release_date)
-      // 2. save the user object to this._userService.user
-      // 3. Redirect
-
-      // 4. Then in profile/ code, since user now has spotify.id, can request playlist and load the widget
-    });
+    }).then( (tokens: any) => this.getSpotifyProfileDataOfMe(tokens));
   }
 
-  getProfile(tokens: any) {
-
+  /**
+   * Get the spotify profile data of this user
+   * @param tokens access_token, refresh_token, expires_in
+   */
+  getSpotifyProfileDataOfMe(tokens: any) {
+    console.log('Next promise\'s token data received: ', tokens);
+    this._spotifyClientService.requestSpotifyMyProfile(tokens).then((responseWithUserPayload: any) => {
+      console.log('My spotify profile: ', responseWithUserPayload);
+      return responseWithUserPayload;
+    }).then((responseWithUserPayload: any) => this.getAlbumsOfMe(responseWithUserPayload));
   }
 
-  getAlbums(responseWithUserPayload: any) {
+  /**
+   * Get all the albums/singles owned/created by me in US market
+   * @param responseWithUserPayload contains user object with spotify id, tokens
+   */
+  getAlbumsOfMe(responseWithUserPayload: any) {
     console.log('Getting the albums of ' + responseWithUserPayload.user.spotify.email);
     this._spotifyClientService.requestAlbumsOwnedByAnArtist(responseWithUserPayload.user)
       .then( (listOfSpotifyAlbumObjects: any) => this.saveToUserAndRedirect(responseWithUserPayload,
                                                                       listOfSpotifyAlbumObjects) );
   }
 
+  /**
+   * Saves the spotify profile and the list of albums in user object
+   * @param responseWithUserPayload contains the spotify profile data
+   * @param listOfSpotifyAlbumObjects contains the list of albums
+   */
   saveToUserAndRedirect(responseWithUserPayload: any, listOfSpotifyAlbumObjects: any) {
       console.log('List of albums: ', listOfSpotifyAlbumObjects);
 
@@ -72,6 +78,10 @@ export class CallbackComponent implements OnInit {
       this.router.navigate(['/profile', 'overview']);
   }
 
+  /**
+   * Extracts and returns the spotify temp code from the URL after
+   *  authentication callback from the spotify website
+   */
   extractSpotifyCode(): string {
     const callbackURL = window.location.href;
     console.log('URL: ', callbackURL);
@@ -90,5 +100,4 @@ export class CallbackComponent implements OnInit {
       }
     }
   }
-
 }
