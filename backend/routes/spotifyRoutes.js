@@ -25,6 +25,9 @@ module.exports = function(app) {
     app.route('/api/spotify/me')
         .post(spotifyHandler.refreshAccessTokenMiddleware, spotifyHandler.getMeAndSavetoDB)
 
+    app.route('/api/spotify/artists/:artistID/albums')
+        .post(spotifyHandler.refreshAccessTokenMiddleware, spotifyHandler.getAllAlbumsOfArtist)
+
     // Routes using the SPOTIFY_USERNAME
 	app.route('/api/users/spotify/:username/playlists/')
         .get(spotifyHandler.getAllPlaylists);

@@ -27,10 +27,12 @@ export class CallbackComponent implements OnInit {
       console.log('Callback token data: ', data);
       return data;
     }).then( (data: any) => {
-      console.log('Next then promise token data: ', data);
+      console.log('Next promise\'s token data received: ', data);
+
 
       // TODO: 
       // 1. request the profile data here. Will get the tokens and the user object
+      // 1.1 Get the albums of this user (uri, name, id, href, release_date)
       // 2. save the user object to this._userService.user
       // 3. Redirect
 
