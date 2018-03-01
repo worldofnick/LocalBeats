@@ -20,7 +20,7 @@ export class User {
     public stripeAccountId: string;
     
     // Music properties
-    public spotify: {
+    public spotify?: {
         email: string,
         id: string,
         uri: string,
