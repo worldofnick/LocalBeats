@@ -152,6 +152,36 @@ exports.spotifyAuthorizeClient = function (req, res) {
 }
 
 /**
+ * Gets all the albums and singles created/owned by the passed artist and 
+ * returns the original spotify response
+ * @param {*} req Access, refresh tokens from the middlware
+ * @param {*} res JSON payload containing all the albums
+ */
+exports.getAllAlbumsOfArtist = function (req, res) {
+  const artistId = req.params.artistID;
+ 
+  var authOptions = {
+    url : 'https://api.spotify.com/v1/artists/' + req.params.artistID + '/albums',
+    headers: {
+      'Authorization': 'Bearer ' + req.body.access_token,
+      'album_type' : 'album,single',
+      'market' : 'US'
+    }
+  }
+  request.get(authOptions, function(err, response, body) {
+    if (err === null && response.statusCode === 200) {
+      res.send( {
+          albums: JSON.parse(body)
+        });
+    } else {
+      res.status(530).send({ message: 'Error getting albums from the artist:' +req.params.artistID,
+                             original_response: JSON.parse(response.body)});
+      console.log('Error getting spotify user albums', err, ', Code: ', response.statusCode, response.body);    
+    }
+  });
+}
+
+/**
  * Retrieve server side only access token
  */
 exports.grantClientCredentials = function () {
