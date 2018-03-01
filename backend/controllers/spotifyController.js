@@ -131,7 +131,7 @@ exports.getAccessRefreshTokens = function (req, res) {
         }
       );
     } else {
-      console.log('Error getting spotify tokens', err, ', Code: ', response.statusCode);
+      console.log('Error getting spotify tokens', err, ', Code: ', response.statusCode, response.body);
     }
   });
 }
