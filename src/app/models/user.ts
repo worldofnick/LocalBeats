@@ -7,7 +7,7 @@ export class User {
     public firstName: string;
     public lastName: string;
     public email: string;
-    public spotifyID: string;
+    public spotifyID: string;       //TODO: remove later. DEPRECATED
     public password: string;
     public genres: string[];
     public isArtist: boolean;
@@ -18,6 +18,15 @@ export class User {
     public state: string;
     public location: number[];
     public stripeAccountId: string;
+    
+    // Music properties
+    public spotify: {
+        email: string,
+        id: string,
+        uri: string,
+        href: string,
+        albums: string[]
+    };
 
     // Chat properties
     public isOnline: boolean = false;
