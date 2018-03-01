@@ -25,7 +25,20 @@ export class CallbackComponent implements OnInit {
   getTokens() {
     this._spotifyClientService.requestRefreshAndAccessTokens(this.spotifyCode).then((data: any) => {
       console.log('Callback token data: ', data);
-      this.router.navigate(['/profile', 'settings']);  //TODO: change to profile/settings after persistent sign in
+      return data;
+    }).then( (data: any) => {
+      console.log('Next then promise token data: ', data);
+
+      // TODO: 
+      // 1. request the profile data here. Will get the tokens and the user object
+      // 2. save the user object to this._userService.user
+      // 3. Redirect
+
+      // 4. Then in profile/ code, since user now has spotify.id, can request playlist and load the widget
+
+      
+      // this.router.navigate(['/profile', 'settings']);  //TODO: change to profile/settings after persistent sign in
+      
       //TODO: save it to localStorage
       // TODO: Chnage proifle button to linked (check)
 
