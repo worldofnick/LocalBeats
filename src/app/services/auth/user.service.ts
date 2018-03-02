@@ -32,12 +32,12 @@ export class UserService {
     // ================================================
     // Session Persistence
     // ================================================
-    
+
     // Authentication Persistence Properties
     jwtHelper: JwtHelper = new JwtHelper();
     loggedIn: boolean;
-    loggedIn$ = new BehaviorSubject<boolean>(this.loggedIn);
-    public user: User = undefined;
+    // loggedIn$ = new BehaviorSubject<boolean>(this.loggedIn);
+    public user: User = null;
 
     /**
      * Checks the user session and sets/deletes it.
@@ -53,11 +53,13 @@ export class UserService {
         if (this.isAuthenticated()) {
             this.user = JSON.parse(localStorage.getItem('loggedInUser'));
             this.setLoggedIn(true);
-            this.initIoConnection();    // Initial socket event listeners
+            this.notifyNewUserLoginToServer(this.user);
+
             // TODO: add notification stuff
         } else {
             this.logout();
         }
+        this.initIoConnection();    // Initial socket event listeners
     }
 
     public setUser(newUser: User) {
@@ -90,7 +92,7 @@ export class UserService {
      * @param value true or false (logged in or not)
      */
     setLoggedIn(value: boolean) {
-        this.loggedIn$.next(value);     // Update login status subject
+        // this.loggedIn$.next(value);     // Update login status subject
         this.loggedIn = value;
     }
 
@@ -100,7 +102,7 @@ export class UserService {
      */
     public isAuthenticated(): boolean {
         if (localStorage.getItem('jwtToken')) {
-            return this.jwtHelper.isTokenExpired(localStorage.getItem('jwtToken'));
+            return !this.jwtHelper.isTokenExpired(localStorage.getItem('jwtToken'));
         } else {
             return false;
         }
@@ -117,7 +119,7 @@ export class UserService {
         // Remove tokens and profile and update login status subject
         localStorage.removeItem('jwtToken');
         localStorage.removeItem('loggedInUser');
-        this.user = undefined;
+        this.user = null;
         this.setLoggedIn(false);
     }
 
@@ -292,7 +294,7 @@ export class UserService {
                 }
 
                 this._socketService.socket.emit('tellTopBar', temp.length);
-                // TODO: Improvement Suggestion: Also create a notification_request_event 
+                // TODO: Improvement Suggestion: Also create a notification_request_event
                 // to get notifications and the total count via socket call.
                 return temp.length;
             })
