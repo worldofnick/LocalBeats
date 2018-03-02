@@ -1,4 +1,4 @@
-import { Injectable, OnDestroy, OnInit } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Http, Headers, RequestOptions, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
@@ -18,7 +18,7 @@ const httpOptions = {
 };
 
 @Injectable()
-export class UserService implements OnInit, OnDestroy {
+export class UserService implements OnDestroy {
     // Request properties
     public connection: string = environment.apiURL + 'api/auth';
     public userConnection: string = environment.apiURL + 'api/users';
@@ -60,24 +60,15 @@ export class UserService implements OnInit, OnDestroy {
         } else {
             this.logout();
         }
+        this.initIoConnection();
     }
 
     /**
-     * Sets up initial socket event listeners
-     */
-    ngOnInit() {
-        this.ioConnection = this._socketService.onEvent(SocketEvent.NEW_LOG_IN)
-            .subscribe((message: Message) => {
-                // this.messages.push(message);
-                console.log('Server Msg to auth.component ', message);
-            });
-    }
-
-    /**
-     * Destroy all the subscriptions here
+     * It unsubscribes from all the subscriptions in it
      */
     ngOnDestroy() {
-        // Destroys every subscription inside ngOnInit automatically
+        // Destroy socket event listener
+        this.ioConnection.unsubscribe();
     }
 
     public setUser(newUser: User) {
@@ -130,7 +121,7 @@ export class UserService implements OnInit, OnDestroy {
      * Checks and returns true if this user is
      *  authenticated AND the object is done loading
      */
-    public iAmDoneLoading(): boolean {
+    public amIDoneLoading(): boolean {
         return (this.isAuthenticated() && this.user) ? true : false;
     }
 
