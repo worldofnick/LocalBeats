@@ -29,6 +29,11 @@ export class ProfileSettingsComponent implements OnInit {
   eventsList: string[] = ['wedding', 'birthday', 'business'];
   settingsForm: FormGroup;
   nowArtist = false;
+
+  imageChangedEvent: any = '';
+  croppedImage: any = '';
+  showCropper: boolean = false;
+
   public uploader: FileUploader = new FileUploader({ url: 'upload_url' });
   public hasBaseDropZoneOver: boolean = false;
   constructor(private route: ActivatedRoute, private userService: UserService, private router : Router,
@@ -92,18 +97,13 @@ export class ProfileSettingsComponent implements OnInit {
     });
   }
 
-
-  onChange(event: EventTarget) {
-      let eventObj: MSInputMethodContext = <MSInputMethodContext> event;
-      let target: HTMLInputElement = <HTMLInputElement> eventObj.target;
-      let files: FileList = target.files;
-      let file: File = files[0];
-      let blob = file as Blob;
-      if (!blob) {
-        return;
-      }
+  private prepareBlob() {
+    fetch(this.croppedImage).then(res => res.blob()).then(blob => this.uploadImage(blob));
+  }
+ 
+  uploadImage(blob: Blob) {
       this.progressBar.mode = 'indeterminate';
-      this.imgurService.uploadToImgur(file).then(link => {
+      this.imgurService.uploadToImgur(blob).then(link => {
         this.user.profilePicUrl = link as string;
       }).then(link => {
           // update the image view
@@ -111,13 +111,25 @@ export class ProfileSettingsComponent implements OnInit {
             this.user = user;
             this.userService.user = this.user;
             this.progressBar.mode = 'determinate';
+            this.showCropper = false;
+            this.croppedImage = null;
             this._socketService.sendToProfile('updateProfile', this.user);
           });
         }).catch(err => {
           console.log(err);
           this.progressBar.mode = 'determinate';
-          //this.router.navigate(['/profile']); //this will go back to my events.
+          this.showCropper = false;
+          this.croppedImage = null;
       });
+  }
+
+  fileChangeEvent(event: EventTarget) {
+    this.showCropper = true;
+    this.imageChangedEvent = event;
+  }
+
+  imageCropped(image: String) {
+    this.croppedImage = image;
   }
 
    // STRIPE

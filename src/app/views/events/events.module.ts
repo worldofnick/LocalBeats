@@ -48,6 +48,8 @@ import { CreateEventsComponent } from './create-events/create-events.component';
 import { EventRoutes } from "./events.routing";
 import { EventSingletonComponent } from './event-singleton/event-singleton.component';
 import { CommonPipesModule } from "../../pipes/common/common-pipes.module";
+import { ImageCropperModule } from 'ngx-image-cropper'
+import { ImageCropperComponent } from 'ngx-image-cropper/src/image-cropper.component';
 
 @NgModule({
   imports: [
@@ -106,6 +108,7 @@ import { CommonPipesModule } from "../../pipes/common/common-pipes.module";
     MatToolbarModule,
     MatTooltipModule,
     CommonPipesModule,
+    ImageCropperModule,
     RouterModule.forChild(EventRoutes)
   ],
   declarations: [CreateEventsComponent, EventSingletonComponent],
