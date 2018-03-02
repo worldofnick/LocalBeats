@@ -110,8 +110,12 @@ export class UserService {
         }
     }
 
+    /**
+     * Checks and returns true if this user is
+     *  authenticated AND the object is done loading
+     */
     public iAmDoneLoading(): boolean {
-        return true;
+        return (this.isAuthenticated() && this.user) ? true : false;
     }
 
     /**
