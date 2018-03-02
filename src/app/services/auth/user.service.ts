@@ -83,7 +83,7 @@ export class UserService implements OnDestroy {
      * notifies the server that a user has logged in
      */
     private _setSession(jwtAccessToken, user) {
-        if (jwtAccessToken !== null || jwtAccessToken !== undefined) {
+        if (jwtAccessToken !== null && jwtAccessToken !== undefined) {
             console.log('JWT Access Token: ', jwtAccessToken);
             localStorage.setItem('jwtToken', jwtAccessToken);
         }
@@ -110,11 +110,13 @@ export class UserService implements OnDestroy {
      *  JWT expiration date (usually 1 whole day from the time of issue)
      */
     public isAuthenticated(): boolean {
-        if (localStorage.getItem('jwtToken')) {
-            return !this.jwtHelper.isTokenExpired(localStorage.getItem('jwtToken'));
-        } else {
+        let result;
+        try {
+            result = !this.jwtHelper.isTokenExpired(localStorage.getItem('jwtToken'));
+        } catch (error) {
             return false;
         }
+        return result;
     }
 
     /**
@@ -122,7 +124,7 @@ export class UserService implements OnDestroy {
      *  authenticated AND the object is done loading
      */
     public amIDoneLoading(): boolean {
-        return (this.isAuthenticated() && this.user) ? true : false;
+        return (this.isAuthenticated() && this.user !== null && this.user !== undefined ) ? true : false;
     }
 
     // ===============================================
@@ -136,7 +138,7 @@ export class UserService implements OnDestroy {
     public logout() {
         const current = this.connection + '/logout';
         console.log('LOGOUT USER: ', this.user);
-        if (this.user !== null) {
+        if (this.user !== null && this.user !== undefined) {
             return this.http.post(current, this.user, { headers: this.headers })
                 .toPromise()
                 .then((response: Response) => {
