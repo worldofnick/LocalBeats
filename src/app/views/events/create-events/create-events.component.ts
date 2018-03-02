@@ -122,18 +122,17 @@ export class CreateEventsComponent implements OnInit {
       // console.log(ID);
       this.updating = true;
     }
-    if(this.updating){
-      this.dateRange = [this.event.fromDate, this.event.toDate];
-    }else{
-      this.dateRange = [new Date(), new Date()];
-    }
+
+    this.dateRange = [new Date(), new Date()];
     this.setForm();
     if (this.updating) {
       this.eventService.getEventByEID(this.EID).then((eventEdit: Event) => {
         this.event = eventEdit;
+        this.dateRange = [this.event.fromDate, this.event.toDate];
+
         this.setForm();
 
-        //pre load maps input box
+        // pre load maps input box
        this.cityState = this.event.city + ',' + this.event.state + ', USA' ;
 
         for(let genre of this.genres){
@@ -145,10 +144,9 @@ export class CreateEventsComponent implements OnInit {
         }
       });
     }
-    
   }
 
-  setForm(){
+  setForm() {
     this.basicForm = this.formBuilder.group({
       eventName: new FormControl(this.event.eventName, [
         Validators.minLength(4),
@@ -162,7 +160,9 @@ export class CreateEventsComponent implements OnInit {
       ]),
       negotiable: new FormControl(this.event.negotiable, [
       ]),
-      date: new FormControl(this.dateRange),
+      date: new FormControl(this.dateRange, [
+        Validators.required
+      ]),
       eventDescription: new FormControl(this.event.description, [
         Validators.required
       ]),
@@ -291,11 +291,15 @@ export class CreateEventsComponent implements OnInit {
     this.event.fixedPrice = this.basicForm.get('fixedPrice').value;
     this.event.toDate = this.basicForm.get('date').value;
     this.event.negotiable = this.basicForm.get('negotiable').value;
+    if(this.event.negotiable == null){
+      this.event.negotiable = false;
+    }
     this.event.eventGenres = this.basicForm.get('genres').value;
     this.event.description = this.basicForm.get('eventDescription').value;
     this.event.hostUser = this.user;
     this.event.hostEmail = this.user.email;
-
+    this.event.fromDate = this.basicForm.get('date').value[0];
+    this.event.toDate = this.basicForm.get('date').value[1];
 
 
     if (!this.updating) {
@@ -304,7 +308,7 @@ export class CreateEventsComponent implements OnInit {
       this.eventService.createEvent(this.event).then((newEvent: Event) => {
         this.event = newEvent;
         this.eventService.event = this.event;
-        this.router.navigate(['/events', this.event._id]); //this will go to the page about the event
+        this.router.navigate(['/events', this.event._id]); // this will go to the page about the event
       });
     } else {
       // console.log("updating event", this.event);
@@ -313,7 +317,7 @@ export class CreateEventsComponent implements OnInit {
         this.event = newEvent;
 
         this.eventService.event = this.event;
-        this.router.navigate(['/events', this.event._id]); //this will go to the page about the event
+        this.router.navigate(['/events', this.event._id]); // this will go to the page about the event
       });
     }
   }

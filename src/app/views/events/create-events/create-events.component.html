@@ -55,7 +55,7 @@
             <mat-form-field class="full-width">
 
               <input matInput [selectMode]="'range'"
-                [owlDateTimeTrigger]="dtPicker3" [owlDateTime]="dtPicker3 "  formControlName="date" name="date" [formControl]="basicForm.controls['date']">
+                [owlDateTimeTrigger]="dtPicker3" [owlDateTime]="dtPicker3 " [formControl]="basicForm.controls['date']">
               <owl-date-time #dtPicker3></owl-date-time>
 
             </mat-form-field>
@@ -93,8 +93,8 @@
           </div>
           <!-- </div>
           </div> -->
-          <button *ngIf="!this.updating && agreed" mat-raised-button color="primary">Create Event</button>
-          <button *ngIf="this.updating && agreed" mat-raised-button color="primary">Update Event</button>
+          <button *ngIf="!this.updating && agreed" mat-raised-button color="primary" >Create Event</button>
+          <button *ngIf="this.updating && agreed" mat-raised-button color="primary" >Update Event</button>
         </mat-card-content>
       </mat-card>
     </div>
