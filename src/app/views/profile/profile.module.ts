@@ -2,6 +2,8 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { ImageCropperModule } from 'ngx-image-cropper'
+
 import { 
   MatSlideToggleModule,
   MatChipsModule,
@@ -90,6 +92,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     ChartsModule,
     FileUploadModule,
     CommonPipesModule,
+    ImageCropperModule,
     RouterModule.forChild(ProfileRoutes)
   ],
   declarations: [ConfirmPaymentDialog, RefundPaymentDialog, PaymentHistoryDialog, ProfileComponent, ProfileOverviewComponent, ProfileSettingsComponent, ProfileBlankComponent, ProfileEventsComponent, ProfileRequestComponent, ProfilePerformancesComponent],
