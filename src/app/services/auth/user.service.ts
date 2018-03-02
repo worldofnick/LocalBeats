@@ -99,7 +99,11 @@ export class UserService {
      *  JWT expiration date (usually 1 whole day from the time of issue)
      */
     public isAuthenticated(): boolean {
-        return this.jwtHelper.isTokenExpired(localStorage.getItem('jwtToken'));
+        if (localStorage.getItem('jwtToken')) {
+            return this.jwtHelper.isTokenExpired(localStorage.getItem('jwtToken'));
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -107,7 +111,9 @@ export class UserService {
      *  removes all the localStorage data, resets parameters
      */
     public logout() {
-        this.notifyUserLoggedOutToServer(this.user);
+        if (this.user) {
+            this.notifyUserLoggedOutToServer(this.user);
+        }
         // Remove tokens and profile and update login status subject
         localStorage.removeItem('jwtToken');
         localStorage.removeItem('loggedInUser');
