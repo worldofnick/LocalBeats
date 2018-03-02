@@ -184,7 +184,7 @@ export class UserService {
 
     public updatePassword(user: User): Promise<User> {
         const current = this.connection + '/passwordChange/' + user._id;
-        let newPassword: string = user.password;
+        const newPassword: string = user.password;
         return this.http.put(current, { 'newPassword': newPassword }, { headers: this.headers })
             .toPromise()
             .then((response: Response) => {
@@ -259,7 +259,7 @@ export class UserService {
     }
 
     private handleError(error: any): Promise<any> {
-        let errMsg = (error.message) ? error.message :
+        const errMsg = (error.message) ? error.message :
             error.status ? `${error.status} - ${error.statusText}` : 'Server error';
         console.error(errMsg); // log to console
         return Promise.reject(errMsg);
@@ -270,8 +270,8 @@ export class UserService {
     // =====================================
 
     private openDialog = function (uri, name, options, cb) {
-        var win = window.open(uri, name, options);
-        var interval = window.setInterval(function () {
+        let win = window.open(uri, name, options);
+        let interval = window.setInterval(function () {
             try {
                 if (!win || win.closed) {
                     window.clearInterval(interval);
@@ -284,8 +284,8 @@ export class UserService {
     };
 
     private toQueryString = function (obj) {
-        var parts = [];
-        for (var key in obj) {
+        let parts = [];
+        for (let key in obj) {
             if (obj.hasOwnProperty(key)) {
                 parts.push(encodeURIComponent(key) + '=' + encodeURIComponent(obj[key]));
             }
