@@ -13,6 +13,7 @@ import { Booking } from '../../models/booking';
 import { Event } from '../../models/event';
 import { Notification } from '../../models/notification';
 import { Router } from '@angular/router';
+import { SpotifyClientService } from '../../services/music/spotify-client.service';
 
 @Component({
   selector: 'app-profile',
@@ -41,7 +42,7 @@ export class ProfileComponent implements OnInit {
     private bookingService: BookingService,
     private eventService: EventService,
     private notificationService: NotificationService,
-    private _socketService: SocketService) {
+    private _socketService: SocketService, private _spotifyClientService: SpotifyClientService) {
 
      router.events.subscribe((url:any) => this.clickedOverview = router.url == "/profile/overview");
 
@@ -91,6 +92,8 @@ export class ProfileComponent implements OnInit {
     this._socketService.onEvent(SocketEvent.UPDATE_PROFILE).subscribe((user: User)=>{
       this.user = user;
     });
+
+    console.log('User object: ', this.userService.user);
   }
 
   clickedOver() {
@@ -108,5 +111,14 @@ export class ProfileComponent implements OnInit {
       this.router.navigate(['/chat']);
       this._socketService.send(Action.REQUEST_MSG_FROM_PROFILE_BUTTON, message);
     }
+  }
+
+  // ========================================
+  // Music corner methods
+  // ========================================
+  authorizeSpotify() {
+    this._spotifyClientService.authorizeSpotify().then((url: string) => {
+      window.open(url);
+    });
   }
 }
