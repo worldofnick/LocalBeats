@@ -25,7 +25,7 @@ export class User {
         id: string,
         uri: string,
         href: string,
-        albums: string[]
+        albums: any[]
     };
 
     // Chat properties
