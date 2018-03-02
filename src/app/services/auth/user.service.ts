@@ -36,7 +36,7 @@ export class UserService {
     // Authentication Persistence Properties
     jwtHelper: JwtHelper = new JwtHelper();
     loggedIn: boolean;
-    // loggedIn$ = new BehaviorSubject<boolean>(this.loggedIn);
+    loggedIn$ = new BehaviorSubject<boolean>(this.loggedIn);
     public user: User = null;
 
     /**
@@ -55,7 +55,9 @@ export class UserService {
             this.setLoggedIn(true);
             this.notifyNewUserLoginToServer(this.user);
 
-            // TODO: add notification stuff
+            // TODO: @Adam Should make new socket events calls for faster performance!!!
+            this.getNotificationsCountForUser(this.user._id);
+            this.getNotificationsForUser(this.user._id);
         } else {
             this.logout();
         }
@@ -92,7 +94,7 @@ export class UserService {
      * @param value true or false (logged in or not)
      */
     setLoggedIn(value: boolean) {
-        // this.loggedIn$.next(value);     // Update login status subject
+        this.loggedIn$.next(value);     // Update login status subject
         this.loggedIn = value;
     }
 
@@ -106,6 +108,10 @@ export class UserService {
         } else {
             return false;
         }
+    }
+
+    public iAmDoneLoading(): boolean {
+        return true;
     }
 
     /**
