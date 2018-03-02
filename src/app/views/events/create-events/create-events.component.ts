@@ -36,21 +36,15 @@ export class CreateEventsComponent implements OnInit {
   submitButtonText:string
   updating:Boolean
   cityState:string;
+
   public selectedMoment = new Date();
   public selectedMoment2 = new FormControl(new Date());
-  public selectedMoments = [new Date(2018, 1, 12, 10, 30), new Date(2018, 3, 21, 20, 30)];
+  // public dateRange = [new Date(2018, 1, 12, 10, 30), new Date(2018, 3, 21, 20, 30)];
+  public dateRange;
+
 
 
   agreed = false;
-  eventDescription: string = `<h1>Your Event Description</h1>
-  <p><a href="http://mhrafi.com" target="_blank"><strong>MH Rafi</strong></a></p>
-  <p><br></p><p><strong >Lorem Ipsum</strong>
-  <span>
-  &nbsp;is simply dummy text of the printing and typesetting industry. 
-  Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a 
-  galley of type and scrambled it to make a type specimen book. It has survived not only five centuries
-  </span></p>`;
-
 
   public place: google.maps.places.PlaceResult
   zoom: number;
@@ -101,6 +95,7 @@ export class CreateEventsComponent implements OnInit {
               
   ngOnInit() {
 
+    
     this.event.eventType = "Wedding"
   
     // this.openSnackBar();
@@ -126,6 +121,11 @@ export class CreateEventsComponent implements OnInit {
     } else {
       // console.log(ID);
       this.updating = true;
+    }
+    if(this.updating){
+      this.dateRange = [this.event.fromDate, this.event.toDate];
+    }else{
+      this.dateRange = [new Date(), new Date()];
     }
     this.setForm();
     if (this.updating) {
@@ -162,7 +162,7 @@ export class CreateEventsComponent implements OnInit {
       ]),
       negotiable: new FormControl(this.event.negotiable, [
       ]),
-      date: new FormControl(),
+      date: new FormControl(this.dateRange),
       eventDescription: new FormControl(this.event.description, [
         Validators.required
       ]),
