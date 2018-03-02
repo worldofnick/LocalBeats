@@ -43,6 +43,7 @@ export class UserService {
         if (this.isAuthenticated()) {
             const token = localStorage.getItem('jwtToken');
             const user: User = JSON.parse(localStorage.getItem('loggedInUser'));
+            
             this._setSession(token, user);
             this.getNotificationsCountForUser(user._id);
             this.getNotificationsForUser(user._id);
@@ -74,13 +75,23 @@ export class UserService {
     private _setSession(jwtAccessToken, user) {
         console.log('JWT Access Token: ', jwtAccessToken);
         console.log('Logged in user: ', user);
+
         localStorage.setItem('jwtToken', jwtAccessToken);
         localStorage.setItem('loggedInUser', JSON.stringify(user));
         this.user = user;
         this.accessToken = jwtAccessToken;
-
+    
         this.notifyNewUserLoginToServer(user);      //TODO: later move it to signIn() method only for performance issues
         this.setLoggedIn(true);
+
+        // this.getUserByID(user._id).then( (gottenUser: User) => {
+        //     localStorage.setItem('loggedInUser', JSON.stringify(gottenUser));
+        //     this.user = gottenUser;
+        //     this.accessToken = jwtAccessToken;
+    
+        //     this.notifyNewUserLoginToServer(gottenUser);      //TODO: later move it to signIn() method only for performance issues
+        //     this.setLoggedIn(true);
+        // } );
     }
 
     /**
@@ -97,7 +108,7 @@ export class UserService {
         if (user !== null) {
             this.notifyUserLoggedOutToServer(user); //TODO: later move it to logout() method only for performance issues
         }
-        this.setLoggedIn(true);
+        this.setLoggedIn(false);
     }
 
     /**
@@ -112,9 +123,16 @@ export class UserService {
         if (jwtToken === null) {
             return false;
         } else {
+            // TODO: add waiting to load user object here
             this.accessToken = jwtToken;
             return true;
         }
+    }
+
+    public setUser(newUser: User) {
+        localStorage.setItem('loggedInUser', JSON.stringify(newUser));
+        // Acts a validation check if assigning from local storage
+        this.user = JSON.parse(localStorage.getItem('loggedInUser'));
     }
 
     // ===============================================
@@ -129,6 +147,7 @@ export class UserService {
             .toPromise()
             .then((response: Response) => {
                 const data = response.json();
+                this.user = data.user as User;
                 this._setSession(data.token, (data.user as User));
 
                 this.notifyServerToAddGreetBot(this.user);
@@ -146,6 +165,7 @@ export class UserService {
             .then((response: Response) => {
                 const data = response.json();
                 this.user = data.user as User;
+                this._setSession(this.accessToken, this.user);
                 return this.user
             })
             .catch(this.handleError);
@@ -160,6 +180,7 @@ export class UserService {
             .toPromise()
             .then((response: Response) => {
                 const data = response.json();
+                this.user = data.user as User;
                 this._setSession(data.token, (data.user as User));
 
                 return this.user;
@@ -181,8 +202,6 @@ export class UserService {
             .toPromise()
             .then((response: Response) => {
                 const data = response.json();
-                // this.accessToken = data.token;
-                // sessionStorage.setItem('token', JSON.stringify({ accessToken: this.accessToken }))
                 this.user = data.user as User;
                 return this.user;
             })
@@ -202,9 +221,9 @@ export class UserService {
             .then((response: Response) => {
                 const data = response.json();
                 // this.accessToken = data.token;
-                // console.log(this.accessToken)
+                console.log('Got user from server: ', data.user);
                 let temp = data.user as User;
-                return temp
+                return temp;
             })
             .catch(this.handleError);
     }
