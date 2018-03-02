@@ -1,5 +1,4 @@
-// 'use strict';
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy, OnInit } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Http, Headers, RequestOptions, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
@@ -19,7 +18,7 @@ const httpOptions = {
 };
 
 @Injectable()
-export class UserService {
+export class UserService implements OnInit, OnDestroy {
     // Request properties
     public connection: string = environment.apiURL + 'api/auth';
     public userConnection: string = environment.apiURL + 'api/users';
@@ -61,7 +60,24 @@ export class UserService {
         } else {
             this.logout();
         }
-        this.initIoConnection();    // Initial socket event listeners
+    }
+
+    /**
+     * Sets up initial socket event listeners
+     */
+    ngOnInit() {
+        this.ioConnection = this._socketService.onEvent(SocketEvent.NEW_LOG_IN)
+            .subscribe((message: Message) => {
+                // this.messages.push(message);
+                console.log('Server Msg to auth.component ', message);
+            });
+    }
+
+    /**
+     * Destroy all the subscriptions here
+     */
+    ngOnDestroy() {
+        // Destroys every subscription inside ngOnInit automatically
     }
 
     public setUser(newUser: User) {
@@ -298,7 +314,7 @@ export class UserService {
     // ===========================================
 
     public getNotificationsCountForUser(ID: any): Promise<Number> {
-        let userConnection: string = environment.apiURL + 'api/notification';
+        const userConnection: string = environment.apiURL + 'api/notification';
         const current = userConnection + '/' + ID;
         return this.http.get(current)
             .toPromise()
@@ -319,7 +335,7 @@ export class UserService {
     }
 
     public getNotificationsForUser(ID: any): Promise<Notification[]> {
-        let userConnection: string = environment.apiURL + 'api/notification';
+        const userConnection: string = environment.apiURL + 'api/notification';
         const current = userConnection + '/' + ID;
         return this.http.get(current)
             .toPromise()
