@@ -292,7 +292,7 @@ export class CreateEventsComponent implements OnInit {
     this.event.fixedPrice = this.basicForm.get('fixedPrice').value;
     this.event.toDate = this.basicForm.get('date').value;
     this.event.negotiable = this.basicForm.get('negotiable').value;
-    if(this.event.negotiable == null){
+    if(this.event.negotiable == null) { 
       this.event.negotiable = false;
     }
     this.event.eventGenres = this.basicForm.get('genres').value;

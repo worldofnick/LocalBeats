@@ -34,12 +34,6 @@ import {
 export class AppCalendarComponent implements OnInit {
   view = 'month';
   viewDate = new Date();
-  @ViewChild('modalContent') modalContent: TemplateRef<any>;
-  dialogRef;
-
-  constructor(public dialogBox: MatDialog, private eventService: EventService, 
-    private userService: UserService, private bookingService: BookingService,
-    private router: Router) { }
 
   events: CalendarEvent[] = [];
   userEvents: Event[];
@@ -68,11 +62,40 @@ export class AppCalendarComponent implements OnInit {
     onClick: ({ event }: { event: CalendarEvent }): void => {
       this.handleEvent('Edited', event);
     }
-  }];
+  },
+  {
+    label: '<i class="material-icons icon-sm">event_available</i>',
+    onClick: ({ event }: { event: CalendarEvent }): void => {
+      this.handleEvent('Events', event);
+    }
+  }
+    ]  ;
+
+  bookingActions: CalendarEventAction[] = [{
+    label: '<i class="material-icons icon-sm">visibility</i>',
+    onClick: ({ event }: { event: CalendarEvent }): void => {
+      this.handleEvent('Singleton', event);
+    }
+  },
+  {
+    label: '<i class="material-icons icon-sm">event_note</i>',
+    onClick: ({ event }: { event: CalendarEvent }): void => {
+      this.handleEvent('Bookings', event);
+    }
+  }
+
+];
 
   refresh: Subject<any> = new Subject();
 
   activeDayIsOpen: boolean = true;
+  @ViewChild('modalContent') modalContent: TemplateRef<any>;
+  dialogRef;
+
+  constructor(public dialogBox: MatDialog, private eventService: EventService,
+    private userService: UserService, private bookingService: BookingService,
+    private router: Router) { }
+
 
   ngOnInit() {
     this.eventService.getEventsByUID(this.userService.user._id).then( (eventList: Event[]) => {
@@ -95,10 +118,13 @@ export class AppCalendarComponent implements OnInit {
               start: subDays(booking.eventEID.fromDate, 0),
               end: subDays(booking.eventEID.toDate, 0),
               title: booking.eventEID.eventName,
-              color: this.colors.blue,
+              color: this.colors.yellow,
+              actions: this.bookingActions,
+              meta: booking.eventEID._id
             };
             this.events.push(calendarEvent);
           }
+          this.refresh.next();
         });
       }
 
@@ -106,37 +132,18 @@ export class AppCalendarComponent implements OnInit {
 
   }
 
-  // events: CalendarEvent[] = [{
-  //   start: subDays(startOfDay(new Date()), 1),
-  //   end: addDays(new Date(), 1),
-  //   title: 'A 3 day event',
-  //   color: this.colors.red,
-  //   actions: this.actions
-  // }, {
-  //   start: startOfDay(new Date()),
-  //   title: 'An event with no end date',
-  //   color: this.colors.yellow,
-  //   actions: this.actions
-  // }, {
-  //   start: subDays(endOfMonth(new Date()), 3),
-  //   end: addDays(endOfMonth(new Date()), 3),
-  //   title: 'A long event that spans 2 months',
-  //   color: this.colors.blue
-  // }, {
-  //   start: addHours(startOfDay(new Date()), 2),
-  //   end: new Date(),
-  //   title: 'A draggable and resizable event',
-  //   color: this.colors.yellow,
-  //   actions: this.actions,
-  //   resizable: {
-  //     beforeStart: true,
-  //     afterEnd: true
-  //   },
-  //   draggable: true
-  // }];
 
   handleEvent(action: string, event: CalendarEvent): void {
-    this.router.navigate(['/events', event.meta]); // this will go to the page about the event
+    if (action == 'Edited') {
+      this.router.navigate(['/events', 'update', event.meta]); // this will go to the page about the event
+    } else if (action == 'Singleton') {
+      this.router.navigate(['/events', event.meta]); // this will go to the page about the event
+    } else if (action == 'Bookings') {
+      this.router.navigate(['/profile', 'performances']); // this will go to the page about the event
+    } else if (action == 'Events') {
+      this.router.navigate(['/profile', 'events']); // this will go to the page about the event
+    }
+
     // this.modalData = { event, action };
     // this.dialogRef = this.dialogBox.open(this.modalContent);
   }
