@@ -110,7 +110,7 @@
         <mat-card-content>
 
           <div class="propic text-center">
-            <img *ngIf="!this.event.eventPicUrl" mat-card-image style="-webkit-user-select: none;
+            <img *ngIf="!this.event.eventPicUrl && !showCropper" mat-card-image style="-webkit-user-select: none;
           background-position: 0px 0px, 10px 10px;
           background-size: 20px 20px;
           background-image:linear-gradient(45deg, #eee 25%, transparent 25%, transparent 75%, #eee 75%, #eee 100%),
@@ -130,11 +130,25 @@
           max-height:512px;
           width:auto;
           height:auto;">
-            <mat-progress-bar mode="determinate" class="session-progress"></mat-progress-bar>
           </div>
           <div class="mb-1 mt-1">
             <!-- <p>Upload an event picture (optional)</p> -->
-            <input formControlName="imageUploaded" type="file" (change)="onChange($event)" accept=".jpg,.png" />
+            
+            <image-cropper 
+                *ngIf="showCropper"
+                [imageChangedEvent]="imageChangedEvent"
+                [maintainAspectRatio]="true"
+                [aspectRatio]="1 / 1"
+                [resizeToWidth]="256"
+                format="png,jpeg"
+                (imageCropped)="imageCropped($event)"
+            ></image-cropper>
+            
+            <mat-progress-bar mode="determinate" class="session-progress"></mat-progress-bar>
+         <p></p>
+         <input type="file" (change)="fileChangeEvent($event)" accept=".jpg,.png"/>
+         <p></p>
+            <a *ngIf="croppedImage" (click)="prepareBlob()" mat-raised-button >Crop and Upload</a>
           </div>
 
 
