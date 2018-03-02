@@ -1,10 +1,8 @@
+import { Routes } from '@angular/router';
+
 import { AdminLayoutComponent } from './components/common/layouts/admin-layout/admin-layout.component';
 import { AuthLayoutComponent } from './components/common/layouts/auth-layout/auth-layout.component';
 
-// Added CanActivate to the imports
-import { Routes, RouterModule, CanActivate } from '@angular/router';
-
-// Import the Auth Guard
 import { UserGuard } from './services/auth/user-guard.service';
 
 export const rootRouterConfig: Routes = [
@@ -34,44 +32,44 @@ export const rootRouterConfig: Routes = [
         data: { title: 'Dashboard', breadcrumb: 'DASHBOARD'}
       },
       {
-        path: 'profile',
-        loadChildren: './views/profile/profile.module#ProfileModule',
-        // canActivate: [UserGuard],
+        path: 'profile', 
+        loadChildren: './views/profile/profile.module#ProfileModule', 
+        // canActivate: [UserGuard], 
         data: { title: 'Profile', breadcrumb: 'PROFILE'}
       },
       {
-        path: 'events',
-        loadChildren: './views/events/events.module#EventsModule',
-        //canActivate: [UserGuard],
+        path: 'events', 
+        loadChildren: './views/events/events.module#EventsModule', 
+        //canActivate: [UserGuard], 
         data: { title: 'Events', breadcrumb: 'EVENTS'}
       },
       {
-        path: 'auth',
-        loadChildren: './views/auth/auth.module#AuthModule',
+        path: 'auth', 
+        loadChildren: './views/auth/auth.module#AuthModule', 
         data: { title: 'Authenticate', breadcrumb: 'AUTHENTICATE'}
       },
       {
-        path: 'calendar',
+        path: 'calendar', 
         loadChildren: './views/app-calendar/app-calendar.module#AppCalendarModule',
-        canActivate: [UserGuard],
+        canActivate: [UserGuard],  
         data: { title: 'Calendar', breadcrumb: 'CALENDAR'}
       },
       {
         path: 'chat',
         loadChildren: './views/app-chats/app-chats.module#AppChatsModule',
-        canActivate: [UserGuard],
+        canActivate: [UserGuard],  
         data: { title: 'Chat', breadcrumb: 'CHAT'}
       },
       {
         path: 'callback',
         loadChildren: './views/callback/callback.module#CallbackModule',
-        // canActivate: [UserGuard],
+        // canActivate: [UserGuard],  
         data: { title: 'Callback', breadcrumb: 'CALLBACK'}
       }
     ]
   },
-  {
-    path: '**',
+  { 
+    path: '**', 
     redirectTo: 'sessions/404'
   }
 ];
