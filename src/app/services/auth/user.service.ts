@@ -118,24 +118,31 @@ export class UserService {
         return (this.isAuthenticated() && this.user) ? true : false;
     }
 
+    // ===============================================
+    // User REST services
+    // ===============================================
+
     /**
      * Notifies the server that this user is loggin out and
      *  removes all the localStorage data, resets parameters
      */
     public logout() {
-        if (this.user) {
-            this.notifyUserLoggedOutToServer(this.user);
+        const current = this.connection + '/logout';
+        console.log('LOGOUT USER: ', this.user);
+        if (this.user !== null) {
+            return this.http.post(current, this.user, { headers: this.headers })
+                .toPromise()
+                .then((response: Response) => {
+                    this.notifyUserLoggedOutToServer(this.user);
+                    // Remove tokens and profile and update login status subject
+                    localStorage.removeItem('jwtToken');
+                    localStorage.removeItem('loggedInUser');
+                    this.user = null;
+                    this.setLoggedIn(false);
+                })
+                .catch(this.handleError);
         }
-        // Remove tokens and profile and update login status subject
-        localStorage.removeItem('jwtToken');
-        localStorage.removeItem('loggedInUser');
-        this.user = null;
-        this.setLoggedIn(false);
     }
-
-    // ===============================================
-    // User REST services
-    // ===============================================
 
     public signupUser(newUser: User): Promise<User> {
         const current = this.connection + '/register';
