@@ -109,7 +109,7 @@ export class ProfileSettingsComponent implements OnInit {
           // update the image view
           this.userService.onEditProfile(this.user).then((user: User) => {
             this.user = user;
-            this.userService.user = this.user;
+            this.userService.user = user;
             this.progressBar.mode = 'determinate';
             this.showCropper = false;
             this.croppedImage = null;
