@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
 import { CalendarEvent, CalendarEventAction, CalendarEventTimesChangedEvent } from 'angular-calendar';
 import { Subject } from 'rxjs/Subject';
+import { Router } from "@angular/router";
 
 // Models
 import { Event } from 'app/models/event';
@@ -9,6 +10,8 @@ import { Booking } from 'app/models/booking';
 // Services
 import { EventService } from 'app/services/event/event.service';
 import { UserService } from 'app/services/auth/user.service';
+import { BookingService } from 'app/services/booking/booking.service';
+
 
 
 import { MatDialog, MatDialogRef } from '@angular/material';
@@ -34,7 +37,9 @@ export class AppCalendarComponent implements OnInit {
   @ViewChild('modalContent') modalContent: TemplateRef<any>;
   dialogRef;
 
-  constructor(public dialogBox: MatDialog, private eventService: EventService, private userService: UserService) { }
+  constructor(public dialogBox: MatDialog, private eventService: EventService, 
+    private userService: UserService, private bookingService: BookingService,
+    private router: Router) { }
 
   events: CalendarEvent[] = [];
   userEvents: Event[];
@@ -63,12 +68,6 @@ export class AppCalendarComponent implements OnInit {
     onClick: ({ event }: { event: CalendarEvent }): void => {
       this.handleEvent('Edited', event);
     }
-  }, {
-    label: '<i class="material-icons icon-sm">close</i>',
-    onClick: ({ event }: { event: CalendarEvent }): void => {
-      this.events = this.events.filter(iEvent => iEvent !== event);
-      this.handleEvent('Deleted', event);
-    }
   }];
 
   refresh: Subject<any> = new Subject();
@@ -83,8 +82,24 @@ export class AppCalendarComponent implements OnInit {
           end: subDays(event.toDate,0),
           title: event.eventName,
           color: this.colors.red,
+          actions: this.actions,
+          meta: event._id
         };
         this.events.push(calendarEvent);
+      }
+
+      if(this.userService.user.isArtist){
+        this.bookingService.getUserBookings(this.userService.user, 'artist').then( (bookings: Booking[]) => {
+          for(let booking of bookings){
+            const calendarEvent: CalendarEvent = {
+              start: subDays(booking.eventEID.fromDate, 0),
+              end: subDays(booking.eventEID.toDate, 0),
+              title: booking.eventEID.eventName,
+              color: this.colors.blue,
+            };
+            this.events.push(calendarEvent);
+          }
+        });
       }
 
     });
@@ -121,8 +136,9 @@ export class AppCalendarComponent implements OnInit {
   // }];
 
   handleEvent(action: string, event: CalendarEvent): void {
-    this.modalData = { event, action };
-    this.dialogRef = this.dialogBox.open(this.modalContent);
+    this.router.navigate(['/events', event.meta]); // this will go to the page about the event
+    // this.modalData = { event, action };
+    // this.dialogRef = this.dialogBox.open(this.modalContent);
   }
   dayClicked({ date, events }: { date: Date, events: CalendarEvent[] }): void {
 
