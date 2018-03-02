@@ -124,7 +124,7 @@ export class CreateEventsComponent implements OnInit {
     }
 
     this.dateRange = [new Date(), new Date()];
-    this.setForm();
+
     if (this.updating) {
       this.eventService.getEventByEID(this.EID).then((eventEdit: Event) => {
         this.event = eventEdit;
@@ -144,6 +144,7 @@ export class CreateEventsComponent implements OnInit {
         }
       });
     }
+    this.setForm();
   }
 
   setForm() {
