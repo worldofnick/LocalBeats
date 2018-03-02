@@ -142,6 +142,7 @@
                 [resizeToWidth]="256"
                 format="png,jpeg"
                 (imageCropped)="imageCropped($event)"
+                style="max-width:512px; max-height:512px"
             ></image-cropper>
             
             <mat-progress-bar mode="determinate" class="session-progress"></mat-progress-bar>
