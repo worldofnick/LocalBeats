@@ -36,6 +36,10 @@ export class CreateEventsComponent implements OnInit {
   submitButtonText:string
   updating:Boolean
   cityState:string;
+  public selectedMoment = new Date();
+  public selectedMoment2 = new FormControl(new Date());
+  public selectedMoments = [new Date(2018, 1, 12, 10, 30), new Date(2018, 3, 21, 20, 30)];
+
 
   agreed = false;
   eventDescription: string = `<h1>Your Event Description</h1>

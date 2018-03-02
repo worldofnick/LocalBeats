@@ -18,7 +18,6 @@
           
 
           <div class="pb-1">
-
               <mat-select formControlName="eventType" (change)="onChangeEventType($event)" id="langToggle" placeholder="Event Type" [(ngModel)]="this.event.eventType" name="eventType"
                 class="mb-1">
                 <mat-option *ngFor="let event of eventTypes" [value]="event.value" ngDefaultControl>
@@ -53,14 +52,17 @@
             </div>
 
           <div class="pb-1">
-            <mat-form-field class="full-width">
-              <input matInput [(ngModel)]="this.event.toDate" name="date" readonly="readonly" formControlName="date" 
+            <!-- <mat-form-field class="full-width"> -->
+              <!-- <input matInput [(ngModel)]="this.event.toDate" name="date" readonly="readonly" formControlName="date" 
               placeholder="Date" [min]="minDate" [max]="maxDate"
-              [matDatepicker]="appDatepicker">
+              [matDatepicker]="appDatepicker"> -->
+              <input [(ngModel)]="selectedMoments" [selectMode]="'range'"
+                [owlDateTimeTrigger]="dtPicker3" [owlDateTime]="dtPicker3" formControlName="date" name="date" >
+              <owl-date-time #dtPicker3></owl-date-time>
 
-              <mat-datepicker-toggle matSuffix [for]="appDatepicker"></mat-datepicker-toggle>
-            </mat-form-field>
-            <mat-datepicker #appDatepicker></mat-datepicker>
+              <!-- <mat-datepicker-toggle matSuffix [for]="appDatepicker"></mat-datepicker-toggle> -->
+            <!-- </mat-form-field> -->
+            <!-- <mat-datepicker #appDatepicker></mat-datepicker> -->
           </div>
 
           <!-- google maps widget -->
