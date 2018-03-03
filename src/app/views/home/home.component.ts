@@ -50,6 +50,13 @@ export class HomeComponent implements OnInit {
   // Shows the snackbar if needed when coming back from a redirect
   showSnackBarIfNeeded() {
     if (this.router.url.indexOf('success=true') >= 0) {
+      // Get the new user object that was updated by the backend
+      // this._userService.getUserByID(this._userService.user._id).then((gottenUser: User) => {
+      //   this._userService.user = gottenUser;
+      //   let snackBarRef = this.snackBar.open('Stripe Account Linked!', "", {
+      //     duration: 1500,
+      //   });
+      // });
       let snackBarRef = this.snackBar.open('Stripe Account Linked!', "", {
         duration: 1500,
       });

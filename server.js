@@ -94,7 +94,7 @@ app.get('/profile/stripe/', function(req, res) {
 });
 
 app.get('*', function(req, res) {
-  res.redirect('/?success=' + req.query.success);
+  res.redirect('/profile/settings/?success=' + req.query.success);
 });
 
 console.log('Magic happens at http://localhost:' + port);
