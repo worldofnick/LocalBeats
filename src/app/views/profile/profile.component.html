@@ -57,13 +57,30 @@
       </mat-card-content>
     </mat-card>
 
-    <mat-card class="default">
+    <!-- Spotify Widget -->
+    <mat-card class="default" *ngIf="this.userService.isAuthenticated()">
       <mat-card-title>Music Corner</mat-card-title>
-      <mat-card-content class="pt-0">
-          <a *ngIf="this.userService.user.spotify === undefined" mat-raised-button (click)="authorizeSpotify()" color="primary">Connect Spotify</a>
-          <iframe *ngIf="this.userService.user.spotify !== undefined"
-          src="https://open.spotify.com/embed?uri=spotify%3Aalbum%3A21luSPtlViDJMWtNjmdf6w&theme=white" width=100% height="380" frameborder="0" allowtransparency="true"></iframe>
-      </mat-card-content>
+      <mat-card-content class="pt-0" [style.overflow]="'auto'" [style.height.px]="'300'">
+          
+          <!-- Link spotify button -->
+          <a *ngIf="this.user.spotify === undefined" mat-raised-button (click)="authorizeSpotify()" color="primary">Connect Spotify</a>
+          
+          <!-- Spotify list of albums -->
+          <mat-list *ngIf="this.user.spotify !== undefined && !this.onSpotifyWidget">
+            <h3 mat-subheader>Albums</h3>
+            <mat-list-item *ngFor="let album of this.user.spotify.albums" (click)="onAlbumRowClicked(album)"> 
+                <mat-icon mat-list-icon>folder</mat-icon>
+                <h4 mat-line>{{album.name}}</h4>
+                <p mat-line> {{album.type}} </p>
+            </mat-list-item>
+          </mat-list>
+      
+        </mat-card-content>
+
+        <mat-card-actions>
+          <!-- <h4 mat-subheader *ngIf="!this.onSpotifyWidget">Album Count : {{this.user.spotify.albums.length}}</h4> -->
+          <button mat-button *ngIf="this.onSpotifyWidget" (click)="backToSpotifyAlbumsClicked()"><mat-icon>arrow_back</mat-icon> Back to Albums</button>
+        </mat-card-actions>
     </mat-card>
   </div>
 
