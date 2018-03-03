@@ -1,4 +1,4 @@
-import { Injectable, OnDestroy } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Http, Headers, RequestOptions, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
@@ -19,7 +19,7 @@ const httpOptions = {
 };
 
 @Injectable()
-export class UserService implements OnDestroy {
+export class UserService {
     // Request properties
     public connection: string = environment.apiURL + 'api/auth';
     public userConnection: string = environment.apiURL + 'api/users';
@@ -63,14 +63,6 @@ export class UserService implements OnDestroy {
             this.logout();
         }
         this.initIoConnection();
-    }
-
-    /**
-     * It unsubscribes from all the subscriptions in it
-     */
-    ngOnDestroy() {
-        // Destroy socket event listener
-        this.ioConnection.unsubscribe();
     }
 
     public setUser(newUser: User) {
