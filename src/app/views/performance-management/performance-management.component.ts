@@ -86,6 +86,9 @@ export class PerformanceManagementComponent implements OnInit {
     this.subscription.unsubscribe();
   }
 
+  /*
+  Updates all payment statuses for the provided booking
+  */
   private updatePaymentStatues(booking: Booking) {
       // Update payment status
     let idx = this.performances.completed.findIndex(b => b._id == booking._id);
@@ -94,6 +97,16 @@ export class PerformanceManagementComponent implements OnInit {
     });
   }
 
+  /* 
+  Retrieves all of the performance bookings of the user
+  Booking Cases:
+  1. Applications
+  2. Requests
+  3. Confirmations
+  4. Completions
+  5. Cancellations
+  Notifications occur if artistViewed boolean is false in the booking model
+  */
   private getPerformances() {
     // Get all performances associated with the user
     this.bookingService.getUserBookings(this.userService.user, 'artist').then((bookings: Booking[]) => {
@@ -122,6 +135,7 @@ export class PerformanceManagementComponent implements OnInit {
             if(!booking.artViewed) {
               completeNotif++;
             }
+            // If a booking is completed, it should have a payment status
             this.bookingService.bookingPaymentStatus(booking).then((status: PaymentStatus) => {
               paymentStatues.push(status);
             });

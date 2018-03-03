@@ -67,6 +67,9 @@ export class EventManagementComponent implements OnInit {
     this.getEvents();
   }
 
+  /*
+
+  */
   ngOnInit() {
     this.subscription = this._socketService.onEvent(SocketEvent.SEND_NOTIFICATION)
       .subscribe((notification: Notification) => {
@@ -78,6 +81,9 @@ export class EventManagementComponent implements OnInit {
     this.subscription.unsubscribe();
   }
 
+  /*
+  Updates all payment statuses for the provided booking
+  */
   private updatePaymentStatues(booking: Booking) {
     // Update payment status'
     let eventIndex = this.events.findIndex(e => e.event._id == booking.eventEID._id);
@@ -87,6 +93,16 @@ export class EventManagementComponent implements OnInit {
     });
   }
 
+  /* 
+  Retrieves all of the events hosted by the user of the model
+  Booking Cases:
+  1. Applications
+  2. Requests
+  3. Confirmations
+  4. Completions
+  5. Cancellations
+  Notifications occur if hostViewed boolean is false in the booking model
+  */
   private getEvents() {
     // Get all events associated with the user
     this.events = [];
@@ -95,6 +111,8 @@ export class EventManagementComponent implements OnInit {
         // Get the bookings associated with each event
         // Get the confirmed bookings, which could be cancelled, verified, or not
         let confirmedBookings: Booking[] = [];
+        // Get the completed bookings, which have been verified and paid
+        let completedBookings: Booking[] = [];
         // Get the application bookings
         let applicationBookings: Booking[] = [];
         // Get the request bookings
@@ -105,23 +123,32 @@ export class EventManagementComponent implements OnInit {
         let numNotif: number = 0;
         let reqNotif: number = 0;
         let numConf: number = 0;
+        let completeNotif: number = 0;
         let cancelNotif: number = 0;
         let paymentStatues = [];  
         this.bookingService.getBooking(e).then((bookings: Booking[]) => {
           for(let booking of bookings) {
             if(booking.approved) {
-              if(!booking.cancelled) {
+              if(booking.completed) {
+                completedBookings.push(booking);
                 confirmedBookings.push(booking);
-                // If the booking is confirmed and has not yet been viewed by the host, a new notification exists
+                // If the booking is completed and has not yet been viewed by the host, a new notification exists
                 if(!booking.hostViewed) {
-                  numConf++;
+                  completeNotif++;
                 }
+                // If a booking is complete, it should have a payment status
                 this.bookingService.bookingPaymentStatus(booking).then((status: string) => {
                   paymentStatues.push(status);
                 });
+              } else if(!booking.cancelled) {
+                confirmedBookings.push(booking);
+                // If the booking is confirmed and has not yet been viewed by the artist, a new notification exists
+                if(!booking.hostViewed) {
+                  numConf++;
+                }
               } else {
                 cancelledBookings.push(booking);
-                if(!booking.hostViewed) {
+                if(!booking.artViewed) {
                   cancelNotif++;
                 }
               }
@@ -143,9 +170,20 @@ export class EventManagementComponent implements OnInit {
               }
             }
           }
-          this.events.push({event: e, applications: applicationBookings, applicationNotifications: numNotif,
-            requests: requestBookings, requestNotifications: reqNotif, confirmations: confirmedBookings, confirmationNotifications: numConf,
-            cancellations: cancelledBookings, cancellationNotifications: cancelNotif, paymentStatues: paymentStatues});
+          this.events.push({
+            event: e,
+            applications: applicationBookings,
+            applicationNotifications: numNotif,
+            requests: requestBookings,
+            requestNotifications: reqNotif,
+            confirmations: confirmedBookings,
+            confirmationNotifications: numConf,
+            completions: completedBookings,
+            completionNotifications: completeNotif,
+            cancellations: cancelledBookings,
+            cancellationNotifications: cancelNotif,
+            paymentStatues: paymentStatues
+          });
         })
       }
     })
