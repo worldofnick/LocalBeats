@@ -211,7 +211,6 @@ export class UserService implements OnDestroy {
             .then((response: Response) => {
                 const data = response.json();
                 console.log('Got user from server: ', data.user);
-                this._setSession(undefined, (data.user as User));
                 return data.user as User;
             })
             .catch(this.handleError);
