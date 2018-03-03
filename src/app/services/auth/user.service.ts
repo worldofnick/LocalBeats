@@ -65,19 +65,6 @@ export class UserService implements OnDestroy {
         this.initIoConnection();
     }
 
-    getUserIdFromJWT() {
-        try {
-            let decodedToken = this.jwtHelper.decodeToken(localStorage.getItem('jwtToken'));
-            console.log('Token: ', decodedToken);
-
-            this.getUserByID(decodedToken.id).then((user: User) => {
-                this.user = user;
-            });
-        } catch (error) {
-            
-        }
-    }
-
     /**
      * It unsubscribes from all the subscriptions in it
      */
