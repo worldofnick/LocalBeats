@@ -6,21 +6,21 @@ import { Router } from "@angular/router";
 import { MatTabChangeEvent, MatSnackBar, MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
 // Services
-import { UserService } from '../../../../services/auth/user.service';
-import { BookingService } from '../../../../services/booking/booking.service';
-import { EventService } from '../../../../services/event/event.service';
+import { UserService } from '../../services/auth/user.service';
+import { BookingService } from '../../services/booking/booking.service';
+import { EventService } from '../../services/event/event.service';
 import { SocketService } from 'app/services/chats/socket.service';
 import { StripeService } from 'app/services/payments/stripe.service';
 
 // Data Models
-import { User } from '../../../../models/user';
-import { Event } from '../../../../models/event';
+import { User } from '../../models/user';
+import { Event } from '../../models/event';
 import { Booking, StatusMessages, NegotiationResponses, VerificationResponse } from '../../../../models/booking';
-import { Action } from '../../../../services/chats/model/action'
-import { SocketEvent } from '../../../../services/chats/model/event'
-import { Notification } from '../../../../models/notification'
-import { Message } from '../../../../services/chats/model/message';
-import { Payment, PaymentStatus } from '../../../../models/payment'
+import { Action } from '../../services/chats/model/action'
+import { SocketEvent } from '../../services/chats/model/event'
+import { Notification } from '../../models/notification'
+import { Message } from '../../services/chats/model/message';
+import { Payment, PaymentStatus } from '../../models/payment'
 
 @Component({
   selector: 'app-performance-management',
