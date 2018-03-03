@@ -35,7 +35,7 @@ export class NotificationsComponent implements OnInit {
 
         let newNotification: Notification = new Notification(temp._id, temp.senderID, temp.receiverID, 
           temp.eventID, temp.booking, temp.response, temp.message, temp.icon, temp.sentTime, temp.route);
-        this.notifications.push(newNotification);
+        this.notifications.unshift(newNotification);
     });
 
     //initial getting of notifications
@@ -46,7 +46,7 @@ export class NotificationsComponent implements OnInit {
         let newNotification:Notification = new Notification(notification._id, notification.senderID, notification.receiverID,
           notification.eventID, notification.booking, notification.response, notification.message, notification.icon, notification.sentTime,
           notification.route);
-        this.notifications.push(newNotification);
+        this.notifications.unshift(newNotification);
       }
     });
     
