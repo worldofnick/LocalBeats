@@ -17,6 +17,8 @@ import { SocketEvent } from '../../../services/chats/model/event'
 import { Notification } from '../../../models/notification'
 import { PaymentStatus } from '../../../models/payment'
 
+
+
 @Component({
   selector: 'app-profile-request',
   templateUrl: './profile-request.component.html',
@@ -29,6 +31,8 @@ export class ProfileRequestComponent implements OnInit {
 
   // Artist Model which the user is viewing
   @Input() artist: User;
+
+
 
   // Hosted Events of the User Model
   hostedEvents: {
@@ -46,7 +50,7 @@ export class ProfileRequestComponent implements OnInit {
     private bookingService: BookingService,
     private _socketService: SocketService
   ) {
-    this.hostedEvents = { 
+    this.hostedEvents = {
       availableEvents: [],
       applications: [],
       applicationNotifications: 0,
@@ -76,6 +80,7 @@ export class ProfileRequestComponent implements OnInit {
       this.hostedEvents.paymentStatues[index] = status;
     });
   }
+
 
   private getAvailableEvents() {
     // Get all events for the current user
