@@ -66,13 +66,13 @@
           <a *ngIf="this.user.spotify === undefined" mat-raised-button (click)="authorizeSpotify()" color="primary">Connect Spotify</a>
           
           <!-- Spotify list of albums -->
-          <mat-list *ngIf="this.user.spotify !== undefined && !this.onSpotifyWidget">
+          <mat-list dense *ngIf="this.user.spotify !== undefined && !this.onSpotifyWidget">
             <h3 mat-subheader>Albums</h3>
             <mat-list-item id="spotifyList" *ngFor="let album of this.user.spotify.albums" (click)="onAlbumRowClicked(album)"> 
                 <!-- <mat-icon mat-list-icon>folder</mat-icon> -->
                 <img matListAvatar [src]="this.getSanitizedUrl(album.images[2].url)" alt="album.name">
                 <h3 mat-line>{{album.name}}</h3>
-                <p mat-line> {{album.release_date}} </p>
+                <p mat-line> Released on {{album.release_date}} </p>
             </mat-list-item>
           </mat-list>
 
