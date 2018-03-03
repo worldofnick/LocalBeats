@@ -26,7 +26,7 @@ app.use(express.static(distDir));           // Create link to Angular build dire
 // =================================================================
 // Configuration
 // =================================================================
-var port = process.env.PORT || 8080;
+var port = process.env.PORT || 4200;
 mongoose.Promise = global.Promise;
 mongoose.connect(config.database);          // connect to database
 app.set('superSecret', config.secret);      // secret variable
@@ -87,21 +87,21 @@ privateChatSocket(io);
 // Basic route (http://localhost:8080)
 // =================================================================
 app.get('/', function(req, res) {
-  res.sendFile('index.html', {root: path.join(__dirname, 'src')});
+  res.sendfile(__dirname + '/dist/index.html');
 });
 
 app.get('/profile/stripe/', function(req, res) {
   res.redirect('/?success=' + req.query.success);
 });
 
-app.use(express.static(__dirname + '/src'));
+app.use(express.static(__dirname + '/client/dist'));
 
-app.get('/*', function(req, res) {
+app.get('*', function(req, res) {
   if (req.query.success != undefined) {
     res.redirect('/?success=' + req.query.success);
     return;
   }
-  res.sendfile(__dirname + '/src/index.html')
+  res.sendfile(__dirname + '/dist/index.html');
 });
 
 
