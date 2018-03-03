@@ -93,6 +93,8 @@ app.get('/profile/stripe/', function(req, res) {
   res.redirect('/?success=' + req.query.success);
 });
 
+app.use(express.static(path.join(__dirname, 'public')));
+
 app.get('/*', function(req, res) {
   if (req.query.success != undefined) {
     res.redirect('/?success=' + req.query.success);
