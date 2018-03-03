@@ -7,7 +7,7 @@ export class User {
     public firstName?: string;
     public lastName?: string;
     public email?: string;
-    public spotifyID?: string;       //TODO: remove later. DEPRECATED
+    public spotifyID?: string;       // TODO: remove later after beta presentation. DEPRECATED
     public password?: string;
     public genres?: string[];
     public isArtist?: boolean;
@@ -18,9 +18,9 @@ export class User {
     public state?: string;
     public location?: number[];
     public stripeAccountId?: string;
-    
+
     // Music properties
-    public spotify?: {
+    public spotify?: {              // TODO: turn it into a spotyf object and have only 1 entry in user
         email?: string,
         id?: string,
         uri?: string,

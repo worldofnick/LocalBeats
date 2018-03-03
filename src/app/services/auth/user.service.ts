@@ -65,14 +65,6 @@ export class UserService {
         this.initIoConnection();
     }
 
-    /**
-     * It unsubscribes from all the subscriptions in it
-     */
-    // ngOnDestroy() {
-        // Destroy socket event listener
-        // this.ioConnection.unsubscribe();
-    // }
-
     public setUser(newUser: User) {
         localStorage.setItem('loggedInUser', JSON.stringify(newUser));
         // Acts as a validation sanity check
