@@ -14,10 +14,13 @@ import { Event } from '../../models/event';
 import { Notification } from '../../models/notification';
 import { Router } from '@angular/router';
 import { SpotifyClientService } from '../../services/music/spotify-client.service';
+import { DomSanitizer, SafeResourceUrl, SafeUrl } from '@angular/platform-browser';
+import {MatListModule} from '@angular/material/list';
 
 @Component({
   selector: 'app-profile',
-  templateUrl: './profile.component.html'
+  templateUrl: './profile.component.html',
+  styleUrls: ['./profile.component.css']
 })
 export class ProfileComponent implements OnInit {
   activeView: string = 'overview';
@@ -36,12 +39,16 @@ export class ProfileComponent implements OnInit {
   deleteStatus:Number;
   hasApplied:Boolean = true;
 
+  // Spotify
+  onSpotifyWidget = false;
+
   constructor(private route: ActivatedRoute,
     private router : Router,
     public userService: UserService,
     private bookingService: BookingService,
     private eventService: EventService,
     private notificationService: NotificationService,
+    private sanitizer: DomSanitizer,
     private _socketService: SocketService, private _spotifyClientService: SpotifyClientService) {
 
      router.events.subscribe((url:any) => this.clickedOverview = router.url == "/profile/overview");
@@ -85,6 +92,7 @@ export class ProfileComponent implements OnInit {
 
       this.userService.getUserByID(ID).then((gottenUser: User) => {
         this.user = gottenUser;
+        console.log('Profile got user: ', gottenUser);
       }).then(() => this.hasRequested());
     }
 
@@ -93,7 +101,22 @@ export class ProfileComponent implements OnInit {
       this.user = user;
     });
 
-    console.log('User object: ', this.userService.user);
+    console.log('User object: ', this.user);
+
+    // Retreive and store the latest spotify albums of this user
+    this.getSpotifyAlbumsAndSave();
+  }
+
+  getSpotifyAlbumsAndSave() {
+    if ( this.user !== null && this.user !== undefined ) {
+      if (this.user.spotify !== null && this.user.spotify !== undefined) {
+        this._spotifyClientService.requestAlbumsOwnedByAnArtist(this.user)
+          .then((listOfSpotifyAlbumObjects: any) => {
+            this.user.spotify.albums = listOfSpotifyAlbumObjects.albums.items;
+            console.log('Got albums: ', this.user.spotify);
+          });
+      }
+    }
   }
 
   clickedOver() {
@@ -116,9 +139,31 @@ export class ProfileComponent implements OnInit {
   // ========================================
   // Music corner methods
   // ========================================
-  authorizeSpotify() {
+  trustedAlbumUrl: SafeResourceUrl;
+  
+  public authorizeSpotify() {
     this._spotifyClientService.authorizeSpotify().then((url: string) => {
       window.open(url);
     });
+  }
+
+  // albumURL() {
+  //   if (this.user.spotify !== undefined) {
+  //     const url = 'https://open.spotify.com/embed?uri=spotify%3Aalbum%3A' + this.user.spotify.albums[0].id + '&theme=white';
+  //     return this.sanitizer.bypassSecurityTrustResourceUrl(url);
+  //   }
+  // }
+
+  public onAlbumRowClicked(album) {
+    console.log('Album ', album.name, 'clicked' );
+    this.onSpotifyWidget = true;
+
+    let dangerousAlbumUrl = 'https://open.spotify.com/embed?uri=spotify%3Aalbum%3A' + this.user.spotify.albums[0].id + '&theme=white';
+    this.trustedAlbumUrl = this.sanitizer.bypassSecurityTrustResourceUrl(dangerousAlbumUrl);
+  }
+
+  public backToSpotifyAlbumsClicked() {
+    this.onSpotifyWidget = false;
+    this.trustedAlbumUrl = undefined;
   }
 }
