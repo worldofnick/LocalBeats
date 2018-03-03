@@ -147,6 +147,9 @@ export class ProfileComponent implements OnInit {
     });
   }
 
+  getSanitizedUrl(url) {
+    return this.sanitizer.bypassSecurityTrustUrl(url);
+  }
   // albumURL() {
   //   if (this.user.spotify !== undefined) {
   //     const url = 'https://open.spotify.com/embed?uri=spotify%3Aalbum%3A' + this.user.spotify.albums[0].id + '&theme=white';

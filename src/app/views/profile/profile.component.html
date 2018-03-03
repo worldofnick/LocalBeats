@@ -69,7 +69,8 @@
           <mat-list *ngIf="this.user.spotify !== undefined && !this.onSpotifyWidget">
             <h3 mat-subheader>Albums</h3>
             <mat-list-item *ngFor="let album of this.user.spotify.albums" (click)="onAlbumRowClicked(album)"> 
-                <mat-icon mat-list-icon>folder</mat-icon>
+                <!-- <mat-icon mat-list-icon>folder</mat-icon> -->
+                <img matListAvatar [src]="this.getSanitizedUrl(album.images[2].url)" alt="album.name">
                 <h4 mat-line>{{album.name}}</h4>
                 <p mat-line> {{album.type}} </p>
             </mat-list-item>
