@@ -450,7 +450,7 @@ export class EventManagementComponent implements OnInit {
               booking.artistStatusMessage = StatusMessages.unpaid;
               this.events[eventIndex].confirmations[bookingIndex] = booking;
               // Don't push a payment status, because the payment failed
-              notificationMessage = "Your booking is incomplete payment by " + booking.hostUser.firstName + " for the event " + booking.eventEID.eventName + " failed";
+              notificationMessage = "Your booking is incomplete, payment by " + booking.hostUser.firstName + " for the event " + booking.eventEID.eventName + " failed";
               let snackBarRef = this.snackBar.open('Payment failed, please try again.', "", {
                 duration: 1500,
               });
@@ -630,7 +630,7 @@ export class ConfirmPaymentDialog {
   }
 
   onOkClick(): void {
-    this.stripeService.charge(this.data.booking).then((success: boolean) => {
+    this.stripeService.charge(this.data.booking, false).then((success: boolean) => {
       this.dialogRef.close();
       if (success) {
         let snackBarRef = this.snackBar.open('Payment sent!', "", {

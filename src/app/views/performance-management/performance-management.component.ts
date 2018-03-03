@@ -376,7 +376,8 @@ export class PerformanceManagementComponent implements OnInit {
             booking.completed = true;
             booking.hostViewed = false;
             booking.artViewed = false;
-            // Don't need a notification sent from component because stripe service will send it
+            notificationMessage = "Your booking is complete and you've paid " + booking.performerUser.firstName + " for the event " + booking.eventEID.eventName;
+            response = NegotiationResponses.complete;
           } else {
             booking.hostStatusMessage = StatusMessages.artistVerified;
             booking.artistStatusMessage = StatusMessages.waitingOnHost;
@@ -395,33 +396,42 @@ export class PerformanceManagementComponent implements OnInit {
           notificationMessage = booking.performerUser.firstName + " has invalidated you for the event " + booking.eventEID.eventName;
           response = NegotiationResponses.verification;
         }
-        // Update the booking asynchronously
-        this.bookingService.updateBooking(booking).then(() => {
-          // If the booking is verified, now wait for payment
-          if(booking.completed) {
-            this.stripeService.charge(booking).then((success: boolean) => {
-              if (success) {
-                this.bookingService.bookingPaymentStatus(booking).then((status: PaymentStatus) => {
-                  this.performances.confirmations.splice(bookingIndex, 1);
-                  this.performances.paymentStatues.push(status);
-                  this.performances.completed.push(booking);
-                  this.performances.completedNotifications++;
-                  let snackBarRef = this.snackBar.open('Payment sent!', "", {
-                    duration: 1500,
-                  });
-                });
-              } else {
-                let snackBarRef = this.snackBar.open('Payment failed, please try again.', "", {
+        // Update the booking and payment asynchronously
+        if(booking.completed) {
+          this.stripeService.charge(booking, true).then((success: boolean) => {
+            if (success) {
+              this.bookingService.bookingPaymentStatus(booking).then((status: PaymentStatus) => {
+                // If payment was successful, push a new status
+                this.performances.paymentStatues.push(status);
+                // Move the booking from confirmations to completions
+                this.performances.confirmations.splice(bookingIndex, 1);
+                this.performances.completions.push(booking);
+                let snackBarRef = this.snackBar.open('Payment received!', "", {
                   duration: 1500,
                 });
-              }
-            });
-          } else {
-            this.performances.confirmations[bookingIndex] = booking;
-            // Send notification to host
-            this.createNotificationForHost(booking, response, ['/profile', 'events'],
-            'event_available', notificationMessage);
-          }
+              });
+            } else {
+              // Payment failed, so change the booking to not be completed
+              booking.completed = false;
+              booking.hostStatusMessage = StatusMessages.unpaid;
+              booking.artistStatusMessage = StatusMessages.unpaid;
+              this.performances.confirmations[bookingIndex] = booking;
+              // Don't push a payment status, because the payment failed
+              notificationMessage = "Your booking is incomplete, please try to pay " + booking.performerUser.firstName + " for the event " + booking.eventEID.eventName + " again";
+              let snackBarRef = this.snackBar.open('Payment failed, please ask host to try again.', "", {
+                duration: 1500,
+              });
+            }
+          });
+        } else {
+          // Otherwise, the booking is not complete, so just a normal verification happened
+          this.performances.confirmations[bookingIndex] = booking;
+        }
+        // Update the model and send a notification if the model updates correctly
+        this.bookingService.updateBooking(booking).then(() => {
+          // Send notification to artist
+          this.createNotificationForHost(booking, response, ['/profile', 'events'],
+          'event_available', notificationMessage);
         });
       }
     })
