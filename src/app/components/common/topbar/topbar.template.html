@@ -91,7 +91,7 @@
     </form>
   </div>  
   <span fxFlex></span>
-  <div *ngIf="userService.isAuthenticated(); else login">
+  <div *ngIf="userService.amIDoneLoading(); else login">
     <button 
     *ngIf="userService.user.stripeAccountId"
     mat-icon-button
