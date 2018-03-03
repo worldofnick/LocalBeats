@@ -92,7 +92,7 @@ export class ProfileSettingsComponent implements OnInit {
 
     this.userService.onEditProfile(this.user).then((user: User) => {
       this.user = user;
-      this.userService.user = user;
+      this.userService.setUser(user);
       this._socketService.sendToProfile('updateProfile', this.user);
     });
   }
@@ -109,7 +109,7 @@ export class ProfileSettingsComponent implements OnInit {
           // update the image view
           this.userService.onEditProfile(this.user).then((user: User) => {
             this.user = user;
-            this.userService.user = user;
+            this.userService.setUser(user);
             this.progressBar.mode = 'determinate';
             this.showCropper = false;
             this.croppedImage = null;
@@ -164,7 +164,7 @@ export class ProfileSettingsComponent implements OnInit {
     this.user.stripeAccountId = null;
     this.userService.onEditProfile(this.user).then((user: User) => {
       this.user = user;
-      this.userService.user = this.user
+      this.userService.setUser(user)
       let snackBarRef = this.snackBar.open('Stripe Account Unlinked', "", {
         duration: 1500,
       });
