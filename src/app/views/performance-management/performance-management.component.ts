@@ -294,38 +294,58 @@ export class PerformanceManagementComponent implements OnInit {
     }
   }
 
+  /*
+  Takes user to event singleton view page
+  */
   onViewEvent(event:Event){
     this.router.navigate(['/events', event._id]);
   }
 
-  resetConfirmations(event: MatTabChangeEvent) {
-    if(event.index == 2) {
-      this.performances.confirmationNotifications = 0;
-      for(let booking of this.performances.confirmations) {
-        if(!booking.artViewed) {
-          booking.artViewed = true;
-          this.bookingService.updateBooking(booking);
-        }
-      }
-    } else if(event.index == 3) {
-      this.performances.completedNotifications = 0;
-      for(let booking of this.performances.completed) {
-        if(!booking.artViewed) {
-          booking.artViewed = true;
-          this.bookingService.updateBooking(booking);
-        }
-      }
-    } else if(event.index == 4) {
-      this.performances.cancellationNotifications = 0;
-      for(let booking of this.performances.cancellations) {
-        if(!booking.artViewed) {
-          booking.artViewed = true;
-          this.bookingService.updateBooking(booking);
-        }
+  /*
+  Resets all completion notifications to 0 when that expansion panel has been clicked
+  */
+ resetCompletionNotifications(eventIndex: number) {
+    this.performances.cancellationNotifications = 0;
+    for(let booking of this.performances.completions) {
+      if(!booking.artViewed) {
+        booking.artViewed = true;
+        this.bookingService.updateBooking(booking);
       }
     }
   }
 
+  /*
+  Resets all cancellation notifications to 0 when that expansion panel has been clicked
+  */
+  resetCancellationNotifications(eventIndex: number) {
+    this.performances.cancellationNotifications = 0;
+    for(let booking of this.performances.cancellations) {
+      if(!booking.artViewed) {
+        booking.artViewed = true;
+        this.bookingService.updateBooking(booking);
+      }
+    }
+  }
+
+  /*
+  Resets all confirmation notifications to 0 when that expansion panel has been clicked
+  */
+  resetConfirmationNotifications(eventIndex: number) {
+    this.performances.confirmationNotifications = 0;
+    for(let booking of this.performances.confirmations) {
+      if(!booking.hostViewed) {
+        booking.hostViewed = true;
+        this.bookingService.updateBooking(booking);
+      }
+    }
+  }
+
+  /*
+  Artist verifies that the host and event of the confirmed booking are as they should be
+  Cases:
+  1. Verified and the Host has not verified - send a verification notification to host
+  2. Verified and the Host has verified - complete the booking and send payment to host
+  */
   artistVerify(booking: Booking, bookingIndex: number) {
     this.bookingService.verify(booking, false)
     .subscribe((result)=> {
