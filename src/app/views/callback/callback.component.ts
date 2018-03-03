@@ -69,13 +69,15 @@ export class CallbackComponent implements OnInit {
         id: responseWithUserPayload.user.spotify.id,
         uri: responseWithUserPayload.user.spotify.uri,
         href: responseWithUserPayload.user.spotify.href,
+        accessToken: responseWithUserPayload.user.spotify.accessToken,
+        refreshToken: responseWithUserPayload.user.spotify.refreshToken,
         albums: listOfSpotifyAlbumObjects.albums.items
       };
       console.log('Spotify Object to save: ', spotifyObject);
       // Save the spotify profile and the albums to user service object
       let newUser = this.userService.user;
       newUser.spotify = spotifyObject;
-      this.userService.user = newUser;
+      this.userService.setUser(newUser);
       // Redirect to the profile page to setup and display the spotify widget
       this.router.navigate(['/profile', 'overview']);
   }
