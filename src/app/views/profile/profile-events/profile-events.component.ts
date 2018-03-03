@@ -321,7 +321,7 @@ export class ProfileEventsComponent implements OnInit {
         this.bookingService.updateBooking(booking).then(() => {
           if(booking.completed) {
             // Notification will come through stripe service on payment
-            this.stripeService.charge(booking).then((success: boolean) => {
+            this.stripeService.charge(booking, true).then((success: boolean) => {
               if (success) {
                 this.bookingService.bookingPaymentStatus(booking).then((status: PaymentStatus) => {
                   this.events[eventIndex].paymentStatues[bookingIndex] = status;
@@ -504,7 +504,7 @@ export class ConfirmPaymentDialog {
   }
 
   onOkClick(): void {
-    this.stripeService.charge(this.data.booking).then((success: boolean) => {
+    this.stripeService.charge(this.data.booking, false).then((success: boolean) => {
       this.dialogRef.close();
       if (success) {
         let snackBarRef = this.snackBar.open('Payment sent!', "", {

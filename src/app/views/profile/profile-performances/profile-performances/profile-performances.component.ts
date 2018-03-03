@@ -329,7 +329,7 @@ export class ProfilePerformancesComponent implements OnInit {
         this.bookingService.updateBooking(booking).then(() => {
           // If the booking is verified, now wait for payment
           if(booking.completed) {
-            this.stripeService.charge(booking).then((success: boolean) => {
+            this.stripeService.charge(booking, true).then((success: boolean) => {
               if (success) {
                 this.bookingService.bookingPaymentStatus(booking).then((status: PaymentStatus) => {
                   this.performances.confirmations.splice(bookingIndex, 1);

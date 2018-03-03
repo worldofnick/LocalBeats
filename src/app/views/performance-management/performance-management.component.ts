@@ -99,7 +99,7 @@ export class PerformanceManagementComponent implements OnInit {
   */
   private updatePaymentStatues(booking: Booking) {
       // Update payment status
-    let idx = this.performances.completed.findIndex(b => b._id == booking._id);
+    let idx = this.performances.completions.findIndex(b => b._id == booking._id);
     this.bookingService.bookingPaymentStatus(booking).then((status: PaymentStatus) => {
       this.performances.paymentStatues[idx] = status;
     });
