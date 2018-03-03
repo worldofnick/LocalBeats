@@ -56,23 +56,15 @@ exports.stripeAuthorize = function (req, res) {
       res.redirect('https://localbeats.herokuapp.com/profile/stripe/?success=false');
      } else {
        // Update the model and store the Stripe account ID in the DB.
-       stripe.accounts.retrieve(
-         body.stripe_user_id,
-         function(err, account) {
-           if (err) {
-            res.redirect('https://localbeats.herokuapp.com/profile/stripe/?success=false');
-           }
-           console.log("user");
-           console.log(req.user);
-           req.user.stripeAccountId = body.stripeAccountId;
-           user.save(function (err) {
-            if(err) {
-              res.redirect('https://localbeats.herokuapp.com/profile/stripe/?success=false');
-            }
-          });
+       console.log("user");
+       console.log(req.user);
+       req.user.stripeAccountId = body.stripe_user_id;
+       user.save(function (err) {
+        if(err) {
+          res.redirect('https://localbeats.herokuapp.com/profile/stripe/?success=false');
+        }
+       });
 
-         }
-       );
      }
      // Redirect to the final stage.
      res.redirect('https://localbeats.herokuapp.com/profile/stripe/?success=true');
