@@ -455,7 +455,7 @@ export class ProfilePerformancesComponent implements OnInit {
   }
   
   createNotificationForHost(booking: Booking, response: NegotiationResponses, route: string[], icon: string, message: string) {
-    let notification = new Notification(booking.performerUser, booking.hostUser, booking.eventEID._id,
+    let notification = new Notification(null, booking.performerUser, booking.hostUser, booking.eventEID._id,
     booking, response, message, icon, route); 
     this._socketService.sendNotification(SocketEvent.SEND_NOTIFICATION, notification);
   }

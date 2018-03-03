@@ -33,7 +33,7 @@ export class NotificationsComponent implements OnInit {
       .subscribe((notification: Notification) => {
         const temp: Notification = notification as Notification;
 
-        let newNotification: Notification = new Notification(temp.senderID, temp.receiverID, 
+        let newNotification: Notification = new Notification(null, temp.senderID, temp.receiverID, 
           temp.eventID, temp.booking, temp.response, temp.message, temp.icon, temp.route);
         this.notifications.push(newNotification);
     });
@@ -43,7 +43,7 @@ export class NotificationsComponent implements OnInit {
 
       this.notifications = [];
       for(let notification of notificationsList){
-        let newNotification:Notification = new Notification(notification.senderID, notification.receiverID,
+        let newNotification:Notification = new Notification(null, notification.senderID, notification.receiverID,
           notification.eventID, notification.booking, notification.response, notification.message, notification.icon,
           notification.route);
         this.notifications.push(newNotification);
@@ -73,6 +73,10 @@ export class NotificationsComponent implements OnInit {
 
     this.notifications = [];
     
+  }
+
+  deleteNotification(notification: Notification) {
+    console.log(notification);
   }
 
   selectNotification(notification:Notification){

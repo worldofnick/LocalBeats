@@ -4,6 +4,7 @@ import { Booking, NegotiationResponses } from 'app/models/booking';
 
 export class Notification {
     constructor(
+    public _id: string,
     public senderID: User,
     public receiverID: User,
     public eventID:string,

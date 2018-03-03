@@ -11,6 +11,7 @@
         <!-- <small class="time text-muted">{{n.time}}</small> -->
       </div>
     </a>
+    <mat-icon (click)="deleteNotification(n)">cancel</mat-icon>
   </mat-list-item>
 </mat-nav-list>
 <div class="text-center mt-1" *ngIf="notifications && notifications.length">
