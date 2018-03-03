@@ -1,4 +1,4 @@
-import { Injectable, OnDestroy, OnInit } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Http, Headers, RequestOptions, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
@@ -19,7 +19,7 @@ const httpOptions = {
 };
 
 @Injectable()
-export class UserService implements OnDestroy, OnInit {
+export class UserService implements OnDestroy {
     // Request properties
     public connection: string = environment.apiURL + 'api/auth';
     public userConnection: string = environment.apiURL + 'api/users';
@@ -48,14 +48,15 @@ export class UserService implements OnDestroy, OnInit {
      */
     constructor(private http: Http, private _socketService: SocketService, private _httpClient: HttpClient) {
 
-    }
-
-    ngOnInit() {
-        // If authenticated, update login status subject and notify server.
+        // If authenticated, set local user property and update login status subject
         // If token is expired, log out to clear any data from localStorage
         if (this.amIDoneLoading()) {
+            // this.getUserIdFromJWT();
+            this.user = JSON.parse(localStorage.getItem('loggedInUser'));
             this.setLoggedIn(true);
             this.notifyNewUserLoginToServer(this.user);
+
+            // TODO: @Adam Should make new socket events calls for faster performance!!!
             this.getNotificationsCountForUser(this.user._id);
             this.getNotificationsForUser(this.user._id);
         } else {
@@ -72,8 +73,14 @@ export class UserService implements OnDestroy, OnInit {
         this.ioConnection.unsubscribe();
     }
 
+    public setUser(newUser: User) {
+        localStorage.setItem('loggedInUser', JSON.stringify(newUser));
+        // Acts as a validation sanity check
+        this.user = JSON.parse(localStorage.getItem('loggedInUser'));
+    }
+
     /**
-     * Set the token in local storage,
+     * Set the token, user in local storage,
      * sets the logged in status to true, and
      * notifies the server that a user has logged in
      */
@@ -84,6 +91,7 @@ export class UserService implements OnDestroy, OnInit {
         }
 
         console.log('Logged in user: ', user);
+        localStorage.setItem('loggedInUser', JSON.stringify(user));
         this.user = user;
         this.setLoggedIn(true);
 
@@ -139,7 +147,7 @@ export class UserService implements OnDestroy, OnInit {
                     this.notifyUserLoggedOutToServer(this.user);
                     // Remove tokens and profile and update login status subject
                     localStorage.removeItem('jwtToken');
-                    // localStorage.removeItem('loggedInUser');
+                    localStorage.removeItem('loggedInUser');
                     this.user = null;
                     this.setLoggedIn(false);
                 })

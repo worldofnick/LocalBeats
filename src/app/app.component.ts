@@ -6,9 +6,6 @@ import 'rxjs/add/operator/filter';
 import { RoutePartsService } from "./services/route-parts/route-parts.service";
 import { SocketService } from 'app/services/chats/socket.service';
 import { MatSnackBar } from '@angular/material';
-import { UserService } from './services/auth/user.service';
-import { JwtHelper } from 'angular2-jwt';
-import { User } from './models/user';
 
 @Component({
   selector: 'app-root',
@@ -18,52 +15,22 @@ import { User } from './models/user';
 export class AppComponent implements OnInit {
   appTitle = 'localBeats';
   pageTitle = '';
-  jwtHelper: JwtHelper = new JwtHelper();
 
-  constructor(public title: Title,
-    private router: Router,
+  constructor(public title: Title, 
+    private router: Router, 
     private activeRoute: ActivatedRoute,
     public snackBar: MatSnackBar,
     private routePartsService: RoutePartsService,
-    private _socketService: SocketService, private _userService: UserService) {
-      // Initialize the client socket before anything else
-      this._socketService.initSocket();
-    }
+    private _socketService: SocketService) { }
 
   ngOnInit() {
     this.changePageTitle();
+    this._socketService.initSocket();
     // Init User Tour
     setTimeout(() => {
       hopscotch.startTour(this.tourSteps());
     }, 2000);
-
-    this.getUserFromJwtAndSave();
   }
-
-  /**
-     * Checks the validity of the JWT token from the localstorage and if
-     *  still valid, retrieve the user object from JWT's id claim and
-     *  sets this.user to it, essentially logging the user in. If the JWT
-     *  has expired or if there is no JWT (user logged out), does nothing and
-     *  app logs out the user.
-     */
-  private getUserFromJwtAndSave() {
-    try {
-        const decodedToken = this.jwtHelper.decodeToken(localStorage.getItem('jwtToken'));
-        console.log('Expired: ', this.jwtHelper.isTokenExpired(localStorage.getItem('jwtToken')));
-        if (!this.jwtHelper.isTokenExpired(localStorage.getItem('jwtToken'))) {
-            this._userService.getUserByID(decodedToken.id).then((obtainedUser: User) => {
-                console.log('Obtained user: ', obtainedUser);
-                this._userService.user = obtainedUser;
-            }).catch((err) => {
-              // Token has expired, so do nothing and let the app log itself out.
-            });
-        }
-    } catch (error) {
-        // No toke found. Already logged out so do nothing
-    }
-}
-
   /*
   ***** Tour Steps ****
   * You can supply tourSteps directly in hopscotch.startTour instead of 
