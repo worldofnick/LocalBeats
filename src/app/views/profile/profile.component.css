@@ -1,7 +1,11 @@
-mat-list-item:hover {
+#spotifyList:hover {
     background-color: rgba(230,230,230,0.6);
 }
 
-mat-list-item:active {
+#spotifyList:active {
     background-color: rgba(220,220,220,0.6)
+}
+
+#spotifyList {
+    border-bottom: 1px solid rgba(243,243,243, 1.0);
 }
