@@ -69,6 +69,8 @@ export class NotificationsComponent implements OnInit {
         this.notificationService.deleteNotificationById(this.notifications[index]._id).then((status: number)=>{
           // Success or failure
           if (status === 200) {
+            this.userService.getNotificationsCountForUser(this.userService.user._id);
+
             // Can remove it from this.notifications. Dont think will need a failure case? Cause if it fails, try again?
             // Can just it it along I guess.
           }
@@ -76,6 +78,7 @@ export class NotificationsComponent implements OnInit {
       }
 
     this.notifications = [];
+
   }
 
   deleteNotification(notification: Notification, index:number) {
@@ -92,6 +95,8 @@ export class NotificationsComponent implements OnInit {
           i++;
         }
         this.notifications = newNotifications;
+        this.userService.getNotificationsCountForUser(this.userService.user._id);
+
       }
     });
   }
