@@ -34,6 +34,8 @@ export class ProfileSettingsComponent implements OnInit {
   croppedImage: any = '';
   showCropper: boolean = false;
 
+  selectedTabIndex = 0;
+
   public uploader: FileUploader = new FileUploader({ url: 'upload_url' });
   public hasBaseDropZoneOver: boolean = false;
   constructor(private route: ActivatedRoute, private userService: UserService, private router : Router,
@@ -47,6 +49,11 @@ export class ProfileSettingsComponent implements OnInit {
     this.user = this.userService.user;
     this.nowArtist = this.user.isArtist;
     this.createForm();
+    this.route.queryParams.subscribe(params => {
+      if (params['stripe']) {
+        this.selectedTabIndex = 2;
+      }
+    });
   }
 
   createForm(){
