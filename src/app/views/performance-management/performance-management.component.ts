@@ -16,7 +16,7 @@ import { StripeService } from 'app/services/payments/stripe.service';
 // Data Models
 import { User } from '../../models/user';
 import { Event } from '../../models/event';
-import { Booking, StatusMessages, NegotiationResponses, VerificationResponse } from '../../../../models/booking';
+import { Booking, StatusMessages, NegotiationResponses, VerificationResponse } from '../../models/booking';
 import { Action } from '../../services/chats/model/action'
 import { SocketEvent } from '../../services/chats/model/event'
 import { Notification } from '../../models/notification'
@@ -561,3 +561,4 @@ export class PaymentHistoryDialog {
   onNoClick(): void {
     this.dialogRef.close();
   }
+}
