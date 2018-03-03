@@ -35,7 +35,7 @@ import { ChartsModule } from 'ng2-charts/ng2-charts';
 import { FileUploadModule } from 'ng2-file-upload/ng2-file-upload';
 import { CommonPipesModule } from "../../pipes/common/common-pipes.module";
 import { ReactiveFormsModule } from '@angular/forms';
-import { EventManagementComponent } from './event-management.component';
+import { EventManagementComponent, ConfirmPaymentDialog } from './event-management.component';
 import { EventManagementRoutes } from './event-management.routing';
 
 @NgModule({
@@ -85,11 +85,12 @@ import { EventManagementRoutes } from './event-management.routing';
     CommonPipesModule,
     RouterModule.forChild(EventManagementRoutes)
   ],
-  declarations: [EventManagementComponent],
+  declarations: [EventManagementComponent, ConfirmPaymentDialog],
   exports: [
-      EventManagementComponent
+      EventManagementComponent,
+      ConfirmPaymentDialog
   ],
   providers: [],
-  entryComponents: []
+  entryComponents: [ConfirmPaymentDialog]
 })
 export class EventManagementModule { }
