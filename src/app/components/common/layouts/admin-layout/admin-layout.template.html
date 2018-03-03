@@ -7,7 +7,7 @@
           <!-- Two different logos for dark and light themes -->
           <h1 class="app-logo-text">LocalBeats</h1>
       </div>
-      <ng-template [ngIf]="userService.isAuthenticated()">
+      <ng-template [ngIf]="userService.amIDoneLoading()">
         <!-- Sidebar user -->
         <div class="app-user">
           <div class="app-user-photo">
