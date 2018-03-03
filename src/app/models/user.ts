@@ -7,7 +7,6 @@ export class User {
     public firstName?: string;
     public lastName?: string;
     public email?: string;
-    public spotifyID?: string;       // TODO: remove later after beta presentation. DEPRECATED
     public password?: string;
     public genres?: string[];
     public isArtist?: boolean;
@@ -28,6 +27,10 @@ export class User {
         accessToken?: string,
         refreshToken?: string,
         albums?: any[]
+    };
+
+    public soundcloud?: {
+        id?: string
     };
 
     // Chat properties
