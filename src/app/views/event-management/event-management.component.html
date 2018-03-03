@@ -1,0 +1,205 @@
+<section id="portfolio-section" class="portfolio home-section" [ngClass]="{'light-gray': backgroundGray}">
+  <div class="container">
+    <div class="section-header">
+      <h2>My Events</h2>
+    </div>
+        <div fxLayout="row" fxLayout.lt-sm="column" fxLayoutWrap="nowrap" fxLayoutGap="30px">
+          <div fxFlex="33.33">
+            <mat-card class="p-0 m-0">
+              <img mat-card-image src="assets/images/sq-10.jpg">
+              <mat-card-content>
+                <h5><strong><a href="">Event Three</a></strong></h5>
+                <p class="mb-0">Event Date</p>
+                <p class="mt-0 mb-0">Event Location</p>
+                <p class="mt-0 mb-0">Event Price</p>
+                <p class="mt-1">Event Description</p>
+                <mat-accordion>
+                  <mat-expansion-panel class="no-shadow">
+                    <mat-expansion-panel-header>
+                      <mat-panel-title>
+                        Applicants
+                      </mat-panel-title>
+                      <mat-panel-description>
+                        <span class="notification-value mat-bg-warn">1</span>
+                      </mat-panel-description>
+                    </mat-expansion-panel-header>
+                    <div fxLayout="column" fxLayoutAlign="space-between center" fxLayoutGap="10px">
+                      <mat-card class="p-1">
+                        <div fxLayout="column">
+                          <div fxFlex="90" fxLayout="row" fxLayout.lt-xs="column"class="mb-05">
+                            <div fxFlex="20" style="float: left;">
+                              <a href="#"><img mat-card-avatar style="float: left;" src="assets/images/sq-12.jpg"></a>
+                            </div>
+                            <div fxFlex="80" style="float: left;">
+                              <mat-card-title class="mb-05"><a href="#">Adam Rosenberg</a></mat-card-title>
+                              <mat-card-subtitle class="mb-0">$500</mat-card-subtitle>
+                            </div>
+                          </div>
+                          <mat-chip fxFlex="10" class="text-center notify-chip mb-05" color="accent" selected="true">New Bid</mat-chip>
+                          <mat-divider class="mb-05"></mat-divider>
+                        </div>
+                        <div fxLayout="row" fxLayoutGap="10px" >
+                          <button class="text-muted" mat-icon-button matTooltip="View Application"><mat-icon>event_available</mat-icon></button>
+                          <button class="text-muted" mat-icon-button matTooltip="Message Artist"><mat-icon>chat</mat-icon></button>
+                          <!-- <button class="text-muted" mat-icon-button matTooltip="Pay Artist"><mat-icon>attach_money</mat-icon></button>
+                          <button class="text-muted" mat-icon-button matTooltip="Refund Host"><mat-icon>money_off</mat-icon></button>
+                          <button class="text-muted" mat-icon-button matTooltip="Payment History"><mat-icon>history</mat-icon></button>
+                          <button class="text-muted" mat-icon-button matTooltip="Review Artist"><mat-icon>star</mat-icon></button> -->
+                        </div>
+                      </mat-card>
+                    </div>
+                  </mat-expansion-panel>
+                  <mat-expansion-panel class="no-shadow">
+                    <mat-expansion-panel-header>
+                      <mat-panel-title>
+                        Requests
+                      </mat-panel-title>
+                      <mat-panel-description>
+                        <span class="notification-value mat-bg-warn">1</span>
+                      </mat-panel-description>
+                    </mat-expansion-panel-header>
+                    <div fxLayout="column" fxLayoutAlign="space-between center" fxLayoutGap="10px">
+                      <mat-card class="p-1">
+                        <div fxLayout="column">
+                          <div fxFlex="90" fxLayout="row" fxLayout.lt-xs="column"class="mb-05">
+                            <div fxFlex="20" style="float: left;">
+                              <a href="#"><img mat-card-avatar style="float: left;" src="assets/images/sq-12.jpg"></a>
+                            </div>
+                            <div fxFlex="80" style="float: left;">
+                              <mat-card-title class="mb-05"><a href="#">Adam Rosenberg</a></mat-card-title>
+                              <mat-card-subtitle class="mb-0">$500</mat-card-subtitle>
+                            </div>
+                          </div>
+                          <mat-chip fxFlex="10" class="text-center notify-chip mb-05" color="accent" selected="false">Complete</mat-chip>
+                          <mat-divider class="mb-05"></mat-divider>
+                        </div>
+                        <div fxLayout="row" fxLayoutGap="10px" >
+                          <button class="text-muted" mat-icon-button matTooltip="View Application"><mat-icon>event_available</mat-icon></button>
+                          <button class="text-muted" mat-icon-button matTooltip="Message Artist"><mat-icon>chat</mat-icon></button>
+                          <!-- <button class="text-muted" mat-icon-button matTooltip="Pay Artist"><mat-icon>attach_money</mat-icon></button>
+                          <button class="text-muted" mat-icon-button matTooltip="Refund Host"><mat-icon>money_off</mat-icon></button>
+                          <button class="text-muted" mat-icon-button matTooltip="Payment History"><mat-icon>history</mat-icon></button>
+                          <button class="text-muted" mat-icon-button matTooltip="Review Artist"><mat-icon>star</mat-icon></button> -->
+                        </div>
+                      </mat-card>
+                    </div>
+                  </mat-expansion-panel>
+                  <mat-expansion-panel class="no-shadow">
+                    <mat-expansion-panel-header>
+                      <mat-panel-title>
+                        Confirmed
+                      </mat-panel-title>
+                      <mat-panel-description>
+                        <span class="notification-value mat-bg-warn">1</span>
+                      </mat-panel-description>
+                    </mat-expansion-panel-header>
+                    <div fxLayout="column" fxLayoutAlign="space-between center" fxLayoutGap="10px">
+                      <mat-card class="p-1">
+                        <div fxLayout="column">
+                          <div fxFlex="90" fxLayout="row" fxLayout.lt-xs="column"class="mb-05">
+                            <div fxFlex="20" style="float: left;">
+                              <a href="#"><img mat-card-avatar style="float: left;" src="assets/images/sq-12.jpg"></a>
+                            </div>
+                            <div fxFlex="80" style="float: left;">
+                              <mat-card-title class="mb-05"><a href="#">Adam Rosenberg</a></mat-card-title>
+                              <mat-card-subtitle class="mb-0">$500</mat-card-subtitle>
+                            </div>
+                          </div>
+                          <mat-chip fxFlex="10" class="text-center notify-chip mb-05" color="accent" selected="false">Complete</mat-chip>
+                          <mat-divider class="mb-05"></mat-divider>
+                        </div>
+                        <div fxLayout="row" fxLayoutGap="10px" >
+                          <button class="text-muted" mat-icon-button matTooltip="View Application"><mat-icon>event_available</mat-icon></button>
+                          <button class="text-muted" mat-icon-button matTooltip="Message Artist"><mat-icon>chat</mat-icon></button>
+                          <!-- <button class="text-muted" mat-icon-button matTooltip="Pay Artist"><mat-icon>attach_money</mat-icon></button>
+                          <button class="text-muted" mat-icon-button matTooltip="Refund Host"><mat-icon>money_off</mat-icon></button>
+                          <button class="text-muted" mat-icon-button matTooltip="Payment History"><mat-icon>history</mat-icon></button>
+                          <button class="text-muted" mat-icon-button matTooltip="Review Artist"><mat-icon>star</mat-icon></button> -->
+                        </div>
+                      </mat-card>
+                    </div>
+                  </mat-expansion-panel>
+                  <mat-expansion-panel class="no-shadow">
+                    <mat-expansion-panel-header>
+                      <mat-panel-title>
+                        Completed
+                      </mat-panel-title>
+                      <mat-panel-description>
+                        <span class="notification-value mat-bg-warn">1</span>
+                      </mat-panel-description>
+                    </mat-expansion-panel-header>
+                    <div fxLayout="column" fxLayoutAlign="space-between center" fxLayoutGap="10px">
+                      <mat-card class="p-1">
+                        <div fxLayout="column">
+                          <div fxFlex="90" fxLayout="row" fxLayout.lt-xs="column"class="mb-05">
+                            <div fxFlex="20" style="float: left;">
+                              <a href="#"><img mat-card-avatar style="float: left;" src="assets/images/sq-12.jpg"></a>
+                            </div>
+                            <div fxFlex="80" style="float: left;">
+                              <mat-card-title class="mb-05"><a href="#">Adam Rosenberg</a></mat-card-title>
+                              <mat-card-subtitle class="mb-0">$500</mat-card-subtitle>
+                            </div>
+                          </div>
+                          <mat-chip fxFlex="10" class="text-center notify-chip mb-05" color="accent" selected="false">Complete</mat-chip>
+                          <mat-divider class="mb-05"></mat-divider>
+                        </div>
+                        <div fxLayout="row" fxLayoutGap="10px" >
+                          <button class="text-muted" mat-icon-button matTooltip="View Application"><mat-icon>event_available</mat-icon></button>
+                          <button class="text-muted" mat-icon-button matTooltip="Message Artist"><mat-icon>chat</mat-icon></button>
+                          <!-- <button class="text-muted" mat-icon-button matTooltip="Pay Artist"><mat-icon>attach_money</mat-icon></button>
+                          <button class="text-muted" mat-icon-button matTooltip="Refund Host"><mat-icon>money_off</mat-icon></button>
+                          <button class="text-muted" mat-icon-button matTooltip="Payment History"><mat-icon>history</mat-icon></button>
+                          <button class="text-muted" mat-icon-button matTooltip="Review Artist"><mat-icon>star</mat-icon></button> -->
+                        </div>
+                      </mat-card>
+                    </div>
+                  </mat-expansion-panel>
+                  <mat-expansion-panel class="no-shadow">
+                    <mat-expansion-panel-header>
+                      <mat-panel-title>
+                        Cancelled
+                      </mat-panel-title>
+                      <mat-panel-description>
+                        <span class="notification-value mat-bg-warn">1</span>
+                      </mat-panel-description>
+                    </mat-expansion-panel-header>
+                    <div fxLayout="column" fxLayoutAlign="space-between center" fxLayoutGap="10px">
+                      <mat-card class="p-1">
+                        <div fxLayout="column">
+                          <div fxFlex="90" fxLayout="row" fxLayout.lt-xs="column"class="mb-05">
+                            <div fxFlex="20" style="float: left;">
+                              <a href="#"><img mat-card-avatar style="float: left;" src="assets/images/sq-12.jpg"></a>
+                            </div>
+                            <div fxFlex="80" style="float: left;">
+                              <mat-card-title class="mb-05"><a href="#">Adam Rosenberg</a></mat-card-title>
+                              <mat-card-subtitle class="mb-0">$500</mat-card-subtitle>
+                            </div>
+                          </div>
+                          <mat-chip fxFlex="10" class="text-center notify-chip mb-05" color="accent" selected="false">Complete</mat-chip>
+                          <mat-divider class="mb-05"></mat-divider>
+                        </div>
+                        <div fxLayout="row" fxLayoutGap="10px" >
+                          <button class="text-muted" mat-icon-button matTooltip="View Application"><mat-icon>event_available</mat-icon></button>
+                          <button class="text-muted" mat-icon-button matTooltip="Message Artist"><mat-icon>chat</mat-icon></button>
+                          <!-- <button class="text-muted" mat-icon-button matTooltip="Pay Artist"><mat-icon>attach_money</mat-icon></button>
+                          <button class="text-muted" mat-icon-button matTooltip="Refund Host"><mat-icon>money_off</mat-icon></button>
+                          <button class="text-muted" mat-icon-button matTooltip="Payment History"><mat-icon>history</mat-icon></button>
+                          <button class="text-muted" mat-icon-button matTooltip="Review Artist"><mat-icon>star</mat-icon></button> -->
+                        </div>
+                      </mat-card>
+                    </div>
+                  </mat-expansion-panel>
+                </mat-accordion>
+                <mat-divider class="mt-05 mb-1"></mat-divider>
+                <button class="text-muted" mat-icon-button matTooltip="Edit Event"><mat-icon>mode_edit</mat-icon></button>
+                <button class="text-muted" mat-icon-button matTooltip="Delete Event"><mat-icon>delete</mat-icon></button>
+              </mat-card-content>
+            </mat-card>
+          </div>
+        </div>
+
+        <div class="text-center home-section-action">
+          <button class="load" mat-raised-button mat-lg-button color="accent">Load More</button>
+        </div>
+  </div>
+</section>

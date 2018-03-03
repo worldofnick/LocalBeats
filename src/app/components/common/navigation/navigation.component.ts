@@ -42,6 +42,20 @@ export class NavigationComponent {
         tooltip: 'Calendar',
         icon: 'date_range',
         state: 'calendar'
+      },
+      {
+        name: 'My Performances',
+        type: 'link',
+        tooltip: 'My Performances',
+        icon: 'music_note',
+        state: 'myperformances'
+      },
+      {
+        name: 'My Events',
+        type: 'link',
+        tooltip: 'My Events',
+        icon: 'music_note',
+        state: 'myevents'
       }
     ];
   }

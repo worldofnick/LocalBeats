@@ -10,7 +10,7 @@ $md-primary: (
     200 : #92bdd0,
     300 : #66a3bd,
     400 : #458fae,
-    500 : #247ba0,
+    500 : #2d9ee0,
     600 : #207398,
     700 : #1b688e,
     800 : #165e84,
@@ -43,7 +43,7 @@ $md-accent: (
     200 : #ffecbe,
     300 : #ffe4a4,
     400 : #ffdf91,
-    500 : #ffd97d,
+    500 : #61c0bf,
     600 : #ffd575,
     700 : #ffcf6a,
     800 : #ffca60,
@@ -53,20 +53,20 @@ $md-accent: (
     A400 : #fffbf3,
     A700 : #fff1da,
     contrast: (
-        50 : #000000,
-        100 : #000000,
-        200 : #000000,
-        300 : #000000,
-        400 : #000000,
-        500 : #000000,
-        600 : #000000,
-        700 : #000000,
-        800 : #000000,
-        900 : #000000,
-        A100 : #000000,
-        A200 : #000000,
-        A400 : #000000,
-        A700 : #000000,
+        50 : #ffffff,
+        100 : #ffffff,
+        200 : #ffffff,
+        300 : #ffffff,
+        400 : #ffffff,
+        500 : #ffffff,
+        600 : #ffffff,
+        700 : #ffffff,
+        800 : #ffffff,
+        900 : #ffffff,
+        A100 : #ffffff,
+        A200 : #ffffff,
+        A400 : #ffffff,
+        A700 : #ffffff,
     )
 );
 
@@ -160,7 +160,7 @@ $primary-dark: darken( map-get($md-primary, 500), 8% );
         color: black;
     }
     .mat-bg-warn {
-        background-color: #f44336;
+        background-color: #61c0bf;
         color: white;
     }
     .mat-color-accent {
