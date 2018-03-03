@@ -93,8 +93,11 @@ app.get('/profile/stripe/', function(req, res) {
   res.redirect('/?success=' + req.query.success);
 });
 
-app.get('*', function(req, res) {
-  res.redirect('/');
+app.get('/*', function(req, res) {
+  if (req.query.success != undefined) {
+    res.redirect('/?success=' + req.query.success);
+  }
+  res.redirect('index.html', {root: path.join(__dirname, 'public')});
 });
 
 console.log('Magic happens at http://localhost:' + port);
