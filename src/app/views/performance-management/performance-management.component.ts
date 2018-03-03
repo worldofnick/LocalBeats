@@ -16,7 +16,7 @@ import { StripeService } from 'app/services/payments/stripe.service';
 // Data Models
 import { User } from '../../models/user';
 import { Event } from '../../models/event';
-import { Booking, StatusMessages, NegotiationResponses, VerificationResponse } from '../../models/booking';
+import { Booking, StatusMessages, NegotiationResponses, VerificationResponse, BookingType } from '../../models/booking';
 import { Action } from '../../services/chats/model/action'
 import { SocketEvent } from '../../services/chats/model/event'
 import { Notification } from '../../models/notification'
@@ -162,7 +162,7 @@ export class PerformanceManagementComponent implements OnInit {
           
         } else {
           // Check to see if the artist applied
-          if(booking.bookingType == 'artist-apply') {
+          if(booking.bookingType == BookingType.artistApply) {
             applicationBookings.push(booking);
             // If the booking is not confirmed and the host has approved, a new notification exists
             if(booking.hostApproved) {
@@ -215,7 +215,7 @@ export class PerformanceManagementComponent implements OnInit {
       requestIndex = this.performances.requests.findIndex(r => r._id == newBooking._id)
       applicationIndex = this.performances.applications.findIndex(a => a._id == newBooking._id);
       // Remove from applications/requests and put on confirmations
-      if(newBooking.bookingType == 'artist-apply') {
+      if(newBooking.bookingType == BookingType.artistApply) {
         this.performances.applications.splice(applicationIndex, 1);
       } else {
         this.performances.requests.splice(requestIndex, 1);
@@ -246,7 +246,7 @@ export class PerformanceManagementComponent implements OnInit {
       } else {
         // Otherwise, it is a brand new application/request
         // Push onto applications/requests
-        if(newBooking.bookingType == 'artist-apply') {
+        if(newBooking.bookingType == BookingType.artistApply) {
           this.performances.applications.push(newBooking);
           // Increment the notifications
           this.performances.applicationNotifications++;
@@ -259,7 +259,7 @@ export class PerformanceManagementComponent implements OnInit {
       }
     } else if(response == NegotiationResponses.decline) {
       // Find it in applications and remove it
-      if(newBooking.bookingType == 'artist-apply') {
+      if(newBooking.bookingType == BookingType.artistApply) {
         applicationIndex = this.performances.applications.findIndex(a => a._id == newBooking._id);
         this.performances.applications.splice(applicationIndex, 1);
       } else {
@@ -437,6 +437,9 @@ export class PerformanceManagementComponent implements OnInit {
     })
   }
 
+  /*
+  Artist responds to applications/bids through negotiation dialog
+  */
   openNegotiationDialog(booking: Booking, bookingIndex: number) {
     let view = "artist";
     if(this.negotiationSubscription) {
@@ -461,7 +464,7 @@ export class PerformanceManagementComponent implements OnInit {
           // Update the booking asynchronously
           this.bookingService.updateBooking(booking).then(() => {
             // Update the model of the component
-            if(booking.bookingType == 'artist-apply') {
+            if(booking.bookingType == BookingType.artistApply) {
               this.performances.applications[bookingIndex] = booking;
               this.performances.applicationNotifications--;
             } else {
@@ -484,7 +487,7 @@ export class PerformanceManagementComponent implements OnInit {
             // Asynchronously update
             this.bookingService.acceptBooking(booking, view).then(() => {
               // Update the model of the component
-              if(booking.bookingType == 'artist-apply') {
+              if(booking.bookingType == BookingType.artistApply) {
                 this.performances.applications.splice(bookingIndex, 1);
                 this.performances.applicationNotifications--;
               } else {
@@ -506,7 +509,7 @@ export class PerformanceManagementComponent implements OnInit {
           // Asynchronously update
           this.bookingService.declineBooking(booking).then(() => {
             // Update the model of the component
-            if(booking.bookingType == 'artist-apply') {
+            if(booking.bookingType == BookingType.artistApply) {
               this.performances.applications.splice(bookingIndex, 1);
               this.performances.applicationNotifications--;
             } else {
@@ -527,6 +530,9 @@ export class PerformanceManagementComponent implements OnInit {
           // Creat enotification for host
           this.bookingService.updateBooking(booking).then(() => {
             // Update the model of the component
+            this.performances.confirmations.splice(bookingIndex,1);
+            this.performances.cancellations.push(booking);
+            this.performances.cancellationNotifications++;
             this.createNotificationForHost(booking, result.response, ['/events', booking.eventEID._id],
             'import_export', booking.hostUser.firstName + " has cancelled the confirmed booking for " + booking.eventEID.eventName);
           });

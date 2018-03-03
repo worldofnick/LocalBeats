@@ -18,7 +18,7 @@ import { StripeService } from 'app/services/payments/stripe.service';
 // Data Models
 import { User } from '../../models/user';
 import { Event } from '../../models/event';
-import { Booking, StatusMessages, NegotiationResponses, VerificationResponse } from '../../models/booking';
+import { Booking, StatusMessages, NegotiationResponses, VerificationResponse, BookingType } from '../../models/booking';
 import { Action } from '../../services/chats/model/action';
 import { SocketEvent } from '../../services/chats/model/event';
 import { Notification } from '../../models/notification';
@@ -164,7 +164,7 @@ export class EventManagementComponent implements OnInit {
               }
             } else {
               // Check to see if the artist applied
-              if(booking.bookingType == 'artist-apply') {
+              if(booking.bookingType == BookingType.artistApply) {
                 applicationBookings.push(booking);
                 // If the booking is not confirmed and the artist has approved, a new notification exists
                 if(booking.artistApproved) {
@@ -223,7 +223,7 @@ export class EventManagementComponent implements OnInit {
       requestIndex = this.events[eventIndex].requests.findIndex(r => r._id == newBooking._id)
       applicationIndex = this.events[eventIndex].applications.findIndex(a => a._id == newBooking._id);
       // Remove from applications/requests and put on confirmations
-      if(newBooking.bookingType == 'artist-apply') {
+      if(newBooking.bookingType == BookingType.artistApply) {
         this.events[eventIndex].applications.splice(applicationIndex, 1);
       } else {
         this.events[eventIndex].requests.splice(requestIndex, 1);
@@ -255,7 +255,7 @@ export class EventManagementComponent implements OnInit {
       } else {
         // Otherwise, it is a brand new application/request
         // Push onto applications/requests
-        if(newBooking.bookingType == 'artist-apply') {
+        if(newBooking.bookingType == BookingType.artistApply) {
           this.events[eventIndex].applications.push(newBooking);
           // Increment the notifications
           this.events[eventIndex].applicationNotifications++;
@@ -269,7 +269,7 @@ export class EventManagementComponent implements OnInit {
     } else if(response == NegotiationResponses.decline) {
       // Find it in applications/requests and remove it
       eventIndex = this.events.findIndex(e => e.event._id == newBooking.eventEID._id);
-      if(newBooking.bookingType == 'artist-apply') {
+      if(newBooking.bookingType == BookingType.artistApply) {
         applicationIndex = this.events[eventIndex].applications.findIndex(a => a._id == newBooking._id);
         this.events[eventIndex].applications.splice(applicationIndex, 1);
       } else {
@@ -497,7 +497,7 @@ export class EventManagementComponent implements OnInit {
           // Update the booking asynchronously
           this.bookingService.updateBooking(booking).then(() => {
             // Update the model of the component
-            if(booking.bookingType == 'artist-apply') {
+            if(booking.bookingType == BookingType.artistApply) {
               this.events[eventIndex].applications[bookingIndex] = booking;
               this.events[eventIndex].applicationNotifications--;
             } else {
@@ -520,7 +520,7 @@ export class EventManagementComponent implements OnInit {
             // Asynchronously update
             this.bookingService.acceptBooking(booking, view).then(() => {
               // Update the model of the component
-              if(booking.bookingType == 'artist-apply') {
+              if(booking.bookingType == BookingType.artistApply) {
                 this.events[eventIndex].applications.splice(bookingIndex, 1);
                 this.events[eventIndex].applicationNotifications--;
               } else {
@@ -542,7 +542,7 @@ export class EventManagementComponent implements OnInit {
           // Asynchronously update
           this.bookingService.declineBooking(booking).then(() => {
             // Update the model of the component
-            if(booking.bookingType == 'artist-apply') {
+            if(booking.bookingType == BookingType.artistApply) {
               this.events[eventIndex].applications.splice(bookingIndex, 1);
               this.events[eventIndex].applicationNotifications--;
             } else {
