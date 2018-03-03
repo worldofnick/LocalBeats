@@ -31,7 +31,9 @@ import { Payment, PaymentStatus } from '../../models/payment'
 export class PerformanceManagementComponent implements OnInit {
   // User Model
   user: User;
-  subscription: ISubscription;
+  socketSubscription: ISubscription;
+  negotiationSubscription: ISubscription;
+  verificationSubscription: ISubscription;
   private canRefund: boolean = true;
   // Performances of the User Model
   performances: {
@@ -76,14 +78,20 @@ export class PerformanceManagementComponent implements OnInit {
     }
 
   ngOnInit() {
-    this.subscription = this._socketService.onEvent(SocketEvent.SEND_NOTIFICATION)
+    this.socketSubscription = this._socketService.onEvent(SocketEvent.SEND_NOTIFICATION)
       .subscribe((notification: Notification) => {
         this.updateModel(notification.booking, notification.response);
     });
   }
 
   ngOnDestroy() {
-    this.subscription.unsubscribe();
+    this.socketSubscription.unsubscribe();
+    if(this.negotiationSubscription) {
+      this.negotiationSubscription.unsubscribe();
+    }
+    if(this.verificationSubscription) {
+      this.verificationSubscription.unsubscribe();
+    }
   }
 
   /*
@@ -347,7 +355,10 @@ export class PerformanceManagementComponent implements OnInit {
   2. Verified and the Host has verified - complete the booking and send payment to host
   */
   artistVerify(booking: Booking, bookingIndex: number) {
-    this.bookingService.verify(booking, false)
+    if(this.verificationSubscription) {
+      this.verificationSubscription.unsubscribe();
+    }
+    this.verificationSubscription = this.bookingService.verify(booking, false)
     .subscribe((result)=> {
       // Check to see if a response was recorded in the verification dialog box
       if(result != undefined) {
@@ -418,7 +429,10 @@ export class PerformanceManagementComponent implements OnInit {
 
   openNegotiationDialog(booking: Booking, bookingIndex: number) {
     let view = "artist";
-    this.bookingService.negotiate(booking, false, view)
+    if(this.negotiationSubscription) {
+      this.negotiationSubscription.unsubscribe();
+    }
+    this.negotiationSubscription = this.bookingService.negotiate(booking, false, view)
     .subscribe((result) => {
       // Check to see if a response was recorded in the negotiation dialog box
       if (result != undefined) {
