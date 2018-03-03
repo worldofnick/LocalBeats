@@ -41,9 +41,9 @@ export class NotificationService {
 
     }
 
-    public deleteNotificationById(receiverID: string): Promise<Number> {
+    public deleteNotificationById(notificationID: string): Promise<Number> {
 
-        const current = SERVER_URL + 'api/notification/' + receiverID;
+        const current = SERVER_URL + 'api/notification/' + notificationID;
         return this.http.delete(current)
             .toPromise()
             .then((response: Response) => {
