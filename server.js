@@ -10,6 +10,7 @@ const http          = require('http');
 const async         = require('async');
 const socketIO      = require('socket.io');
 const jwt           = require('jsonwebtoken');                // used to create, sign, and verify tokens
+const path          = require('path');
 var cors            = require('cors')
 const config        = require('./config');                    // get the config file
 const User          = require('./backend/models/userModel');  
