@@ -41,8 +41,8 @@ export class PerformanceManagementComponent implements OnInit {
     requestNotifications: number,
     confirmations: Booking[],
     confirmationNotifications: number,
-    completed: Booking[],
-    completedNotifications: number,
+    completions: Booking[],
+    completionNotifications: number,
     cancellations: Booking[],
     cancellationNotifications: number,
     paymentStatues: PaymentStatus[]};
@@ -67,8 +67,8 @@ export class PerformanceManagementComponent implements OnInit {
         requestNotifications: 0,
         confirmations: [],
         confirmationNotifications: 0,
-        completed: [],
-        completedNotifications: 0,
+        completions: [],
+        completionNotifications: 0,
         cancellations: [],
         cancellationNotifications: 0,
         paymentStatues: []};
@@ -177,18 +177,31 @@ export class PerformanceManagementComponent implements OnInit {
         requestNotifications: reqNotif,
         confirmations: confirmedBookings,
         confirmationNotifications: numConf,
-        completed: completedBookings,
-        completedNotifications: completeNotif,
+        completions: completedBookings,
+        completionNotifications: completeNotif,
         cancellations: cancelledBookings,
         cancellationNotifications: cancelNotif,
         paymentStatues: paymentStatues};
     });
   }
 
+  /*
+  Receives a response and a new booking from the subscription to the socket
+  Updates the component model in real-time according to the negotiation response
+  Negotiation Cases:
+  1. New Bid/Application - find if already on applications/requests, otherwise push onto applications/requests
+  2. Accepted by Host, Booking Approved - splice booking from applications/requests and push onto confirmations
+  3. Declined - find in applications/requests and splice it
+  4. Cancelled - find in applications/requests/confirmations, splice it
+  5. Complete - host has done final verification, find in confirmations, splice it, and push onto completions, update payment statuses
+  6. Verification - host has verified, but artist has yet to verify, update confirmations with a notification
+  7. Payment - a refund has occurred from the artist, update the completed booking and payment statuses
+  */
   private updateModel(newBooking: Booking, response: NegotiationResponses) {
     let applicationIndex: number = -1;
     let requestIndex: number = -1;
     let confirmationIndex: number = -1;
+    let completionIndex: number = -1;
     // Check if the booking has been approved
     if(newBooking.approved && response == NegotiationResponses.accept) {
       requestIndex = this.performances.requests.findIndex(r => r._id == newBooking._id)
@@ -209,16 +222,16 @@ export class PerformanceManagementComponent implements OnInit {
       if(applicationIndex >= 0) {
         // Then it must be a performance with a current application
         // Update this event
-        if(this.performances.applications[applicationIndex].artistApproved != newBooking.artistApproved) {
-          // Increment the notifications only if there wasn't a previous one before the artist responded
+        if(this.performances.applications[applicationIndex].hostApproved != newBooking.hostApproved) {
+          // Increment the notifications only if there wasn't a previous one before the host responded
           this.performances.applicationNotifications++;
         }
         this.performances.applications[applicationIndex] = newBooking;
       } else if(requestIndex >= 0){
         // Then it is an event with a current request
         // Update this event
-        if(this.performances.requests[requestIndex].artistApproved != newBooking.artistApproved) {
-          // Increment the notifications only if there wasn't a previous one before the artist responded
+        if(this.performances.requests[requestIndex].hostApproved != newBooking.hostApproved) {
+          // Increment the notifications only if there wasn't a previous one before the host responded
           this.performances.requestNotifications++;
         }
         this.performances.requests[requestIndex] = newBooking;
@@ -242,6 +255,7 @@ export class PerformanceManagementComponent implements OnInit {
         applicationIndex = this.performances.applications.findIndex(a => a._id == newBooking._id);
         this.performances.applications.splice(applicationIndex, 1);
       } else {
+        // Otherwise, it was a request, remove it
         requestIndex = this.performances.requests.findIndex(r => r._id == newBooking._id);
         this.performances.requests.splice(requestIndex, 1);
       }
@@ -251,32 +265,37 @@ export class PerformanceManagementComponent implements OnInit {
       this.performances.confirmations.splice(confirmationIndex, 1);
       this.performances.cancellationNotifications++;
       this.performances.cancellations.push(newBooking);
-    } else if(response == NegotiationResponses.payment) {
+    } else if(response == NegotiationResponses.complete) {
+      // Find it in confirmations
       confirmationIndex = this.performances.confirmations.findIndex(a => a._id == newBooking._id);
-      if(confirmationIndex >= 0) {
-        // The host has completed the booking
-        this.performances.confirmations.splice(confirmationIndex, 1);
-        this.performances.completedNotifications++;
-        this.performances.completed.push(newBooking);
-        // Update payment status
-        this.bookingService.bookingPaymentStatus(newBooking).then((status: PaymentStatus) => {
-          this.performances.paymentStatues.push(status);
-        });
-      } else {
-        this.performances.completedNotifications++;
-        this.updatePaymentStatues(newBooking);
-      }
-      
+      // The artist has verified and the booking is complete
+      this.performances.confirmations.splice(confirmationIndex,1);
+      this.performances.completionNotifications++;
+      this.performances.completions.push(newBooking);
+      // Get the payment statuses
+      // If a booking is complete, it should have a payment status
+      this.bookingService.bookingPaymentStatus(newBooking).then((status: PaymentStatus) => {
+        this.performances.paymentStatues.push(status);
+      });
     } else if(response == NegotiationResponses.verification) {
+      // Find it in confirmations
       confirmationIndex = this.performances.confirmations.findIndex(a => a._id == newBooking._id);
       // The host has either verified or not, update the booking so the artist is aware
       this.performances.confirmations[confirmationIndex] = newBooking;
       this.performances.confirmationNotifications++;
+    } else if(response == NegotiationResponses.payment) {
+      // Update payment status of completed booking because a payment has happened
+      completionIndex = this.performances.completions.findIndex(a => a._id == newBooking._id);
+      this.bookingService.bookingPaymentStatus(newBooking).then((status: PaymentStatus) => {
+        this.performances.completions[completionIndex] = newBooking;
+        this.performances.completionNotifications++;
+        this.performances.paymentStatues[completionIndex] = status;
+      });
     }
   }
 
   onViewEvent(event:Event){
-    this.router.navigate(['/events', event._id]); //this will go to the page about the event
+    this.router.navigate(['/events', event._id]);
   }
 
   resetConfirmations(event: MatTabChangeEvent) {

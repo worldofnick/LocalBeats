@@ -196,7 +196,7 @@ export class EventManagementComponent implements OnInit {
   1. New Bid/Application - find if already on applications/requests, otherwise push onto applications/requests
   2. Accepted by Artist, Booking Approved - splice booking from applications/requests and push onto confirmations
   3. Declined - find in applications/requests and splice it
-  4. Cancelled - find in applications/requests/confirmations, splice it, check if there is a strict cancellation policy and charge user
+  4. Cancelled - find in applications/requests/confirmations, splice it
   5. Complete - artist has done final verification, find in confirmations, splice it, and push onto completions, update payment statuses
   6. Verification - artist has verified, but host has yet to verify, update confirmations with a notification
   7. Payment - a refund has occurred from the artist, update the completed booking and payment statuses
@@ -291,7 +291,7 @@ export class EventManagementComponent implements OnInit {
       // Find it in confirmations
       eventIndex = this.events.findIndex(e => e.event._id == newBooking.eventEID._id);
       confirmationIndex = this.events[eventIndex].confirmations.findIndex(a => a._id == newBooking._id);
-      // The artist has verified and now waiting on host verification
+      // The artist has verified or not and now waiting on host verification
       this.events[eventIndex].confirmationNotifications++;
       this.events[eventIndex].confirmations[confirmationIndex] = newBooking;
     } else if(response == NegotiationResponses.payment) {
@@ -306,6 +306,9 @@ export class EventManagementComponent implements OnInit {
     }
   }
 
+  /*
+  Resets all completion notifications to 0 when that expansion panel has been clicked
+  */
   resetCompletionNotifications(eventIndex: number) {
     this.events[eventIndex].cancellationNotifications = 0;
     for(let booking of this.events[eventIndex].completions) {
@@ -316,6 +319,9 @@ export class EventManagementComponent implements OnInit {
     }
   }
 
+  /*
+  Resets all cancellation notifications to 0 when that expansion panel has been clicked
+  */
   resetCancellationNotifications(eventIndex: number) {
     this.events[eventIndex].cancellationNotifications = 0;
     for(let booking of this.events[eventIndex].cancellations) {
@@ -326,6 +332,9 @@ export class EventManagementComponent implements OnInit {
     }
   }
 
+  /*
+  Resets all confirmation notifications to 0 when that expansion panel has been clicked
+  */
   resetConfirmationNotifications(eventIndex: number) {
     this.events[eventIndex].confirmationNotifications = 0;
     for(let booking of this.events[eventIndex].confirmations) {
@@ -336,6 +345,10 @@ export class EventManagementComponent implements OnInit {
     }
   }
 
+  /*
+  Removes the event and all of its bookings from the model if the event is successfully
+  deleted in the database
+  */
   onDeleteEvent(event: Event, index: number) {
     this.eventService.deleteEventByEID(event).then((status: Number) => {
       if (status == 200) {
@@ -344,14 +357,26 @@ export class EventManagementComponent implements OnInit {
     });
   }
 
+  /*
+  Takes user to edit their event
+  */
   onEditEvent(event: Event) {
     this.router.navigate(['/events', 'update', event._id]);    
   }
 
+  /*
+  Takes user to their event singleton view page
+  */
   onViewEvent(event: Event) {
     this.router.navigate(['/events', event._id]);
   }
 
+  /*
+  Host verifies that the artist has or has not arrived at the confirmed booking
+  Cases:
+  1. Verified and the Artist has not verified - send a verification notification to artist
+  2. Verified and the Artist has verified - complete the booking and send payment to artist
+  */
   hostVerify(booking: Booking, bookingIndex: number, eventIndex: number) {
     this.bookingService.verify(booking, true)
     .subscribe((result)=> {
