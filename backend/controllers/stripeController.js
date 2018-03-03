@@ -52,22 +52,21 @@ exports.stripeAuthorize = function (req, res) {
      },
      json: true
    }, (err, response, body) => {
-     if (err || body.error) {
-       console.log('The Stripe onboarding process has not succeeded.');
-       res.redirect('https://localbeats.herokuapp.com/profile/settings/?success=false');
+     if (err || body.error) { 
+       res.redirect('/profile/settings/?success=false');
      } else {
        // Update the model and store the Stripe account ID in the DB.
        stripe.accounts.retrieve(
          body.stripe_user_id,
          function(err, account) {
            if (err) {
-             res.redirect('https://localbeats.herokuapp.com/profile/settings/?success=false');
+             res.redirect('/profile/settings/?success=false');
            }
 
            req.user.stripeAccountId = body.stripeAccountId;
            user.save(function (err) {
             if(err) {
-              res.redirect('https://localbeats.herokuapp.com/profile/settings/?success=false');
+              res.redirect('/profile/settings/?success=false');
             }
           });
 
@@ -75,7 +74,7 @@ exports.stripeAuthorize = function (req, res) {
        );
      }
      // Redirect to the final stage.
-     res.redirect('https://localbeats.herokuapp.com/profile/settings/?success=true');
+     res.redirect('/profile/settings/?success=true');
    });
 
  };
