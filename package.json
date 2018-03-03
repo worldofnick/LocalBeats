@@ -57,6 +57,7 @@
     "ng2-file-upload": "1.2.1",
     "ng2-translate": "5.0.0",
     "ng2-validation": "4.2.0",
+    "ngx-image-cropper": "^0.1.24",
     "ngx-quill": "2.0.4",
     "perfect-scrollbar": "0.7.1",
     "rxjs": "5.5.2",
