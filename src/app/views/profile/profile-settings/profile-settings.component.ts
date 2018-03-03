@@ -51,7 +51,12 @@ export class ProfileSettingsComponent implements OnInit {
     this.createForm();
     this.route.queryParams.subscribe(params => {
       if (params['stripe']) {
-        this.selectedTabIndex = 2;
+        this.userService.getUserByID(this.userService.user._id).then((user: User) => {
+          this.user = user;
+          // this.userService.setUser(user);
+          this.userService.user = user;
+        }).then(() => this.selectedTabIndex = 2);
+        
       }
     });
   }
