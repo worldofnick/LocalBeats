@@ -6,6 +6,6 @@ export class UserGuard implements CanActivate {
     
     constructor(private authService: UserService) {}
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot ) {
-        return this.authService.amIDoneLoading();
+        return this.authService.isAuthenticated();
     }
 }

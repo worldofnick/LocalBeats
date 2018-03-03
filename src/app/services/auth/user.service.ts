@@ -11,6 +11,7 @@ import { Action } from '../../services/chats/model/action';
 import { environment } from '../../../environments/environment';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { JwtHelper } from 'angular2-jwt';
+import { decode } from 'punycode';
 
 // For Angular 5 HttpClient Module
 const httpOptions = {
@@ -47,20 +48,46 @@ export class UserService implements OnDestroy {
      */
     constructor(private http: Http, private _socketService: SocketService, private _httpClient: HttpClient) {
 
-        // If authenticated, set local user property and update login status subject
+        // If authenticated, get the user from JWT id, and update login status subject
         // If token is expired, log out to clear any data from localStorage
-        if (this.isAuthenticated()) {
-            this.user = JSON.parse(localStorage.getItem('loggedInUser'));
-            this.setLoggedIn(true);
-            this.notifyNewUserLoginToServer(this.user);
-
-            // TODO: @Adam Should make new socket events calls for faster performance!!!
-            this.getNotificationsCountForUser(this.user._id);
-            this.getNotificationsForUser(this.user._id);
+        if (this.isJwtValid()) {
+            if ( this.gotUserFromJWT() ) {
+                this.setLoggedIn(true);
+                this.notifyNewUserLoginToServer(this.user);
+                this.getNotificationsCountForUser(this.user._id);
+                this.getNotificationsForUser(this.user._id);
+            } else {
+                this.logout();
+            }
         } else {
             this.logout();
         }
         this.initIoConnection();
+    }
+
+    /**
+     * Checks the validity of the JWT token from the localstorage and if
+     *  still valid, retrieve the user object from JWT's id claim and
+     *  sets this.user to it, essentially logging the user in. If the JWT
+     *  has expired or if there is no JWT (user logged out), returns false.
+     */
+    private gotUserFromJWT(): boolean {
+        try {
+            let decodedToken = this.jwtHelper.decodeToken(localStorage.getItem('jwtToken'));
+            console.log('Expired: ', this.jwtHelper.isTokenExpired(localStorage.getItem('jwtToken')));
+            if (!this.jwtHelper.isTokenExpired(localStorage.getItem('jwtToken'))) {
+                this.getUserByID(decodedToken.id).then((obtainedUser: User) => {
+                    console.log('Obtained user: ', obtainedUser);
+                    this.user = obtainedUser;
+                    return this.user !== null;
+                }).catch((err) => {
+                    return false;
+                });
+            }
+            return false;
+        } catch (error) {
+            return false;
+        }
     }
 
     /**
@@ -69,12 +96,6 @@ export class UserService implements OnDestroy {
     ngOnDestroy() {
         // Destroy socket event listener
         this.ioConnection.unsubscribe();
-    }
-
-    public setUser(newUser: User) {
-        localStorage.setItem('loggedInUser', JSON.stringify(newUser));
-        // Acts as a validation sanity check
-        this.user = JSON.parse(localStorage.getItem('loggedInUser'));
     }
 
     /**
@@ -89,7 +110,6 @@ export class UserService implements OnDestroy {
         }
 
         console.log('Logged in user: ', user);
-        localStorage.setItem('loggedInUser', JSON.stringify(user));
         this.user = user;
         this.setLoggedIn(true);
 
@@ -109,7 +129,7 @@ export class UserService implements OnDestroy {
      * Returns if the user's session is still valid based on the
      *  JWT expiration date (usually 1 whole day from the time of issue)
      */
-    public isAuthenticated(): boolean {
+    public isJwtValid(): boolean {
         let result;
         try {
             result = !this.jwtHelper.isTokenExpired(localStorage.getItem('jwtToken'));
@@ -123,8 +143,8 @@ export class UserService implements OnDestroy {
      * Checks and returns true if this user is
      *  authenticated AND the object is done loading
      */
-    public amIDoneLoading(): boolean {
-        return (this.isAuthenticated() && this.user !== null && this.user !== undefined ) ? true : false;
+    public isAuthenticated(): boolean {
+        return (this.isJwtValid() && this.user !== null && this.user !== undefined ) ? true : false;
     }
 
     // ===============================================
@@ -143,9 +163,8 @@ export class UserService implements OnDestroy {
                 .toPromise()
                 .then((response: Response) => {
                     this.notifyUserLoggedOutToServer(this.user);
-                    // Remove tokens and profile and update login status subject
+                    // Remove token and update login status subject
                     localStorage.removeItem('jwtToken');
-                    localStorage.removeItem('loggedInUser');
                     this.user = null;
                     this.setLoggedIn(false);
                 })
@@ -211,7 +230,6 @@ export class UserService implements OnDestroy {
             .then((response: Response) => {
                 const data = response.json();
                 console.log('Got user from server: ', data.user);
-                this._setSession(undefined, (data.user as User));
                 return data.user as User;
             })
             .catch(this.handleError);
