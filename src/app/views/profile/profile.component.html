@@ -62,7 +62,7 @@
     <!-- Spotify Widget -->
     <mat-card class="default" *ngIf="this.userService.isAuthenticated()">
       <mat-card-title>Music Corner</mat-card-title>
-      <mat-card-content class="pt-0" [style.overflow]="'auto'" [style.height.px]="'300'">
+      <mat-card-content class="pt-0">
 
         <mat-tab-group class="music-tab-group">
           
@@ -70,7 +70,7 @@
             <!-- <ng-template mat-tab-label> -->
               <!-- <mat-icon>security</mat-icon> -->
             <!-- </ng-template> -->
-            <div class="spotify-tab-content">
+            <div class="spotify-tab-content" [style.overflow]="'auto'" [style.height.px]="'300'">
               <!-- Link spotify button -->
               <a *ngIf="this.user.spotify === undefined" mat-raised-button (click)="authorizeSpotify()" color="primary">Connect Spotify</a>
 
@@ -95,7 +95,7 @@
             <!-- <ng-template mat-tab-label>
               <mat-icon>attach_file</mat-icon>
             </ng-template> -->
-            <div class="soundcloud-tab-content">
+            <div class="soundcloud-tab-content" [style.overflow]="'auto'" [style.height.px]="'300'">
               Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla venenatis ante augue. Phasellus volutpat neque ac dui mattis
               vulputate. Etiam consequat aliquam cursus. In sodales pretium ultrices. Maecenas lectus est, sollicitudin consectetur
               felis nec, feugiat ultricies mi. Aliquam erat volutpat. Nam placerat, tortor in ultrices porttitor, orci enim
