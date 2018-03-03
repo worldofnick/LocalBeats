@@ -35,7 +35,7 @@ import { ChartsModule } from 'ng2-charts/ng2-charts';
 import { FileUploadModule } from 'ng2-file-upload/ng2-file-upload';
 import { CommonPipesModule } from "../../pipes/common/common-pipes.module";
 import { ReactiveFormsModule } from '@angular/forms';
-import { PerformanceManagementComponent } from './performance-management.component';
+import { PerformanceManagementComponent, PaymentHistoryDialog, RefundPaymentDialog } from './performance-management.component';
 import { PerformanceManagementRoutes } from './performance-management.routing';
 
 @NgModule({
@@ -85,11 +85,20 @@ import { PerformanceManagementRoutes } from './performance-management.routing';
     CommonPipesModule,
     RouterModule.forChild(PerformanceManagementRoutes)
   ],
-  declarations: [PerformanceManagementComponent],
+  declarations: [
+    PerformanceManagementComponent, 
+    PaymentHistoryDialog,
+    RefundPaymentDialog
+  ],
   exports: [
-      PerformanceManagementComponent
+    PerformanceManagementComponent,
+    PaymentHistoryDialog,
+    RefundPaymentDialog
   ],
   providers: [],
-  entryComponents: []
+  entryComponents: [
+    PaymentHistoryDialog, 
+    RefundPaymentDialog
+  ]
 })
 export class PerformanceManagementModule { }
