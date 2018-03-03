@@ -11,6 +11,7 @@ import { Action } from '../../services/chats/model/action';
 import { environment } from '../../../environments/environment';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { JwtHelper } from 'angular2-jwt';
+import { decode } from 'punycode';
 
 // For Angular 5 HttpClient Module
 const httpOptions = {
@@ -49,7 +50,8 @@ export class UserService implements OnDestroy {
 
         // If authenticated, set local user property and update login status subject
         // If token is expired, log out to clear any data from localStorage
-        if (this.isAuthenticated()) {
+        if (this.amIDoneLoading()) {
+            // this.getUserIdFromJWT();
             this.user = JSON.parse(localStorage.getItem('loggedInUser'));
             this.setLoggedIn(true);
             this.notifyNewUserLoginToServer(this.user);
@@ -61,6 +63,19 @@ export class UserService implements OnDestroy {
             this.logout();
         }
         this.initIoConnection();
+    }
+
+    getUserIdFromJWT() {
+        try {
+            let decodedToken = this.jwtHelper.decodeToken(localStorage.getItem('jwtToken'));
+            console.log('Token: ', decodedToken);
+
+            this.getUserByID(decodedToken.id).then((user: User) => {
+                this.user = user;
+            });
+        } catch (error) {
+            
+        }
     }
 
     /**
@@ -109,7 +124,7 @@ export class UserService implements OnDestroy {
      * Returns if the user's session is still valid based on the
      *  JWT expiration date (usually 1 whole day from the time of issue)
      */
-    public isAuthenticated(): boolean {
+    public amIDoneLoading(): boolean {
         let result;
         try {
             result = !this.jwtHelper.isTokenExpired(localStorage.getItem('jwtToken'));
@@ -123,8 +138,8 @@ export class UserService implements OnDestroy {
      * Checks and returns true if this user is
      *  authenticated AND the object is done loading
      */
-    public amIDoneLoading(): boolean {
-        return (this.isAuthenticated() && this.user !== null && this.user !== undefined ) ? true : false;
+    public isAuthenticated(): boolean {
+        return (this.amIDoneLoading() && this.user !== null && this.user !== undefined ) ? true : false;
     }
 
     // ===============================================

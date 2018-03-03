@@ -11,8 +11,8 @@
         <!-- <div class="subtitle mb-05">Big Data Expert</div> -->
       </div>
       <div class="profile-actions text-center mb-1">
-        <button *ngIf="!this.onOwnProfile && this.userService.amIDoneLoading()" mat-raised-button color="primary" (click)="onStartNewConversationFromProfileButtonClick()">Message</button>
-        <button *ngIf="!this.onOwnProfile && this.userService.amIDoneLoading() && this.user.isArtist" mat-raised-button color="accent" (click)="clickedRequestArtist = true">Request Artist</button>
+        <button *ngIf="!this.onOwnProfile && this.userService.isAuthenticated()" mat-raised-button color="primary" (click)="onStartNewConversationFromProfileButtonClick()">Message</button>
+        <button *ngIf="!this.onOwnProfile && this.userService.isAuthenticated() && this.user.isArtist" mat-raised-button color="accent" (click)="clickedRequestArtist = true">Request Artist</button>
       </div>
       <div class="profile-nav">
         <mat-nav-list>

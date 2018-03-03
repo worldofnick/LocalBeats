@@ -63,12 +63,12 @@
 
         </mat-card-content>
 
-        <mat-divider *ngIf="userService.amIDoneLoading()"></mat-divider>
-        <button *ngIf="isCurrentUser && userService.amIDoneLoading()" (click)="onEditEvent()" mat-raised-button color="primary">Edit Event</button>
-        <button *ngIf="isCurrentUser && userService.amIDoneLoading()" (click)="onDeleteEvent()" mat-raised-button color="accent">Delete Event</button>
-        <button *ngIf="!isCurrentUser && userService.amIDoneLoading()" (click)="messageHost()" mat-raised-button color="primary">Message Host</button>
-        <button *ngIf="!isCurrentUser && userService.amIDoneLoading() && !hasApplied && userService.user.isArtist" (click)="newApplication()" mat-raised-button color="accent">{{buttonText}}</button>
-        <button *ngIf="!isCurrentUser && userService.amIDoneLoading() && hasApplied && userService.user.isArtist" (click)="openNegotiationDialog()" mat-raised-button color="accent">{{buttonText}}</button>
+        <mat-divider *ngIf="userService.isAuthenticated()"></mat-divider>
+        <button *ngIf="isCurrentUser && userService.isAuthenticated()" (click)="onEditEvent()" mat-raised-button color="primary">Edit Event</button>
+        <button *ngIf="isCurrentUser && userService.isAuthenticated()" (click)="onDeleteEvent()" mat-raised-button color="accent">Delete Event</button>
+        <button *ngIf="!isCurrentUser && userService.isAuthenticated()" (click)="messageHost()" mat-raised-button color="primary">Message Host</button>
+        <button *ngIf="!isCurrentUser && userService.isAuthenticated() && !hasApplied && userService.user.isArtist" (click)="newApplication()" mat-raised-button color="accent">{{buttonText}}</button>
+        <button *ngIf="!isCurrentUser && userService.isAuthenticated() && hasApplied && userService.user.isArtist" (click)="openNegotiationDialog()" mat-raised-button color="accent">{{buttonText}}</button>
      
       </mat-card>
       <!-- </div> -->
