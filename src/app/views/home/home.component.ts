@@ -54,24 +54,24 @@ export class HomeComponent implements OnInit {
       let snackBarRef = this.snackBar.open('Stripe Account Linked!', "", {
         duration: 1500,
       });
-      this.router.navigate(['/profile/settings?success=true']);
+      this.router.navigate(['/profile/settings'], {queryParams: {stripe: true}});
     } else if (this.router.url.indexOf('success=false') >= 0) {
       // failure
       let snackBarRef = this.snackBar.open("Failed to Link Account", "", {
         duration: 1500,
       });
-      this.router.navigate(['/profile/settings?success=false']);
+      this.router.navigate(['/profile/settings'], {queryParams: {stripe: true}});
     } else if (this.router.url.indexOf('updated=true') >= 0) {
       let snackBarRef = this.snackBar.open("Stripe Details Updated", "", {
         duration: 1500,
       });
-      this.router.navigate(['/profile/settings?update=true']);
+      this.router.navigate(['/profile/settings'], {queryParams: {stripe: true}});
     } else if (this.router.url.indexOf('updated=false') >= 0) {
       // failure
       let snackBarRef = this.snackBar.open("Failed to Update Stripe Details", "", {
         duration: 1500,
       });
-      this.router.navigate(['/profile/settings?update=false']);
+      this.router.navigate(['/profile/settings'], {queryParams: {stripe: true}});
   }
 }
 
