@@ -396,7 +396,7 @@ export class EventManagementComponent implements OnInit {
       // Check to see if a response was recorded in the verification dialog box
       if(result != undefined) {
         // Check to see what the response was
-        booking.hostComment = result.comment;
+        //booking.hostComment = result.comment; -- Send comment as message
         let notificationMessage: string = '';
         let response:NegotiationResponses = null;
         if(result.response == VerificationResponse.verify) {
@@ -409,7 +409,8 @@ export class EventManagementComponent implements OnInit {
             booking.completed = true;
             booking.hostViewed = false;
             booking.artViewed = false;
-            // No notification needed here because payment service will send notification
+            notificationMessage = "Your booking is complete and " + booking.hostUser.firstName + " has paid you for " + booking.eventEID.eventName;
+            response = NegotiationResponses.complete;
           } else {
             booking.hostStatusMessage = StatusMessages.waitingOnArtist;
             booking.artistStatusMessage = StatusMessages.hostVerified;
@@ -429,30 +430,41 @@ export class EventManagementComponent implements OnInit {
           response = NegotiationResponses.verification;
         }
         // Update the booking and payment asynchronously
-        this.bookingService.updateBooking(booking).then(() => {
-          if(booking.completed) {
-            // Notification will come through stripe service on payment
-            this.stripeService.charge(booking).then((success: boolean) => {
-              if (success) {
-                this.bookingService.bookingPaymentStatus(booking).then((status: PaymentStatus) => {
-                  this.events[eventIndex].paymentStatues[bookingIndex] = status;
-                  this.events[eventIndex].confirmations[bookingIndex] = booking;
-                  let snackBarRef = this.snackBar.open('Payment sent!', "", {
-                    duration: 1500,
-                  });
-                });
-              } else {
-                let snackBarRef = this.snackBar.open('Payment failed, please try again.', "", {
+        if(booking.completed) {
+          this.stripeService.charge(booking, true).then((success: boolean) => {
+            if (success) {
+              this.bookingService.bookingPaymentStatus(booking).then((status: PaymentStatus) => {
+                // If payment was successful, push a new status
+                this.events[eventIndex].paymentStatues.push(status);
+                // Move the booking from confirmations to completions
+                this.events[eventIndex].confirmations.splice(bookingIndex, 1);
+                this.events[eventIndex].completions.push(booking);
+                let snackBarRef = this.snackBar.open('Payment sent!', "", {
                   duration: 1500,
                 });
-              }
-            });
-          } else {
-            this.events[eventIndex].confirmations[bookingIndex] = booking;
-            // Send notification to artist
-            this.createNotificationForArtist(booking, response, ['/profile', 'performances'],
-            'event_available', notificationMessage);
-          }
+              });
+            } else {
+              // Payment failed, so change the booking to not be completed
+              booking.completed = false;
+              booking.hostStatusMessage = StatusMessages.unpaid;
+              booking.artistStatusMessage = StatusMessages.unpaid;
+              this.events[eventIndex].confirmations[bookingIndex] = booking;
+              // Don't push a payment status, because the payment failed
+              notificationMessage = "Your booking is incomplete payment by " + booking.hostUser.firstName + " for the event " + booking.eventEID.eventName + " failed";
+              let snackBarRef = this.snackBar.open('Payment failed, please try again.', "", {
+                duration: 1500,
+              });
+            }
+          });
+        } else {
+          // Otherwise, the booking is not complete, so just a normal verification happened
+          this.events[eventIndex].confirmations[bookingIndex] = booking;
+        }
+        // Update the model and send a notification if the model updates correctly
+        this.bookingService.updateBooking(booking).then(() => {
+          // Send notification to artist
+          this.createNotificationForArtist(booking, response, ['/profile', 'performances'],
+          'event_available', notificationMessage);
         });
       }
     })
@@ -468,8 +480,8 @@ export class EventManagementComponent implements OnInit {
       // Check to see if a response was recorded in the negotiation dialog box
       if (result != undefined) {
         // Check to see what the response was
-        booking.hostComment = result.comment;
-        booking.artistComment = "";
+        //booking.hostComment = result.comment; -- send comment as message
+        //booking.artistComment = "";
         if (result.response == NegotiationResponses.new) {
           // New, the user offered a new monetary amount to the artist
           // Set the new price

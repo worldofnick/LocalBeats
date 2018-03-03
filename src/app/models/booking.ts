@@ -50,6 +50,9 @@ export enum StatusMessages {
     hostRejected = "Host Rejected",
     completed = "Booking Completed",
     cancelled = "Booking Cancelled",
+    paid = "Paid",
+    refund = "Refund",
+    unpaid = "Waiting"
 }
 
 export enum NegotiationResponses {

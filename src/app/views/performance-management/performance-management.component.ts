@@ -363,7 +363,7 @@ export class PerformanceManagementComponent implements OnInit {
       // Check to see if a response was recorded in the verification dialog box
       if(result != undefined) {
         // Check to see what the response was
-        booking.artistComment = result.comment;
+        //booking.artistComment = result.comment; -- send comment as message
         let notificationMessage: string = '';
         let response:NegotiationResponses = null;
         if(result.response == VerificationResponse.verify) {
@@ -436,8 +436,8 @@ export class PerformanceManagementComponent implements OnInit {
     .subscribe((result) => {
       // Check to see if a response was recorded in the negotiation dialog box
       if (result != undefined) {
-        booking.artistComment = result.comment;
-        booking.hostComment = "";
+        //booking.artistComment = result.comment; -- send comment as message
+        //booking.hostComment = "";
         // Check to see what the response was
         if (result.response == NegotiationResponses.new) {
           // New, the user offered a new monetary amount to the host

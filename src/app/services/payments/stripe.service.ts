@@ -62,18 +62,20 @@ export class StripeService {
 
   // Makes a request to our backend to request the Stripe API to charge the event host
   // This will need an extra visa parameter for event host stripe charge info
-  public charge(booking: Booking): Promise<boolean> {
+  public charge(booking: Booking, initial: boolean): Promise<boolean> {
     const current = this.connection + '/charge';
     return this.http.post(current, { booking: booking }, { headers: this.headers })
         .toPromise()
         .then((response: Response) => {
             if (response.status == 200) {
             // Send notification
-            let message = booking.hostUser.firstName + " " + booking.hostUser.lastName + " has paid you $" + booking.currentPrice +   " for " + booking.eventEID.eventName;
-            let notification = new Notification(booking.hostUser, booking.performerUser, booking.eventEID._id,
-              booking, NegotiationResponses.payment, message, "payment", ['/events', booking.eventEID._id]);
-            this._socketService.sendNotification(SocketEvent.SEND_NOTIFICATION, notification);
-              return true;
+            if(!initial) {
+              let message = booking.hostUser.firstName + " " + booking.hostUser.lastName + " has paid you $" + booking.currentPrice +   " for " + booking.eventEID.eventName;
+              let notification = new Notification(booking.hostUser, booking.performerUser, booking.eventEID._id,
+                booking, NegotiationResponses.payment, message, "payment", ['/events', booking.eventEID._id]);
+              this._socketService.sendNotification(SocketEvent.SEND_NOTIFICATION, notification);
+            }
+            return true;
             } else {
               return false;
             }
