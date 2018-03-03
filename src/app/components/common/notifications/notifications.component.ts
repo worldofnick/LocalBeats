@@ -86,7 +86,7 @@ export class NotificationsComponent implements OnInit {
         let newNotifications:Notification[] = [];
         let i = 0;
         for (let n of this.notifications){
-          if(i != 0){
+          if(i != index){
             newNotifications.push(n);
           }
           i++;
