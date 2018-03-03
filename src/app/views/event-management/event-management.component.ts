@@ -125,7 +125,7 @@ export class EventManagementComponent implements OnInit {
         let numConf: number = 0;
         let completeNotif: number = 0;
         let cancelNotif: number = 0;
-        let paymentStatues = [];  
+        let paymentStatues: PaymentStatus[] = [];  
         this.bookingService.getBooking(e).then((bookings: Booking[]) => {
           for(let booking of bookings) {
             if(booking.approved) {
@@ -137,7 +137,7 @@ export class EventManagementComponent implements OnInit {
                   completeNotif++;
                 }
                 // If a booking is complete, it should have a payment status
-                this.bookingService.bookingPaymentStatus(booking).then((status: string) => {
+                this.bookingService.bookingPaymentStatus(booking).then((status: PaymentStatus) => {
                   paymentStatues.push(status);
                 });
               } else if(!booking.cancelled) {
@@ -189,11 +189,24 @@ export class EventManagementComponent implements OnInit {
     })
   }
 
+  /*
+  Receives a response and a new booking from the subscription to the socket
+  Updates the component model in real-time according to the negotiation response
+  Negotiation Cases:
+  1. New Bid/Application - find if already on applications/requests, otherwise push onto applications/requests
+  2. Accepted by Artist, Booking Approved - splice booking from applications/requests and push onto confirmations
+  3. Declined - find in applications/requests and splice it
+  4. Cancelled - find in applications/requests/confirmations, splice it, check if there is a strict cancellation policy and charge user
+  5. Complete - artist has done final verification, find in confirmations, splice it, and push onto completions, update payment statuses
+  6. Verification - artist has verified, but host has yet to verify, update confirmations with a notification
+  7. Payment - a refund has occurred from the artist, update the completed booking and payment statuses
+  */
   private updateModel(newBooking: Booking, response: NegotiationResponses) {
     let eventIndex: number = -1;
     let applicationIndex: number = -1;
     let requestIndex: number = -1;
     let confirmationIndex: number = -1;
+    let completionIndex: number = -1;
     // Check if the booking has been approved
     if(newBooking.approved && response == NegotiationResponses.accept) {
       eventIndex = this.events.findIndex(e => e.event._id == newBooking.eventEID._id);
@@ -244,7 +257,7 @@ export class EventManagementComponent implements OnInit {
         
       }
     } else if(response == NegotiationResponses.decline) {
-      // Find it in applications and remove it
+      // Find it in applications/requests and remove it
       eventIndex = this.events.findIndex(e => e.event._id == newBooking.eventEID._id);
       if(newBooking.bookingType == 'artist-apply') {
         applicationIndex = this.events[eventIndex].applications.findIndex(a => a._id == newBooking._id);
@@ -258,7 +271,6 @@ export class EventManagementComponent implements OnInit {
       eventIndex = this.events.findIndex(e => e.event._id == newBooking.eventEID._id);
       confirmationIndex = this.events[eventIndex].confirmations.findIndex(a => a._id == newBooking._id);
       // The artist has cancelled
-      this.events[eventIndex].paymentStatues.splice(confirmationIndex, 1);
       this.events[eventIndex].cancellations.push(newBooking);
       this.events[eventIndex].cancellationNotifications++;
       this.events[eventIndex].confirmations.splice(confirmationIndex,1);
@@ -267,9 +279,14 @@ export class EventManagementComponent implements OnInit {
       eventIndex = this.events.findIndex(e => e.event._id == newBooking.eventEID._id);
       confirmationIndex = this.events[eventIndex].confirmations.findIndex(a => a._id == newBooking._id);
       // The artist has verified and the booking is complete
-      this.events[eventIndex].confirmationNotifications++;
-      this.events[eventIndex].confirmations[confirmationIndex] = newBooking;
-      // Send payment here [placeholder]
+      this.events[eventIndex].confirmations.splice(confirmationIndex,1);
+      this.events[eventIndex].completionNotifications++;
+      this.events[eventIndex].completions.push(newBooking);
+      // Get the payment statuses
+      // If a booking is complete, it should have a payment status
+      this.bookingService.bookingPaymentStatus(newBooking).then((status: PaymentStatus) => {
+        this.events[eventIndex].paymentStatues.push(status);
+      });
     } else if(response == NegotiationResponses.verification) {
       // Find it in confirmations
       eventIndex = this.events.findIndex(e => e.event._id == newBooking.eventEID._id);
@@ -278,15 +295,23 @@ export class EventManagementComponent implements OnInit {
       this.events[eventIndex].confirmationNotifications++;
       this.events[eventIndex].confirmations[confirmationIndex] = newBooking;
     } else if(response == NegotiationResponses.payment) {
-      // Update payment status
+      // Update payment status of completed booking because a refund has happened
       eventIndex = this.events.findIndex(e => e.event._id == newBooking.eventEID._id);
-      confirmationIndex = this.events[eventIndex].confirmations.findIndex(a => a._id == newBooking._id);
+      completionIndex = this.events[eventIndex].completions.findIndex(a => a._id == newBooking._id);
       this.bookingService.bookingPaymentStatus(newBooking).then((status: PaymentStatus) => {
-        this.events[eventIndex].confirmations[confirmationIndex] = newBooking;
-        this.events[eventIndex].confirmationNotifications++;
-        this.events[eventIndex].paymentStatues[confirmationIndex] = status;
+        this.events[eventIndex].completions[completionIndex] = newBooking;
+        this.events[eventIndex].completionNotifications++;
+        this.events[eventIndex].paymentStatues[completionIndex] = status;
       });
     }
+  }
+
+  resetCompletions(eventIndex: number) {
+
+  }
+
+  resetCancellations(eventIndex: number) {
+
   }
 
   resetConfirmations(event: MatTabChangeEvent, eventIndex: number) {

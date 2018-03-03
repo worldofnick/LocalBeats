@@ -126,7 +126,7 @@ export class PerformanceManagementComponent implements OnInit {
       let numConf: number = 0;
       let cancelNotif: number = 0;
       let completeNotif: number = 0;
-      let paymentStatues = [];
+      let paymentStatues: PaymentStatus[] = [];
       for(let booking of bookings) {
         if(booking.approved) {
           if(booking.completed) {
