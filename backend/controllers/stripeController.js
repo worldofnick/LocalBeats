@@ -62,7 +62,8 @@ exports.stripeAuthorize = function (req, res) {
            if (err) {
             res.redirect('https://localbeats.herokuapp.com/profile/stripe/?success=false');
            }
-
+           console.log("user");
+           console.log(user);
            req.user.stripeAccountId = body.stripeAccountId;
            user.save(function (err) {
             if(err) {
