@@ -65,6 +65,7 @@ exports.stripeAuthorize = function (req, res) {
            }
 
            User.findOne({email: account.email}, function (err, user) {
+             console.log(body.stripe_user_id);
             user.stripeAccountId = body.stripe_user_id;
             user.save(function (err) {
               if(err) {
