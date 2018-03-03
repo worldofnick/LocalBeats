@@ -306,30 +306,32 @@ export class EventManagementComponent implements OnInit {
     }
   }
 
-  resetCompletions(eventIndex: number) {
-
-  }
-
-  resetCancellations(eventIndex: number) {
-
-  }
-
-  resetConfirmations(event: MatTabChangeEvent, eventIndex: number) {
-    if(event.index == 3) {
-      this.events[eventIndex].confirmationNotifications = 0;
-      for(let booking of this.events[eventIndex].confirmations) {
-        if(!booking.hostViewed) {
-          booking.hostViewed = true;
-          this.bookingService.updateBooking(booking);
-        }
+  resetCompletionNotifications(eventIndex: number) {
+    this.events[eventIndex].cancellationNotifications = 0;
+    for(let booking of this.events[eventIndex].completions) {
+      if(!booking.hostViewed) {
+        booking.hostViewed = true;
+        this.bookingService.updateBooking(booking);
       }
-    } else if(event.index == 4) {
-      this.events[eventIndex].cancellationNotifications = 0;
-      for(let booking of this.events[eventIndex].cancellations) {
-        if(!booking.hostViewed) {
-          booking.hostViewed = true;
-          this.bookingService.updateBooking(booking);
-        }
+    }
+  }
+
+  resetCancellationNotifications(eventIndex: number) {
+    this.events[eventIndex].cancellationNotifications = 0;
+    for(let booking of this.events[eventIndex].cancellations) {
+      if(!booking.hostViewed) {
+        booking.hostViewed = true;
+        this.bookingService.updateBooking(booking);
+      }
+    }
+  }
+
+  resetConfirmationNotifications(eventIndex: number) {
+    this.events[eventIndex].confirmationNotifications = 0;
+    for(let booking of this.events[eventIndex].confirmations) {
+      if(!booking.hostViewed) {
+        booking.hostViewed = true;
+        this.bookingService.updateBooking(booking);
       }
     }
   }
