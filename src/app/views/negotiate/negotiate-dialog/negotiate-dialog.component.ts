@@ -35,7 +35,7 @@ export class NegotiateDialogComponent implements OnInit {
   negotiable: boolean;
   title: string = "Offer";
   subtext: string = "Please enter your offer or accept the current price:";
-  artistAvail: string = "Artist is current available";
+  artistAvail: string = "";
 
   // List of possible time conflicts for artist
   artistEvents: Event[] = [];
@@ -175,7 +175,7 @@ export class NegotiateDialogComponent implements OnInit {
         for (let e of this.artistEvents) {
           if (isWithinRange(this.data.booking.eventEID.fromDate, e.fromDate, addMinutes(e.toDate, 5)) ||
               isWithinRange(this.data.booking.eventEID.toDate, e.fromDate, addMinutes(e.toDate, 5))) {
-            this.artistAvail = 'WARNING: Artist is currently not available for this event';
+            this.artistAvail = 'Artist is currently not available for this event. You may still request the artist but confirm availability before booking this event.';
           }
         }
       });
