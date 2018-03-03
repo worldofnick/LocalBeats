@@ -64,15 +64,23 @@ exports.stripeAuthorize = function (req, res) {
              res.redirect('https://localbeats.herokuapp.com/profile/stripe/?success=false');
            }
 
-           User.findOne({email: account.email}, function (err, user) {
-             console.log(body.stripe_user_id);
-            user.stripeAccountId = body.stripe_user_id;
-            user.save(function (err) {
-              if(err) {
-                console.error('error saving stripe id to account');
-              }
-            });
+           req.user.stripeAccountId = body.stripeAccountId;
+           user.save(function (err) {
+            if(err) {
+              res.redirect('https://localbeats.herokuapp.com/profile/stripe/?success=false');
+              console.error('error saving stripe id to account');
+            }
           });
+
+          //  User.findOne({email: account.email}, function (err, user) {
+          //    console.log(body.stripe_user_id);
+          //   user.stripeAccountId = body.stripe_user_id;
+            // user.save(function (err) {
+            //   if(err) {
+            //     console.error('error saving stripe id to account');
+            //   }
+            // });
+          // });
 
          }
        );
