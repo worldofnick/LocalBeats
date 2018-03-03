@@ -3,7 +3,7 @@
 </div>
 <mat-nav-list class="notification-list" role="list">
   <!-- Notification item -->
-  <mat-list-item *ngFor="let n of notifications" class="notific-item" role="listitem" routerLinkActive="open">
+  <mat-list-item *ngFor="let n of notifications; let i = index" class="notific-item" role="listitem" routerLinkActive="open">
     <mat-icon [color]="green" class="notific-icon">{{n.icon}}</mat-icon>
     <a (click)="selectNotification(n)">
       <div class="mat-list-text">
@@ -11,7 +11,7 @@
         <!-- <small class="time text-muted">{{n.time}}</small> -->
       </div>
     </a>
-    <mat-icon (click)="deleteNotification(n)">cancel</mat-icon>
+    <mat-icon (click)="deleteNotification(n, i)">cancel</mat-icon>
   </mat-list-item>
 </mat-nav-list>
 <div class="text-center mt-1" *ngIf="notifications && notifications.length">

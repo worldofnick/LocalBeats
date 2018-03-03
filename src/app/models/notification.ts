@@ -12,6 +12,7 @@ export class Notification {
     public response: NegotiationResponses,
     public message: string,
     public icon: string,
+    public sentTime: Date,
     public route: string[]
     ) {}
 }

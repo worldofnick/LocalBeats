@@ -39,13 +39,12 @@ exports.deleteNotificationsByID = function (req, res) {
 exports.saveNotification = function (req, res) {
 
     var newNotification = new Notification(req.body);
-    // newNotification = req.body;
 
     Notifications.save(function (err, newNotification) {
       if (err) {
         return res.status(400).send("Failed to create notification");
       }else{
-          console.log('returned notification', newNotification);
+        //   console.log('returned notification', newNotification);
       }
     });
 };

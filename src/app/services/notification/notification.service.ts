@@ -37,9 +37,6 @@ export class NotificationService {
         return this.httpClient.put(SERVER_URL + 'api/notifications/', body, httpOptions);
     }
 
-    connect(){
-
-    }
 
     public deleteNotificationById(notificationID: string): Promise<Number> {
 
