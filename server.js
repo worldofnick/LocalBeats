@@ -87,21 +87,23 @@ privateChatSocket(io);
 // Basic route (http://localhost:8080)
 // =================================================================
 app.get('/', function(req, res) {
-  res.send('Welcome the EXPRESS Server! This API is at http://localhost:' + port + '/api');
+  res.sendFile('index.html', {root: path.join(__dirname, 'src')});
 });
 
 app.get('/profile/stripe/', function(req, res) {
   res.redirect('/?success=' + req.query.success);
 });
 
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(__dirname + '/src'));
 
 app.get('/*', function(req, res) {
   if (req.query.success != undefined) {
     res.redirect('/?success=' + req.query.success);
+    return;
   }
-  res.redirect('index.html', {root: path.join(__dirname, 'public')});
+  res.sendfile(__dirname + '/src/index.html')
 });
+
 
 console.log('Magic happens at http://localhost:' + port);
 
