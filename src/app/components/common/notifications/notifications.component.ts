@@ -40,14 +40,16 @@ export class NotificationsComponent implements OnInit {
 
     //initial getting of notifications
     this._socketService.onEvent(SocketEvent.REQUEST_NOTIFICATIONS).subscribe((notificationsList: Notification[])=>{
-
+      console.log('NotificationList got from server: ', notificationsList);
       this.notifications = [];
       for(let notification of notificationsList){
-        let newNotification:Notification = new Notification(null, notification.senderID, notification.receiverID,
+        let newNotification:Notification = new Notification(notification._id, notification.senderID, notification.receiverID,
           notification.eventID, notification.booking, notification.response, notification.message, notification.icon,
           notification.route);
         this.notifications.push(newNotification);
       }
+
+      console.log('This.notificaiotns: ', this.notifications);
     });
     
 
@@ -64,15 +66,18 @@ export class NotificationsComponent implements OnInit {
   clearAll(e) {
     e.preventDefault();
 
-
-
-      this.notificationService.deleteNotificationById(this.notifications[0].receiverID._id).then((status: number)=>{
-        // Success
-      });
-
+      for(let index = 0; index < this.notifications.length; index++) {
+        console.log('removing notifiaction : ', this.notifications[index].message);
+        this.notificationService.deleteNotificationById(this.notifications[index]._id).then((status: number)=>{
+          // Success or failure
+          if (status === 200) {
+            // Can remove it from this.notifications. Dont think will need a failure case? Cause if it fails, try again?
+            // Can just it it along I guess.
+          }
+        });
+      }
 
     this.notifications = [];
-    
   }
 
   deleteNotification(notification: Notification) {
