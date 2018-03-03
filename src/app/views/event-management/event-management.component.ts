@@ -470,6 +470,9 @@ export class EventManagementComponent implements OnInit {
     })
   }
 
+  /*
+  Host responds to applications/bids through negotiation dialog
+  */
   openNegotiationDialog(booking: Booking, bookingIndex: number, eventIndex: number) {
     let view = "host";
     if(this.negotiationSubscription) {
@@ -560,6 +563,9 @@ export class EventManagementComponent implements OnInit {
           // Update the booking asynchronously
           this.bookingService.updateBooking(booking).then(() => {
             // Update the model of the component
+            this.events[eventIndex].confirmations.splice(bookingIndex,1);
+            this.events[eventIndex].cancellations.push(booking);
+            this.events[eventIndex].cancellationNotifications++;
             this.createNotificationForArtist(booking, result.response, ['/events', booking.eventEID._id],
             'import_export', booking.hostUser.firstName + " has cancelled the confirmed booking for " + booking.eventEID.eventName);
           });
