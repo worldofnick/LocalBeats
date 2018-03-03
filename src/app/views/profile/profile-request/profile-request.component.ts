@@ -1,5 +1,6 @@
 // Angular Modules
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy } from '@angular/core';
+import { ISubscription } from "rxjs/Subscription";
 import { MatTabChangeEvent } from '@angular/material';
 
 // Services
@@ -23,6 +24,7 @@ import { PaymentStatus } from '../../../models/payment'
   styleUrls: ['./profile-request.component.css']
 })
 export class ProfileRequestComponent implements OnInit {
+  private subscription: ISubscription;
 
   // User Model
   @Input() user: User;
@@ -60,7 +62,7 @@ export class ProfileRequestComponent implements OnInit {
 
   ngOnInit() {
     this.getAvailableEvents();
-    this._socketService.onEvent(SocketEvent.SEND_NOTIFICATION)
+    this.subscription = this._socketService.onEvent(SocketEvent.SEND_NOTIFICATION)
       .subscribe((notification: Notification) => {
         if (notification.response != NegotiationResponses.payment) {
           this.updateModel(notification.booking, notification.response);
@@ -68,6 +70,10 @@ export class ProfileRequestComponent implements OnInit {
           this.updatePaymentStatues(notification.booking);
         }
     });
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 
   private updatePaymentStatues(booking: Booking) {

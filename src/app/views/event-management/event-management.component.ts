@@ -1,5 +1,6 @@
 // Angular Modules
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
+import { ISubscription } from "rxjs/Subscription";
 import { ActivatedRoute } from "@angular/router";
 import { NgForm } from '@angular/forms/src/directives/ng_form';
 import { Router } from "@angular/router";
@@ -33,6 +34,7 @@ import { Payment, PaymentStatus } from '../../models/payment';
 export class EventManagementComponent implements OnInit {
   // User Model
   user: User;
+  subscription: ISubscription;
   private canPay: boolean = true;
   // Hosted Events of the User Model
   events: {
@@ -43,6 +45,8 @@ export class EventManagementComponent implements OnInit {
     requestNotifications: number,
     confirmations: Booking[],
     confirmationNotifications: number,
+    completions: Booking[],
+    completionNotifications: number,
     cancellations: Booking[],
     cancellationNotifications: number,
     paymentStatues: PaymentStatus[]}[];
@@ -64,10 +68,14 @@ export class EventManagementComponent implements OnInit {
   }
 
   ngOnInit() {
-    this._socketService.onEvent(SocketEvent.SEND_NOTIFICATION)
+    this.subscription = this._socketService.onEvent(SocketEvent.SEND_NOTIFICATION)
       .subscribe((notification: Notification) => {
           this.updateModel(notification.booking, notification.response);
     });
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 
   private updatePaymentStatues(booking: Booking) {

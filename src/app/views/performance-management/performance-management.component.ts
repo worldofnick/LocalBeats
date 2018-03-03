@@ -1,5 +1,6 @@
 // Angular Modules
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
+import { ISubscription } from "rxjs/Subscription";
 import { ActivatedRoute } from "@angular/router";
 import { NgForm } from '@angular/forms/src/directives/ng_form';
 import { Router } from "@angular/router";
@@ -30,6 +31,7 @@ import { Payment, PaymentStatus } from '../../models/payment'
 export class PerformanceManagementComponent implements OnInit {
   // User Model
   user: User;
+  subscription: ISubscription;
   private canRefund: boolean = true;
   // Performances of the User Model
   performances: {
@@ -74,10 +76,14 @@ export class PerformanceManagementComponent implements OnInit {
     }
 
   ngOnInit() {
-    this._socketService.onEvent(SocketEvent.SEND_NOTIFICATION)
+    this.subscription = this._socketService.onEvent(SocketEvent.SEND_NOTIFICATION)
       .subscribe((notification: Notification) => {
         this.updateModel(notification.booking, notification.response);
     });
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 
   private updatePaymentStatues(booking: Booking) {

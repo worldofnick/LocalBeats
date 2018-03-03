@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { ISubscription } from "rxjs/Subscription";
 import { ActivatedRoute } from "@angular/router";
 import { DatePipe } from '@angular/common'
 import { Router } from "@angular/router";
-
 
 import { UserService } from '../../../services/auth/user.service';
 import { BookingService } from '../../../services/booking/booking.service';
@@ -33,6 +33,7 @@ export class EventSingletonComponent implements OnInit {
   public zoom: number;
   public lat: number;
   public lng: number;
+  private subscription: ISubscription;
   EID: any;
   buttonText: string = "Apply";
   setLocation = false;
@@ -66,7 +67,7 @@ export class EventSingletonComponent implements OnInit {
     }).then(() => {
       if(this.userService.isAuthenticated()) {
         this.getBooking()
-        this._socketService.onEvent(SocketEvent.SEND_NOTIFICATION)
+        this.subscription = this._socketService.onEvent(SocketEvent.SEND_NOTIFICATION)
         .subscribe((notification: Notification) => {
           
           if (notification.response != NegotiationResponses.payment) {
@@ -76,6 +77,10 @@ export class EventSingletonComponent implements OnInit {
         });
       }
     });
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 
   private updateModel(newBooking: Booking, response: NegotiationResponses) {
