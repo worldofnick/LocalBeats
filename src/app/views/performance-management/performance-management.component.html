@@ -19,8 +19,8 @@
                   <h5><strong><a [routerLink]="['/events', application.eventEID._id]">{{application.eventEID.eventName}}</a></strong></h5>
                   <p class="mb-0">{{application.eventEID.eventType | capitalize}}</p>
                   <p class="mt-0 mb-0">{{application.eventEID.toDate | date:'MMM d, y, h:mm a'}}</p>
-                  <p class="mt-0 mb-0">{{application.event.fixedPrice | currency}} <span *ngIf="application.event.negotiable">(Negotiable)</span></p>
-                  <p class="mt-1">>{{application.event.description}}</p>
+                  <p class="mt-0 mb-0">{{application.currentPrice | currency}} <span *ngIf="application.eventEID.negotiable">(Negotiable)</span></p>
+                  <p class="mt-1">{{application.eventEID.description}}</p>
                   <mat-chip class="text-center notify-chip mb-05" color="accent" [selected]="!application.artViewed">{{application.artistStatusMessage}}</mat-chip>
                   <mat-divider class="mt-05 mb-1"></mat-divider>
                   <button (click)="openNegotiationDialog(application, i)" class="text-muted" mat-icon-button matTooltip="View Application"><mat-icon>event_available</mat-icon></button>
@@ -44,8 +44,8 @@
                   <h5><strong><a [routerLink]="['/events', request.eventEID._id]">{{request.eventEID.eventName}}</a></strong></h5>
                   <p class="mb-0">{{request.eventEID.eventType | capitalize}}</p>
                   <p class="mt-0 mb-0">{{request.eventEID.toDate | date:'MMM d, y, h:mm a'}}</p>
-                  <p class="mt-0 mb-0">{{request.event.fixedPrice | currency}} <span *ngIf="request.event.negotiable">(Negotiable)</span></p>
-                  <p class="mt-1">>{{request.event.description}}</p>
+                  <p class="mt-0 mb-0">{{request.currentPrice | currency}} <span *ngIf="request.eventEID.negotiable">(Negotiable)</span></p>
+                  <p class="mt-1">{{request.eventEID.description}}</p>
                   <mat-chip class="text-center notify-chip mb-05" color="accent" [selected]="!request.artViewed">{{request.artistStatusMessage}}</mat-chip>
                   <mat-divider class="mt-05 mb-1"></mat-divider>
                   <button (click)="openNegotiationDialog(request, i)" class="text-muted" mat-icon-button matTooltip="View Request"><mat-icon>event_available</mat-icon></button>
@@ -69,11 +69,11 @@
                   <h5><strong><a [routerLink]="['/events', confirmation.eventEID._id]">{{confirmation.eventEID.eventName}}</a></strong></h5>
                   <p class="mb-0">{{confirmation.eventEID.eventType | capitalize}}</p>
                   <p class="mt-0 mb-0">{{confirmation.eventEID.toDate | date:'MMM d, y, h:mm a'}}</p>
-                  <p class="mt-0 mb-0">{{confirmation.event.fixedPrice | currency}} <span *ngIf="confirmation.event.negotiable">(Negotiable)</span></p>
-                  <p class="mt-1">>{{confirmation.event.description}}</p>
+                  <p class="mt-0 mb-0">{{confirmation.currentPrice | currency}}</p>
+                  <p class="mt-1">{{confirmation.eventEID.description}}</p>
                   <mat-chip class="text-center notify-chip mb-05" color="accent" [selected]="!confirmation.artViewed">{{confirmation.artistStatusMessage}}</mat-chip>
                   <mat-divider class="mt-05 mb-1"></mat-divider>
-                  <button *ngIf="!booking.artistVerified" (click)="artistVerify(confirmation, i)" class="text-muted" mat-icon-button matTooltip="Verify Host and Receive Payment"><mat-icon>lock</mat-icon></button>
+                  <button *ngIf="!confirmation.artistVerified" (click)="artistVerify(confirmation, i)" class="text-muted" mat-icon-button matTooltip="Verify Host and Receive Payment"><mat-icon>lock</mat-icon></button>
                   <button (click)="messageHost(confirmation)" class="text-muted" mat-icon-button matTooltip="Message Host"><mat-icon>chat</mat-icon></button>
                   <button (click)="openNegotiationDialog(confirmation, i)" class="text-muted" mat-icon-button matTooltip="Cancel Booking"><mat-icon>event_busy</mat-icon></button>
                 </mat-card-content>
@@ -95,13 +95,13 @@
                   <h5><strong><a [routerLink]="['/events', completion.eventEID._id]">{{completion.eventEID.eventName}}</a></strong></h5>
                   <p class="mb-0">{{completion.eventEID.eventType | capitalize}}</p>
                   <p class="mt-0 mb-0">{{completion.eventEID.toDate | date:'MMM d, y, h:mm a'}}</p>
-                  <p class="mt-0 mb-0">{{completion.event.fixedPrice | currency}} <span *ngIf="completion.event.negotiable">(Negotiable)</span></p>
-                  <p class="mt-1">>{{completion.event.description}}</p>
+                  <p class="mt-0 mb-0">{{completion.currentPrice | currency}}</p>
+                  <p class="mt-1">{{completion.eventEID.description}}</p>
                   <mat-chip class="text-center notify-chip mb-05" color="accent" [selected]="!completion.artViewed">{{completion.artistStatusMessage}}</mat-chip>
                   <mat-divider class="mt-05 mb-1"></mat-divider>
                   <button (click)="messageHost(completion)" class="text-muted" mat-icon-button matTooltip="Message Host"><mat-icon>chat</mat-icon></button>
-                  <button *ngIf="completion.completed && completion.paymentStatues[i] == 'paid' && (performances.paymentStatues[i] != 'artist_cancel' && performances.paymentStatues[i] != 'host_cancel')" (click)="showRefundDialog(booking)" class="text-muted" mat-icon-button matTooltip="Refund Host"><mat-icon>money_off</mat-icon></button>
-                  <button *ngIf="completion.completed && completion.paymentStatues[i] != 'waiting'" (click)="showPaymentHistoryDialog(completion)" class="text-muted" mat-icon-button matTooltip="Payment History"><mat-icon>history</mat-icon></button>
+                  <button *ngIf="completion.completed && performances.paymentStatues[i] == 'paid' && (performances.paymentStatues[i] != 'artist_cancel' && performances.paymentStatues[i] != 'host_cancel')" (click)="showRefundDialog(completion)" class="text-muted" mat-icon-button matTooltip="Refund Host"><mat-icon>money_off</mat-icon></button>
+                  <button *ngIf="completion.completed && performances.paymentStatues[i] != 'waiting'" (click)="showPaymentHistoryDialog(completion)" class="text-muted" mat-icon-button matTooltip="Payment History"><mat-icon>history</mat-icon></button>
                   <!-- TO DO -->
                   <button class="text-muted" mat-icon-button matTooltip="Review Artist"><mat-icon>star</mat-icon></button>
                 </mat-card-content>
@@ -114,7 +114,7 @@
               Cancelled <span *ngIf="performances.cancellationNotifications > 0" class="notification-value mat-bg-warn">{{performances.cancellationNotifications}}</span>
           </ng-template>
           <br>
-          <p *ngIf="performances.cancellations.length == 0">You don't have any completed bookings.</p>
+          <p *ngIf="performances.cancellations.length == 0">You don't have any cancelled bookings.</p>
           <div fxLayout="row" fxLayout.lt-sm="column" fxLayoutWrap="nowrap" fxLayoutGap="30px">
             <div *ngFor="let cancellation of performances.cancellations; let i = index" fxFlex="33.33">
               <mat-card class="p-0 m-0">
@@ -123,8 +123,8 @@
                   <h5><strong><a [routerLink]="['/events', cancellation.eventEID._id]">{{cancellation.eventEID.eventName}}</a></strong></h5>
                   <p class="mb-0">{{cancellation.eventEID.eventType | capitalize}}</p>
                   <p class="mt-0 mb-0">{{cancellation.eventEID.toDate | date:'MMM d, y, h:mm a'}}</p>
-                  <p class="mt-0 mb-0">{{cancellation.event.fixedPrice | currency}} <span *ngIf="cancellation.event.negotiable">(Negotiable)</span></p>
-                  <p class="mt-1">>{{cancellation.event.description}}</p>
+                  <p class="mt-0 mb-0">{{cancellation.currentPrice | currency}}</p>
+                  <p class="mt-1">{{cancellation.eventEID.description}}</p>
                   <mat-chip class="text-center notify-chip mb-05" color="accent" [selected]="!cancellation.artViewed">{{cancellation.artistStatusMessage}}</mat-chip>
                   <mat-divider class="mt-05 mb-1"></mat-divider>
                   <button (click)="messageHost(cancellation)" class="text-muted" mat-icon-button matTooltip="Message Host"><mat-icon>chat</mat-icon></button>

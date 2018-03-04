@@ -84,7 +84,7 @@ export class EventSingletonComponent implements OnInit {
   }
 
   private updateModel(newBooking: Booking, response: NegotiationResponses) {
-    if(!newBooking.cancelled) {
+    if(response != NegotiationResponses.cancel && response != NegotiationResponses.decline) {
       this.userBooking = newBooking;
       this.hasApplied = true;
     } else {

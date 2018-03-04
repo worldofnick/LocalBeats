@@ -150,7 +150,6 @@ export class EventManagementComponent implements OnInit {
             if(booking.approved) {
               if(booking.completed) {
                 completedBookings.push(booking);
-                confirmedBookings.push(booking);
                 // If the booking is completed and has not yet been viewed by the host, a new notification exists
                 if(!booking.hostViewed) {
                   completeNotif++;

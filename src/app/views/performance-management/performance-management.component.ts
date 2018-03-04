@@ -107,7 +107,7 @@ export class PerformanceManagementComponent implements OnInit {
         booking.artistStatusMessage = StatusMessages.completed;
       } else if(status == PaymentStatus.refund) {
         booking.hostStatusMessage = StatusMessages.refund;
-        booking.hostStatusMessage = StatusMessages.refund;
+        booking.artistStatusMessage = StatusMessages.refund;
       }
       this.bookingService.updateBooking(booking);
     });

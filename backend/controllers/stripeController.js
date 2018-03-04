@@ -53,7 +53,6 @@ exports.stripeAuthorize = function (req, res) {
      json: true
    }, (err, response, body) => {
      if (err || body.error) {
-       console.log('The Stripe onboarding process has not succeeded.');
        res.redirect('https://localbeats.herokuapp.com/profile/stripe/?success=false');
      } else {
        // Update the model and store the Stripe account ID in the DB.
@@ -68,7 +67,7 @@ exports.stripeAuthorize = function (req, res) {
             user.stripeAccountId = body.stripe_user_id;
             user.save(function (err) {
               if(err) {
-                console.error('error saving stripe id to account');
+                res.redirect('https://localbeats.herokuapp.com/profile/stripe/?success=false');
               }
             });
           });
@@ -147,7 +146,7 @@ exports.stripeTransfers = async function (req, res) {
      res.sendStatus(403);
    }
   stripe.charges.create({
-    amount: booking.currentPrice,
+    amount: Math.round(booking.currentPrice * 100),
     currency: "usd",
     source: "tok_visa_debit",
     destination: {
@@ -254,7 +253,7 @@ exports.stripeTransfers = async function (req, res) {
     }
     var feeAmount = booking.currentPrice * 0.15;
     stripe.charges.create({
-      amount: feeAmount,
+      amount: Math.round(feeAmount * 100),
       currency: "usd",
       source: "tok_visa",
       destination: {

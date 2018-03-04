@@ -135,7 +135,7 @@
                     </div>
                     <div fxLayout="row" fxLayoutGap="10px" >
                       <button (click)="messageArtist(booking)" class="text-muted" mat-icon-button matTooltip="Message Artist"><mat-icon>chat</mat-icon></button>
-                      <button [disabled]="this.canPay" *ngIf="booking.completed && item.paymentStatues[i] != 'paid' && (item.paymentStatues[i] != 'host_cancel' && item.paymentStatues[i] != 'artist_cancel')" (click)="showPayDialog(booking)" class="text-muted" mat-icon-button matTooltip="Pay Artist"><mat-icon>attach_money</mat-icon></button>
+                      <button [disabled]="!this.canPay" *ngIf="booking.completed && item.paymentStatues[i] != 'paid' && (item.paymentStatues[i] != 'host_cancel' && item.paymentStatues[i] != 'artist_cancel')" (click)="showPayDialog(booking)" class="text-muted" mat-icon-button matTooltip="Pay Artist"><mat-icon>attach_money</mat-icon></button>
                       <button *ngIf="booking.completed && item.paymentStatues[i] != 'waiting'" (click)="showPaymentHistoryDialog(booking)" class="text-muted" mat-icon-button matTooltip="Payment History"><mat-icon>history</mat-icon></button>
                       <!-- TO DO -->
                       <button class="text-muted" mat-icon-button matTooltip="Review Artist"><mat-icon>star</mat-icon></button>
@@ -143,7 +143,7 @@
                   </mat-card>
                 </div>
               </mat-expansion-panel>
-              <mat-expansion-panel *ngIf="item.cancellations.length > 0" class="no-shadow">
+              <mat-expansion-panel *ngIf="item.cancellations.length > 0" (click)="resetCancellationNotifications(j)" class="no-shadow">
                 <mat-expansion-panel-header>
                   <mat-panel-title>
                     Cancelled

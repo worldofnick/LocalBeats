@@ -66,26 +66,21 @@ export class ProfileRequestComponent implements OnInit {
   private getAvailableEvents() {
     // Get all events for the current user
     // Loop through the bookings and see which bookings exist for the selected artist
-    let tempEventIds: String[] = [];
-    // Get the confirmed bookings
-    let confirmedBookings: Booking[] = [];
-    // Get the application bookings
-    let applicationBookings: Booking[] = [];
-    // Get the request bookings
-    let requestBookings: Booking[] = [];
+    let tempEventIds: String[] = [];;
     let tempEvents: Event[] = [];
+    let potentialEvents: Event[] = [];
     this.eventService.getEventsByUID(this.user._id).then((events: Event[]) => {
-      this.hostedEvents.availableEvents = events;
+      potentialEvents = events;
     }).then(() => this.bookingService.getUserBookings(this.user, 'host').then((bookings: Booking[]) => {
       for (let booking of bookings) {
-        if (booking.performerUser._id == this.artist._id) {
+        if (booking.performerUser._id == this.artist._id && !booking.cancelled) {
           // The user has booking with this person for this event
           tempEventIds.push(booking.eventEID._id);
         }
       }
       // Remove those event ids from available events
-      for (let event of this.hostedEvents.availableEvents) {
-        let found = false
+      for (let event of potentialEvents) {
+        let found = false;
         for (let tempEventId of tempEventIds) {
           if (tempEventId == event._id) {
             found = true;
@@ -95,10 +90,8 @@ export class ProfileRequestComponent implements OnInit {
           tempEvents.push(event);
         }
       }
+    this.hostedEvents.availableEvents = tempEvents;
     }));
-    this.hostedEvents = {
-      availableEvents: tempEvents,
-    };
   }
 
   private updateModel(newBooking: Booking, response: NegotiationResponses) {
