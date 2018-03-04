@@ -178,7 +178,12 @@ export class ProfileComponent implements OnInit {
       
       // If the user entered non-blank id and hit send, communicate with server
       if (this.soundcloudIdFormInput.trim().length > 0) {
-        // TODO: call userService to save the id to DB. Get the new user and re-assign it to userService user
+        // Save the soundcloud id to the DB
+        this.user.soundcloud = { id: this.soundcloudIdFormInput };
+        this.userService.onEditProfile(this.user).then( (userWithSoundcloud: User) => {
+          console.log('User with soundcloud in proifle: ', this.user);
+          console.log('User with soundcloud in userservice: ', this.userService.user);
+        });
       }
 
       this.soundcloudIdFormInput = '';
