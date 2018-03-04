@@ -88,6 +88,8 @@ export class ProfileComponent implements OnInit {
     if (this.userID["id"] == null) {
       this.onOwnProfile = true;
       //this.user = this.userService.user;
+      // Retreive and store the latest spotify albums of this user
+      this.getSpotifyAlbumsAndSave();
     } else {
       //on another perons profile.
       this.onOwnProfile = false;
@@ -96,6 +98,8 @@ export class ProfileComponent implements OnInit {
       this.userService.getUserByID(ID).then((gottenUser: User) => {
         this.user = gottenUser;
         console.log('Profile got user: ', gottenUser);
+        // Retreive and store the latest spotify albums of this user
+        this.getSpotifyAlbumsAndSave();
       }).then(() => this.hasRequested());
     }
 
@@ -115,7 +119,7 @@ export class ProfileComponent implements OnInit {
     
     // If the user clicked message to some other user, then initiate conversation with it
     if (!this.onOwnProfile) {
-      let message:Message = {
+      let message: Message = {
         to: this.user
       };
 
@@ -153,11 +157,6 @@ export class ProfileComponent implements OnInit {
   onMusicTabSelectChange(event) {
     if (event.index === 0) {
       console.log('Spotify tab is selected!');
-
-      if (this.user.spotify !== undefined && this.user.spotify !== null ) {
-        // Retreive and store the latest spotify albums of this user
-        this.getSpotifyAlbumsAndSave();
-      }
     } else {
       console.log('Soundcloud tab is selected!');
       if (this.user.soundcloud !== undefined && this.user.soundcloud !== null) {
@@ -171,12 +170,14 @@ export class ProfileComponent implements OnInit {
    *  set it to the user object's albums property
    */
   getSpotifyAlbumsAndSave() {
+    console.log('Profile user: ', this.user);
+    console.log(this.user.spotify !== null && this.user.spotify !== undefined);
     if ( this.user !== null && this.user !== undefined ) {
       if (this.user.spotify !== null && this.user.spotify !== undefined) {
         this._spotifyClientService.requestAlbumsOwnedByAnArtist(this.user)
           .then((listOfSpotifyAlbumObjects: any) => {
             this.user.spotify.albums = listOfSpotifyAlbumObjects.albums.items;
-            console.log('Got albums: ', this.user.spotify);
+            console.log('Saved albums: ', this.user);
           });
       }
     }
