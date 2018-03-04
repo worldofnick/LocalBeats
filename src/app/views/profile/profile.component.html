@@ -97,6 +97,13 @@
             </ng-template> -->
             <div class="soundcloud-tab-content" [style.overflow]="'auto'" [style.height.px]="'300'">
                 
+                <div class="soundcloud-register-container" *ngIf="this.user.soundcloud === undefined">
+                  <mat-form-field (keydown)="registerSoundcloudClicked($event)" floatLabel="never" hintLabel="Tip: ID can be found in your account's URL">
+                      <input matInput [(ngModel)]="soundcloudIdFormInput" placeholder="Register your SoundCloud ID">
+                  </mat-form-field>
+                </div>
+                <!-- <a *ngIf="this.user.soundcloud === undefined" mat-raised-button (click)="authorizeSoundcloud()" color="primary">Connect Spotify</a> -->
+
             </div>
           </mat-tab>
         </mat-tab-group>
