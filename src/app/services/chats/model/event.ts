@@ -14,5 +14,6 @@ export enum SocketEvent {
     REQUEST_NOTIFICATIONS = 'notifications',
     REQUEST_NOTIFICATION_COUNT = 'notificationCount',
     SEND_NOTIFICATION = 'sendNotification',
-    UPDATE_PROFILE = 'updateProfile'
+    UPDATE_PROFILE = 'updateProfile',
+    NEW_REVIEW = 'newReview'
 }

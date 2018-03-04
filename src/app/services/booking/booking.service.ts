@@ -5,12 +5,16 @@ import { MatDialogRef, MatDialog, MatDialogConfig } from '@angular/material';
 import { Observable } from 'rxjs/Observable';
 import { Booking, NegotiationResponses, VerificationResponse } from 'app/models/booking';
 import { Event } from 'app/models/event';
+import { Review } from 'app/models/review';
+import { Notification } from 'app/models/notification';
 import { User } from 'app/models/user';
 import { PaymentStatus } from 'app/models/payment';
 import { NegotiateDialogComponent } from '../../views/negotiate/negotiate-dialog/negotiate-dialog.component';
 import { StripeDialogComponent } from '../../views/events/event-singleton/stripe-dialog.component';
 import { VerifyDialogComponent } from '../../views/negotiate/verify-dialog/verify-dialog.component';
 import { environment } from '../../../environments/environment';
+import { SocketService } from 'app/services/chats/socket.service';
+import { SocketEvent } from 'app/services/chats/model/event';
 
 @Injectable()
 export class BookingService {
@@ -23,7 +27,7 @@ export class BookingService {
 
     private headers: Headers = new Headers({ 'Content-Type': 'application/json' });
 
-    constructor(private http: Http, private dialog: MatDialog) { }
+    constructor(private http: Http, private dialog: MatDialog, private socketService: SocketService) { }
 
     public negotiate(booking: Booking, initial: boolean, view: string): Observable<{response: NegotiationResponses, price: number, comment: string}> {
         if ((view == "artist" && !booking.performerUser.stripeAccountId || view == "host" && !booking.hostUser.stripeAccountId)) {
@@ -58,6 +62,49 @@ export class BookingService {
             data: {booking, isHost}
         });
         return dialogRef.afterClosed();
+    }
+
+    public sendNotificationsToBoth(review: Review) {
+        if (review.booking.bothReviewed) {
+            // send notification to artist and host
+            const profile: string[] = ['/profile'];
+
+            const notificationToArtist = new Notification(review.fromUser, review.toUser,
+                review.booking.eventEID._id, review.booking, NegotiationResponses.review,
+                'You have been reviewed by ' + review.fromUser.firstName + ' and now your review is published', 'rate_review', profile);
+
+            const notificationToHost = new Notification(review.toUser, review.fromUser,
+                review.booking.eventEID._id, review.booking, NegotiationResponses.review,
+                'You have been reviewed by ' + review.toUser.firstName + ' and now your review is published', 'rate_review', profile);
+
+            this.socketService.sendNotification(SocketEvent.SEND_NOTIFICATION, notificationToArtist);
+            this.socketService.sendNotification(SocketEvent.SEND_NOTIFICATION, notificationToHost);
+        }
+    }
+
+    public sendNotificationsToArtist(review: Review) {
+        // send notification to artist
+        const profile: string[] = ['/profile', 'performances'];
+
+        const notificationToArtist = new Notification(review.fromUser, review.toUser,
+            review.booking.eventEID._id, review.booking, NegotiationResponses.review,
+            'You have been reviewed by ' + review.fromUser.firstName + ' click here to leave your review', 'hearing', profile);
+
+        this.socketService.sendNotification(SocketEvent.SEND_NOTIFICATION, notificationToArtist);
+
+    }
+
+    public sendNotificationsToHost(review: Review) {
+        // send notification to artist
+        // this path should be changed with the new managment UI most likely
+        const profile: string[] = ['/profile', 'events'];
+
+        const notificationToHost = new Notification(review.fromUser, review.toUser,
+            review.booking.eventEID._id, review.booking, NegotiationResponses.review,
+            'You have been reviewed by ' + review.fromUser.firstName + ' click here to leave your review', 'hearing', profile);
+
+        this.socketService.sendNotification(SocketEvent.SEND_NOTIFICATION, notificationToHost);
+
     }
 
     // post("/api/events/create")
