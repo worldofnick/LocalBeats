@@ -195,10 +195,10 @@ export class ProfileComponent implements OnInit {
    * @param album The spotify album object that was clicked
    */
   public onAlbumRowClicked(album) {
-    console.log('Album ', album.name, 'clicked' );
+    console.log('Album ', album, 'clicked' );
     this.onSpotifyWidget = true;
 
-    let dangerousAlbumUrl = 'https://open.spotify.com/embed?uri=spotify%3Aalbum%3A' + this.user.spotify.albums[0].id + '&theme=white';
+    let dangerousAlbumUrl = 'https://open.spotify.com/embed?uri=spotify%3Aalbum%3A' + album.id + '&theme=white';
     this.trustedAlbumUrl = this.sanitizer.bypassSecurityTrustResourceUrl(dangerousAlbumUrl);
   }
 
