@@ -5,6 +5,7 @@ import { BookingService } from '../../services/booking/booking.service';
 import { NotificationService } from '../../services/notification/notification.service';
 import { EventService } from '../../services/event/event.service';
 import { SocketService } from '../../services/chats/socket.service';
+import { SharedDataService } from '../../services/shared/shared-data.service';
 import { Action } from '../../services/chats/model/action';
 import { Message } from '../../services/chats/model/message';
 import { SocketEvent } from '../../services/chats/model/event';
@@ -51,10 +52,10 @@ export class ProfileComponent implements OnInit {
     private bookingService: BookingService,
     private eventService: EventService,
     private notificationService: NotificationService,
-    private sanitizer: DomSanitizer,
+    private sanitizer: DomSanitizer, private _sharedDataService: SharedDataService,
     private _socketService: SocketService, private _spotifyClientService: SpotifyClientService) {
 
-     router.events.subscribe((url:any) => this.clickedOverview = router.url == "/profile/overview");
+     router.events.subscribe((url: any) => this.clickedOverview = router.url == "/profile/overview");
 
   }
 
@@ -115,16 +116,21 @@ export class ProfileComponent implements OnInit {
     this.clickedOverview = true;
   }
 
+  /**
+   * Handler for when message button on profile page is clicked
+   */
   onStartNewConversationFromProfileButtonClick() {
     
     // If the user clicked message to some other user, then initiate conversation with it
     if (!this.onOwnProfile) {
-      let message: Message = {
-        to: this.user
-      };
+      this._sharedDataService.setProfileMessageSharedProperties(this.user);
+
+      // let message: Message = {
+      //   to: this.user
+      // };
 
       this.router.navigate(['/chat']);
-      this._socketService.send(Action.REQUEST_MSG_FROM_PROFILE_BUTTON, message);
+      // this._socketService.send(Action.REQUEST_MSG_FROM_PROFILE_BUTTON, message);
     }
   }
 

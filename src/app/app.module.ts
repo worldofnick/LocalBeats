@@ -24,10 +24,10 @@ import { ImgurService } from './services/image/imgur.service';
 import { NotificationService} from './services/notification/notification.service';
 import { ChatsService} from './services/chats/chats.service';
 import { SocketService } from './services/chats/socket.service';
-import { DatePipe } from '@angular/common'
+import { DatePipe } from '@angular/common';
 import { StripeService } from './services/payments/stripe.service';
 import { SpotifyClientService } from './services/music/spotify-client.service';
-
+import { SharedDataService } from './services/shared/shared-data.service';
 
 export function createTranslateLoader(http: Http) {
   return new TranslateStaticLoader(http, './assets/i18n', '.json');
@@ -63,6 +63,7 @@ export function createTranslateLoader(http: Http) {
     UserService,
     ChatsService, 
     SpotifyClientService,
+    SharedDataService,
     BookingService,
     EventService,
     UserGuard,
