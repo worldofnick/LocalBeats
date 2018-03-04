@@ -39,8 +39,11 @@ export class ProfileComponent implements OnInit {
   deleteStatus:Number;
   hasApplied:Boolean = true;
 
-  // Spotify
+  // Spotify and Soundcloud
   onSpotifyWidget = false;
+  trustedAlbumUrl: SafeResourceUrl;
+  trustedSoundcloudUrl: SafeResourceUrl;
+  soundcloudIdFormInput: string;
 
   constructor(private route: ActivatedRoute,
     private router : Router,
@@ -139,26 +142,45 @@ export class ProfileComponent implements OnInit {
   // ========================================
   // Music corner methods
   // ========================================
-  trustedAlbumUrl: SafeResourceUrl;
-  soundcloudIdFormInput: string;
-  
-  
+
+  /**
+   * Redirects user to spotify website to login and
+   *  ask for permissions
+   */
   public authorizeSpotify() {
     this._spotifyClientService.authorizeSpotify().then((url: string) => {
       window.open(url);
     });
   }
 
+  /**
+   * Returns a sanitized version of the passed url
+   */
   getSanitizedUrl(url) {
     return this.sanitizer.bypassSecurityTrustUrl(url);
   }
-  // albumURL() {
-  //   if (this.user.spotify !== undefined) {
-  //     const url = 'https://open.spotify.com/embed?uri=spotify%3Aalbum%3A' + this.user.spotify.albums[0].id + '&theme=white';
-  //     return this.sanitizer.bypassSecurityTrustResourceUrl(url);
-  //   }
-  // }
 
+  /**
+   * Detects which music corner tab is selected and loads
+   *  content accordingly
+   * @param event Contains the selected tab index
+   */
+  onMusicTabSelectChange(event) {
+    if (event.index === 0) {
+      console.log('Spotify tab is selected!');
+    } else {
+      console.log('Soundcloud tab is selected!');
+      if (this.user.soundcloud !== undefined && this.user.soundcloud !== null) {
+        this.sanitizeSoundcloudUrl();
+      }
+    }
+  }
+
+  /**
+   * Triggered when one of the spotify album rows
+   *  is clicked
+   * @param album The spotify album object that was clicked
+   */
   public onAlbumRowClicked(album) {
     console.log('Album ', album.name, 'clicked' );
     this.onSpotifyWidget = true;
@@ -167,11 +189,20 @@ export class ProfileComponent implements OnInit {
     this.trustedAlbumUrl = this.sanitizer.bypassSecurityTrustResourceUrl(dangerousAlbumUrl);
   }
 
+  /**
+   * Triggered when bacl t albums button on spotify
+   *  card is clicked
+   */
   public backToSpotifyAlbumsClicked() {
     this.onSpotifyWidget = false;
     this.trustedAlbumUrl = undefined;
   }
 
+  /**
+   * Saves the soundcloud id to DB if it is valid
+   *  and sanitizes the url to use in iframe
+   * @param event Contains the keypress
+   */
   registerSoundcloudClicked(event) {
     if (event.keyCode === 13 && !event.shiftKey) {
       console.log('Entered soundcloud id: %s', this.soundcloudIdFormInput);
@@ -181,12 +212,21 @@ export class ProfileComponent implements OnInit {
         // Save the soundcloud id to the DB
         this.user.soundcloud = { id: this.soundcloudIdFormInput };
         this.userService.onEditProfile(this.user).then( (userWithSoundcloud: User) => {
-          console.log('User with soundcloud in proifle: ', this.user);
-          console.log('User with soundcloud in userservice: ', this.userService.user);
+          this.sanitizeSoundcloudUrl();
         });
       }
 
       this.soundcloudIdFormInput = '';
     }
+  }
+
+  /**
+   * Creates the iframe url, and sets the sanitized version of it
+   */
+  public sanitizeSoundcloudUrl() {
+    const dangerousAlbumUrl = 'https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/users/' +
+    this.user.soundcloud.id + '&color=%23ff5500&auto_play=false&hide_related=false&show_comments=true&' +
+    'show_user=true&show_reposts=false&show_teaser=true&visual=true';
+    this.trustedSoundcloudUrl = this.sanitizer.bypassSecurityTrustResourceUrl(dangerousAlbumUrl);
   }
 }
