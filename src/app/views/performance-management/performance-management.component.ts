@@ -36,6 +36,7 @@ export class PerformanceManagementComponent implements OnInit {
   socketSubscription: ISubscription;
   negotiationSubscription: ISubscription;
   verificationSubscription: ISubscription;
+  reviewSubscription: ISubscription;
   private canRefund: boolean = true;
   // Performances of the User Model
   performances: {
@@ -85,6 +86,9 @@ export class PerformanceManagementComponent implements OnInit {
       .subscribe((notification: Notification) => {
         this.updateModel(notification.booking, notification.response);
     });
+    this.negotiationSubscription = null;
+    this.verificationSubscription = null;
+    this.reviewSubscription = null;
   }
 
   ngOnDestroy() {
@@ -94,6 +98,9 @@ export class PerformanceManagementComponent implements OnInit {
     }
     if(this.verificationSubscription) {
       this.verificationSubscription.unsubscribe();
+    }
+    if(this.reviewSubscription) {
+      this.reviewSubscription.unsubscribe();
     }
   }
 
@@ -129,7 +136,11 @@ export class PerformanceManagementComponent implements OnInit {
     review.booking = booking;
     review.toUser = booking.hostUser;
     review.fromUser = booking.performerUser;
-    this.reviewService.review(review, false).subscribe((result) => {
+    if(this.reviewSubscription) {
+      this.reviewSubscription.unsubscribe();
+      this.reviewSubscription = null;
+    }
+    this.reviewSubscription = this.reviewService.review(review, false).subscribe((result) => {
       if (result.rating == -1) {
         // user clicked cancel in the review dialog.
         return;

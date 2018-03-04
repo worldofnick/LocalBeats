@@ -104,8 +104,6 @@
                   <button *ngIf="completion.completed && performances.paymentStatues[i] != 'waiting'" (click)="showPaymentHistoryDialog(completion)" class="text-muted" mat-icon-button matTooltip="Payment History"><mat-icon>history</mat-icon></button>
                   <button *ngIf="!completion.beenReviewedByArtist" (click)="reviewDialog(completion)" class="text-muted" mat-icon-button matTooltip="Review"><mat-icon>star</mat-icon></button>
                   <button *ngIf="completion.beenReviewedByArtist && !completion.bothReviewed" (click)="editReview(completion)" class="text-muted" mat-icon-button matTooltip="Edit Review"><mat-icon>mode_edit</mat-icon></button>
-                  <!-- TO DO -->
-                  <button class="text-muted" mat-icon-button matTooltip="Review Artist"><mat-icon>star</mat-icon></button>
                 </mat-card-content>
               </mat-card>
             </div>

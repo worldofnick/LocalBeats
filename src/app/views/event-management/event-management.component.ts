@@ -39,6 +39,7 @@ export class EventManagementComponent implements OnInit {
   socketSubscription: ISubscription;
   negotiationSubscription: ISubscription;
   verificationSubscription: ISubscription;
+  reviewSubscription: ISubscription;
   private canPay: boolean = true;
   // Hosted Events of the User Model
   events: {
@@ -73,13 +74,13 @@ export class EventManagementComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log(this.events);
     this.socketSubscription = this._socketService.onEvent(SocketEvent.SEND_NOTIFICATION)
       .subscribe((notification: Notification) => {
           this.updateModel(notification.booking, notification.response);
     });
     this.negotiationSubscription = null;
     this.verificationSubscription = null;
+    this.reviewSubscription = null;
   }
 
   ngOnDestroy() {
@@ -89,6 +90,9 @@ export class EventManagementComponent implements OnInit {
     }
     if(this.verificationSubscription) {
       this.verificationSubscription.unsubscribe();
+    }
+    if(this.reviewSubscription) {
+      this.reviewSubscription.unsubscribe();
     }
   }
 
@@ -125,7 +129,11 @@ export class EventManagementComponent implements OnInit {
     review.booking = booking;
     review.toUser = booking.performerUser;
     review.fromUser = booking.hostUser;
-    this.reviewService.review(review, false).subscribe((result) => {
+    if(this.reviewSubscription) {
+      this.reviewSubscription.unsubscribe();
+      this.reviewSubscription = null;
+    }
+    this.reviewSubscription = this.reviewService.review(review, false).subscribe((result) => {
       if (result.rating == -1) {
         // user clicked cancel in the review dialog.
         return;
@@ -421,7 +429,7 @@ export class EventManagementComponent implements OnInit {
   Resets all completion notifications to 0 when that expansion panel has been clicked
   */
   resetCompletionNotifications(eventIndex: number) {
-    this.events[eventIndex].cancellationNotifications = 0;
+    this.events[eventIndex].completionNotifications = 0;
     for(let booking of this.events[eventIndex].completions) {
       if(!booking.hostViewed) {
         booking.hostViewed = true;
