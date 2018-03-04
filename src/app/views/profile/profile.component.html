@@ -73,7 +73,7 @@
             <div class="spotify-tab-content" [style.overflow]="'auto'" [style.height.px]="'300'">
               
               <!-- Link spotify button on logged in user's profile if no spotify account is linked -->
-              <div *ngIf="(this.user.spotify === undefined || this.user.spotify === null) && this.user._id === this.userService.user._id">
+              <div class="spotifyConnectButtonContainer" *ngIf="(this.user.spotify === undefined || this.user.spotify === null) && this.user._id === this.userService.user._id">
                 <a mat-raised-button (click)="authorizeSpotify()" color="primary">Connect Spotify</a>
               </div>
 
