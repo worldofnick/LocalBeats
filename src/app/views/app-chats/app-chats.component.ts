@@ -201,7 +201,7 @@ export class AppChatsComponent implements OnInit, AfterViewChecked, AfterViewIni
         this.profileRecipient = message.to as User;
         this.isProfileUserRequestPending = true;
         console.log(' <<< Calling re-initialzie on socket profile button event received >>> ');
-        this.initChatSideBarWithWithNewUsers();
+        // this.initChatSideBarWithWithNewUsers();
       });
 
       this._socketService.onEvent(SocketEvent.OPEN_SNACK_BAR_PM)
@@ -342,7 +342,7 @@ export class AppChatsComponent implements OnInit, AfterViewChecked, AfterViewIni
         },
         err => console.error('Error fetching PMs between 2 users: ', err),
         () => {
-          console.log('Done fetching PMs from the server DB');
+          console.log('Done fetching PMs from the server DB:', this.activeChatMessages);
           this.profileRecipient = new User();
           this.snackBarRecipient = new User();
           this.isProfileUserRequestPending = false;
