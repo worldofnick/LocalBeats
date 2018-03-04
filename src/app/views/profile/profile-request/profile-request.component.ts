@@ -24,7 +24,8 @@ import { PaymentStatus } from '../../../models/payment'
   styleUrls: ['./profile-request.component.css']
 })
 export class ProfileRequestComponent implements OnInit {
-  private subscription: ISubscription;
+  private socketSubscription: ISubscription;
+  private negotiationSubscription: ISubscription;
 
   // User Model
   @Input() user: User;
@@ -49,14 +50,17 @@ export class ProfileRequestComponent implements OnInit {
 
   ngOnInit() {
     this.getAvailableEvents();
-    this.subscription = this._socketService.onEvent(SocketEvent.SEND_NOTIFICATION)
+    this.socketSubscription = this._socketService.onEvent(SocketEvent.SEND_NOTIFICATION)
       .subscribe((notification: Notification) => {
         this.updateModel(notification.booking, notification.response);
     });
   }
 
   ngOnDestroy() {
-    this.subscription.unsubscribe();
+    this.socketSubscription.unsubscribe();
+    if(this.negotiationSubscription) {
+      this.negotiationSubscription.unsubscribe();
+    }
   }
 
   private getAvailableEvents() {
@@ -111,7 +115,10 @@ export class ProfileRequestComponent implements OnInit {
 
   newRequest(event: Event, eventIndex: number) {
     let tempBooking = new Booking(undefined, BookingType.hostRequest, event.hostUser, this.artist, event, false, false, false, StatusMessages.waitingOnArtist, StatusMessages.hostOffer, false, true, event.fixedPrice, null, null);
-    this.bookingService.negotiate(tempBooking, true, "host").subscribe((result) => {
+    if(this.negotiationSubscription) {
+      this.negotiationSubscription.unsubscribe();
+    }
+    this.negotiationSubscription = this.bookingService.negotiate(tempBooking, true, "host").subscribe((result) => {
       if (result != undefined) {
         //tempBooking.hostComment = result.comment;
         // Send message through messaging
