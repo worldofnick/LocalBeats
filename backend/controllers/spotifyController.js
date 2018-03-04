@@ -30,7 +30,7 @@ exports.sendTokens = function(req, res) {
 }
 
 exports.refreshAccessTokenMiddleware = function(req, res, next) {
-  console.log('Token req is: ', req.body);
+  console.log('Token req is from refreshAccess middlware: ', req.body);
   var spotifyUserProfile = undefined;
   var authOptions = { 
     url : config.spotify.tokenUri,
@@ -46,9 +46,7 @@ exports.refreshAccessTokenMiddleware = function(req, res, next) {
   request.post(authOptions, function (err, response, body) {
     if (err === null && response.statusCode === 200) {
       //TODO: get the user id, save it and then return the user id along with the tokens
-      console.log('Access Token Spotify: ', body.access_token,
-        '\nRefresh token: ', body.refresh_token,
-        '\nExpires_in:', body.expires_in);
+      console.log('Refresh Middleware response: ', body);
 
       req.body.access_token = body.access_token;
       req.body.expires_in = body.expires_in;
@@ -73,6 +71,7 @@ exports.getMeAndSavetoDB = function(req, res) {
     if (err === null && response.statusCode === 200) {
       console.log('Profile body received: ', body);
       const spotifyProfileObject = JSON.parse(body);
+      
       let payload = {
             'spotify.id' : spotifyProfileObject.id,
             'spotify.email' : spotifyProfileObject.email,
@@ -100,8 +99,18 @@ exports.getMeAndSavetoDB = function(req, res) {
   });
 }
 
+exports.removeSpotifyFromUID = function (req, res) {
+  const userChanges = { $unset: { spotify: 1 } }
+  User.findByIdAndUpdate(req.params.uid, userChanges, {new: true}, function (err, updatedUser) {
+    if (err) {
+      return res.status(520).send({ message: "Error finding the user from this UID...", error: err });
+    }
+    return res.status(200).send({ user: updatedUser });
+  });
+}
+
 exports.getAccessRefreshTokens = function (req, res) {
-  console.log('Token req is: ', req.body);
+  console.log('Get access refresh request body is: ', req.body);
   var spotifyUserProfile = undefined;
   var authOptions = { 
     url : config.spotify.tokenUri,
@@ -118,9 +127,7 @@ exports.getAccessRefreshTokens = function (req, res) {
   request.post(authOptions, function (err, response, body) {
     if (err === null && response.statusCode === 200) {
       //TODO: get the user id, save it and then return the user id along with the tokens
-      console.log('Access Token Spotify: ', body.access_token,
-        '\nRefresh token: ', body.refresh_token,
-        '\nExpires_in:', body.expires_in);
+      console.log('Access Refresh Token response: ', body);
 
       res.send(
         {
