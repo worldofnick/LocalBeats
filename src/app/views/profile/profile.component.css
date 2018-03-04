@@ -9,3 +9,14 @@
 #spotifyList {
     border-bottom: 1px solid rgba(243,243,243, 1.0);
 }
+
+.soundcloud-register-container {
+    display: flex;
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    flex-direction: column;
+    width : 80%;
+}
