@@ -77,9 +77,10 @@
       <mat-card-content class="mt-1">
         <p>Manage your social accounts and preferences here...</p>
         <div class="button-row">
-          <a mat-raised-button (click)="callbackTest()" color="primary">Unlink Spotify</a>
-          <a mat-raised-button (click)="callbackTest()" color="primary">Unlink SoundCloud</a>
-          <a mat-raised-button (click)="callbackTest()" color="primary">Link Spotify</a>
+          <a *ngIf="this.user.spotify !== null && this.user.spotify !== undefined" mat-raised-button (click)="unlinkSpotify()" color="primary">Unlink Spotify</a>
+          <!-- <a *ngIf="this.user.spotify === null && this.user.spotify === undefined"  mat-raised-button (click)="callbackTest()" color="primary">Link Spotify</a> -->
+          
+          <a mat-raised-button (click)="callbackTest()" color="primary">Unlink SoundCloud</a>          
           <a mat-raised-button (click)="callbackTest()" color="primary">Link SoundCloud</a>
       </div>
       </mat-card-content>
