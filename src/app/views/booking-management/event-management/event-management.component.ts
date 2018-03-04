@@ -6,28 +6,30 @@ import { NgForm } from '@angular/forms/src/directives/ng_form';
 import { Router } from "@angular/router";
 import { MatTabChangeEvent } from '@angular/material';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatSnackBar} from '@angular/material';
-import { PaymentHistoryDialog } from '../performance-management/performance-management.component';
 
 // Services
-import { UserService } from '../../services/auth/user.service';
-import { BookingService } from '../../services/booking/booking.service';
-import { EventService } from '../../services/event/event.service';
+import { UserService } from '../../../services/auth/user.service';
+import { BookingService } from '../../../services/booking/booking.service';
+import { EventService } from '../../../services/event/event.service';
 import { SocketService } from 'app/services/chats/socket.service';
 import { StripeService } from 'app/services/payments/stripe.service';
 import { ReviewService } from 'app/services/reviews/review.service';
 
 // Data Models
-import { User } from '../../models/user';
-import { Review } from '../../models/review';
-import { Event } from '../../models/event';
-import { Booking, StatusMessages, NegotiationResponses, VerificationResponse, BookingType } from '../../models/booking';
-import { Action } from '../../services/chats/model/action';
-import { SocketEvent } from '../../services/chats/model/event';
-import { Notification } from '../../models/notification';
-import { Message } from '../../services/chats/model/message';
-import { MessageTypes } from'../../services/chats/model/messageTypes';
-import { Payment, PaymentStatus } from '../../models/payment';
+import { User } from '../../../models/user';
+import { Review } from '../../../models/review';
+import { Event } from '../../../models/event';
+import { Booking, StatusMessages, NegotiationResponses, VerificationResponse, BookingType } from '../../../models/booking';
+import { Action } from '../../../services/chats/model/action';
+import { SocketEvent } from '../../../services/chats/model/event';
+import { Notification } from '../../../models/notification';
+import { Message } from '../../../services/chats/model/message';
+import { MessageTypes } from'../../../services/chats/model/messageTypes';
+import { Payment, PaymentStatus } from '../../../models/payment';
 
+// Components
+import { ConfirmPaymentDialogComponent } from '../confirm-payment-dialog/confirm-payment-dialog.component';
+import { PaymentHistoryDialogComponent } from '../payment-history-dialog/payment-history-dialog.component';
 
 @Component({
   selector: 'app-event-management',
@@ -41,6 +43,7 @@ export class EventManagementComponent implements OnInit {
   negotiationSubscription: ISubscription;
   verificationSubscription: ISubscription;
   reviewSubscription: ISubscription;
+  paySubscription: ISubscription;
   private canPay: boolean = true;
   // Hosted Events of the User Model
   events: {
@@ -82,6 +85,7 @@ export class EventManagementComponent implements OnInit {
     this.negotiationSubscription = null;
     this.verificationSubscription = null;
     this.reviewSubscription = null;
+    this.paySubscription = null;
   }
 
   ngOnDestroy() {
@@ -94,6 +98,9 @@ export class EventManagementComponent implements OnInit {
     }
     if(this.reviewSubscription) {
       this.reviewSubscription.unsubscribe();
+    }
+    if(this.paySubscription) {
+      this.paySubscription.unsubscribe();
     }
   }
 
@@ -568,6 +575,12 @@ export class EventManagementComponent implements OnInit {
                 let snackBarRef = this.snackBar.open('Payment sent!', "", {
                   duration: 1500,
                 });
+                // Update the model and send a notification if the model updates correctly
+                this.bookingService.updateBooking(booking).then(() => {
+                  // Send notification to artist
+                  this.createNotificationForArtist(booking, response, ['/bookingmanagement', 'myperformances'],
+                  'event_available', notificationMessage);
+                });
               });
             } else {
               // Payment failed, so change the booking to not be completed
@@ -580,18 +593,24 @@ export class EventManagementComponent implements OnInit {
               let snackBarRef = this.snackBar.open('Payment failed, please try again.', "", {
                 duration: 1500,
               });
+              // Update the model and send a notification if the model updates correctly
+              this.bookingService.updateBooking(booking).then(() => {
+                // Send notification to artist
+                this.createNotificationForArtist(booking, response, ['/bookingmanagement', 'myperformances'],
+                'event_available', notificationMessage);
+              });
             }
           });
         } else {
           // Otherwise, the booking is not complete, so just a normal verification happened
           this.events[eventIndex].confirmations[bookingIndex] = booking;
+          // Update the model and send a notification if the model updates correctly
+          this.bookingService.updateBooking(booking).then(() => {
+            // Send notification to artist
+            this.createNotificationForArtist(booking, response, ['/bookingmanagement', 'myperformances'],
+            'event_available', notificationMessage);
+          });
         }
-        // Update the model and send a notification if the model updates correctly
-        this.bookingService.updateBooking(booking).then(() => {
-          // Send notification to artist
-          this.createNotificationForArtist(booking, response, ['/profile', 'performances'],
-          'event_available', notificationMessage);
-        });
       }
     })
   }
@@ -634,7 +653,7 @@ export class EventManagementComponent implements OnInit {
               this.events[eventIndex].requests[bookingIndex] = booking;
               this.events[eventIndex].requestNotifications--;
             }
-            this.createNotificationForArtist(booking, result.response, ['/events', booking.eventEID._id],
+            this.createNotificationForArtist(booking, result.response, ['/bookingmanagement', 'myperformances'],
             'import_export', booking.hostUser.firstName + " has updated the offer on " + booking.eventEID.eventName);
           });
         } else if (result.response == NegotiationResponses.accept) {
@@ -661,7 +680,7 @@ export class EventManagementComponent implements OnInit {
               }
               this.events[eventIndex].confirmations.push(booking);
               this.events[eventIndex].confirmationNotifications++;
-              this.createNotificationForArtist(booking, result.response, ['/profile', 'performances'],
+              this.createNotificationForArtist(booking, result.response, ['/bookingmanagement', 'myperformances'],
               'event_available', booking.hostUser.firstName + " has confirmed the booking" + booking.eventEID.eventName);
             })
           }
@@ -726,14 +745,17 @@ export class EventManagementComponent implements OnInit {
 
   showPayDialog(booking: Booking) {
     this.canPay = false;
-    let dialogRef: MatDialogRef<ConfirmPaymentDialog>;
-    dialogRef = this.dialog.open(ConfirmPaymentDialog, {
+    let dialogRef: MatDialogRef<ConfirmPaymentDialogComponent>;
+    dialogRef = this.dialog.open(ConfirmPaymentDialogComponent, {
         width: '250px',
         disableClose: false,
         data: { booking }
     });
-
-    dialogRef.afterClosed().subscribe(result => {
+    if(this.paySubscription) {
+      this.paySubscription.unsubscribe();
+      this.paySubscription = null;
+    }
+    this.paySubscription = dialogRef.afterClosed().subscribe(result => {
       this.updatePaymentStatues(booking);
       this.canPay = true;
     });
@@ -741,9 +763,9 @@ export class EventManagementComponent implements OnInit {
 
   showPaymentHistoryDialog(booking: Booking) {
     let userID = this.userService.user._id;
-    let dialogRef: MatDialogRef<PaymentHistoryDialog>;
+    let dialogRef: MatDialogRef<PaymentHistoryDialogComponent>;
     this.stripeService.getBookingPayments(booking).then((payments: Payment[]) => {
-      dialogRef = this.dialog.open(PaymentHistoryDialog, {
+      dialogRef = this.dialog.open(PaymentHistoryDialogComponent, {
           width: '420px',
           disableClose: false,
           data: { payments, userID }
@@ -751,37 +773,6 @@ export class EventManagementComponent implements OnInit {
 
     });
 
-  }
-
-}
-
-@Component({
-  selector: 'payment-confirm-dialog',
-  templateUrl: 'payment-confirm-dialog.html',
-})
-export class ConfirmPaymentDialog {
-
-  constructor(
-    public dialogRef: MatDialogRef<ConfirmPaymentDialog>, private stripeService: StripeService, public snackBar: MatSnackBar,
-    @Inject(MAT_DIALOG_DATA) public data: any) { }
-
-  onNoClick(): void {
-    this.dialogRef.close();
-  }
-
-  onOkClick(): void {
-    this.stripeService.charge(this.data.booking, false).then((success: boolean) => {
-      this.dialogRef.close();
-      if (success) {
-        let snackBarRef = this.snackBar.open('Payment sent!', "", {
-          duration: 1500,
-        });
-      } else {
-        let snackBarRef = this.snackBar.open('Payment failed, please try again.', "", {
-          duration: 1500,
-        });
-      }
-    });
   }
 
 }

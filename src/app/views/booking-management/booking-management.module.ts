@@ -35,8 +35,12 @@ import { ChartsModule } from 'ng2-charts/ng2-charts';
 import { FileUploadModule } from 'ng2-file-upload/ng2-file-upload';
 import { CommonPipesModule } from "../../pipes/common/common-pipes.module";
 import { ReactiveFormsModule } from '@angular/forms';
-import { PerformanceManagementComponent, PaymentHistoryDialog, RefundPaymentDialog } from './performance-management.component';
-import { PerformanceManagementRoutes } from './performance-management.routing';
+import { EventManagementComponent } from './event-management/event-management.component';
+import { PerformanceManagementComponent } from './performance-management/performance-management.component';
+import { PaymentHistoryDialogComponent } from './payment-history-dialog/payment-history-dialog.component';
+import { ConfirmPaymentDialogComponent } from './confirm-payment-dialog/confirm-payment-dialog.component';
+import { RefundPaymentDialogComponent } from './refund-payment-dialog/refund-payment-dialog.component';
+import { BookingManagementRoutes } from './booking-management.routing';
 
 @NgModule({
   imports: [
@@ -83,22 +87,29 @@ import { PerformanceManagementRoutes } from './performance-management.routing';
     ChartsModule,
     FileUploadModule,
     CommonPipesModule,
-    RouterModule.forChild(PerformanceManagementRoutes)
+    RouterModule.forChild(BookingManagementRoutes)
   ],
   declarations: [
-    PerformanceManagementComponent, 
-    PaymentHistoryDialog,
-    RefundPaymentDialog
-  ],
+      EventManagementComponent, 
+      PerformanceManagementComponent, 
+      PaymentHistoryDialogComponent, 
+      ConfirmPaymentDialogComponent, 
+      RefundPaymentDialogComponent
+    ],
   exports: [
-    PerformanceManagementComponent,
-    PaymentHistoryDialog,
-    RefundPaymentDialog
+      EventManagementComponent,
+      PerformanceManagementComponent,
+      PaymentHistoryDialogComponent,
+      ConfirmPaymentDialogComponent,
+      RefundPaymentDialogComponent
   ],
   providers: [],
   entryComponents: [
-    PaymentHistoryDialog, 
-    RefundPaymentDialog
-  ]
+      PaymentHistoryDialogComponent,
+      PerformanceManagementComponent,
+      ConfirmPaymentDialogComponent,
+      PaymentHistoryDialogComponent,
+      RefundPaymentDialogComponent
+    ]
 })
-export class PerformanceManagementModule { }
+export class BookingManagementModule { }

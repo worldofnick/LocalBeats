@@ -38,14 +38,9 @@ export const rootRouterConfig: Routes = [
         data: { title: 'Profile', breadcrumb: 'PROFILE'}
       },
       {
-        path: 'myperformances',
-        loadChildren: './views/performance-management/performance-management.module#PerformanceManagementModule',
-        data: { title: 'My Performances', breadcrumb: 'MY PERFORMANCES'}
-      },
-      {
-        path: 'myevents',
-        loadChildren: './views/event-management/event-management.module#EventManagementModule',
-        data: { title: 'My Events', breadcrumb: 'MY EVENTS'}
+        path: 'bookingmanagement',
+        loadChildren: './views/booking-management/booking-management.module#BookingManagementModule',
+        data: { title: 'Booking Management', breadcrumb: 'MY BOOKINGS'}
       },
       {
         path: 'events', 

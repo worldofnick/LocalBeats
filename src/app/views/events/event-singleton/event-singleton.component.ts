@@ -121,7 +121,7 @@ export class EventSingletonComponent implements OnInit {
   Takes user to their performances
   */
  onManageBooking() {
-    this.router.navigate(['/myperformances']);    
+    this.router.navigate(['/bookingmanagement/myperformances']);    
   }
 
   messageHost(){
