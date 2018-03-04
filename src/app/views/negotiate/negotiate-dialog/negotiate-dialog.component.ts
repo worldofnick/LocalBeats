@@ -80,6 +80,7 @@ export class NegotiateDialogComponent implements OnInit {
           this.acceptButtonText = "Apply";
           this.declineButtonText = "Cancel Application";
         }
+        this.getArtistAvailability(false);
       } else {
         // Otherwise, it is a host request
         // Check if the event is negotiable
@@ -94,7 +95,7 @@ export class NegotiateDialogComponent implements OnInit {
           this.acceptButtonText = "Request";
           this.declineButtonText = "Cancel Request";
         }
-        this.getArtistAvailability();
+        this.getArtistAvailability(true);
       }
     } else if(!this.data.booking.approved){
       // Check what view it's coming from
@@ -159,23 +160,30 @@ export class NegotiateDialogComponent implements OnInit {
 
   }
 
-  private getArtistAvailability(){
+  private getArtistAvailability(isRequest: boolean){
     this.eventService.getEventsByUID(this.data.booking.performerUser._id).then( (eventList: Event[]) => {
       for(let e of eventList){
         this.artistEvents.push(e);
       }
       this.bookingService.getUserBookings(this.data.booking.performerUser, 'artist').then( (bookings: Booking[]) =>{
         for(let b of bookings){
-          this.artistEvents.push(b.eventEID);
+          if(b.approved){
+            this.artistEvents.push(b.eventEID);
+          }
         }
 
 
         // change this.artistAvail is the artist has a conflict.
 
+        console.log('looking thhru');
         for (let e of this.artistEvents) {
           if (isWithinRange(this.data.booking.eventEID.fromDate, e.fromDate, addMinutes(e.toDate, 5)) ||
               isWithinRange(this.data.booking.eventEID.toDate, e.fromDate, addMinutes(e.toDate, 5))) {
-            this.artistAvail = 'Artist is currently not available for this event. You may still request the artist but confirm availability before booking this event.';
+            if(isRequest){
+              this.artistAvail = 'Artist is currently not available for this event. You may still request the artist but confirm availability before booking this event.';
+            }else{
+              this.artistAvail = 'You are currently not available for this event. You may still apply, but confirm your availbility for this event before completing the booking process.'
+            }
           }
         }
       });

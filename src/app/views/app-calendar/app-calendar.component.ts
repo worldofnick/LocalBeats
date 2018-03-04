@@ -111,7 +111,7 @@ export class AppCalendarComponent implements OnInit {
         this.events.push(calendarEvent);
       }
 
-      if(this.userService.user.isArtist){
+      if(this.userService.user.isArtist) {
         this.bookingService.getUserBookings(this.userService.user, 'artist').then( (bookings: Booking[]) => {
           for(let booking of bookings){
             const calendarEvent: CalendarEvent = {
@@ -127,7 +127,6 @@ export class AppCalendarComponent implements OnInit {
           this.refresh.next();
         });
       }
-
     });
 
   }
