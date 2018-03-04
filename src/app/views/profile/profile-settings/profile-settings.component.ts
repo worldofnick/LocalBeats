@@ -185,4 +185,15 @@ export class ProfileSettingsComponent implements OnInit {
       });
     });
   }
+
+  unlinkSoundcloud() {
+    this.user.soundcloud = null;
+    this.userService.onEditProfile(this.user).then((unlinkedUser: User) => {
+      this.user = unlinkedUser;
+      this.userService.setUser(unlinkedUser);
+      let snackBarRef = this.snackBar.open('SoundCloud Account Unlinked', '', {
+        duration: 1500,
+      });
+    });
+  }
 }
