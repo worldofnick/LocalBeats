@@ -10,7 +10,7 @@ export enum Action {
     REQUEST_MSG_FROM_PROFILE_BUTTON = 'requestNewMsgFromProfileButtonClick',
     NOTIFY_SERVER_CHAT_LOADED = 'chatComponentDoneLoading',
     OPEN_SNACK_BAR_PM = 'openPmSnackBarThread',
-    //notifications
+    // notifications
     REQUEST_NOTIFICATIONS = 'notifications',
     REQUEST_NOTIFICATION_COUNT = 'notificationCount',
     UPDATE_PROFILE = 'updateProfile'

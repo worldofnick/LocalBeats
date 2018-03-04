@@ -36,7 +36,7 @@ import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { ChartsModule } from 'ng2-charts/ng2-charts';
 import { FileUploadModule } from 'ng2-file-upload/ng2-file-upload';
 import { CommonPipesModule } from "../../pipes/common/common-pipes.module";
-
+import { ReviewDialogComponent } from "../../views/review/review-dialog/review-dialog.component"
 import { ProfileComponent } from "./profile.component";
 import { ProfileOverviewComponent } from './profile-overview/profile-overview.component';
 import { ProfileSettingsComponent } from './profile-settings/profile-settings.component';
@@ -95,7 +95,10 @@ import { ReactiveFormsModule } from '@angular/forms';
     ImageCropperModule,
     RouterModule.forChild(ProfileRoutes)
   ],
-  declarations: [ConfirmPaymentDialog, RefundPaymentDialog, PaymentHistoryDialog, ProfileComponent, ProfileOverviewComponent, ProfileSettingsComponent, ProfileBlankComponent, ProfileEventsComponent, ProfileRequestComponent, ProfilePerformancesComponent],
+  declarations: [ ConfirmPaymentDialog, RefundPaymentDialog, 
+    PaymentHistoryDialog, ProfileComponent, ProfileOverviewComponent, 
+    ProfileSettingsComponent, ProfileBlankComponent, ProfileEventsComponent, ProfileRequestComponent, ProfilePerformancesComponent],
+
   exports: [ConfirmPaymentDialog, RefundPaymentDialog, PaymentHistoryDialog],
   providers: [],
   entryComponents: [ConfirmPaymentDialog, RefundPaymentDialog, PaymentHistoryDialog]

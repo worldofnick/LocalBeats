@@ -9,6 +9,8 @@ import { AgmCoreModule, MapsAPILoader } from '@agm/core';
 import { rootRouterConfig } from './app.routes';
 import { AppCommonModule } from "./components/common/app-common.module";
 import { NegotiateModule } from './views/negotiate/negotiate.module';
+import { ReviewModule } from './views/review/review.module';
+
 import { StripeModule } from './views/events/event-singleton/stripe.module';
 import {MatDialogModule} from '@angular/material/dialog';
 import { AppComponent } from './app.component';
@@ -23,6 +25,7 @@ import { UserGuard } from './services/auth/user-guard.service';
 import { ImgurService } from './services/image/imgur.service';
 import { NotificationService} from './services/notification/notification.service';
 import { ChatsService} from './services/chats/chats.service';
+import { ReviewService } from './services/reviews/review.service';
 import { SocketService } from './services/chats/socket.service';
 import { DatePipe } from '@angular/common'
 import { StripeService } from './services/payments/stripe.service';
@@ -46,6 +49,7 @@ export function createTranslateLoader(http: Http) {
     HttpModule,
     AppCommonModule,
     NegotiateModule,
+    ReviewModule,
     StripeModule,
     TranslateModule.forRoot({
       provide: TranslateLoader,
@@ -60,6 +64,7 @@ export function createTranslateLoader(http: Http) {
     NavigationService,
     SearchService,
     SocketService,
+    ReviewService,
     UserService,
     ChatsService, 
     SpotifyClientService,

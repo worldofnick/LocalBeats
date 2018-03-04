@@ -69,6 +69,6 @@
   <div fxFlex="100" fxFlex.gt-sm="50" fxFlex.gt-md="calc(100% - 300px)">
     <router-outlet></router-outlet>
     <app-profile-request *ngIf="clickedRequestArtist" [user]="userService.user" [artist]="user"></app-profile-request>
-    <app-profile-overview *ngIf="clickedOverview" [user]="this.user"></app-profile-overview>
+    <app-profile-overview *ngIf="clickedOverview" [user]="this.user" [onOwnProfile]="this.onOwnProfile"></app-profile-overview>
   </div>
 </div>

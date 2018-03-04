@@ -8,6 +8,7 @@ import { MatTabChangeEvent, MatSnackBar, MatDialog, MatDialogRef, MAT_DIALOG_DAT
 // Services
 import { UserService } from '../../../../services/auth/user.service';
 import { BookingService } from '../../../../services/booking/booking.service';
+import { ReviewService } from 'app/services/reviews/review.service';
 import { EventService } from '../../../../services/event/event.service';
 import { SocketService } from 'app/services/chats/socket.service';
 import { StripeService } from 'app/services/payments/stripe.service';
@@ -15,6 +16,8 @@ import { StripeService } from 'app/services/payments/stripe.service';
 // Data Models
 import { User } from '../../../../models/user';
 import { Event } from '../../../../models/event';
+import { Review } from '../../../../models/review';
+
 import { Booking, StatusMessages, NegotiationResponses, VerificationResponse } from '../../../../models/booking';
 import { Action } from '../../../../services/chats/model/action'
 import { SocketEvent } from '../../../../services/chats/model/event'
@@ -45,7 +48,7 @@ export class ProfilePerformancesComponent implements OnInit {
     cancellationNotifications: number,
     paymentStatues: PaymentStatus[]};
 
-  constructor(private eventService: EventService, 
+  constructor(private eventService: EventService,
     private userService: UserService,
     private bookingService: BookingService,
     private route: ActivatedRoute,
@@ -53,7 +56,9 @@ export class ProfilePerformancesComponent implements OnInit {
     private _socketService: SocketService,
     private stripeService: StripeService,
     public dialog: MatDialog,
-    public snackBar: MatSnackBar
+    public snackBar: MatSnackBar,
+    private reviewService: ReviewService,
+    private socketService: SocketService
     ) {
       // Set user model to the authenticated singleton user
       this.user = this.userService.user;
@@ -86,6 +91,74 @@ export class ProfilePerformancesComponent implements OnInit {
     this.bookingService.bookingPaymentStatus(booking).then((status: PaymentStatus) => {
       this.performances.paymentStatues[idx] = status;
     });
+  }
+
+  openReviewDialog(booking: Booking): void {
+
+    let review: Review = new Review;
+    review.booking = booking;
+    review.toUser = booking.hostUser;
+    review.fromUser = booking.performerUser;
+  
+
+    this.reviewService.review(review, false).subscribe((result) => {
+      if (result.rating == -1) {
+        // user clicked cancel in the review dialog.
+        return;
+      }
+
+      this.reviewService.createReview(result).then( (newReview: Review) => {
+          booking.beenReviewedByArtist = true;
+          if (booking.beenReviewedByHost) {
+            booking.bothReviewed = true;
+          }
+          // maybe this should be in reference to reesult.booking instead of booking.
+          this.bookingService.updateBooking(booking).then( () => {
+            if (booking.bothReviewed) {
+                this.bookingService.sendNotificationsToBoth(review);
+            }else {
+                this.bookingService.sendNotificationsToHost(review);
+            }
+          });
+      });
+    });
+
+  }
+
+  editReview(booking: Booking) {
+
+    let reviewToEdit: Review = new Review;
+
+    this.reviewService.getReviewsFrom(booking.performerUser).then( (reviews) => {
+
+      for (let review of reviews){
+        if (review.booking._id == booking._id){
+          reviewToEdit = review;
+        }
+      }
+
+      this.reviewService.review(reviewToEdit, true).subscribe((result) => {
+        if (result.rating == null) {
+          return;
+        }
+        if (result.rating == -1) {
+          // if the user pressed cancel when editing
+          return;
+        }else if (result.rating == -2) {
+          // if the user pressed delete when editing
+          this.reviewService.deleteReviewByRID(result).then( () => {
+            // this.setReviews();
+            booking.beenReviewedByArtist = false;
+            this.bookingService.updateBooking(booking);
+          });
+        }else {
+          this.reviewService.updateReview(reviewToEdit);
+        }
+      });
+
+
+    }); 
+
   }
 
   private getPerformances() {
@@ -252,6 +325,9 @@ export class ProfilePerformancesComponent implements OnInit {
       // The host has either verified or not, update the booking so the artist is aware
       this.performances.confirmations[confirmationIndex] = newBooking;
       this.performances.confirmationNotifications++;
+    } else if (response == NegotiationResponses.review) {
+      confirmationIndex = this.performances.completed.findIndex(a => a._id == newBooking._id);
+      this.performances.completed[confirmationIndex] = newBooking;
     }
   }
 

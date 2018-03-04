@@ -88,7 +88,7 @@ export class ProfileComponent implements OnInit {
     }
 
     //received socket emition from server about updating profile 
-    this._socketService.onEvent(SocketEvent.UPDATE_PROFILE).subscribe((user: User)=>{
+    this._socketService.onEvent(SocketEvent.UPDATE_PROFILE).subscribe((user: User) => {
       this.user = user;
     });
   }

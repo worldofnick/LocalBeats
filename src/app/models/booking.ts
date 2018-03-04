@@ -1,7 +1,7 @@
 import { User } from 'app/models/user';
 import { Event } from 'app/models/event';
 
-export class Booking { 
+export class Booking {
     constructor(
     public _id: string,
     public bookingType: BookingType,
@@ -14,7 +14,7 @@ export class Booking {
     public hostStatusMessage: StatusMessages,
     public artistStatusMessage: StatusMessages,
     public artistApproved: boolean,
-    public hostApproved: boolean, 
+    public hostApproved: boolean,
     public currentPrice: number,
     public hostVerified: boolean,
     public artistVerified: boolean
@@ -29,6 +29,9 @@ export class Booking {
     public artistComment: string;
     public cancelled: boolean;
     public completed: boolean;
+    public beenReviewedByHost: boolean;
+    public beenReviewedByArtist: boolean;
+    public bothReviewed: boolean;
 }
 
 export enum BookingType {
@@ -61,6 +64,7 @@ export enum NegotiationResponses {
     payment = 5, // Payment
     complete = 6, // A confirmed booking has been completed
     verification = 7, // A booking has been verified
+    review = 8
 }
 
 export enum VerificationResponse {

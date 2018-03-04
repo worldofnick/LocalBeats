@@ -98,7 +98,7 @@ export class CreateEventsComponent implements OnInit {
               private stripeService: StripeService
               ) { }
 
-              
+
   ngOnInit() {
 
     this.event.eventType = "Wedding"
@@ -145,7 +145,6 @@ export class CreateEventsComponent implements OnInit {
         }
       });
     }
-    
   }
 
   setForm(){

@@ -1,0 +1,25 @@
+<form [formGroup]="reviewForm" (ngSubmit)="onYesClick()">
+    <h2 mat-dialog-title>Leave a review for: {{currentReview.toUser.firstName}}</h2>
+    <mat-form-field class="full-width">
+        <input matInput name="title" placeholder="Title:" formControlName="title">
+    </mat-form-field>
+
+    <mat-form-field class="full-width">
+        <mat-select placeholder="Rating:" formControlName="rating">
+            <mat-option value="1">1</mat-option>
+            <mat-option value="2">2</mat-option>
+            <mat-option value="3">3</mat-option>
+            <mat-option value="4">4</mat-option>
+            <mat-option value="5">5</mat-option>
+        </mat-select>
+    </mat-form-field>
+
+    <textarea matInput placeholder="Review:" matTextareaAutosize 
+    matAutosizeMinRows="5" matAutosizeMaxRows="10" name="text" formControlName="text"></textarea>
+    <div mat-dialog-actions>
+        <button type="button" mat-raised-button (click)="onNoClick()">Cancel</button>
+        <!-- <button type="button" color="primary" *ngIf="isEditing" (click)="onDelete()" mat-raised-button>Delete Review</button> -->
+        <button color="accent" *ngIf="!isEditing && this.reviewForm.get('title').value && this.reviewForm.get('text').value && this.reviewForm.get('rating').value" mat-raised-button>Submit Review</button>
+        <button color="accent" *ngIf="isEditing && this.reviewForm.get('title').value && this.reviewForm.get('text').value && this.reviewForm.get('rating').value" mat-raised-button>Submit Edit</button>
+    </div>
+</form>

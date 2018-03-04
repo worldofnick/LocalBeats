@@ -4,6 +4,8 @@ import { Observable } from 'rxjs/Observable';
 import { Observer } from 'rxjs/Observer';
 // import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { User } from '../../models/user';
+import { Review } from '../../models/review';
+
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Message } from './model/message';
 import { SocketEvent } from './model/event';
@@ -46,14 +48,14 @@ export class SocketService {
     this.socket.emit(eventName, user);
   }
 
+  public addedReview(eventName: string, review: Review): void {
+    this.socket.emit(eventName, review);
+  }
+
   public sendNotification(eventName: SocketEvent, notificationPayload: SocketNotification):void {
-    //save notification to db.
+    // save notification to db.
     let body = JSON.stringify(notificationPayload);
-    console.log("emitting a send notification event for :")
-    console.log(notificationPayload);
-    console.log(SERVER_URL)
     this.http.post(SERVER_URL + 'api/notification/', body, httpOptions);
-    
     this.socket.emit(eventName, notificationPayload);
   }
 

@@ -5,12 +5,17 @@ import { MatDialogRef, MatDialog, MatDialogConfig } from '@angular/material';
 import { Observable } from 'rxjs/Observable';
 import { Booking, NegotiationResponses, VerificationResponse } from 'app/models/booking';
 import { Event } from 'app/models/event';
+import { Review } from 'app/models/review';
+import { Notification } from 'app/models/notification';
 import { User } from 'app/models/user';
 import { PaymentStatus } from 'app/models/payment';
 import { NegotiateDialogComponent } from '../../views/negotiate/negotiate-dialog/negotiate-dialog.component';
 import { StripeDialogComponent } from '../../views/events/event-singleton/stripe-dialog.component';
 import { VerifyDialogComponent } from '../../views/negotiate/verify-dialog/verify-dialog.component';
 import { environment } from '../../../environments/environment';
+import { SocketService } from 'app/services/chats/socket.service';
+import { SocketEvent } from 'app/services/chats/model/event';
+
 
 @Injectable()
 export class BookingService {
@@ -23,7 +28,7 @@ export class BookingService {
 
     private headers: Headers = new Headers({ 'Content-Type': 'application/json' });
 
-    constructor(private http: Http, private dialog: MatDialog) { }
+    constructor(private http: Http, private dialog: MatDialog, private socketService: SocketService) { }
 
     public negotiate(booking: Booking, initial: boolean, view: string): Observable<{response: NegotiationResponses, price: number, comment: string}> {
         if ((view == "artist" && !booking.performerUser.stripeAccountId || view == "host" && !booking.hostUser.stripeAccountId)) {
@@ -55,7 +60,7 @@ export class BookingService {
         dialogRef = this.dialog.open(VerifyDialogComponent, {
             width: '380px',
             disableClose: false,
-            data: {booking, isHost}
+            data: { booking, isHost }
         });
         return dialogRef.afterClosed();
     }
@@ -74,7 +79,7 @@ export class BookingService {
     }
 
     public getBooking(event: Event): Promise<any[]> {
-        const current = this.eventBooking + '?eid=' +event._id;
+        const current = this.eventBooking + '?eid=' + event._id;
 
         return this.http.get(current, { headers: this.headers })
             .toPromise()
@@ -86,14 +91,56 @@ export class BookingService {
             .catch(this.handleError);
     }
 
+    public sendNotificationsToBoth(review: Review) {
+        if (review.booking.bothReviewed) {
+            // send notification to artist and host
+            const profile: string[] = ['/profile'];
+
+            const notificationToArtist = new Notification(review.fromUser, review.toUser,
+                review.booking.eventEID._id, review.booking, NegotiationResponses.review,
+                'You have been reviewed by ' + review.fromUser.firstName + ' and now your review is published', 'rate_review', profile);
+
+            const notificationToHost = new Notification(review.toUser, review.fromUser,
+                review.booking.eventEID._id, review.booking, NegotiationResponses.review,
+                'You have been reviewed by ' + review.toUser.firstName + ' and now your review is published', 'rate_review', profile);
+
+            this.socketService.sendNotification(SocketEvent.SEND_NOTIFICATION, notificationToArtist);
+            this.socketService.sendNotification(SocketEvent.SEND_NOTIFICATION, notificationToHost);
+        }
+    }
+
+    public sendNotificationsToArtist(review: Review) {
+        // send notification to artist
+        const profile: string[] = ['/profile', 'performances'];
+
+        const notificationToArtist = new Notification(review.fromUser, review.toUser,
+            review.booking.eventEID._id, review.booking, NegotiationResponses.review,
+            'You have been reviewed by ' + review.fromUser.firstName + ' click here to leave your review', 'hearing', profile);
+
+        this.socketService.sendNotification(SocketEvent.SEND_NOTIFICATION, notificationToArtist);
+
+    }
+
+    public sendNotificationsToHost(review: Review) {
+        // send notification to artist
+        // this path should be changed with the new managment UI most likely
+        const profile: string[] = ['/profile', 'events'];
+
+        const notificationToHost = new Notification(review.fromUser, review.toUser,
+            review.booking.eventEID._id, review.booking, NegotiationResponses.review,
+            'You have been reviewed by ' + review.fromUser.firstName + ' click here to leave your review', 'hearing', profile);
+
+        this.socketService.sendNotification(SocketEvent.SEND_NOTIFICATION, notificationToHost);
+
+    }
     public getUserBookings(user: User, type: string): Promise<any[]> {
-        const current = this.userBooking
+        const current = this.userBooking;
 
         let params: URLSearchParams = new URLSearchParams();
         params.set('uid', user._id)
         params.set('user_type', type)
-        
-        return this.http.get(current, { headers: this.headers, search: params  })
+
+        return this.http.get(current, { headers: this.headers, search: params })
             .toPromise()
             .then((response: Response) => {
                 const data = response.json();
@@ -104,8 +151,8 @@ export class BookingService {
     }
 
     public updateBooking(newBooking: Booking) {
-        const current = this.connection + '/' + newBooking._id
-        return this.http.put(current, {booking: newBooking}, { headers: this.headers })
+        const current = this.connection + '/' + newBooking._id;
+        return this.http.put(current, { booking: newBooking }, { headers: this.headers })
             .toPromise()
             .then((response: Response) => {
                 const data = response.json();
@@ -116,7 +163,7 @@ export class BookingService {
     }
 
     public declineBooking(booking: Booking) {
-        const current = this.declineBookingConnection + '/' + booking._id
+        const current = this.declineBookingConnection + '/' + booking._id;
 
         return this.http.put(current, { headers: this.headers })
             .toPromise()
@@ -130,8 +177,8 @@ export class BookingService {
             return this.showStripeDialog().afterClosed().toPromise();
         }
 
-        const current = this.acceptBookingConnection + '/' + booking._id
-        
+        const current = this.acceptBookingConnection + '/' + booking._id;
+
         return this.http.put(current, { headers: this.headers })
             .toPromise()
             .then((response: Response) => {
@@ -143,8 +190,8 @@ export class BookingService {
     }
 
     public bookingPaymentStatus(booking: Booking): Promise<PaymentStatus> {
-        const current = this.paymentBookingConnection + '/?bid=' + booking._id
-        
+        const current = this.paymentBookingConnection + '/?bid=' + booking._id;
+
         return this.http.get(current, { headers: this.headers })
             .toPromise()
             .then((response: Response) => {
