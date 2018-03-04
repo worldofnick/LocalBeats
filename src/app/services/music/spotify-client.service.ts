@@ -36,7 +36,7 @@ export class SpotifyClientService {
         .toPromise()
         .then((response: Response) => {
           const data = response.json();
-          console.log('Tokens recieved: ', data);
+          console.log('Tokens recieved from getAuthTokens: ', data);
           return data;
         })
         .catch(this.handleError);
@@ -45,6 +45,7 @@ export class SpotifyClientService {
   public requestSpotifyMyProfile(tokens: any): Promise<any> {
     const current = this.authorizeConnection + '/me';
     console.log('Spotify Token server url: ', current);
+    console.log('Spotify Token payload: ', tokens);
     return this.http.post(current, {user: this._userService.user,
                                     access_token: tokens.access_token,
                                     refresh_token: tokens.refresh_token}, { headers: this.headers })
@@ -71,6 +72,19 @@ export class SpotifyClientService {
           const listOfSpotifyAlbumObjects = response.json();
           console.log('Albums recieved: ', listOfSpotifyAlbumObjects);
           return listOfSpotifyAlbumObjects;
+        })
+        .catch(this.handleError);
+  }
+
+  public removeSpotifyFromUser(userObject: User): Promise<any> {
+    // TODO: @ash change it back to use the user's id
+    // const current = this.authorizeConnection + '/artists/' + userObject.spotify.id + '/albums';
+    const current = this.authorizeConnection + '/' + userObject._id;
+    return this.http.delete(current)
+        .toPromise()
+        .then((response: Response) => {
+          console.log('Modified User w/o: ', response.json());
+          return (response.json().user as User);
         })
         .catch(this.handleError);
   }
