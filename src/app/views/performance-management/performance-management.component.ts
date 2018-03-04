@@ -102,6 +102,14 @@ export class PerformanceManagementComponent implements OnInit {
     let idx = this.performances.completions.findIndex(b => b._id == booking._id);
     this.bookingService.bookingPaymentStatus(booking).then((status: PaymentStatus) => {
       this.performances.paymentStatues[idx] = status;
+      if(booking.completed && status == PaymentStatus.paid) {
+        booking.hostStatusMessage = StatusMessages.completed;
+        booking.artistStatusMessage = StatusMessages.completed;
+      } else if(status == PaymentStatus.refund) {
+        booking.hostStatusMessage = StatusMessages.refund;
+        booking.hostStatusMessage = StatusMessages.refund;
+      }
+      this.bookingService.updateBooking(booking);
     });
   }
 
@@ -297,6 +305,14 @@ export class PerformanceManagementComponent implements OnInit {
       this.bookingService.bookingPaymentStatus(newBooking).then((status: PaymentStatus) => {
         this.performances.completions[completionIndex] = newBooking;
         this.performances.completionNotifications++;
+        if(newBooking.completed && status == PaymentStatus.paid) {
+          newBooking.hostStatusMessage = StatusMessages.completed;
+          newBooking.artistStatusMessage = StatusMessages.completed;
+        } else if(status == PaymentStatus.refund) {
+          newBooking.hostStatusMessage = StatusMessages.refund;
+          newBooking.hostStatusMessage = StatusMessages.refund;
+        }
+        this.bookingService.updateBooking(newBooking);
         this.performances.paymentStatues[completionIndex] = status;
       });
     }
@@ -461,6 +477,8 @@ export class PerformanceManagementComponent implements OnInit {
           booking.hostStatusMessage = StatusMessages.artistBid
           booking.artistApproved = true;
           booking.artistStatusMessage = StatusMessages.waitingOnHost;
+          booking.artViewed = true;
+          booking.hostViewed = false;
           // Update the booking asynchronously
           this.bookingService.updateBooking(booking).then(() => {
             // Update the model of the component
@@ -484,6 +502,8 @@ export class PerformanceManagementComponent implements OnInit {
             booking.approved = true;
             booking.hostStatusMessage = StatusMessages.bookingConfirmed;
             booking.artistStatusMessage = StatusMessages.bookingConfirmed;
+            booking.hostViewed = false;
+            booking.artViewed = false;
             // Asynchronously update
             this.bookingService.acceptBooking(booking, view).then(() => {
               // Update the model of the component
@@ -525,6 +545,8 @@ export class PerformanceManagementComponent implements OnInit {
           booking.cancelled = true;
           booking.artViewed = true;
           booking.hostViewed = false;
+          booking.hostViewed = false;
+          booking.artViewed = true;
           booking.hostStatusMessage = StatusMessages.cancelled;
           booking.artistStatusMessage = StatusMessages.cancelled;
           // Creat enotification for host

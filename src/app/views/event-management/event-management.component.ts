@@ -73,6 +73,7 @@ export class EventManagementComponent implements OnInit {
 
   */
   ngOnInit() {
+    console.log(this.events);
     this.socketSubscription = this._socketService.onEvent(SocketEvent.SEND_NOTIFICATION)
       .subscribe((notification: Notification) => {
           this.updateModel(notification.booking, notification.response);
@@ -97,9 +98,17 @@ export class EventManagementComponent implements OnInit {
   private updatePaymentStatues(booking: Booking) {
     // Update payment status'
     let eventIndex = this.events.findIndex(e => e.event._id == booking.eventEID._id);
-    let confirmationIndex = this.events[eventIndex].confirmations.findIndex(b => b._id == booking._id);
+    let completionIndex = this.events[eventIndex].completions.findIndex(b => b._id == booking._id);
     this.bookingService.bookingPaymentStatus(booking).then((status: PaymentStatus) => {
-      this.events[eventIndex].paymentStatues[confirmationIndex] = status;
+      this.events[eventIndex].paymentStatues[completionIndex] = status;
+      if(booking.completed && status == PaymentStatus.paid) {
+        booking.hostStatusMessage = StatusMessages.completed;
+        booking.artistStatusMessage = StatusMessages.completed;
+      } else if(status == PaymentStatus.refund) {
+        booking.hostStatusMessage = StatusMessages.refund;
+        booking.hostStatusMessage = StatusMessages.refund;
+      }
+      this.bookingService.updateBooking(booking);
     });
   }
 
@@ -253,12 +262,15 @@ export class EventManagementComponent implements OnInit {
         }
         this.events[eventIndex].requests[requestIndex] = newBooking;
       } else {
+        console.log('here - new application');
+        console.log(newBooking);
         // Otherwise, it is a brand new application/request
         // Push onto applications/requests
         if(newBooking.bookingType == BookingType.artistApply) {
           this.events[eventIndex].applications.push(newBooking);
           // Increment the notifications
           this.events[eventIndex].applicationNotifications++;
+          console.log(this.events[eventIndex].applicationNotifications);
         } else {
           this.events[eventIndex].requests.push(newBooking);
           // Increment the notifications
@@ -311,6 +323,14 @@ export class EventManagementComponent implements OnInit {
       this.bookingService.bookingPaymentStatus(newBooking).then((status: PaymentStatus) => {
         this.events[eventIndex].completions[completionIndex] = newBooking;
         this.events[eventIndex].completionNotifications++;
+        if(newBooking.completed && status == PaymentStatus.paid) {
+          newBooking.hostStatusMessage = StatusMessages.completed;
+          newBooking.artistStatusMessage = StatusMessages.completed;
+        } else if(status == PaymentStatus.refund) {
+          newBooking.hostStatusMessage = StatusMessages.refund;
+          newBooking.hostStatusMessage = StatusMessages.refund;
+        }
+        this.bookingService.updateBooking(newBooking);
         this.events[eventIndex].paymentStatues[completionIndex] = status;
       });
     }
@@ -494,6 +514,8 @@ export class EventManagementComponent implements OnInit {
           booking.hostStatusMessage = StatusMessages.waitingOnArtist;
           booking.artistApproved = false;
           booking.artistStatusMessage = StatusMessages.hostOffer;
+          booking.hostViewed = true;
+          booking.artViewed = false;
           // Update the booking asynchronously
           this.bookingService.updateBooking(booking).then(() => {
             // Update the model of the component
@@ -517,6 +539,8 @@ export class EventManagementComponent implements OnInit {
             booking.approved = true;
             booking.hostStatusMessage = StatusMessages.bookingConfirmed;
             booking.artistStatusMessage = StatusMessages.bookingConfirmed;
+            booking.hostViewed = false;
+            booking.artViewed = false;
             // Asynchronously update
             this.bookingService.acceptBooking(booking, view).then(() => {
               // Update the model of the component
@@ -539,6 +563,8 @@ export class EventManagementComponent implements OnInit {
           booking.artistApproved = false;
           booking.hostApproved = false;
           booking.approved = false;
+          booking.hostViewed = true;
+          booking.artViewed = false;
           // Asynchronously update
           this.bookingService.declineBooking(booking).then(() => {
             // Update the model of the component
