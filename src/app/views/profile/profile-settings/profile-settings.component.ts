@@ -176,11 +176,11 @@ export class ProfileSettingsComponent implements OnInit {
   // ======================================
 
   unlinkSpotify() {
+    this.user.spotify = null;
+    this.userService.setUser(this.user);
     this._spotifyClientService.removeSpotifyFromUser(this.user).then((unlinkedUser: User) => {
-      this.user = unlinkedUser;
-      console.log('Unlkine spotify User fromDB: ', unlinkedUser);
-      console.log('this unlinked spotify User : ', this.user);
-      this.userService.setUser(unlinkedUser);
+      // this.user = unlinkedUser;
+      this.userService.setUser(this.user);
       let snackBarRef = this.snackBar.open('Spotify Account Unlinked', '', {
         duration: 1500,
       });
@@ -189,9 +189,10 @@ export class ProfileSettingsComponent implements OnInit {
 
   unlinkSoundcloud() {
     this.user.soundcloud = null;
+    this.userService.setUser(this.user);
     this.userService.onEditProfile(this.user).then((unlinkedUser: User) => {
-      this.user = unlinkedUser;
-      this.userService.setUser(unlinkedUser);
+      // this.user = unlinkedUser;
+      this.userService.setUser(this.user);
       let snackBarRef = this.snackBar.open('SoundCloud Account Unlinked', '', {
         duration: 1500,
       });
