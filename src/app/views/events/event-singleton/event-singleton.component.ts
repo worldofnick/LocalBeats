@@ -15,6 +15,7 @@ import { SocketEvent } from '../../../services/chats/model/event'
 import { Notification } from '../../../models/notification'
 import { SocketService } from '../../../services/chats/socket.service';
 import { Message } from '../../../services/chats/model/message';
+import { MessageTypes } from '../../../services/chats/model/messageTypes';
 import { AgmCoreModule, MapsAPILoader } from '@agm/core';
 
 @Component({
@@ -131,6 +132,19 @@ export class EventSingletonComponent implements OnInit {
     this._socketService.send(Action.REQUEST_MSG_FROM_PROFILE_BUTTON, message);
   }
 
+  commentToHost(comment: string): Message {
+    let message:Message = {
+      to: this.model.hostUser,
+      from: this.userService.user,
+      content: comment,
+      action: Action.SEND_PRIVATE_MSG,
+      isRead: false,    
+      sentAt: new Date(Date.now()),
+      messageType: MessageTypes.MSG
+    }
+    return message;
+  }
+
   onSelectHost(){
     if(this.isCurrentUser){
       this.router.navigate(['/profile'])
@@ -156,8 +170,6 @@ export class EventSingletonComponent implements OnInit {
     this.userBooking = new Booking(undefined, BookingType.artistApply, this.model.hostUser, this.userService.user, this.model, false, false, false, StatusMessages.artistBid, StatusMessages.waitingOnHost, true, false, this.model.fixedPrice, null, null);
     this.bookingService.negotiate(this.userBooking, true, "artist").subscribe((result) => {
       if (result != undefined) {
-        //this.userBooking.artistComment = result.comment;
-        // TODO: Send message through messaging
         if (result.response == NegotiationResponses.new) {
           this.userBooking.currentPrice = result.price;
           this.userBooking.hostViewed = false;
@@ -175,6 +187,10 @@ export class EventSingletonComponent implements OnInit {
             }
             this.createNotificationForHost(booking, result.response, ['/events', booking.eventEID._id],
             'queue_music', message);
+            if(result.comment != '') {
+              let privateMessage: Message = this.commentToHost(result.comment);
+              this._socketService.send(Action.SEND_PRIVATE_MSG, privateMessage);
+            }
           });
         }
       }

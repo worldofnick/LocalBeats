@@ -25,6 +25,7 @@ import { Action } from '../../services/chats/model/action';
 import { SocketEvent } from '../../services/chats/model/event';
 import { Notification } from '../../models/notification';
 import { Message } from '../../services/chats/model/message';
+import { MessageTypes } from'../../services/chats/model/messageTypes';
 import { Payment, PaymentStatus } from '../../models/payment';
 
 
@@ -490,6 +491,19 @@ export class EventManagementComponent implements OnInit {
     this.router.navigate(['/events', event._id]);
   }
 
+  commentToArtist(comment: string, booking: Booking): Message {
+    let message:Message = {
+      to: booking.performerUser,
+      from: this.userService.user,
+      content: comment,
+      action: Action.SEND_PRIVATE_MSG,
+      isRead: false,    
+      sentAt: new Date(Date.now()),
+      messageType: MessageTypes.MSG
+    }
+    return message;
+  }
+
   /*
   Host verifies that the artist has or has not arrived at the confirmed booking
   Cases:
@@ -505,7 +519,10 @@ export class EventManagementComponent implements OnInit {
       // Check to see if a response was recorded in the verification dialog box
       if(result != undefined) {
         // Check to see what the response was
-        //booking.hostComment = result.comment; -- Send comment as message
+        if(result.comment != '') {
+          let privateMessage: Message = this.commentToArtist(result.comment, booking);
+          this._socketService.send(Action.SEND_PRIVATE_MSG, privateMessage);
+        }
         let notificationMessage: string = '';
         let response:NegotiationResponses = null;
         if(result.response == VerificationResponse.verify) {
@@ -592,8 +609,10 @@ export class EventManagementComponent implements OnInit {
       // Check to see if a response was recorded in the negotiation dialog box
       if (result != undefined) {
         // Check to see what the response was
-        //booking.hostComment = result.comment; -- send comment as message
-        //booking.artistComment = "";
+        if(result.comment != '') {
+          let privateMessage: Message = this.commentToArtist(result.comment, booking);
+          this._socketService.send(Action.SEND_PRIVATE_MSG, privateMessage);
+        }
         if (result.response == NegotiationResponses.new) {
           // New, the user offered a new monetary amount to the artist
           // Set the new price

@@ -13,10 +13,12 @@ import { SocketService } from '../../../services/chats/socket.service';
 import { User } from '../../../models/user';
 import { Booking, StatusMessages, NegotiationResponses, BookingType } from '../../../models/booking';
 import { Event } from '../../../models/event';
-import { Action } from '../../../services/chats/model/action'
-import { SocketEvent } from '../../../services/chats/model/event'
-import { Notification } from '../../../models/notification'
-import { PaymentStatus } from '../../../models/payment'
+import { Action } from '../../../services/chats/model/action';
+import { SocketEvent } from '../../../services/chats/model/event';
+import { Notification } from '../../../models/notification';
+import { PaymentStatus } from '../../../models/payment';
+import { Message } from '../../../services/chats/model/message';
+import { MessageTypes } from '../../../services/chats/model/messageTypes';
 
 @Component({
   selector: 'app-profile-request',
@@ -113,8 +115,6 @@ export class ProfileRequestComponent implements OnInit {
     }
     this.negotiationSubscription = this.bookingService.negotiate(tempBooking, true, "host").subscribe((result) => {
       if (result != undefined) {
-        //tempBooking.hostComment = result.comment;
-        // Send message through messaging
         if (result.response == NegotiationResponses.new) {
           tempBooking.currentPrice = result.price;
           this.bookingService.createBooking(tempBooking).then((booking: Booking) => {
@@ -123,10 +123,27 @@ export class ProfileRequestComponent implements OnInit {
             // Send notification to artist
             this.createNotificationForArtist(booking, result.response, ['/events', booking.eventEID._id], 
           'queue_music', booking.hostUser.firstName + " has requested you for an event called: " + booking.eventEID.eventName);
+          if(result.comment != '') {
+            let privateMessage: Message = this.commentToArtist(result.comment, booking);
+            this._socketService.send(Action.SEND_PRIVATE_MSG, privateMessage);
+          }
           });
         }
       }
     });
+  }
+
+  commentToArtist(comment: string, booking: Booking): Message {
+    let message:Message = {
+      to: booking.performerUser,
+      from: this.userService.user,
+      content: comment,
+      action: Action.SEND_PRIVATE_MSG,
+      isRead: false,    
+      sentAt: new Date(Date.now()),
+      messageType: MessageTypes.MSG
+    }
+    return message;
   }
 
   createNotificationForArtist(booking: Booking, response: NegotiationResponses, route: string[], icon: string, message: string) {
