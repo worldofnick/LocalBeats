@@ -97,10 +97,17 @@
             </ng-template> -->
             <div class="soundcloud-tab-content" [style.overflow]="'auto'" [style.height.px]="'300'">
                 
-                <div class="soundcloud-register-container" *ngIf="this.user.soundcloud === undefined">
+                <div *ngIf="this.user.soundcloud === undefined && this.user._id === this.userService.user._id" class="soundcloud-register-container">
                   <mat-form-field (keydown)="registerSoundcloudClicked($event)" floatLabel="never" hintLabel="Tip: ID is the numeric sequence at end of the profile page's URL">
                       <input matInput [(ngModel)]="soundcloudIdFormInput" placeholder="Register your SoundCloud ID">
                   </mat-form-field>
+                </div>
+                <div *ngIf="this.user.soundcloud === undefined && this.user._id !== this.userService.user._id" class="soundcloud-register-container">
+                  <!-- TODO: Add tear eye emoji -->
+                  <h3>No soundcloud account linked...</h3>
+                    <!-- <mat-form-field (keydown)="registerSoundcloudClicked($event)" floatLabel="never" hintLabel="Tip: ID is the numeric sequence at end of the profile page's URL">
+                        <input matInput [(ngModel)]="soundcloudIdFormInput" placeholder="Register your SoundCloud ID">
+                    </mat-form-field> -->
                 </div>
                 
                 <iframe *ngIf="this.user.soundcloud !== undefined" [src]="this.trustedSoundcloudUrl" width="100%" height="300" scrolling="no" frameborder="no"></iframe>
