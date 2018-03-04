@@ -12,9 +12,11 @@ import { BookingService } from '../../services/booking/booking.service';
 import { EventService } from '../../services/event/event.service';
 import { SocketService } from 'app/services/chats/socket.service';
 import { StripeService } from 'app/services/payments/stripe.service';
+import { ReviewService } from 'app/services/reviews/review.service';
 
 // Data Models
 import { User } from '../../models/user';
+import { Review } from '../../models/review';
 import { Event } from '../../models/event';
 import { Booking, StatusMessages, NegotiationResponses, VerificationResponse, BookingType } from '../../models/booking';
 import { Action } from '../../services/chats/model/action'
@@ -51,6 +53,7 @@ export class PerformanceManagementComponent implements OnInit {
 
   constructor(private eventService: EventService, 
     private userService: UserService,
+    private reviewService: ReviewService,
     private bookingService: BookingService,
     private route: ActivatedRoute,
     private router: Router,
@@ -102,15 +105,85 @@ export class PerformanceManagementComponent implements OnInit {
     let idx = this.performances.completions.findIndex(b => b._id == booking._id);
     this.bookingService.bookingPaymentStatus(booking).then((status: PaymentStatus) => {
       this.performances.paymentStatues[idx] = status;
-      if(booking.completed && status == PaymentStatus.paid) {
+      if(booking.completed && status == PaymentStatus.paid && booking.bothReviewed) {
         booking.hostStatusMessage = StatusMessages.completed;
         booking.artistStatusMessage = StatusMessages.completed;
+      } else if(booking.completed && status == PaymentStatus.paid) {
+        if(booking.beenReviewedByArtist) {
+          booking.artistStatusMessage = StatusMessages.reviewed;
+          booking.hostStatusMessage = StatusMessages.needsReview;
+        } else {
+          booking.artistStatusMessage = StatusMessages.needsReview;
+          booking.hostStatusMessage = StatusMessages.reviewed;
+        }
       } else if(status == PaymentStatus.refund) {
         booking.hostStatusMessage = StatusMessages.refund;
         booking.artistStatusMessage = StatusMessages.refund;
       }
       this.bookingService.updateBooking(booking);
     });
+  }
+
+  reviewDialog(booking: Booking) {
+    let review: Review = new Review;
+    review.booking = booking;
+    review.toUser = booking.hostUser;
+    review.fromUser = booking.performerUser;
+    this.reviewService.review(review, false).subscribe((result) => {
+      if (result.rating == -1) {
+        // user clicked cancel in the review dialog.
+        return;
+      }
+      this.reviewService.createReview(result).then( (newReview: Review) => {
+          booking.beenReviewedByHost = true;
+          booking.hostStatusMessage = StatusMessages.needsReview;
+          booking.artistStatusMessage = StatusMessages.reviewed;
+          booking.artViewed = true;
+          booking.hostViewed = false;
+          if(booking.beenReviewedByHost){
+            booking.bothReviewed = true;
+            booking.artistStatusMessage = StatusMessages.completed;
+            booking.hostStatusMessage = StatusMessages.completed;
+          }
+          this.bookingService.updateBooking(booking).then( () => {
+            // new review is null right here.
+            if (booking.bothReviewed) {
+              this.bookingService.sendNotificationsToBoth(review);
+            }else{
+              this.bookingService.sendNotificationsToArtist(review);
+            }
+          });
+      });
+    });
+  }
+
+  editReview(booking: Booking) {
+    let reviewToEdit: Review = new Review;
+    this.reviewService.getReviewsFrom(booking.performerUser).then( (reviews) => {
+      for (let review of reviews){
+        if (review.booking._id == booking._id){
+          reviewToEdit = review;
+        }
+      }
+      this.reviewService.review(reviewToEdit, true).subscribe((result) => {
+        if (result.rating == null) {
+          return;
+        }
+        if (result.rating == -1) {
+          // if the user pressed cancel when editing
+          return;
+        }else if (result.rating == -2) {
+          // if the user pressed delete when editing
+          this.reviewService.deleteReviewByRID(result).then( () => {
+            // this.setReviews();
+            booking.beenReviewedByArtist = false;
+            this.bookingService.updateBooking(booking);
+          });
+        }else {
+          this.reviewService.updateReview(reviewToEdit);
+        }
+      });
+    }); 
   }
 
   /* 
@@ -305,9 +378,17 @@ export class PerformanceManagementComponent implements OnInit {
       this.bookingService.bookingPaymentStatus(newBooking).then((status: PaymentStatus) => {
         this.performances.completions[completionIndex] = newBooking;
         this.performances.completionNotifications++;
-        if(newBooking.completed && status == PaymentStatus.paid) {
+        if(newBooking.completed && status == PaymentStatus.paid && newBooking.bothReviewed) {
           newBooking.hostStatusMessage = StatusMessages.completed;
           newBooking.artistStatusMessage = StatusMessages.completed;
+        } else if(newBooking.completed && status == PaymentStatus.paid) {
+          if(newBooking.beenReviewedByArtist) {
+            newBooking.hostStatusMessage = StatusMessages.needsReview;
+            newBooking.artistStatusMessage = StatusMessages.reviewed;
+          } else {
+            newBooking.hostStatusMessage = StatusMessages.reviewed;
+            newBooking.artistStatusMessage = StatusMessages.needsReview;
+          }
         } else if(status == PaymentStatus.refund) {
           newBooking.hostStatusMessage = StatusMessages.refund;
           newBooking.hostStatusMessage = StatusMessages.refund;
@@ -315,6 +396,12 @@ export class PerformanceManagementComponent implements OnInit {
         this.bookingService.updateBooking(newBooking);
         this.performances.paymentStatues[completionIndex] = status;
       });
+    } else if (response == NegotiationResponses.review) {
+      completionIndex = this.performances.completions.findIndex(a => a._id == newBooking._id);
+      this.performances.completions[completionIndex] = newBooking;
+      if(!newBooking.artViewed) {
+        this.performances.completionNotifications++;
+      }
     }
   }
 
@@ -376,12 +463,12 @@ export class PerformanceManagementComponent implements OnInit {
           booking.artistVerified = true;
           // If host has verified, the booking is complete
           if(booking.hostVerified) {
-            booking.hostStatusMessage = StatusMessages.completed;
-            booking.artistStatusMessage = StatusMessages.completed;
+            booking.hostStatusMessage = StatusMessages.needsReview;
+            booking.artistStatusMessage = StatusMessages.needsReview;
             booking.completed = true;
             booking.hostViewed = false;
             booking.artViewed = false;
-            notificationMessage = "Your booking is complete and you've paid " + booking.performerUser.firstName + " for the event " + booking.eventEID.eventName;
+            notificationMessage = "You've paid " + booking.performerUser.firstName + " for the event " + booking.eventEID.eventName + ". Please go and submit a review to complete the booking.";
             response = NegotiationResponses.complete;
           } else {
             booking.hostStatusMessage = StatusMessages.artistVerified;

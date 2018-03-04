@@ -137,6 +137,8 @@
                       <button (click)="messageArtist(booking)" class="text-muted" mat-icon-button matTooltip="Message Artist"><mat-icon>chat</mat-icon></button>
                       <button [disabled]="!this.canPay" *ngIf="booking.completed && item.paymentStatues[i] != 'paid' && (item.paymentStatues[i] != 'host_cancel' && item.paymentStatues[i] != 'artist_cancel')" (click)="showPayDialog(booking)" class="text-muted" mat-icon-button matTooltip="Pay Artist"><mat-icon>attach_money</mat-icon></button>
                       <button *ngIf="booking.completed && item.paymentStatues[i] != 'waiting'" (click)="showPaymentHistoryDialog(booking)" class="text-muted" mat-icon-button matTooltip="Payment History"><mat-icon>history</mat-icon></button>
+                      <button *ngIf="!booking.beenReviewedByHost" class="text-muted" (click)="reviewDialog(booking)" mat-icon-button matTooltip="Review"><mat-icon>star</mat-icon></button>
+                      <button *ngIf="booking.beenReviewedByArtist && !booking.bothReviewed" (click)="editReview(booking)" class="text-muted" mat-icon-button matTooltip="Edit Review"><mat-icon>mode_edit</mat-icon></button>
                       <!-- TO DO -->
                       <button class="text-muted" mat-icon-button matTooltip="Review Artist"><mat-icon>star</mat-icon></button>
                     </div>

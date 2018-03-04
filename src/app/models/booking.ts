@@ -51,6 +51,8 @@ export enum StatusMessages {
     verified = "Booking Verified",
     artistRejected = "Artist Rejected",
     hostRejected = "Host Rejected",
+    needsReview = "Needs Review",
+    reviewed = "Reviewed",
     completed = "Booking Completed",
     cancelled = "Booking Cancelled",
     paid = "Paid",
