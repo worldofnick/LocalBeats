@@ -642,14 +642,19 @@ export class PaymentHistoryDialog {
   constructor(
     public dialogRef: MatDialogRef<RefundPaymentDialog>,
     @Inject(MAT_DIALOG_DATA) public data: any, private _socketService: SocketService, private stripeService: StripeService) { }
+    socketSubscription: ISubscription;
 
     ngOnInit() {
-      this._socketService.onEvent(SocketEvent.SEND_NOTIFICATION)
+      this.socketSubscription = this._socketService.onEvent(SocketEvent.SEND_NOTIFICATION)
         .subscribe((notification: Notification) => {
           this.stripeService.getBookingPayments(notification.booking).then((payments: Payment[]) => {
             this.data.payments = payments;
           });
       });
+    }
+    
+    ngOnDestroy() {
+      this.socketSubscription.unsubscribe();
     }
 
   onNoClick(): void {

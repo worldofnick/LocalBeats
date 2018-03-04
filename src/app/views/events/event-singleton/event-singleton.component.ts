@@ -84,46 +84,34 @@ export class EventSingletonComponent implements OnInit {
   }
 
   private updateModel(newBooking: Booking, response: NegotiationResponses) {
-    this.userBooking = newBooking;
-    // Check if the booking has been approved
-    if(newBooking.approved && response == NegotiationResponses.accept) {
-      this.buttonText = "Cancel Booking";
-    } else if(response == NegotiationResponses.new) {
-      // Otherwise, check if there is a new bid or offer
-      this.buttonText = "View Application";
-    } else if(response == NegotiationResponses.decline || response == NegotiationResponses.cancel) {
+    if(!newBooking.cancelled) {
+      this.userBooking = newBooking;
+      this.hasApplied = true;
+    } else {
+      this.userBooking = null;
+      this.hasApplied = false;
       if(this.model.negotiable) {
         this.buttonText = "Bid";
       } else {
         this.buttonText = "Apply";
       }
-      this.hasApplied = false;
-      this.userBooking = null;
     }
   }
 
   private getBooking() {
     this.bookingService.getBooking(this.model).then((bookings: Booking[]) => {
-      this.userBooking = bookings.find(b => b.performerUser._id == this.userService.user._id);
+      this.userBooking = bookings.find(b => b.performerUser._id == this.userService.user._id && !b.cancelled);
       // If a booking exists, then the current user has applied to this event
       if(this.userBooking != null) {
         this.hasApplied = true;
       } else {
         this.hasApplied = false;
       }
-      // If they haven't applied to this event, change the application text
+      // If they haven't applied to this event, change the application text if it's negotiable
       if (!this.hasApplied) {
         if (this.model.negotiable) {
           this.buttonText = "Bid";
-        } else {
-          this.buttonText = "Apply";
         }
-      } else if(this.userBooking.approved){
-        // If they have applied and have been approved, change button to cancellation
-        this.buttonText = "Cancel Booking";
-      } else {
-        // If they have applied and have not yet been approved, change button to view of application
-        this.buttonText = "View Application";
       }
     })
   }
@@ -161,14 +149,16 @@ export class EventSingletonComponent implements OnInit {
     this.userBooking = new Booking(undefined, BookingType.artistApply, this.model.hostUser, this.userService.user, this.model, false, false, false, StatusMessages.artistBid, StatusMessages.waitingOnHost, true, false, this.model.fixedPrice, null, null);
     this.bookingService.negotiate(this.userBooking, true, "artist").subscribe((result) => {
       if (result != undefined) {
-        this.userBooking.artistComment = result.comment;
+        //this.userBooking.artistComment = result.comment;
+        // TODO: Send message through messaging
         if (result.response == NegotiationResponses.new) {
           this.userBooking.currentPrice = result.price;
+          this.userBooking.hostViewed = false;
+          this.userBooking.artViewed = true;
           this.bookingService.createBooking(this.userBooking).then((booking: Booking) => {
             // Flag application
             this.hasApplied = true;
             this.userBooking = booking;
-            this.buttonText = 'View Application';
             // Send notification to host
             let message = '';
             if(this.model.negotiable) {
@@ -179,95 +169,6 @@ export class EventSingletonComponent implements OnInit {
             this.createNotificationForHost(booking, result.response, ['/events', booking.eventEID._id],
             'queue_music', message);
           });
-        }
-      }
-    });
-  }
-
-  openNegotiationDialog() {
-    let view = "artist";
-    this.bookingService.negotiate(this.userBooking, false, view)
-    .subscribe((result) => {
-      // Check to see if a response was recorded in the negotiation dialog box
-      if (result != undefined) {
-        this.userBooking.artistComment = result.comment;
-        this.userBooking.hostComment = "";
-        // Check to see what the response was
-        if (result.response == NegotiationResponses.new) {
-          // New, the user offered a new monetary amount to the host
-          // Set the new price
-          this.userBooking.currentPrice = result.price;
-          // Swap the approvals so that the host now needs to approve the new price
-          this.userBooking.hostApproved = false;
-          if(this.model.negotiable) {
-            this.userBooking.hostStatusMessage = StatusMessages.artistBid;
-          } else {
-            this.userBooking.hostStatusMessage = StatusMessages.artistApplication;
-          }
-          this.userBooking.artistApproved = true;
-          this.userBooking.artistStatusMessage = StatusMessages.waitingOnHost;
-          // Update the booking asynchronously
-          this.bookingService.updateBooking(this.userBooking).then(() => {
-            this.createNotificationForHost(this.userBooking, result.response, ['/profile', 'events'],
-            'import_export', this.userBooking.performerUser.firstName + " has updated the offer on " + this.model.eventName);
-          });
-        } else if (result.response == NegotiationResponses.accept) {
-          // Accept, the user accepted an offer from the host or they reconfirmed their previous bid/application to the host
-          // No price change
-          // Check to see if it was already host approved, otherwise no change
-          this.userBooking.artistApproved = true;
-          if(this.userBooking.hostApproved) {
-            // Confirm booking
-            this.userBooking.approved = true;
-            this.userBooking.hostStatusMessage = StatusMessages.bookingConfirmed;
-            this.userBooking.artistStatusMessage = StatusMessages.bookingConfirmed;
-            // Asynchronously update
-            this.bookingService.acceptBooking(this.userBooking, view).then(() => {
-              // Update the model of the component
-              this.buttonText = "Cancel Booking";
-              this.createNotificationForHost(this.userBooking, result.response, ['/profile', 'events'],
-              'event_available', this.userBooking.performerUser.firstName + " has confirmed the booking" + this.model.eventName);
-            })
-          }
-        } else if (result.response == NegotiationResponses.decline) {
-          // Decline, the user declined an offer from the host
-          // Negate approvals for real-time notification to other user's component model
-          this.userBooking.artistApproved = false;
-          this.userBooking.hostApproved = false;
-          this.userBooking.approved = false;
-          
-          // Asynchronously update
-          this.bookingService.declineBooking(this.userBooking).then(() => {
-            // Update the model of the component
-            this.hasApplied = false;
-            if(this.model.negotiable) {
-              this.buttonText = "Bid";
-            } else {
-              this.buttonText = "Apply";
-            }
-            this.createNotificationForHost(this.userBooking, result.response, ['/profile', 'events'],
-            'event_busy', this.userBooking.performerUser.firstName + " has cancelled the application on " + this.model.eventName);
-          })
-        } else if(result.response == NegotiationResponses.cancel) {
-          // Cancellation, the user cancelled a confirmed booking
-          // Negate approvals for real-time notification to other user's component model
-          this.userBooking.artistApproved = false;
-          this.userBooking.hostApproved = false;
-          this.userBooking.approved = false;
-          // Asynchronously update
-          this.bookingService.declineBooking(this.userBooking).then(() => {
-            // Update the model of the component
-            this.hasApplied = false;
-            if(this.model.negotiable) {
-              this.buttonText = "Bid";
-            } else {
-              this.buttonText = "Apply";
-            }
-            this.createNotificationForHost(this.userBooking, result.response, ['/profile', 'events'],
-            'event_busy', this.userBooking.performerUser.firstName + " has cancelled the confirmed booking on " + this.model.eventName);
-          })
-        } else {
-          // No change, the user kept their confirmed booking
         }
       }
     });
