@@ -200,6 +200,8 @@ export class AppChatsComponent implements OnInit, AfterViewChecked, AfterViewIni
         console.log('Messaging from profile requested for (chat event): ', message);
         this.profileRecipient = message.to as User;
         this.isProfileUserRequestPending = true;
+        console.log(' <<< Calling re-initialzie on socket profile button event received >>> ');
+        this.initChatSideBarWithWithNewUsers();
       });
 
       this._socketService.onEvent(SocketEvent.OPEN_SNACK_BAR_PM)
