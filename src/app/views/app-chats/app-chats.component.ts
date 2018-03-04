@@ -23,25 +23,26 @@ import { MessageTypes } from '../../services/chats/model/messageTypes';
 @Component({
   selector: 'app-chats',
   templateUrl: './app-chats.component.html',
-  styleUrls: ['./app-chats.component.css'],
-  animations: [
-    trigger('flyInOut', [
-      state('in', style({ opacity: 1, transform: 'translateX(0)' })),
-      transition('void => *', [
-        style({
-          opacity: 0,
-          transform: 'translateX(-100%)'
-        }),
-        animate('0.2s ease-in-out')
-      ]),
-      transition('* => void', [
-        animate('0.1s 200ms ease-out', style({
-          opacity: 0,
-          transform: 'translateX(100%)'
-        }))
-      ])
-    ])
-  ]
+  styleUrls: ['./app-chats.component.css']
+  // ,
+  // animations: [
+  //   trigger('flyInOut', [
+  //     state('in', style({ opacity: 1, transform: 'translateX(0)' })),
+  //     transition('void => *', [
+  //       style({
+  //         opacity: 0,
+  //         transform: 'translateX(-100%)'
+  //       }),
+  //       animate('0.2s ease-in-out')
+  //     ]),
+  //     transition('* => void', [
+  //       animate('0.1s 200ms ease-out', style({
+  //         opacity: 0,
+  //         transform: 'translateX(100%)'
+  //       }))
+  //     ])
+  //   ])
+  // ]
 })
 export class AppChatsComponent implements OnInit, AfterViewChecked, AfterViewInit {
 
@@ -200,6 +201,8 @@ export class AppChatsComponent implements OnInit, AfterViewChecked, AfterViewIni
         console.log('Messaging from profile requested for (chat event): ', message);
         this.profileRecipient = message.to as User;
         this.isProfileUserRequestPending = true;
+        console.log(' <<< Calling re-initialzie on socket profile button event received >>> ');
+        this.initChatSideBarWithWithNewUsers();
       });
 
       this._socketService.onEvent(SocketEvent.OPEN_SNACK_BAR_PM)
@@ -340,7 +343,7 @@ export class AppChatsComponent implements OnInit, AfterViewChecked, AfterViewIni
         },
         err => console.error('Error fetching PMs between 2 users: ', err),
         () => {
-          console.log('Done fetching PMs from the server DB');
+          console.log('Done fetching PMs from the server DB:', this.activeChatMessages);
           this.profileRecipient = new User();
           this.snackBarRecipient = new User();
           this.isProfileUserRequestPending = false;
