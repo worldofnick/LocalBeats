@@ -80,8 +80,8 @@
           <a *ngIf="this.user.spotify !== null && this.user.spotify !== undefined" mat-raised-button (click)="unlinkSpotify()" color="primary">Unlink Spotify</a>
           <!-- <a *ngIf="this.user.spotify === null && this.user.spotify === undefined"  mat-raised-button (click)="callbackTest()" color="primary">Link Spotify</a> -->
           
-          <a mat-raised-button (click)="callbackTest()" color="primary">Unlink SoundCloud</a>          
-          <a mat-raised-button (click)="callbackTest()" color="primary">Link SoundCloud</a>
+          <a *ngIf="this.user.soundcloud !== null && this.user.soundcloud !== undefined" mat-raised-button (click)="unlinkSoundcloud()" color="primary">Unlink SoundCloud</a>          
+          <!-- <a mat-raised-button (click)="callbackTest()" color="primary">Link SoundCloud</a> -->
       </div>
       </mat-card-content>
     </mat-tab>
