@@ -164,8 +164,8 @@ export class ProfileSettingsComponent implements OnInit {
     this.user.stripeAccountId = null;
     this.userService.onEditProfile(this.user).then((user: User) => {
       this.user = user;
-      this.userService.setUser(user)
-      let snackBarRef = this.snackBar.open('Stripe Account Unlinked', "", {
+      this.userService.setUser(user);
+      let snackBarRef = this.snackBar.open('Stripe Account Unlinked', '', {
         duration: 1500,
       });
     });
@@ -175,7 +175,14 @@ export class ProfileSettingsComponent implements OnInit {
   // Social Accounts Tab Methods
   // ======================================
 
-  callbackTest() {
-    this.router.navigate(['/callback', 'spotify']);
+  unlinkSpotify() {
+    this.user.spotify = undefined;
+    this.userService.onEditProfile(this.user).then((unlinkedUser: User) => {
+      this.user = unlinkedUser;
+      this.userService.setUser(unlinkedUser);
+      let snackBarRef = this.snackBar.open('Spotify Account Unlinked', '', {
+        duration: 1500,
+      });
+    });
   }
 }
