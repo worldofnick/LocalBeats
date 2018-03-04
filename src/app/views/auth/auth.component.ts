@@ -45,7 +45,6 @@ export class AuthComponent implements OnInit {
       lastName: null,
       email: signinData.username,
       password: signinData.password,
-      spotifyID: null,
       genres: [],
       isArtist: true,
       profilePicUrl: "https://www.vccircle.com/wp-content/uploads/2017/03/default-profile.png",
@@ -55,6 +54,8 @@ export class AuthComponent implements OnInit {
       state: '',
       location: null,
       isOnline: true,
+      spotify: null,
+      soundcloud: null,
       stripeAccountId: null
     };
 
