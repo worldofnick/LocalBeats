@@ -140,6 +140,8 @@ export class ProfileComponent implements OnInit {
   // Music corner methods
   // ========================================
   trustedAlbumUrl: SafeResourceUrl;
+  soundcloudIdFormInput: string;
+  
   
   public authorizeSpotify() {
     this._spotifyClientService.authorizeSpotify().then((url: string) => {
@@ -168,5 +170,18 @@ export class ProfileComponent implements OnInit {
   public backToSpotifyAlbumsClicked() {
     this.onSpotifyWidget = false;
     this.trustedAlbumUrl = undefined;
+  }
+
+  registerSoundcloudClicked(event) {
+    if (event.keyCode === 13 && !event.shiftKey) {
+      console.log('Entered soundcloud id: %s', this.soundcloudIdFormInput);
+      
+      // If the user entered non-blank id and hit send, communicate with server
+      if (this.soundcloudIdFormInput.trim().length > 0) {
+        // TODO: call userService to save the id to DB. Get the new user and re-assign it to userService user
+      }
+
+      this.soundcloudIdFormInput = '';
+    }
   }
 }
