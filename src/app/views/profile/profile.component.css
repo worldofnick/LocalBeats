@@ -44,3 +44,24 @@
     flex-direction: column;
     width : 100%;
 }
+
+/* Style Music buttons */
+.btn {
+    background-color:#a4c639; /* Blue background */
+    border: none; /* Remove borders */
+    color: white; /* White text */
+    padding: 12px 16px; /* Some padding */
+    font-size: 18px; /* Set a font size */
+    cursor: pointer; /* Mouse pointer on hover */
+    border-radius: 40px;
+}
+
+.btn:hover {
+    opacity: 0.7;
+}
+
+.fa-spotify {
+    font-size: 20px;
+    background: #a4c639;
+    color: white;
+}

@@ -74,7 +74,7 @@
               
               <!-- Link spotify button on logged in user's profile if no spotify account is linked -->
               <div class="spotifyConnectButtonContainer" *ngIf="(this.user.spotify === undefined || this.user.spotify === null) && this.user._id === this.userService.user._id">
-                <a mat-raised-button (click)="authorizeSpotify()" color="primary">Connect Spotify</a>
+                  <button class="btn" (click)="authorizeSpotify()"><i class="fa fa-spotify"></i> Connect your Spotify account</button>
               </div>
 
               <!-- No spotify linked message on other person's profile with no spotify account -->
