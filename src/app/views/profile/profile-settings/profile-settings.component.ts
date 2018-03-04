@@ -176,7 +176,7 @@ export class ProfileSettingsComponent implements OnInit {
   // ======================================
 
   unlinkSpotify() {
-    this.user.spotify = null;
+    this.user.spotify = undefined;
     this.userService.setUser(this.user);
     this._spotifyClientService.removeSpotifyFromUser(this.user).then((unlinkedUser: User) => {
       // this.user = unlinkedUser;
