@@ -75,13 +75,14 @@
 
     <mat-tab label="Account Services">
       <mat-card-content class="mt-1">
-        <p>Manage your social accounts and preferences here...</p>
         <div class="button-row">
           <a *ngIf="this.user.spotify !== null && this.user.spotify !== undefined" mat-raised-button (click)="unlinkSpotify()" color="primary">Unlink Spotify</a>
           <!-- <a *ngIf="this.user.spotify === null && this.user.spotify === undefined"  mat-raised-button (click)="callbackTest()" color="primary">Link Spotify</a> -->
           
           <a *ngIf="this.user.soundcloud !== null && this.user.soundcloud !== undefined" mat-raised-button (click)="unlinkSoundcloud()" color="primary">Unlink SoundCloud</a>          
           <!-- <a mat-raised-button (click)="callbackTest()" color="primary">Link SoundCloud</a> -->
+          <h3 class="accountEmptyContainer" *ngIf="(this.user.spotify === null || this.user.spotify === undefined) && 
+          (this.user.soundcloud === null || this.user.soundcloud === undefined)">>Nothing to see here...</h3>
       </div>
       </mat-card-content>
     </mat-tab>
