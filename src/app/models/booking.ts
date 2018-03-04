@@ -29,6 +29,9 @@ export class Booking {
     public artistComment: string;
     public cancelled: boolean;
     public completed: boolean;
+    public beenReviewedByHost: boolean;
+    public beenReviewedByArtist: boolean;
+    public bothReviewed: boolean;
 }
 
 export enum BookingType {
@@ -64,6 +67,7 @@ export enum NegotiationResponses {
     payment = 5, // Payment
     complete = 6, // A confirmed booking has been completed
     verification = 7, // A booking has been verified
+    review = 8
 }
 
 export enum VerificationResponse {
