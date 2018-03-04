@@ -68,7 +68,8 @@
         <button *ngIf="isCurrentUser && userService.isAuthenticated()" (click)="onDeleteEvent()" mat-raised-button color="accent">Delete Event</button>
         <button *ngIf="!isCurrentUser && userService.isAuthenticated()" (click)="messageHost()" mat-raised-button color="primary">Message Host</button>
         <button *ngIf="!isCurrentUser && userService.isAuthenticated() && !hasApplied && userService.user.isArtist" (click)="newApplication()" mat-raised-button color="accent">{{buttonText}}</button>
-        <p *ngIf="!isCurrentUser && userService.isAuthenticated() && hasApplied && userService.user.isArtist">You have applied or been requested for this event, please go to your bookings to manage your application or request.</p>
+        <button *ngIf="!isCurrentUser && userService.isAuthenticated() && hasApplied && userService.user.isArtist && userBooking != null && !userBooking.approved" (click)="onManageBooking()" mat-raised-button color="accent">Manage Application</button>
+        <button *ngIf="!isCurrentUser && userService.isAuthenticated() && hasApplied && userService.user.isArtist && userBooking != null && userBooking.approved" (click)="onManageBooking()" mat-raised-button color="accent">Manage Booking</button>
       </mat-card>
       <!-- </div> -->
 

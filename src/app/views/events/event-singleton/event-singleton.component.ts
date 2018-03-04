@@ -116,6 +116,13 @@ export class EventSingletonComponent implements OnInit {
     })
   }
 
+  /*
+  Takes user to their performances
+  */
+ onManageBooking() {
+    this.router.navigate(['/myperformances']);    
+  }
+
   messageHost(){
     let message:Message = {
       to: this.model.hostUser
