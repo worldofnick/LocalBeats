@@ -325,41 +325,30 @@ export class PerformanceManagementComponent implements OnInit {
     this.router.navigate(['/events', event._id]);
   }
 
-  /*
-  Resets all completion notifications to 0 when that expansion panel has been clicked
-  */
- resetCompletionNotifications(eventIndex: number) {
-    this.performances.cancellationNotifications = 0;
-    for(let booking of this.performances.completions) {
-      if(!booking.artViewed) {
-        booking.artViewed = true;
-        this.bookingService.updateBooking(booking);
+  resetNotifications(event: MatTabChangeEvent) {
+    if(event.index == 2) {
+      this.performances.confirmationNotifications = 0;
+      for(let booking of this.performances.confirmations) {
+        if(!booking.artViewed) {
+          booking.artViewed = true;
+          this.bookingService.updateBooking(booking);
+        }
       }
-    }
-  }
-
-  /*
-  Resets all cancellation notifications to 0 when that expansion panel has been clicked
-  */
-  resetCancellationNotifications(eventIndex: number) {
-    this.performances.cancellationNotifications = 0;
-    for(let booking of this.performances.cancellations) {
-      if(!booking.artViewed) {
-        booking.artViewed = true;
-        this.bookingService.updateBooking(booking);
+    } else if(event.index == 3) {
+      this.performances.completionNotifications = 0;
+      for(let booking of this.performances.completions) {
+        if(!booking.artViewed) {
+          booking.artViewed = true;
+          this.bookingService.updateBooking(booking);
+        }
       }
-    }
-  }
-
-  /*
-  Resets all confirmation notifications to 0 when that expansion panel has been clicked
-  */
-  resetConfirmationNotifications(eventIndex: number) {
-    this.performances.confirmationNotifications = 0;
-    for(let booking of this.performances.confirmations) {
-      if(!booking.hostViewed) {
-        booking.hostViewed = true;
-        this.bookingService.updateBooking(booking);
+    } else if(event.index == 4) {
+      this.performances.cancellationNotifications = 0;
+      for(let booking of this.performances.cancellations) {
+        if(!booking.artViewed) {
+          booking.artViewed = true;
+          this.bookingService.updateBooking(booking);
+        }
       }
     }
   }
