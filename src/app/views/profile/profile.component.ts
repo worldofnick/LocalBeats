@@ -144,7 +144,8 @@ export class ProfileComponent implements OnInit {
    */
   public authorizeSpotify() {
     this._spotifyClientService.authorizeSpotify().then((url: string) => {
-      window.open(url);
+      window.location.href = url;
+      // window.open(url);
     });
   }
 
