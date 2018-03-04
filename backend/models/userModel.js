@@ -15,7 +15,7 @@ var UserSchema = new Schema({
     joinDate      : {type: Date, default: Date.now},
     profilePicUrl : {type: String, default: 'https://www.vccircle.com/wp-content/uploads/2017/03/default-profile.png'},
     spotifyID     : {type: String},
-    stripeAccountId  : {type: String, default: null},
+    stripeAccountId  : {type: String},
     genres        : {type: Array}, // Kept empty if the user is not an artist
     eventTypes    : {type: Array}, // Kept empty if the user is not an artist
     isArtist      : {type: Boolean, default: false},

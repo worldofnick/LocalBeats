@@ -25,7 +25,7 @@ app.use(express.static(distDir));           // Create link to Angular build dire
 // =================================================================
 // Configuration
 // =================================================================
-var port = process.env.PORT || 8080;
+var port = process.env.PORT || 4200;
 mongoose.Promise = global.Promise;
 mongoose.connect(config.database);          // connect to database
 app.set('superSecret', config.secret);      // secret variable
@@ -86,16 +86,23 @@ privateChatSocket(io);
 // Basic route (http://localhost:8080)
 // =================================================================
 app.get('/', function(req, res) {
-  res.send('Welcome the EXPRESS Server! This API is at http://localhost:' + port + '/api');
+  res.sendfile(__dirname + '/dist/index.html');
 });
 
 app.get('/profile/stripe/', function(req, res) {
-  res.redirect('/profile/settings/?success=' + req.query.success);
-});
-
-app.get('*', function(req, res) {
   res.redirect('/?success=' + req.query.success);
 });
+
+app.use(express.static(__dirname + '/client/dist'));
+
+app.get('*', function(req, res) {
+  if (req.query.success != undefined) {
+    res.redirect('/?success=' + req.query.success);
+    return;
+  }
+  res.sendfile(__dirname + '/dist/index.html');
+});
+
 
 console.log('Magic happens at http://localhost:' + port);
 
