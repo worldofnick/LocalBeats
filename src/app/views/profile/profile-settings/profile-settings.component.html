@@ -81,8 +81,8 @@
           
           <a *ngIf="this.user.soundcloud !== null && this.user.soundcloud !== undefined" mat-raised-button (click)="unlinkSoundcloud()" color="primary">Unlink SoundCloud</a>          
           <!-- <a mat-raised-button (click)="callbackTest()" color="primary">Link SoundCloud</a> -->
-          <h3 class="accountEmptyContainer" *ngIf="(this.user.spotify === null || this.user.spotify === undefined) && 
-          (this.user.soundcloud === null || this.user.soundcloud === undefined)">>Nothing to see here...</h3>
+          <p class="accountEmptyContainer" *ngIf="(this.user.spotify === null || this.user.spotify === undefined) && 
+          (this.user.soundcloud === null || this.user.soundcloud === undefined)">Nothing to see here...</p>
       </div>
       </mat-card-content>
     </mat-tab>

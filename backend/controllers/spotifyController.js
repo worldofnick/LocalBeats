@@ -109,6 +109,16 @@ exports.removeSpotifyFromUID = function (req, res) {
   });
 }
 
+exports.removeSoundcloudFromUID = function (req, res) {
+  const userChanges = { $unset: { soundcloud: 1 } }
+  User.findByIdAndUpdate(req.params.uid, userChanges, {new: true}, function (err, updatedUser) {
+    if (err) {
+      return res.status(520).send({ message: "Error finding the user from this UID...", error: err });
+    }
+    return res.status(200).send({ user: updatedUser });
+  });
+}
+
 exports.getAccessRefreshTokens = function (req, res) {
   console.log('Get access refresh request body is: ', req.body);
   var spotifyUserProfile = undefined;

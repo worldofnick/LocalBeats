@@ -190,10 +190,10 @@ export class ProfileSettingsComponent implements OnInit {
   unlinkSoundcloud() {
     this.user.soundcloud = undefined;
     this.userService.setUser(this.user);
-    this.userService.onEditProfile(this.user).then((unlinkedUser: User) => {
+    this._spotifyClientService.removeSoundcloudFromUser(this.user).then((unlinkedUser: User) => {
       // this.user = unlinkedUser;
       this.userService.setUser(this.user);
-      let snackBarRef = this.snackBar.open('SoundCloud Account Unlinked', '', {
+      let snackBarRef = this.snackBar.open('Soundcloud Account Unlinked', '', {
         duration: 1500,
       });
     });
