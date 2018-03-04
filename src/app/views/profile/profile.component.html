@@ -73,12 +73,12 @@
             <div class="spotify-tab-content" [style.overflow]="'auto'" [style.height.px]="'300'">
               
               <!-- Link spotify button on logged in user's profile if no spotify account is linked -->
-              <div *ngIf="(this.user.spotify === undefined || this.user.spotify === null) && this.user === this.userService.user">
+              <div *ngIf="(this.user.spotify === undefined || this.user.spotify === null) && this.user._id === this.userService.user._id">
                 <a mat-raised-button (click)="authorizeSpotify()" color="primary">Connect Spotify</a>
               </div>
 
               <!-- No spotify linked message on other person's profile with no spotify account -->
-              <div *ngIf="(this.user.spotify === undefined || this.user.spotify === null) && this.user !== this.userService.user" class="no-music-found-container">
+              <div *ngIf="(this.user.spotify === undefined || this.user.spotify === null) && this.user._id !== this.userService.user._id" class="no-music-found-container">
                   <h3>{{this.user.firstName}} has no Spotify music...</h3>
               </div>
               
