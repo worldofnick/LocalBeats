@@ -18,6 +18,9 @@ module.exports = function(app) {
     
     app.route('/api/spotify/refreshAccessToken')
         .post(spotifyHandler.refreshAccessTokenMiddleware, spotifyHandler.sendTokens)
+
+    app.route('/api/spotify/:uid')
+        .delete(spotifyHandler.removeSpotifyFromUID);
     
     // Get the user profile for the passed access token and saves it to DB
     // If the sent token has expired, the MW will automatically refresh and new token 
