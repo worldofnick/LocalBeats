@@ -105,21 +105,6 @@ export class ProfileComponent implements OnInit {
     });
 
     console.log('User object: ', this.user);
-
-    // Retreive and store the latest spotify albums of this user
-    this.getSpotifyAlbumsAndSave();
-  }
-
-  getSpotifyAlbumsAndSave() {
-    if ( this.user !== null && this.user !== undefined ) {
-      if (this.user.spotify !== null && this.user.spotify !== undefined) {
-        this._spotifyClientService.requestAlbumsOwnedByAnArtist(this.user)
-          .then((listOfSpotifyAlbumObjects: any) => {
-            this.user.spotify.albums = listOfSpotifyAlbumObjects.albums.items;
-            console.log('Got albums: ', this.user.spotify);
-          });
-      }
-    }
   }
 
   clickedOver() {
@@ -168,10 +153,31 @@ export class ProfileComponent implements OnInit {
   onMusicTabSelectChange(event) {
     if (event.index === 0) {
       console.log('Spotify tab is selected!');
+
+      if (this.user.spotify !== undefined && this.user.spotify !== null ) {
+        // Retreive and store the latest spotify albums of this user
+        this.getSpotifyAlbumsAndSave();
+      }
     } else {
       console.log('Soundcloud tab is selected!');
       if (this.user.soundcloud !== undefined && this.user.soundcloud !== null) {
         this.sanitizeSoundcloudUrl();
+      }
+    }
+  }
+
+  /**
+   * Gets the latest albums of this user on the profile page and
+   *  set it to the user object's albums property
+   */
+  getSpotifyAlbumsAndSave() {
+    if ( this.user !== null && this.user !== undefined ) {
+      if (this.user.spotify !== null && this.user.spotify !== undefined) {
+        this._spotifyClientService.requestAlbumsOwnedByAnArtist(this.user)
+          .then((listOfSpotifyAlbumObjects: any) => {
+            this.user.spotify.albums = listOfSpotifyAlbumObjects.albums.items;
+            console.log('Got albums: ', this.user.spotify);
+          });
       }
     }
   }
