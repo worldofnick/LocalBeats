@@ -188,7 +188,7 @@ export class ProfileSettingsComponent implements OnInit {
   }
 
   unlinkSoundcloud() {
-    this.user.soundcloud = null;
+    this.user.soundcloud = undefined;
     this.userService.setUser(this.user);
     this.userService.onEditProfile(this.user).then((unlinkedUser: User) => {
       // this.user = unlinkedUser;
