@@ -99,8 +99,6 @@ export class HomeComponent implements OnInit {
         ' ' + message.from.lastName, 'Go to message...', { duration: 3500 });
       
       snackBarRef.onAction().subscribe(() => {
-        console.log('Going to the message...');
-
         this.router.navigate(['/chat']);
         this._socketService.send(Action.OPEN_SNACK_BAR_PM, message);
       });
@@ -112,9 +110,12 @@ export class HomeComponent implements OnInit {
    * @param message The original notification that is received
    */
   openNotificationSnackBar(message: Notification) {
-    // if (this._userService.user._id !== message.senderID._id) {
-      this.snackBar.open('You have a new notification from ' + message.senderID.firstName + ' ' + message.senderID.lastName,
-                        'close', { duration: 3500 });
-    // };
+      let snackBarRef = this.snackBar.open('You have a new notification from ' + message.senderID.firstName + ' ' + message.senderID.lastName,
+                        'Go to...', { duration: 3500 });
+
+      snackBarRef.onAction().subscribe(() => {
+        this.router.navigate(message.route);
+      });
+
   }
 }
