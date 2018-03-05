@@ -13,6 +13,8 @@ export class SearchResultsComponent implements OnInit {
   length = 100;
   pageSize = 15;
   pageSizeOptions = [15, 25, 50];
+  distancesInMiles = [5, 10, 20, 50, 100];
+  sortTypes = ["Best Match", "Distance", "Price High to Low", "Price Low to High", "Soonest"];
 
   constructor(private searchService: SearchService) { }
 

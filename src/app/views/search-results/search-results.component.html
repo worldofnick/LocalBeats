@@ -1,3 +1,17 @@
+<div fxLayout="row">
+    <mat-select placeholder="Max Distance">
+      <mat-option *ngFor="let distance of distancesInMiles">
+        {{ distance }} miles
+      </mat-option>
+    </mat-select>
+
+  <mat-select placeholder="Sort Type">
+    <mat-option *ngFor="let type of sortTypes">
+      {{ type }}
+    </mat-option>
+  </mat-select>
+</div>
+
 <div fxLayout="row" fxLayoutWrap="wrap">
   <mat-card *ngIf="results.length == 0">
       <mat-card-title class="m-0 no-shadow">

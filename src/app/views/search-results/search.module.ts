@@ -10,7 +10,8 @@ import {
   MatChipsModule,
   MatListModule,
   MatGridListModule,
-  MatPaginator
+  MatPaginator,
+  MatSelectModule
  } from '@angular/material';
 import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -38,6 +39,7 @@ import { SearchRoutes } from "./search.routing";
     NgxDatatableModule,
     CommonPipesModule,
     MatPaginatorModule,
+    MatSelectModule,
     RouterModule.forChild(SearchRoutes)
   ],
   declarations: [SearchResultsComponent],
