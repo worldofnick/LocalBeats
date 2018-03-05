@@ -68,9 +68,9 @@ export class AppChatsComponent implements OnInit, AfterViewChecked, AfterViewIni
   activeChatUser: User = new User();    //TODO: set to first user in connectedUsers list or one with highest unread count
   connectedUsers: User[] = new Array();
   // isProfileUserRequestPending = false;
-  isSnackBarRequestPending = false;
+  // isSnackBarRequestPending = false;
   // profileRecipient: User = new User();
-  snackBarRecipient: User = new User();
+  // snackBarRecipient: User = new User();
 
   options: User[] = new Array();  // All users list to populate autocomplete with
   
@@ -81,7 +81,7 @@ export class AppChatsComponent implements OnInit, AfterViewChecked, AfterViewIni
   constructor(private media: ObservableMedia, public _snackBar: MatSnackBar, private cdr: ChangeDetectorRef,
     private _socketService: SocketService, private _chatsService: ChatsService, private router: Router,
     private _sharedDataService: SharedDataService, public dialog: MatDialog) {
-      console.log('>>> IN CONSTRUCTOR');
+      // console.log('>>> IN CONSTRUCTOR');
     this.loggedInUser = this._chatsService.getCurrentLoggedInUser();
 
     this.initChatSideBarWithWithNewUsers();
@@ -111,12 +111,12 @@ export class AppChatsComponent implements OnInit, AfterViewChecked, AfterViewIni
       }
       else {
         if ( this.isUserObjInConnectedUsers(result.recipientUser) !== -1 ) {
-          console.log('Already chatting with ' + result.recipientUser.firstName + '. Switching to that thread');
+          // console.log('Already chatting with ' + result.recipientUser.firstName + '. Switching to that thread');
           this.changeActiveUser(result.recipientUser);
         } else {
-          console.log('Starting new chat with ' + result.recipientUser.firstName);
+          // console.log('Starting new chat with ' + result.recipientUser.firstName);
           let recipient: User = result.recipientUser as User;
-          console.log('New recipient: ', recipient);
+          // console.log('New recipient: ', recipient);
           this.connectedUsers.unshift(recipient);
           this.changeActiveUser(recipient);
         }
@@ -125,7 +125,7 @@ export class AppChatsComponent implements OnInit, AfterViewChecked, AfterViewIni
   }
 
   ngOnInit() {
-    console.log('>>> IN NGONINIT');
+    // console.log('>>> IN NGONINIT');
     this.initIoConnection();
     this.chatSideBarInit();
     // console.log('On open, connectd users: ', this.connectedUsers);
@@ -166,20 +166,20 @@ export class AppChatsComponent implements OnInit, AfterViewChecked, AfterViewIni
     // Every time there is a new login/out, it reloads the chat side Bar.
     this._socketService.onEvent(SocketEvent.NEW_LOG_IN)                       // TODO: optimize to reload only online status and new, deleted users
       .subscribe((message: Message) => {
-        console.log('New user logged in (chat event): ', message);
+        // console.log('New user logged in (chat event): ', message);
         this.reloadChatSideBarWithNewConnectedUsers();                   // reload the connectedUsers navBar
       });
 
     this._socketService.onEvent(SocketEvent.SMN_LOGGED_OUT)
       .subscribe((message: Message) => {
-        console.log('Some user logged out (chat event): ', message);
+        // console.log('Some user logged out (chat event): ', message);
         this.reloadChatSideBarWithNewConnectedUsers();                   // reload the connectedUsers navBar
       });
 
     this._socketService.onEvent(SocketEvent.SEND_PRIVATE_MSG)
       .subscribe((message: Message) => {
         // this.isBlankTemplate = false;
-        console.log('Private Chat message from server (chat event): ', message);
+        // console.log('Private Chat message from server (chat event): ', message);
         const temp: Message = message as Message;
 
         // If you are the receiver and the sender is not already in the connectedUsers list,
@@ -205,12 +205,12 @@ export class AppChatsComponent implements OnInit, AfterViewChecked, AfterViewIni
       //   this.isProfileUserRequestPending = true;
       // });
 
-      this._socketService.onEvent(SocketEvent.OPEN_SNACK_BAR_PM)
-      .subscribe((message: Message) => {
-        console.log('Opening message from snackbar action (chat event): ', message);
-        this.snackBarRecipient = message.from as User;
-        this.isSnackBarRequestPending = true;
-      });
+      // this._socketService.onEvent(SocketEvent.OPEN_SNACK_BAR_PM)
+      // .subscribe((message: Message) => {
+      //   // console.log('Opening message from snackbar action (chat event): ', message);
+      //   this.snackBarRecipient = message.from as User;
+      //   this.isSnackBarRequestPending = true;
+      // });
   }
 
   isUserInConnectedUsers(message): boolean {
@@ -236,8 +236,8 @@ export class AppChatsComponent implements OnInit, AfterViewChecked, AfterViewIni
         },
         err => console.error('Error fetching PMs between 2 users: ', err),
         () => {
-          console.log('Done fetching PMs from the server DB');
-          console.log('Sending myself with messages[]: ', this.activeChatMessages);
+          // console.log('Done fetching PMs from the server DB');
+          // console.log('Sending myself with messages[]: ', this.activeChatMessages);
           this._socketService.send(Action.REQUEST_PM_SOCKET_ID, { serverPayload: this.activeChatMessages });
         }
       );
@@ -255,12 +255,12 @@ export class AppChatsComponent implements OnInit, AfterViewChecked, AfterViewIni
         for (let buddy of temp.users) {
           this.connectedUsers.push(buddy);
         }
-        console.log('Side Bar Connected Users:', this.connectedUsers);
+        // console.log('Side Bar Connected Users:', this.connectedUsers);
       },
       err => console.error(err),
       () => {
         this.initiateAutocompleteOptions();
-        console.log('Done reloading users in chat side bar');
+        // console.log('Done reloading users in chat side bar');
         // this.chatSideBarInit();
       }
     );
@@ -275,12 +275,12 @@ export class AppChatsComponent implements OnInit, AfterViewChecked, AfterViewIni
         for (let buddy of temp.users) {
           this.connectedUsers.push(buddy);
         }
-        console.log('Initial list of connected Users:', this.connectedUsers);
+        // console.log('Initial list of connected Users:', this.connectedUsers);
         this.activeChatUser = this.connectedUsers[0]; // TODO: change to whatever filter applied later
       },
       err => console.error(err),
       () => {
-        // See if profile user clicked. If so, add it as first user or switch to exisitng one
+        // See if profile message clicked. If so, add it as first user or switch to exisitng one
         if (this._sharedDataService.isProfileUserRequestPending) {
           let indexInConnectedUsers = this.isUserObjInConnectedUsers(this._sharedDataService.profileButtonChatRecipient);
           if ( indexInConnectedUsers === -1 ) {
@@ -288,6 +288,13 @@ export class AppChatsComponent implements OnInit, AfterViewChecked, AfterViewIni
           }
           this.activeChatUser = this._sharedDataService.profileButtonChatRecipient;
           this._sharedDataService.resetProfileMessageSharedProperties();
+        }
+
+        // See if go to message on snackbar clicked. If so, make it active user
+        if (this._sharedDataService.isSnackBarMessageRequestPending) {
+          let indexInConnectedUsers = this.isUserObjInConnectedUsers(this._sharedDataService.snackBarMessageRecipient);
+          this.activeChatUser = this._sharedDataService.snackBarMessageRecipient;
+          this._sharedDataService.resetSnackBarMessageSharedProperties();
         }
 
         this.initiateAutocompleteOptions();
@@ -305,11 +312,11 @@ export class AppChatsComponent implements OnInit, AfterViewChecked, AfterViewIni
         // console.log('User DATA: ', data);
         const temp = data as { users: User[] };
         this.options = temp.users;
-        console.log('Options: ', this.options);
+        // console.log('Options: ', this.options);
       },
       err => console.error(err),
       () => {
-        console.log('Done initializing autocomplete users');
+        // console.log('Done initializing autocomplete users');
       }
     );
   }
@@ -332,18 +339,18 @@ export class AppChatsComponent implements OnInit, AfterViewChecked, AfterViewIni
       //   this.activeChatUser = this.profileRecipient;
       // } 
       // else 
-      if (this.isSnackBarRequestPending) {
-        this.isSnackBarRequestPending = false;
-        let indexInConnectedUsers = this.isUserObjInConnectedUsers(this.snackBarRecipient);
-        if ( indexInConnectedUsers === -1 ) {
-          this.connectedUsers.unshift(this.snackBarRecipient);  // Add user to connected Users
-        }
-        this.activeChatUser = this.snackBarRecipient;
-      }
-      else {
+      // if (this.isSnackBarRequestPending) {
+      //   this.isSnackBarRequestPending = false;
+      //   let indexInConnectedUsers = this.isUserObjInConnectedUsers(this.snackBarRecipient);
+      //   if ( indexInConnectedUsers === -1 ) {
+      //     this.connectedUsers.unshift(this.snackBarRecipient);  // Add user to connected Users
+      //   }
+      //   this.activeChatUser = this.snackBarRecipient;
+      // }
+      // else {
         this.activeChatUser = user;
-        console.log('New User clicked:', this.activeChatUser);
-      }
+        // console.log('New User clicked:', this.activeChatUser);
+      // }
 
       this._chatsService.getPMsBetweenActiveAndLoggedInUser(this.loggedInUser, this.activeChatUser).subscribe(
         data => {
@@ -355,11 +362,11 @@ export class AppChatsComponent implements OnInit, AfterViewChecked, AfterViewIni
         },
         err => console.error('Error fetching PMs between 2 users: ', err),
         () => {
-          console.log('Done fetching PMs from the server DB');
+          // console.log('Done fetching PMs from the server DB');
           // this.profileRecipient = new User();
-          this.snackBarRecipient = new User();
+          // this.snackBarRecipient = new User();
           // this.isProfileUserRequestPending = false;
-          this.isSnackBarRequestPending = false;
+          // this.isSnackBarRequestPending = false;
         }
       );
       this.vc.first.nativeElement.focus();
@@ -386,11 +393,11 @@ export class AppChatsComponent implements OnInit, AfterViewChecked, AfterViewIni
 
   sendMessageClicked(event) {
     if (event.keyCode === 13 && !event.shiftKey) {
-      console.log('-------CHAT UI---------');
-    console.log('%s entered the message: %s', this.loggedInUser.firstName, this.messageEntered);
-    console.log('Sender: ', this.loggedInUser.firstName + ' ' + this.loggedInUser.lastName);
-    console.log('Receiver: ', this.activeChatUser.firstName + ' ' + this.activeChatUser.lastName);
-    console.log('---------------------');
+    //   console.log('-------CHAT UI---------');
+    // console.log('%s entered the message: %s', this.loggedInUser.firstName, this.messageEntered);
+    // console.log('Sender: ', this.loggedInUser.firstName + ' ' + this.loggedInUser.lastName);
+    // console.log('Receiver: ', this.activeChatUser.firstName + ' ' + this.activeChatUser.lastName);
+    // console.log('---------------------');
     // If the user entered non-blank message and hit send, communicate with server
 
     if (this.messageEntered.trim().length > 0) {
@@ -416,7 +423,7 @@ export class AppChatsComponent implements OnInit, AfterViewChecked, AfterViewIni
   }
 
   topBarGoToProfileClicked() {
-    console.log('Go to profile clicked for user: ', this.activeChatUser);
+    // console.log('Go to profile clicked for user: ', this.activeChatUser);
     this.router.navigate(['profile/', this.activeChatUser._id]);
   }
 
@@ -451,7 +458,7 @@ export class DialogOverviewExampleDialog {
   constructor(
     public dialogRef: MatDialogRef<DialogOverviewExampleDialog>,
     @Inject(MAT_DIALOG_DATA) public data: any) { 
-      console.log('From dialog, USERS: ', data.usersList);
+      // console.log('From dialog, USERS: ', data.usersList);
       this.allUsers = data.usersList;
       this.initRecipientForm();
     }
