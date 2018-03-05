@@ -13,12 +13,7 @@ import { SocketEvent } from         '../../../services/chats/model/event';
 })
 export class NotificationsComponent implements OnInit {
   @Input() notificPanel;
-
-  //get notification data.
-
-  // Dummy notifications
   notifications:Notification[] = [];
-
 
   constructor(private router: Router,
               private notificationService: NotificationService,
@@ -27,30 +22,27 @@ export class NotificationsComponent implements OnInit {
 
   ngOnInit
   () {
-
     //listening for real time notification
     this._socketService.onEvent(SocketEvent.SEND_NOTIFICATION)
       .subscribe((notification: Notification) => {
         const temp: Notification = notification as Notification;
 
-        let newNotification: Notification = new Notification(temp.senderID, temp.receiverID, 
-          temp.eventID, temp.booking, temp.response, temp.message, temp.icon, temp.route);
-        this.notifications.push(newNotification);
+        let newNotification: Notification = new Notification(temp._id, temp.senderID, temp.receiverID, 
+          temp.eventID, temp.booking, temp.response, temp.message, temp.icon, temp.sentTime, temp.route);
+        this.notifications.unshift(newNotification);
     });
 
     //initial getting of notifications
     this._socketService.onEvent(SocketEvent.REQUEST_NOTIFICATIONS).subscribe((notificationsList: Notification[])=>{
-
+      // console.log('NotificationList got from server: ', notificationsList);
       this.notifications = [];
       for(let notification of notificationsList){
-        let newNotification:Notification = new Notification(notification.senderID, notification.receiverID,
-          notification.eventID, notification.booking, notification.response, notification.message, notification.icon,
+        let newNotification:Notification = new Notification(notification._id, notification.senderID, notification.receiverID,
+          notification.eventID, notification.booking, notification.response, notification.message, notification.icon, notification.sentTime,
           notification.route);
-        this.notifications.push(newNotification);
+        this.notifications.unshift(newNotification);
       }
     });
-    
-
 
     this.router.events.subscribe((routeChange) => {
         if (routeChange instanceof NavigationEnd) {
@@ -59,23 +51,42 @@ export class NotificationsComponent implements OnInit {
     });
   }
 
-
   //add service call to delete those notifications.
   clearAll(e) {
     e.preventDefault();
 
-
-
-      this.notificationService.deleteNotificationById(this.notifications[0].receiverID._id).then((status: number)=>{
-        // Success
-      });
-
+      for(let index = 0; index < this.notifications.length; index++) {
+        this.notificationService.deleteNotificationById(this.notifications[index]._id).then((status: number)=>{
+          // Success or failure
+          if (status === 200) {
+            this.userService.getNotificationsCountForUser(this.userService.user._id);
+          }
+        });
+      }
 
     this.notifications = [];
-    
+
+  }
+
+  deleteNotification(notification: Notification, index:number) {
+    this.notificationService.deleteNotificationById(notification._id).then((status: number)=>{
+      // Success or failure
+      if (status === 200) {
+        let newNotifications:Notification[] = [];
+        let i = 0;
+        for (let n of this.notifications){
+          if(i != index){
+            newNotifications.push(n);
+          }
+          i++;
+        }
+        this.notifications = newNotifications;
+        this.userService.getNotificationsCountForUser(this.userService.user._id);
+      }
+    });
   }
 
   selectNotification(notification:Notification){
-    this.router.navigate(notification.route); //this will go to the page about the event
+    this.router.navigate(notification.route);
   }
 }

@@ -69,13 +69,13 @@ export class BookingService {
             // send notification to artist and host
             const profile: string[] = ['/profile'];
 
-            const notificationToArtist = new Notification(review.fromUser, review.toUser,
+            const notificationToArtist = new Notification(null, review.fromUser, review.toUser,
                 review.booking.eventEID._id, review.booking, NegotiationResponses.review,
-                'You have been reviewed by ' + review.fromUser.firstName + ' and now your review is published', 'rate_review', profile);
+                'You have been reviewed by ' + review.fromUser.firstName + ' and now your review is published', 'rate_review', new Date(), profile);
 
-            const notificationToHost = new Notification(review.toUser, review.fromUser,
+            const notificationToHost = new Notification(null, review.toUser, review.fromUser,
                 review.booking.eventEID._id, review.booking, NegotiationResponses.review,
-                'You have been reviewed by ' + review.toUser.firstName + ' and now your review is published', 'rate_review', profile);
+                'You have been reviewed by ' + review.toUser.firstName + ' and now your review is published', 'rate_review', new Date(), profile);
 
             this.socketService.sendNotification(SocketEvent.SEND_NOTIFICATION, notificationToArtist);
             this.socketService.sendNotification(SocketEvent.SEND_NOTIFICATION, notificationToHost);
@@ -86,9 +86,9 @@ export class BookingService {
         // send notification to artist
         const profile: string[] = ['/profile', 'performances'];
 
-        const notificationToArtist = new Notification(review.fromUser, review.toUser,
+        const notificationToArtist = new Notification(null, review.fromUser, review.toUser,
             review.booking.eventEID._id, review.booking, NegotiationResponses.review,
-            'You have been reviewed by ' + review.fromUser.firstName + ' click here to leave your review', 'hearing', profile);
+            'You have been reviewed by ' + review.fromUser.firstName + ' click here to leave your review', 'hearing', new Date(), profile);
 
         this.socketService.sendNotification(SocketEvent.SEND_NOTIFICATION, notificationToArtist);
 
@@ -99,9 +99,9 @@ export class BookingService {
         // this path should be changed with the new managment UI most likely
         const profile: string[] = ['/profile', 'events'];
 
-        const notificationToHost = new Notification(review.fromUser, review.toUser,
+        const notificationToHost = new Notification(null, review.fromUser, review.toUser,
             review.booking.eventEID._id, review.booking, NegotiationResponses.review,
-            'You have been reviewed by ' + review.fromUser.firstName + ' click here to leave your review', 'hearing', profile);
+            'You have been reviewed by ' + review.fromUser.firstName + ' click here to leave your review', 'hearing', new Date(), profile);
 
         this.socketService.sendNotification(SocketEvent.SEND_NOTIFICATION, notificationToHost);
 

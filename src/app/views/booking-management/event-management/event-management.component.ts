@@ -807,8 +807,8 @@ export class EventManagementComponent implements OnInit {
   }
 
   createNotificationForArtist(booking: Booking, response: NegotiationResponses, route: string[], icon: string, message: string) {
-    let notification = new Notification(booking.hostUser, booking.performerUser, booking.eventEID._id,
-    booking, response, message, icon, route);
+    let notification = new Notification(null, booking.hostUser, booking.performerUser, booking.eventEID._id,
+    booking, response, message, icon, new Date(), route);
     this._socketService.sendNotification(SocketEvent.SEND_NOTIFICATION, notification);
   }
 
