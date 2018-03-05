@@ -74,6 +74,11 @@ export class TopbarComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.searchService.eventTypes().then((types: string[]) => {
+      this.eventsList = types;
+    }).then(() => this.searchService.genres().then((types: string[]) => {
+      this.genresList = types;
+    }));
     // Initialize the menu to be collapsed
     domHelper.toggleClass(document.body, 'collapsed-menu');
 
