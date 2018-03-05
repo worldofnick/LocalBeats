@@ -99,7 +99,7 @@ export class SpotifyClientService {
   }
 
   public removeSoundcloudFromUser(userObject: User): Promise<any> {
-    // TODO: @ash change it back to use the user's id
+    // TODO: @ash change it back to use the user's id after the demo
     // const current = this.authorizeConnection + '/artists/' + userObject.spotify.id + '/albums';
     const current = environment.apiURL + 'api/soundcloud/' + userObject._id;
     return this.http.delete(current)
@@ -107,6 +107,17 @@ export class SpotifyClientService {
         .then((response: Response) => {
           // console.log('Modified User w/o: ', response.json());
           return (response.json().user as User);
+        })
+        .catch(this.handleError);
+  }
+
+  public getSoundcloudProfileData(soundcloudUsername: String): Promise<any> {
+    const current = environment.apiURL + 'api/soundcloud/' + soundcloudUsername;
+    return this.http.get(current)
+        .toPromise()
+        .then((response: Response) => {
+          console.log('Modified User: ', response.json());
+          return (response.json());
         })
         .catch(this.handleError);
   }

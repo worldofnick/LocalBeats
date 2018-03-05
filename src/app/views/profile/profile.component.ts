@@ -132,17 +132,10 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterViewChecked {
    * Handler for when message button on profile page is clicked
    */
   onStartNewConversationFromProfileButtonClick() {
-    
     // If the user clicked message to some other user, then initiate conversation with it
     if (!this.onOwnProfile) {
       this._sharedDataService.setProfileMessageSharedProperties(this.user);
-
-      // let message: Message = {
-      //   to: this.user
-      // };
-
       this.router.navigate(['/chat']);
-      // this._socketService.send(Action.REQUEST_MSG_FROM_PROFILE_BUTTON, message);
     }
   }
 
@@ -233,15 +226,34 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterViewChecked {
    */
   registerSoundcloudClicked(event) {
     if (event.keyCode === 13 && !event.shiftKey) {
-      // console.log('Entered soundcloud id: %s', this.soundcloudIdFormInput);
-      
+      console.log('Entered soundcloud id: %s', this.soundcloudIdFormInput);
+
       // If the user entered non-blank id and hit send, communicate with server
       if (this.soundcloudIdFormInput.trim().length > 0) {
-        // Save the soundcloud id to the DB
-        this.user.soundcloud = { id: this.soundcloudIdFormInput };
-        this.userService.onEditProfile(this.user).then( (userWithSoundcloud: User) => {
-          this.sanitizeSoundcloudUrl();
+        // Get user profile data from the server which contacts soundcloud API
+        this._spotifyClientService.getSoundcloudProfileData(this.soundcloudIdFormInput).then((updatedUser: any) => {
+          if (updatedUser !== false) {
+            this.user.soundcloud = {
+              id: updatedUser.soundcloud.id,
+              avatar_url: updatedUser.soundcloud.avatar_url,
+              username: updatedUser.soundcloud.username
+            };
+            console.log('This User: ', this.user);
+            this.userService.setUser(this.user);
+            this.sanitizeSoundcloudUrl();
+          } else {
+            // Invalid soundcloud username. Notify user and keep the input
+            let snackBarRef = this.snackBar.open('Invalid Soundcloud username. Try Again!', '', {
+              duration: 3000,
+            });
+          }
         });
+
+        // TODO: Save the soundcloud id to the DB
+        // this.user.soundcloud = { username: this.soundcloudIdFormInput };
+        // this.userService.onEditProfile(this.user).then( (userWithSoundcloud: User) => {
+        //   this.sanitizeSoundcloudUrl();
+        // });
       }
 
       this.soundcloudIdFormInput = '';
@@ -257,7 +269,6 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterViewChecked {
     'show_user=true&show_reposts=false&show_teaser=true&visual=true';
     this.trustedSoundcloudUrl = this.sanitizer.bypassSecurityTrustResourceUrl(dangerousAlbumUrl);
   }
-
   
   // ======================================
   // Social Accounts Tab Methods

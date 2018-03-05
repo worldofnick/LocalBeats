@@ -30,7 +30,9 @@ export class User {
     };
 
     public soundcloud?: {
-        id?: string
+        id?: string,
+        username?: string,
+        avatar_url?: string
     };
 
     // Chat properties

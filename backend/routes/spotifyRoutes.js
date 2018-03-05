@@ -24,6 +24,9 @@ module.exports = function(app) {
 
     app.route('/api/soundcloud/:uid')
         .delete(spotifyHandler.removeSoundcloudFromUID);
+
+    app.route('/api/soundcloud/:username')
+        .get(spotifyHandler.getSoundcloudUserProfile);
     
     // Get the user profile for the passed access token and saves it to DB
     // If the sent token has expired, the MW will automatically refresh and new token 

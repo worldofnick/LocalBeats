@@ -200,6 +200,23 @@ exports.getAllAlbumsOfArtist = function (req, res) {
   });
 }
 
+exports.getSoundcloudUserProfile = function(req, res) {
+  var authOptions = {
+    url : 'http://api.soundcloud.com/resolve.json?url=http://soundcloud.com/' + req.params.username 
+              + '&client_id=' + config.soundcloud.clientID,
+  }
+  request.get(authOptions, function(err, response, body) {
+    if (err === null && response.statusCode === 200) {
+      res.status(200).send( {
+          soundcloud: JSON.parse(body)
+        });
+    } else {
+      res.status(response.statusCode).send({ message: 'An error occured...', original_response: JSON.parse(response.body)});
+      console.log('Error getting soundcloud profile info', err, ', Code: ', response.statusCode, response.body);    
+    }
+  });
+}
+
 /**
  * Retrieve server side only access token
  */

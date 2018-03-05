@@ -36,7 +36,8 @@ var UserSchema = new Schema({
     },
     soundcloud: {
         id              : { type: String },
-        email           : { type: String, lowercase: true }
+        username        : { type: String },
+        avatar_url      : { tyep: String }
     }
 }, {strict: true}, {versionKey: false});
 
