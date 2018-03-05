@@ -13,42 +13,29 @@
                 value="">
             </mat-form-field>
           </div>
-
-
-          
-
           <div class="pb-1">
-
-              <mat-select formControlName="eventType" (change)="onChangeEventType($event)" id="langToggle" placeholder="Event Type" [(ngModel)]="this.event.eventType" name="eventType"
-                class="mb-1">
-                <mat-option *ngFor="let event of eventTypes" [value]="event.value" ngDefaultControl>
-                  {{event.viewValue}}
-                </mat-option>
-              </mat-select>
-  
-  
-            </div>
-
-            <div class="pb-1">
-              <mat-select formControlName="cancellationPolicy" (change)="onChangeCancellationPolicy($event)" id="langToggle" placeholder="Cancellation Policy" [(ngModel)]="this.event.cancellation" name="cancellationPolicy"
-                class="mb-1">
-                <mat-option *ngFor="let policy of cancellationPolicies" [value]="policy" ngDefaultControl>
-                  {{policy | capitalize}}
-                </mat-option>
-              </mat-select>
-              <mat-chip *ngIf="basicForm.controls['cancellationPolicy'].value == 'strict'" color='accent' selected="true">Either user who cancels a confirmed booking within 30 days of the calendar start date will be charged 15%.</mat-chip>
-              <mat-chip *ngIf="basicForm.controls['cancellationPolicy'].value == 'flexible'" color='primary' selected="true">Either user who cancels a confirmed booking within 7 days of the calendar start date will be charged 15%.</mat-chip>
-            </div>
-
-
-
+            <mat-select formControlName="eventType" (change)="onChangeEventType($event)" id="langToggle" placeholder="Event Type" [(ngModel)]="this.event.eventType" name="eventType"
+              class="mb-1">
+              <mat-option *ngFor="let event of eventTypes" [value]="event.value" ngDefaultControl>
+                {{event.viewValue}}
+              </mat-option>
+            </mat-select>
+          </div>
+          <div class="pb-1">
+            <mat-select formControlName="cancellationPolicy" (change)="onChangeCancellationPolicy($event)" id="langToggle" placeholder="Cancellation Policy" [(ngModel)]="this.event.cancellation" name="cancellationPolicy"
+              class="mb-1">
+              <mat-option *ngFor="let policy of cancellationPolicies" [value]="policy" ngDefaultControl>
+                {{policy | capitalize}}
+              </mat-option>
+            </mat-select>
+            <mat-chip *ngIf="basicForm.controls['cancellationPolicy'].value == 'strict'" color='accent' selected="true">Either user who cancels a confirmed booking within 30 days of the calendar start date will be charged 15%.</mat-chip>
+            <mat-chip *ngIf="basicForm.controls['cancellationPolicy'].value == 'flexible'" color='primary' selected="true">Either user who cancels a confirmed booking within 7 days of the calendar start date will be charged 15%.</mat-chip>
+          </div>
           <!-- img stuff iirc -->
           <div *ngFor="let interest of interests; let i = index">
             <mat-checkbox class="example-margin" (change)="onChange($event)" [checked]="interestFormGroup.get('interests').value.indexOf(interest) > -1"
               [value]="interest">{{interest}}</mat-checkbox>
           </div>
-
-
           <!-- event price input field. still needs to be formatted for numbers -->
           <div class="pb-1">
             <mat-form-field class="full-width">
@@ -56,24 +43,16 @@
                 value="">
             </mat-form-field>
           </div>
-
-
-    
           <div class="pb-1 pt-05">
-              <mat-checkbox name="negotiable" formControlName="negotiable" class="pb-1">Price is negotiable</mat-checkbox>
-            </div>
-
+            <mat-checkbox name="negotiable" formControlName="negotiable" class="pb-1">Price is negotiable</mat-checkbox>
+          </div>
           <div class="pb-1">
             <mat-form-field class="full-width">
-              <input matInput [(ngModel)]="this.event.fromDate" name="date" readonly="readonly" formControlName="date" 
-              placeholder="Date" [min]="minDate" [max]="maxDate"
-              [matDatepicker]="appDatepicker">
-
-              <mat-datepicker-toggle matSuffix [for]="appDatepicker"></mat-datepicker-toggle>
+              <input matInput [selectMode]="'range'"
+                [owlDateTimeTrigger]="dtPicker3" [owlDateTime]="dtPicker3 " [formControl]="basicForm.controls['date']">
+              <owl-date-time #dtPicker3></owl-date-time>
             </mat-form-field>
-            <mat-datepicker #appDatepicker></mat-datepicker>
           </div>
-
           <!-- google maps widget -->
           <div class="pb-1">
           <mat-form-field class="full-width">
@@ -81,36 +60,23 @@
               spellcheck="off" type="text" #searchplaces [formControl]="basicForm.controls['location']">
             </mat-form-field>
             </div>
-
           <div class="pb-1">
-
-
-            
             <mat-form-field class="full-width">
-
               <mat-select [formControl]="basicForm.controls['genres']" name="genres" placeholder="Music Genres" multiple>
                 <mat-option *ngFor="let genre of genresList" [value]="genre" >{{genre}}</mat-option>
               </mat-select>
             </mat-form-field>
-            
-           
-            
           </div>
-
-
-
-
           <div class="pb-1 pt-05">
             <mat-checkbox (click)="onAgreed()" name="agreed" formControlName="agreed" class="pb-1">I have read and agree to the terms of service.</mat-checkbox>
           </div>
           <!-- </div>
           </div> -->
-          <button *ngIf="!this.updating && agreed" mat-raised-button color="primary">Create Event</button>
-          <button *ngIf="this.updating && agreed" mat-raised-button color="primary">Update Event</button>
+          <button *ngIf="!this.updating && agreed" mat-raised-button color="primary" >Create Event</button>
+          <button *ngIf="this.updating && agreed" mat-raised-button color="primary" >Update Event</button>
         </mat-card-content>
       </mat-card>
     </div>
-
     <!-- second column on the right now..inclulding picture uploading  -->
     <div fxLayout="column" fxFlex="100" fxFlex.gt-md="50">
       <mat-card class="p-0">
@@ -119,7 +85,6 @@
           <mat-divider></mat-divider>
         </mat-card-title>
         <mat-card-content>
-
           <div class="propic text-center">
             <img *ngIf="!this.event.eventPicUrl" mat-card-image style="-webkit-user-select: none;
           background-position: 0px 0px, 10px 10px;
