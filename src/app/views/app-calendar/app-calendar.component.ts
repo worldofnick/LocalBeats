@@ -114,6 +114,7 @@ export class AppCalendarComponent implements OnInit {
       if(this.userService.user.isArtist) {
         this.bookingService.getUserBookings(this.userService.user, 'artist').then( (bookings: Booking[]) => {
           for(let booking of bookings){
+            if(!booking.cancelled) {
             const calendarEvent: CalendarEvent = {
               start: subDays(booking.eventEID.fromDate, 0),
               end: subDays(booking.eventEID.toDate, 0),
@@ -123,6 +124,7 @@ export class AppCalendarComponent implements OnInit {
               meta: booking.eventEID._id
             };
             this.events.push(calendarEvent);
+          }
           }
           this.refresh.next();
         });
