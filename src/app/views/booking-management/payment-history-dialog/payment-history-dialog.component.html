@@ -10,7 +10,7 @@
     <h4 *ngIf="payment.type == 'artist_cancel' && payment.performerUser._id == data.userID" mat-line>You paid {{payment.hostUser.firstName}} {{payment.hostUser.lastName}} a cancellation fee of {{payment.amount | currency}}.</h4>
     <h4 *ngIf="payment.type == 'host_cancel' && payment.performerUser._id == data.userID" mat-line>{{payment.hostUser.firstName}} {{payment.hostUser.lastName}} paid you a cancellation fee of {{payment.amount | currency}}.</h4> 
     <h4 *ngIf="payment.type == 'host_cancel' && payment.hostUser._id == data.userID" mat-line>You paid {{payment.performerUser.firstName}} {{payment.performerUser.lastName}} a cancellation fee of {{payment.amount | currency}}.</h4>
-    <p mat-line> {{payment.date | date}} </p>
+    <p mat-line>{{payment.date | date}}</p>
   </mat-list-item>
   <mat-divider></mat-divider>
 </mat-list>
