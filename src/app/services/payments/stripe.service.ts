@@ -117,7 +117,7 @@ export class StripeService {
   // Make a request to our backend to charge the user for cancelling
   // Returns true if successful, false otherwise.
   public cancelBookingFee(booking: Booking, cancelType: string): Promise<boolean> {
-    const current = this.connection + '/cancel?cancel_type=' + cancelType;
+    const current = this.connectionPayments + '/cancel/?cancel_type=' + cancelType;
     return this.http.post(current, { booking: booking }, { headers: this.headers })
         .toPromise()
         .then((response: Response) => {

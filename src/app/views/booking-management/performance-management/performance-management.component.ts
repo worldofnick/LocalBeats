@@ -516,7 +516,7 @@ export class PerformanceManagementComponent implements OnInit {
       // Check to see if a response was recorded in the verification dialog box
       if(result != undefined) {
         // Check to see what the response was
-        if(result.comment != '') {
+        if(result.comment != null && result.comment != undefined) {
           let privateMessage: Message = this.commentToHost(result.comment, booking);
           this._socketService.send(Action.SEND_PRIVATE_MSG, privateMessage);
         }
@@ -617,7 +617,7 @@ export class PerformanceManagementComponent implements OnInit {
     .subscribe((result) => {
       // Check to see if a response was recorded in the negotiation dialog box
       if (result != undefined) {
-        if(result.comment != '') {
+        if(result.comment != null && result.comment != undefined) {
           let privateMessage: Message = this.commentToHost(result.comment, booking);
           this._socketService.send(Action.SEND_PRIVATE_MSG, privateMessage);
         }
@@ -702,19 +702,11 @@ export class PerformanceManagementComponent implements OnInit {
           booking.hostStatusMessage = StatusMessages.cancelled;
           booking.artistStatusMessage = StatusMessages.cancelled;
           // Check cancellation policy and dates
-          let today = new Date()
-          let endDate = subDays(booking.eventEID.fromDate,0);
-          let inRange = isWithinRange(subDays(today, 0), subDays(booking.eventEID.fromDate,30), subDays(booking.eventEID.fromDate,0));
-          console.log("today " + today);
-          let startDate = booking.eventEID.fromDate;
-          console.log("start date " + startDate);
-          startDate = subDays(booking.eventEID.fromDate, 30);
-          console.log("end date " + endDate);
-          if((booking.eventEID.cancellationPolicy == CancellationPolicy.flexible && isWithinRange(subDays(today, 0), subDays(booking.eventEID.fromDate,7), subDays(booking.eventEID.fromDate,0)) ||
-          booking.eventEID.cancellationPolicy == CancellationPolicy.strict && isWithinRange(subDays(today, 0), subDays(booking.eventEID.fromDate,30), subDays(booking.eventEID.fromDate,0)))) {
-            // Charge
-            console.log('booking:');
-            console.log(booking);
+          let today = new Date();
+          if((booking.eventEID.cancellationPolicy == CancellationPolicy.flexible && 
+            isWithinRange(subDays(today, 0), subDays(booking.eventEID.fromDate,7), subDays(booking.eventEID.fromDate,0))) ||
+          (booking.eventEID.cancellationPolicy == CancellationPolicy.strict &&
+             isWithinRange(subDays(today, 0), subDays(booking.eventEID.fromDate,30), subDays(booking.eventEID.fromDate,0)))) {
             this.stripeService.cancelBookingFee(booking, PaymentStatus.artist_cancel).then((success: boolean) => {
               if(success) {
                 this.bookingService.bookingPaymentStatus(booking).then((status: PaymentStatus) => {

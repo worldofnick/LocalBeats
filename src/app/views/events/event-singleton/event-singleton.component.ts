@@ -185,9 +185,9 @@ export class EventSingletonComponent implements OnInit {
             } else {
               message = booking.hostUser.firstName + " has applied to your event called: " + booking.eventEID.eventName;
             }
-            this.createNotificationForHost(booking, result.response, ['/events', booking.eventEID._id],
+            this.createNotificationForHost(booking, result.response, ['/bookingmanagement', 'myevents'],
             'queue_music', message);
-            if(result.comment != '') {
+            if(result.comment != null && result.comment != undefined) {
               let privateMessage: Message = this.commentToHost(result.comment);
               this._socketService.send(Action.SEND_PRIVATE_MSG, privateMessage);
             }

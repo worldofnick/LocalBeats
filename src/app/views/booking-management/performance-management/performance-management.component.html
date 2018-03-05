@@ -128,6 +128,7 @@
                 <mat-chip class="text-center notify-chip mb-05" color="accent" [selected]="!cancellation.artViewed">{{cancellation.artistStatusMessage}}</mat-chip>
                 <mat-divider class="mt-05 mb-1"></mat-divider>
                 <button (click)="messageHost(cancellation)" class="text-muted" mat-icon-button matTooltip="Message Host"><mat-icon>chat</mat-icon></button>
+                <button *ngIf="cancellation.cancelled && performances.cancelledPaymentStatues[i] != 'waiting'" (click)="showPaymentHistoryDialog(cancellation)" class="text-muted" mat-icon-button matTooltip="Payment History"><mat-icon>history</mat-icon></button>
               </mat-card-content>
             </mat-card>
           </div>
