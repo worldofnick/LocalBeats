@@ -23,7 +23,7 @@
   fxFlex
   fxHide.lt-sm="true" 
   class="search-bar" (offClick)="offClick()">
-    <form [formGroup]="searchForm" class="top-search-form" (ngSubmit)="submit()">
+    <form [formGroup]="searchForm" class="top-search-form" (ngSubmit)="submit(false)">
       <mat-expansion-panel [expanded]="expand" [disabled]="true">
           <mat-expansion-panel-header>
             <mat-panel-title>
@@ -31,7 +31,7 @@
                 <input class="search-text" [formControl]="searchForm.controls['text']" autofocus="true" placeholder="Search" type="text" (click)="click()" (keyup)="onKey($event)">
             </mat-panel-title>
           </mat-expansion-panel-header>
-          <mat-button-toggle-group [formControl]="searchForm.controls['type']" name="searchType" value="Artist">
+          <mat-button-toggle-group (change)="this.submit()" [formControl]="searchForm.controls['type']" name="searchType" value="Artist">
             <mat-button-toggle value="Artist">
               Artists
             </mat-button-toggle>

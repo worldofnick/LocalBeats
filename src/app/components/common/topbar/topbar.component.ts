@@ -176,7 +176,7 @@ export class TopbarComponent implements OnInit {
   }
 
   // Submission of search
-  submit() {
+  submit(expand: boolean = true) {
 
     this.currentSearch.from_date = this.searchForm.get('startDate').value;
     this.currentSearch.to_date = this.searchForm.get('endDate').value;
@@ -227,7 +227,7 @@ export class TopbarComponent implements OnInit {
         this.router.navigate(['/search'])
       });
     }
-
+    this.expand = expand;
   }
 
   // Triggers the notification panel to sideload
