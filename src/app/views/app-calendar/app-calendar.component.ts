@@ -58,13 +58,13 @@ export class AppCalendarComponent implements OnInit {
   };
 
   actions: CalendarEventAction[] = [{
-    label: '<i class="material-icons icon-sm">edit</i>',
+    label: '<i class="material-icons icon-sm" matTooltip="Edit Event">edit</i>',
     onClick: ({ event }: { event: CalendarEvent }): void => {
       this.handleEvent('Edited', event);
     }
   },
   {
-    label: '<i class="material-icons icon-sm">event_available</i>',
+    label: '<i class="material-icons icon-sm" matTooltip="Manage Events">event_available</i>',
     onClick: ({ event }: { event: CalendarEvent }): void => {
       this.handleEvent('Events', event);
     }
@@ -72,13 +72,13 @@ export class AppCalendarComponent implements OnInit {
     ]  ;
 
   bookingActions: CalendarEventAction[] = [{
-    label: '<i class="material-icons icon-sm">visibility</i>',
+    label: '<i class="material-icons icon-sm" matTooltip="View Event">visibility</i>',
     onClick: ({ event }: { event: CalendarEvent }): void => {
       this.handleEvent('Singleton', event);
     }
   },
   {
-    label: '<i class="material-icons icon-sm">event_note</i>',
+    label: '<i class="material-icons icon-sm" matTooltip="Manage Performances">event_note</i>',
     onClick: ({ event }: { event: CalendarEvent }): void => {
       this.handleEvent('Bookings', event);
     }
