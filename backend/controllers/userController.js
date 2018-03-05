@@ -30,6 +30,7 @@ exports.getUserByID = function (req, res) {
 };
 
 exports.updateUserByID = function (req, res, next) {
+  req.body.user.fullName = req.body.user.firstName + " " + req.body.user.lastName;
   User.findByIdAndUpdate(req.params.uid, req.body.user, { new: true }, function (err, user) {
     if (err) {
       return res.status(520).send({ message: "Error finding the user from this UID...", error: err });
@@ -89,7 +90,7 @@ exports.searchUsers = function (req, res) {
   }
 
   if (req.query.name != null) {
-    query.firstName = new RegExp(req.query.name, 'gi');
+    query.fullName = new RegExp(req.query.name, 'gi');    
   }
 
   if (req.query.artist != null) {
