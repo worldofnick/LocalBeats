@@ -59,9 +59,9 @@ export class AppComponent implements OnInit {
         },
         {
           title: 'Front Page',
-          content: 'An eye catching free front page.',
+          content: 'Welcome to LocalBeats',
           target: 'frontend-btn', // Element ID
-          placement: 'bottom',
+          placement: 'top',
           xOffset: 20
         }
       ]

@@ -1,62 +1,25 @@
-<mat-card>
-  <mat-card-title class="m-0">
-      <div class="card-title-text text-center fz-2">LocalBeats<mat-icon>music_note</mat-icon></div>
-    </mat-card-title>
-</mat-card>
-<mat-card class="p-0">
-    <mat-card-title class="m-0">
-      <div class="card-title-text">Nearby Musicians</div>
-      <mat-divider></mat-divider>
-    </mat-card-title>
-    <mat-card-content class="p-0">
-      <mat-grid-list cols="3" rowHeight="1:1" class="app-gallery">
-        <!-- Gallery item -->
-        <mat-grid-tile *ngFor="let artist of artists">
-          <img [src]="artist.url" alt="">
-          <!-- item detail, show on hover -->
-          <div class="gallery-control-wrap">
-            <div class="gallery-control">
-              <h4 class="photo-detail fz-1">{{artist.name}}</h4>
-              <span fxFlex></span>
-              <button mat-icon-button [matMenuTriggerFor]="photoMenu" class="">
-                  <mat-icon>more_vert</mat-icon>
-              </button>
-              <mat-menu #photoMenu="matMenu">
-                  <button mat-menu-item><mat-icon>send</mat-icon>View</button>
-                  <button mat-menu-item><mat-icon>favorite</mat-icon>Favorite</button>
-              </mat-menu>
-            </div>
-          </div>
-        </mat-grid-tile>
-      </mat-grid-list>
-    </mat-card-content>
-  </mat-card>
-  <mat-card class="p-0">
-    <mat-card-title class="m-0">
-      <div class="card-title-text">Trending Events</div>
-      <mat-divider></mat-divider>
-    </mat-card-title>
-    <mat-card-content class="p-0">
-      <mat-grid-list cols="3" rowHeight="1:1" class="app-gallery">
-        <!-- Gallery item -->
-        <mat-grid-tile *ngFor="let event of events">
-          <img [src]="event.url" alt="">
-          <!-- item detail, show on hover -->
-          <div class="gallery-control-wrap">
-            <div class="gallery-control">
-              <h4 class="photo-detail fz-1">{{event.name}}</h4>
-              <span fxFlex></span>
-              <button mat-icon-button [matMenuTriggerFor]="photoMenu" class="">
-                  <mat-icon>more_vert</mat-icon>
-              </button>
-              <mat-menu #photoMenu="matMenu">
-                  <button mat-menu-item><mat-icon>send</mat-icon>View</button>
-                  <button mat-menu-item><mat-icon>favorite</mat-icon>Favorite</button>
-              </mat-menu>
-            </div>
-          </div>
-        </mat-grid-tile>
-      </mat-grid-list>
-    </mat-card-content>
-  </mat-card>
-  
+<section id="intro-section" class="home-intro-section">
+    <div class="container" fxLayout="row" fxLayout.lt-md="column" fxLayoutWrap="nowrap" fxLayoutGap="30px">
+      <div fxFlex="50">
+        <h1 class="home-intro-title">LocalBeats</h1>
+        <div class="home-intro-desc">
+          Find musicians near you for your next event
+        </div>
+        <div class="intro-list" fxLayout="column" fxLayoutGap="30px">
+          <div fxFlex="100">
+            <mat-icon >event_available</mat-icon><span fxFlex="20px"></span> Host your Event</div>
+          <div fxFlex="100">
+            <mat-icon >search</mat-icon><span fxFlex="20px"></span> Search for Musicians in your Area</div>
+          <div fxFlex="100">
+            <mat-icon >music_note</mat-icon><span fxFlex="20px"></span> Listen to their Music on Spotify</div>
+        <div fxFlex="100">
+          <mat-icon >attach_money</mat-icon><span fxFlex="20px"></span> Pay through Stripe</div>
+      </div>
+        <div fxLayout="row" fxLayout.lt-sm="column">
+          <button routerLink="/auth/register" color="primary" mat-raised-button mat-lg-button><mat-icon>person</mat-icon> Register</button>
+          <span fxFlex="20px"></span>
+          <button [routerLink]="['/auth']" color="accent" mat-raised-button mat-lg-button><mat-icon>subdirectory_arrow_right</mat-icon> Login</button>
+        </div>
+      </div>
+    </div>
+  </section>
