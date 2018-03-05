@@ -247,9 +247,10 @@ exports.stripeTransfers = async function (req, res) {
   */
   exports.cancelBoookingFee = function (req, res) {
     // If cancel_type == "host-cancel", then charge the host
-    var stripeAccountId = req.body.booking.hostUser;
+    const booking = req.body.booking;
+    var stripeAccountId = booking.hostUser.stripeAccountId;
     if (req.query.cancel_type == "artist-cancel") {
-      stripeAccountId = req.body.booking.performerUser;
+      stripeAccountId = booking.performerUser.stripeAccountId;
     }
     var feeAmount = booking.currentPrice * 0.15;
     stripe.charges.create({
