@@ -5,6 +5,7 @@ export enum Action {
     SMN_LOGGED_OUT = 'someUserLoggedOut',
     SEND_PRIVATE_MSG = 'sendPrivateMessage',
     SEND_MSG = 'sendMessage',
+    PERSISTED_LOGIN = 'persistedLogin',
     REQUEST_PM_SOCKET_ID = 'requestSocketIdForPM',
     GREET_WITH_BEATBOT = 'addBeatBotToUserMessage',
     REQUEST_MSG_FROM_PROFILE_BUTTON = 'requestNewMsgFromProfileButtonClick',

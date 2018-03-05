@@ -1,6 +1,7 @@
 // 'use strict';
 import { Injectable } from '@angular/core';
 import { Http, Headers, RequestOptions, Response } from '@angular/http';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import 'rxjs/Rx';
 import { Observable } from 'rxjs/Observable';
 import { User } from 'app/models/user';
@@ -21,6 +22,8 @@ const httpOptions = {
 export class UserService {
     public connection: string = environment.apiURL + 'api/auth';
     public userConnection: string = environment.apiURL + 'api/users';
+    private persistedUser = new BehaviorSubject<User>(null);
+    public userResult = this.persistedUser.asObservable();
 
     public accessToken: string = null;
     public user: User = null;
@@ -29,29 +32,41 @@ export class UserService {
 
     private headers: Headers = new Headers({ 'Content-Type': 'application/json' });
 
-    constructor(private http: Http, private _socketService: SocketService, private _httpClient: HttpClient) { this.initIoConnection(); }
+    constructor(private http: Http, private _socketService: SocketService, private _httpClient: HttpClient) { }
 
-    private initIoConnection(): void {
-        // this._socketService.initSocket();
-    
-        // TODO: can remove
-        this.ioConnection = this._socketService.onEvent(SocketEvent.NEW_LOG_IN)
-          .subscribe((message: Message) => {
-            // this.messages.push(message);
-            console.log('Server Msg to auth.component ', message);
-        });
-      }
+    userLoaded(user: User, token: string, persisted: boolean, logout: boolean) {
+        this.user = user;
+        this.accessToken = token;
+        this.persistedUser.next(user);
+        if (!logout) {
+            this.initIoConnection(persisted);
+        }
+    }
+
+    private initIoConnection(persisted: boolean): void {
+            this.ioConnection = this._socketService.onEvent(SocketEvent.NEW_LOG_IN)
+                .subscribe((message: Message) => {
+                    // this.messages.push(message);
+                    console.log('Server Msg to user service', message);
+                });
+        if (persisted) {
+            let message: Message = {
+                from: this.user,
+                action: Action.PERSISTED_LOGIN
+            }
+            this._socketService.send(SocketEvent.PERSISTED_LOGIN, message);
+        }
+    }
 
     // post("api/auth/passwordChange/:uid')
     public signupUser(newUser: User): Promise<User> {
         const current = this.connection + '/register';
-        console.log(newUser)
         return this.http.post(current, newUser, { headers: this.headers })
             .toPromise()
             .then((response: Response) => {
                 const data = response.json();
                 this.accessToken = data.token;
-                sessionStorage.setItem('token', JSON.stringify({ accessToken: this.accessToken }))
+                localStorage.setItem('token', JSON.stringify({ accessToken: this.accessToken }))
                 this.user = data.user as User;
 
                 // Notify server that a new user user logged in
@@ -91,26 +106,27 @@ export class UserService {
     public signinUser(returningUser: User): Observable<Object> {
         const current = this.connection + '/authenticate';
         return this.http.post(current, returningUser, { headers: this.headers })
-        .map((response: Response) => {
-            const data = response.json();
-            this.accessToken = data.token;
-            sessionStorage.setItem('token', JSON.stringify({ accessToken: this.accessToken }))
-            this.user = data.user as User;
-            // Notify server that a new user user logged in
-            this._socketService.send(Action.NEW_LOG_IN, {
-                from: this.user,
-                action: Action.NEW_LOG_IN
+            .map((response: Response) => {
+                console.log('IN LOGIn');
+                const data = response.json();
+                this.accessToken = data.token;
+                localStorage.setItem('token', JSON.stringify({ accessToken: this.accessToken }))
+                this.user = data.user as User;
+                // Notify server that a new user user logged in
+                this._socketService.send(Action.NEW_LOG_IN, {
+                    from: this.user,
+                    action: Action.NEW_LOG_IN
+                });
+                return data;
+            }).catch((error: Response) => {
+                if (error.status === 404) {
+                    return Observable.throw('Wrong email.  Please try again.');
+                } else if (error.status === 401) {
+                    return Observable.throw('Wrong password.  Please try again.');
+                } else {
+                    return Observable.throw('Error Unknown');
+                }
             });
-            return data;
-        }).catch((error: Response) => {
-            if(error.status === 404) {
-                return Observable.throw('Wrong email.  Please try again.');
-            } else if(error.status === 401) {
-                return Observable.throw('Wrong password.  Please try again.');
-            } else {
-                return Observable.throw('Error Unknown');
-            }
-        });
     }
 
     /**
@@ -123,12 +139,10 @@ export class UserService {
     public updatePassword(user: User): Promise<User> {
         const current = this.connection + '/passwordChange/' + user._id;
         let newPassword: string = user.password;
-        return this.http.put(current, {'newPassword': newPassword}, { headers: this.headers })
+        return this.http.put(current, { 'newPassword': newPassword }, { headers: this.headers })
             .toPromise()
             .then((response: Response) => {
                 const data = response.json();
-                // this.accessToken = data.token;
-                // sessionStorage.setItem('token', JSON.stringify({ accessToken: this.accessToken }))
                 this.user = data.user as User;
                 return this.user;
             })
@@ -160,7 +174,6 @@ export class UserService {
     public logout() {
         let from: User = this.user;
         const current = this.connection + '/logout';
-        console.log('LOGOUT USER: ', this.user);
         return this.http.post(current, this.user, { headers: this.headers })
             .toPromise()
             .then((response: Response) => {
@@ -174,6 +187,8 @@ export class UserService {
                     from: from,
                     action: Action.SMN_LOGGED_OUT
                 });
+
+                this.userLoaded(null, null, false, true);
             })
             .catch(this.handleError);
     }
@@ -195,7 +210,7 @@ export class UserService {
      *************************/
 
 
-    public getNotificationsCountForUser(ID: any): Promise<Number>{
+    public getNotificationsCountForUser(ID: any): Promise<Number> {
         let userConnection: string = environment.apiURL + 'api/notification';
         // app.route('/api/notification/:uid')
         const current = userConnection + '/' + ID;
@@ -210,7 +225,7 @@ export class UserService {
                 // this.accessToken = data.token;
                 // console.log(this.accessToken)
                 let temp = data.notifications as Notification[];
-                if(temp == null){
+                if (temp == null) {
                     return 0;
                 }
 
@@ -226,7 +241,7 @@ export class UserService {
     }
 
 
-    public getNotificationsForUser(ID: any): Promise<Notification[]>{
+    public getNotificationsForUser(ID: any): Promise<Notification[]> {
         let userConnection: string = environment.apiURL + 'api/notification';
         const current = userConnection + '/' + ID;
         // const current = userConnection + '/5a7113ac9d89a873c89fe5ff';
@@ -242,9 +257,9 @@ export class UserService {
                 //inserting test notifications until i can actually send them.
                 let temp = data.notifications as Notification[];
                 // console.log(data);
-                let t:Notification[] = [];
- 
-                if(temp == null){
+                let t: Notification[] = [];
+
+                if (temp == null) {
                     // this.io.emit('tellNotificationPanel', t)
                     return t;
                 }
