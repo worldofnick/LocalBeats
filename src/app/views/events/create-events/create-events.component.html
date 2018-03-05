@@ -72,8 +72,8 @@
           </div>
           <!-- </div>
           </div> -->
-          <button *ngIf="!this.updating && agreed" mat-raised-button color="primary" >Create Event</button>
-          <button *ngIf="this.updating && agreed" mat-raised-button color="primary" >Update Event</button>
+          <button *ngIf="!this.updating" mat-raised-button color="primary" [disabled]="!basicForm.valid">Create Event</button>
+          <button *ngIf="this.updating" mat-raised-button color="primary" [disabled]="!basicForm.valid">Update Event</button>
         </mat-card-content>
       </mat-card>
     </div>
