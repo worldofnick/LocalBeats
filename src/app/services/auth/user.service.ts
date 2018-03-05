@@ -17,32 +17,113 @@ const httpOptions = {
 
 @Injectable()
 export class UserService {
+    // Request properties
     public connection: string = environment.apiURL + 'api/auth';
     public userConnection: string = environment.apiURL + 'api/users';
+    private headers: Headers = new Headers({ 'Content-Type': 'application/json' });
 
-    public accessToken: string = null;
-    public user: User = null;
+    // Socket properties
     ioConnection: any;
     action = Action;
 
-    private headers: Headers = new Headers({ 'Content-Type': 'application/json' });
+    // Authentication Properties
+    loggedIn: boolean;
+    public accessToken: string = null;
+    public user: User = null;
 
-    constructor(private http: Http, private _socketService: SocketService, private _httpClient: HttpClient) { this.initIoConnection(); }
+    /**
+     * Checks the user session and sets/deletes it. 
+     * Initializes the socket event listeners.
+     * @param http To be deprecated
+     * @param _socketService 
+     * @param _httpClient Angular 5 
+     */
+    constructor(private http: Http, private _socketService: SocketService, private _httpClient: HttpClient) {
+        // See if the user has an active session and load it.
+        if (this.isAuthenticated()) {
+            const token = localStorage.getItem('jwtToken');
+            const user: User = JSON.parse(localStorage.getItem('loggedInUser'));
+            this._setSession(token, user);
+            this.getNotificationsCountForUser(user._id);
+            this.getNotificationsForUser(user._id);
+        } else {
+            this._deleteSession(null);
+        }
 
-    private initIoConnection(): void {
-        // this._socketService.initSocket();
-    
-        // TODO: can remove
-        this.ioConnection = this._socketService.onEvent(SocketEvent.NEW_LOG_IN)
-          .subscribe((message: Message) => {
-            // this.messages.push(message);
-            console.log('Server Msg to auth.component ', message);
-        });
-      }
-    
-      setUser (user: User) {
-          this.user = user;
-      }
+        // Initial socket event listeners
+        this.initIoConnection();
+    }
+
+    // ================================================
+    // Session Persistence methods
+    // ================================================
+
+    /**
+     * Update login status subject
+     * @param value true or false (logged in or not)
+     */
+    setLoggedIn(value: boolean) {
+        this.loggedIn = value;
+    }
+
+    public setUser(user: User) {
+        this.user = user;
+        localStorage.setItem('loggedInUser', JSON.stringify(user));
+    }
+    /**
+     * Set the token, user in local storage,
+     * sets the logged in status to true, and
+     * notifies the server that a user has logged in
+     */
+    private _setSession(jwtAccessToken, user) {
+        console.log('JWT Access Token: ', jwtAccessToken);
+        console.log('Logged in user: ', user);
+        localStorage.setItem('jwtToken', jwtAccessToken);
+        localStorage.setItem('loggedInUser', JSON.stringify(user));
+        this.user = user;
+        this.accessToken = jwtAccessToken;
+
+        this.notifyNewUserLoginToServer(user);      //TODO: later move it to signIn() method only for performance issues
+        this.setLoggedIn(true);
+    }
+
+    /**
+     * Deletes the token, the user in local storage,
+     * sets the logged in status to false, and
+     * notifies the server that a user has logged out
+     */
+    private _deleteSession(user) {
+        localStorage.removeItem('jwtToken');
+        localStorage.removeItem('loggedInUser');
+        this.user = null;                       //TODO: change to undefined later based on what's preferred by Auth0
+        this.accessToken = null;
+
+        if (user !== null) {
+            this.notifyUserLoggedOutToServer(user); //TODO: later move it to logout() method only for performance issues
+        }
+        this.setLoggedIn(true);
+    }
+
+    /**
+     * Returns if the user has a valid session or not
+     */
+    public isAuthenticated() {
+        // TODO: Check if current date is greater than expiration and if localSTrage token is not null
+        // const expiresAt = JSON.parse(localStorage.getItem('expires_at'));
+        // return Date.now() < expiresAt;
+        // TODO: improve later so no token is persistently stored but managed by the server
+        const jwtToken = localStorage.getItem('jwtToken');
+        if (jwtToken === null) {
+            return false;
+        } else {
+            this.accessToken = jwtToken;
+            return true;
+        }
+    }
+
+    // ===============================================
+    // User REST services
+    // ===============================================
 
     // post("api/auth/passwordChange/:uid')
     public signupUser(newUser: User): Promise<User> {
@@ -52,15 +133,7 @@ export class UserService {
             .toPromise()
             .then((response: Response) => {
                 const data = response.json();
-                this.accessToken = data.token;
-                sessionStorage.setItem('token', JSON.stringify({ accessToken: this.accessToken }))
-                this.user = data.user as User;
-
-                // Notify server that a new user user logged in
-                this._socketService.send(Action.NEW_LOG_IN, {
-                    from: this.user,
-                    action: Action.NEW_LOG_IN
-                });
+                this._setSession(data.token, (data.user as User));
 
                 this.notifyServerToAddGreetBot(this.user);
 
@@ -82,14 +155,6 @@ export class UserService {
             .catch(this.handleError);
     }
 
-    private notifyServerToAddGreetBot(to: User) {
-        this._socketService.send(Action.GREET_WITH_BEATBOT, {
-            to: this.user,
-            action: Action.GREET_WITH_BEATBOT
-        });
-    }
-
-
     // post("/api/authenticate")
     public signinUser(returningUser: User): Promise<User> {
         // this.connection = 'http://localhost:8080/api/auth/authenticate';
@@ -99,15 +164,7 @@ export class UserService {
             .toPromise()
             .then((response: Response) => {
                 const data = response.json();
-                this.accessToken = data.token;
-                sessionStorage.setItem('token', JSON.stringify({ accessToken: this.accessToken }))
-                this.user = data.user as User;
-
-                // Notify server that a new user user logged in
-                this._socketService.send(Action.NEW_LOG_IN, {
-                    from: this.user,
-                    action: Action.NEW_LOG_IN
-                });
+                this._setSession(data.token, (data.user as User));
 
                 return this.user;
             })
@@ -124,7 +181,7 @@ export class UserService {
     public updatePassword(user: User): Promise<User> {
         const current = this.connection + '/passwordChange/' + user._id;
         let newPassword: string = user.password;
-        return this.http.put(current, {'newPassword': newPassword}, { headers: this.headers })
+        return this.http.put(current, { 'newPassword': newPassword }, { headers: this.headers })
             .toPromise()
             .then((response: Response) => {
                 const data = response.json();
@@ -141,8 +198,6 @@ export class UserService {
     /**
      * 
      * @param userToGet 
-     * 
-     * 
      */
     public getUserByID(ID: String): Promise<User> {
         const current = this.userConnection + '/' + ID;
@@ -165,38 +220,66 @@ export class UserService {
         return this.http.post(current, this.user, { headers: this.headers })
             .toPromise()
             .then((response: Response) => {
-
-                this.accessToken = null;
-                this.user = null;
-                sessionStorage.clear();
-
-                // Notify server that a new user user logged in
-                this._socketService.send(Action.SMN_LOGGED_OUT, {
-                    from: from,
-                    action: Action.SMN_LOGGED_OUT
-                });
+                this._deleteSession(from);
             })
             .catch(this.handleError);
     }
 
-    public isAuthenticated() {
-        return this.accessToken != null;
+    // ====================================
+    // Socket events methods
+    // ====================================
+
+    /**
+     * Initiates an event socket coming from the server side
+     */
+    private initIoConnection(): void {
+        this.ioConnection = this._socketService.onEvent(SocketEvent.NEW_LOG_IN)
+            .subscribe((message: Message) => {
+                // this.messages.push(message);
+                console.log('Server Msg to auth.component ', message);
+            });
     }
 
+    /**
+     * Emits an event notifying the server that a user
+     *  has logged in
+     */
+    private notifyNewUserLoginToServer(user) {
+        // Notify server that a new user user logged in
+        this._socketService.send(Action.NEW_LOG_IN, {
+            from: user,
+            action: Action.NEW_LOG_IN
+        });
+    }
 
+    /**
+     * Emits an event notifying the server that a user
+     *  has logged out
+     */
+    private notifyUserLoggedOutToServer(user) {
+        // Notify server that a new user user logged in
+        this._socketService.send(Action.SMN_LOGGED_OUT, {
+            from: user,
+            action: Action.SMN_LOGGED_OUT
+        });
+    }
 
+    /**
+     * Emits an event notifying the server that to
+     *  add the greet bot
+     */
+    private notifyServerToAddGreetBot(to: User) {
+        this._socketService.send(Action.GREET_WITH_BEATBOT, {
+            to: this.user,
+            action: Action.GREET_WITH_BEATBOT
+        });
+    }
 
+    // ===========================================
+    // Notification Methods
+    // ===========================================
 
-    /***********************
-     * 
-     * 
-     * N O T I F I C A T I O N S
-     * 
-     * 
-     *************************/
-
-
-    public getNotificationsCountForUser(ID: any): Promise<Number>{
+    public getNotificationsCountForUser(ID: any): Promise<Number> {
         let userConnection: string = environment.apiURL + 'api/notification';
         // app.route('/api/notification/:uid')
         const current = userConnection + '/' + ID;
@@ -211,7 +294,7 @@ export class UserService {
                 // this.accessToken = data.token;
                 // console.log(this.accessToken)
                 let temp = data.notifications as Notification[];
-                if(temp == null){
+                if (temp == null) {
                     return 0;
                 }
 
@@ -226,8 +309,7 @@ export class UserService {
             .catch(this.handleError);
     }
 
-
-    public getNotificationsForUser(ID: any): Promise<Notification[]>{
+    public getNotificationsForUser(ID: any): Promise<Notification[]> {
         let userConnection: string = environment.apiURL + 'api/notification';
         const current = userConnection + '/' + ID;
         // const current = userConnection + '/5a7113ac9d89a873c89fe5ff';
@@ -243,9 +325,9 @@ export class UserService {
                 //inserting test notifications until i can actually send them.
                 let temp = data.notifications as Notification[];
                 // console.log(data);
-                let t:Notification[] = [];
- 
-                if(temp == null){
+                let t: Notification[] = [];
+
+                if (temp == null) {
                     // this.io.emit('tellNotificationPanel', t)
                     return t;
                 }
@@ -264,7 +346,11 @@ export class UserService {
         console.error(errMsg); // log to console
         return Promise.reject(errMsg);
     }
-    
+
+    // =====================================
+    // Other method (WILL BE CHANGED LATER, DO NOT TOUCH)
+    // =====================================
+
     private openDialog = function (uri, name, options, cb) {
         var win = window.open(uri, name, options);
         var interval = window.setInterval(function () {
@@ -285,8 +371,7 @@ export class UserService {
             if (obj.hasOwnProperty(key)) {
                 parts.push(encodeURIComponent(key) + '=' + encodeURIComponent(obj[key]));
             }
-        }
-        ;
+        };
         return parts.join('&');
     };
 }
