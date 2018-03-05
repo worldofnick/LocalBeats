@@ -3,20 +3,20 @@ import * as io from 'socket.io';
 
 
 export class User {
-    public _id?: string;
-    public firstName?: string;
-    public lastName?: string;
-    public email?: string;
-    public password?: string;
-    public genres?: string[];
-    public isArtist?: boolean;
-    public profilePicUrl?: string;
-    public eventTypes?: string[];
-    public socket?: io.socket;
-    public city?: string;
-    public state?: string;
-    public location?: number[];
-    public stripeAccountId?: string;
+    public _id: string;
+    public firstName: string;
+    public lastName: string;
+    public email: string;
+    public password: string;
+    public genres: string[];
+    public isArtist: boolean;
+    public profilePicUrl: string;
+    public eventTypes: string[];
+    public socket: io.socket;
+    public city: string;
+    public state: string;
+    public location: number[];
+    public stripeAccountId: string;
 
     // Music properties
     public spotify?: {              // TODO: turn it into a spotyf object and have only 1 entry in user
