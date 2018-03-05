@@ -22,7 +22,6 @@ var isResultEmpty = function isEmptyObject(obj) {
 }
 
 exports.getAccessRefreshTokens = function (req, res) {
-  console.log('Token req is: ', req.body);
   var authOptions = { 
     url : config.spotify.tokenUri,
     form: {
@@ -38,9 +37,6 @@ exports.getAccessRefreshTokens = function (req, res) {
   request.post(authOptions, function (err, response, body) {
     if (err === null && response.statusCode === 200) {
       //TODO: get the user id, save it and then return the user id along with the tokens
-      console.log('Access Token Spotify: ', body.access_token,
-        '\nRefresh token: ', body.refresh_token,
-        '\nExpires_in:', body.expires_in);
       res.send(
         {
           access_token: body.access_token,
@@ -55,7 +51,6 @@ exports.getAccessRefreshTokens = function (req, res) {
 }
 
 exports.spotifyAuthorizeClient = function (req, res) {
-  console.log('In spotify Authorize!');
   // Prepare the authorize spotify parameters.
   let parameters = {
     client_id: config.spotify.clientID,
@@ -65,7 +60,6 @@ exports.spotifyAuthorizeClient = function (req, res) {
   };
 
   // Redirect to spotify to ask for permissions.
-  console.log('Authorize SPotify URL : ',config.spotify.authorizeUri + '?' + querystring.stringify(parameters) )
   res.send({"redirect_url": config.spotify.authorizeUri + '?' + querystring.stringify(parameters)});
 }
 
@@ -75,15 +69,9 @@ exports.spotifyAuthorizeClient = function (req, res) {
 exports.grantClientCredentials = function () {
   spotifyApi.clientCredentialsGrant()
     .then(function (data) {
-      // console.log('The access token expires in ' + data.body['expires_in']);
-      // console.log('The access token is ' + data.body['access_token']);
 
       // Save the access token so that it's used in future calls
       spotifyApi.setAccessToken(data.body['access_token']);
-      console.log("-------------\nThe spotify CC grant body is :\n-------------");
-      console.log(data.body);
-      console.log("---------------\nSPOTIFY API VAR\n---------------");
-      console.log(spotifyApi);
     }, function (err) {
       console.log('Something went wrong when retrieving an access token', err.message);
     });
@@ -97,7 +85,6 @@ exports.grantClientCredentials = function () {
 exports.getAllPlaylists = function (req, res) {
   spotifyApi.getUserPlaylists(req.params.username)
     .then(function (data) {
-      console.log('IS JSON EMPYT?: ', isResultEmpty(data.body));
       return res.status(200).send({ playlists: data.body });
     }, function (err) {
       return res.status(530).send({ message: "Invalid spotifyID...", error: err });
@@ -113,9 +100,7 @@ exports.getAllPlaylists = function (req, res) {
 exports.getFirstPlaylist = function (req, res) {
   spotifyApi.getUserPlaylists(req.params.username)
     .then(function (data) {
-      console.log('IS JSON EMPYT?: ', isResultEmpty(data.body));
       if (!isResultEmpty(data.body)) {
-        console.log(data.body);
         for (var playlist of data.body.items) {
           if (playlist.owner.id == req.params.username) {
             return res.status(200).send({ uri: playlist.uri });
@@ -147,9 +132,7 @@ exports.getFirstPlaylistByUIDAfterProfileUpdate = function (req, res) {
     }
     spotifyApi.getUserPlaylists(user.spotifyID)
       .then(function (data) {
-        console.log('IS JSON EMPYT?: ', isResultEmpty(data.body));
         if (!isResultEmpty(data.body)) {
-          // console.log(data.body);
           for (var playlist of data.body.items) {
             if (playlist.owner.id == user.spotifyID) {
               user.hashPassword = undefined;
@@ -180,11 +163,9 @@ exports.getFirstPlaylistByUIDAfterProfileUpdate = function (req, res) {
 exports.getPlaylistByID = function (req, res) {
   spotifyApi.getPlaylist(req.params.username, req.params.playlist_id)
     .then(function (data) {
-      console.log('\n-------------\nPlaylist: \n-------------\n', data.body);
       return res.status(200).send({ uri: data.body.uri });
     }, function (err) {
       return res.status(530).send({ message: "Invalid spotifyID...", error: err });
-      console.log('Invalid spotifyID...', err);
     });
 };
 
@@ -201,11 +182,8 @@ exports.getAllPlaylistsByUID = function (req, res) {
       return res.status(520).send({ message: "Invalid UID in spotify findByID", error: err });
     }
     theUser = new User(user);
-    console.log("USER: ");
-    console.log(theUser.spotifyID);
     spotifyApi.getUserPlaylists(theUser.spotifyID)
       .then(function (data) {
-        console.log('IS JSON EMPYT?: ', isResultEmpty(data.body));
         return res.status(200).send({ playlists: data.body });
       }, function (err) {
         console.log('Invalid spotifyID...', err);
@@ -226,9 +204,7 @@ exports.getFirstPlaylistByUID = function (req, res) {
     }
     spotifyApi.getUserPlaylists(user.spotifyID)
       .then(function (data) {
-        console.log('IS JSON EMPYT?: ', isResultEmpty(data.body));
         if (!isResultEmpty(data.body)) {
-          // console.log(data.body);
           for (var playlist of data.body.items) {
             if (playlist.owner.id == user.spotifyID) {
               return res.status(200).send({ uri: playlist.uri });
@@ -258,11 +234,8 @@ exports.getPlaylistByUIDandPID = function (req, res) {
     if (err) {
       return res.status(520).send({ message: "Invalid UID in spotify findByID", error: err });
     }
-    console.log("USER: ");
-    console.log(user.spotifyID);
     spotifyApi.getPlaylist(user.spotifyID, req.params.playlist_id)
       .then(function (data) {
-        console.log('\n-------------\nPlaylist: \n-------------\n', data.body);
         return res.status(200).send({ uri: data.body.uri });
       }, function (err) {
         return res.status(530).send({ message: "Invalid spotifyID...", error: err });
