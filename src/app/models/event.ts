@@ -23,5 +23,10 @@ export class Event {
     public isBooked: string
     public location: number[]
     public eventPicUrl: string
-    public cancellation: number
+    public cancellationPolicy: CancellationPolicy
+}
+
+export enum CancellationPolicy {
+    flexible = "flexible", // 15% charged to either host or artist if cancelled within 7 days of event
+    strict = "strict", // 15% charged to either host or artist if cancelled within 30 days of event
 }

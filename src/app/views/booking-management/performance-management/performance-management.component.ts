@@ -30,6 +30,20 @@ import { Payment, PaymentStatus } from 'app/models/payment'
 import { RefundPaymentDialogComponent } from '../refund-payment-dialog/refund-payment-dialog.component';
 import { PaymentHistoryDialogComponent } from '../payment-history-dialog/payment-history-dialog.component';
 
+// External Libraries
+import {
+  startOfDay,
+  endOfDay,
+  subDays,
+  addMinutes,
+  addDays,
+  endOfMonth,
+  isSameDay,
+  isSameMonth,
+  addHours,
+  isWithinRange
+} from 'date-fns';
+
 @Component({
   selector: 'app-performance-management',
   templateUrl: './performance-management.component.html',

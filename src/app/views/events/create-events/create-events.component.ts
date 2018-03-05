@@ -64,6 +64,7 @@ export class CreateEventsComponent implements OnInit {
     { value: 'birthday', viewValue: 'Birthday' },
     { value: 'business', viewValue: 'Business' }
   ];
+  cancellationPolicies = ['flexible', 'strict'];
   checkedValues:Boolean[]
   
   // evenGenres:Array<string>;
@@ -153,6 +154,7 @@ export class CreateEventsComponent implements OnInit {
       ]),
       eventType: new FormControl(this.event.eventType, [
       ]),
+      cancellationPolicy: new FormControl(this.event.cancellationPolicy, [Validators.required]),
       fixedPrice: new FormControl(this.event.fixedPrice, [
         Validators.required
       ]),
@@ -179,7 +181,6 @@ export class CreateEventsComponent implements OnInit {
   
   
   openSnackBar() {
-    // console.log('test')
     this.snackBar.open('Create Event','next', { duration: 2000 });
   }
 
@@ -260,6 +261,10 @@ export class CreateEventsComponent implements OnInit {
     }
   }
 
+  onChangeCancellationPolicy(event: EventTarget) {
+
+  }
+
   onAgreed(){
     this.agreed = !this.agreed;
   }
@@ -280,7 +285,6 @@ export class CreateEventsComponent implements OnInit {
       this.event.state = state;
       this.event.city = city;
     }
-    // console.log("creating this event: ")
     
     this.event.eventName = this.basicForm.get('eventName').value;
     this.event.eventType = this.basicForm.get('eventType').value;
@@ -291,19 +295,19 @@ export class CreateEventsComponent implements OnInit {
     this.event.description = this.basicForm.get('eventDescription').value;
     this.event.hostUser = this.user;
     this.event.hostEmail = this.user.email;
+    this.event.cancellationPolicy = this.basicForm.get('cancellationPolicy').value;
 
 
 
     if (!this.updating) {
-      // console.log("creating event", this.event)
       
       this.eventService.createEvent(this.event).then((newEvent: Event) => {
         this.event = newEvent;
+        console.log(this.event);
         this.eventService.event = this.event;
         this.router.navigate(['/events', this.event._id]); //this will go to the page about the event
       });
     } else {
-      // console.log("updating event", this.event);
 
       this.eventService.updateEvent(this.event).then((newEvent: Event) => {
         this.event = newEvent;

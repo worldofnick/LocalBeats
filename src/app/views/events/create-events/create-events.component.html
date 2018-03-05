@@ -29,6 +29,17 @@
   
             </div>
 
+            <div class="pb-1">
+              <mat-select formControlName="cancellationPolicy" (change)="onChangeCancellationPolicy($event)" id="langToggle" placeholder="Cancellation Policy" [(ngModel)]="this.event.cancellation" name="cancellationPolicy"
+                class="mb-1">
+                <mat-option *ngFor="let policy of cancellationPolicies" [value]="policy" ngDefaultControl>
+                  {{policy | capitalize}}
+                </mat-option>
+              </mat-select>
+              <mat-chip *ngIf="basicForm.controls['cancellationPolicy'].value == 'strict'" color='accent' selected="true">Either user who cancels a confirmed booking within 30 days of the calendar start date will be charged 15%.</mat-chip>
+              <mat-chip *ngIf="basicForm.controls['cancellationPolicy'].value == 'flexible'" color='primary' selected="true">Either user who cancels a confirmed booking within 7 days of the calendar start date will be charged 15%.</mat-chip>
+            </div>
+
 
 
           <!-- img stuff iirc -->
