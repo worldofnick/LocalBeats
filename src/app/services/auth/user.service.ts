@@ -1,6 +1,7 @@
 // 'use strict';
 import { Injectable } from '@angular/core';
 import { Http, Headers, RequestOptions, Response } from '@angular/http';
+import 'rxjs/Rx';
 import { Observable } from 'rxjs/Observable';
 import { User } from 'app/models/user';
 import { Notification } from 'app/models/notification'
@@ -87,27 +88,29 @@ export class UserService {
     }
 
     // post("/api/authenticate")
-    public signinUser(returningUser: User): Promise<User> {
-        // this.connection = 'http://localhost:8080/api/auth/authenticate';
+    public signinUser(returningUser: User): Observable<Object> {
         const current = this.connection + '/authenticate';
-        // console.log('Returning User in auth: ', returningUser);
         return this.http.post(current, returningUser, { headers: this.headers })
-            .toPromise()
-            .then((response: Response) => {
-                const data = response.json();
-                this.accessToken = data.token;
-                sessionStorage.setItem('token', JSON.stringify({ accessToken: this.accessToken }))
-                this.user = data.user as User;
-
-                // Notify server that a new user user logged in
-                this._socketService.send(Action.NEW_LOG_IN, {
-                    from: this.user,
-                    action: Action.NEW_LOG_IN
-                });
-
-                return this.user;
-            })
-            .catch(this.handleError);
+        .map((response: Response) => {
+            const data = response.json();
+            this.accessToken = data.token;
+            sessionStorage.setItem('token', JSON.stringify({ accessToken: this.accessToken }))
+            this.user = data.user as User;
+            // Notify server that a new user user logged in
+            this._socketService.send(Action.NEW_LOG_IN, {
+                from: this.user,
+                action: Action.NEW_LOG_IN
+            });
+            return data;
+        }).catch((error: Response) => {
+            if(error.status === 404) {
+                return Observable.throw('Wrong email.  Please try again.');
+            } else if(error.status === 401) {
+                return Observable.throw('Wrong password.  Please try again.');
+            } else {
+                return Observable.throw('Error Unknown');
+            }
+        });
     }
 
     /**

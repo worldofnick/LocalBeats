@@ -15,7 +15,7 @@
                   name="username"
                   [formControl]="signinForm.controls['username']"
                   placeholder="Email"
-                  value="">
+                  >
               </mat-form-field>
               <small 
                 *ngIf="signinForm.controls['username'].hasError('required') && signinForm.controls['username'].touched" 
@@ -30,7 +30,7 @@
                   matInput
                   [formControl]="signinForm.controls['password']"
                   placeholder="Password" 
-                  value="">
+                  >
               </mat-form-field>
               <small 
                 *ngIf="signinForm.controls['password'].hasError('required') && signinForm.controls['password'].touched" 
@@ -45,6 +45,7 @@
             </div>
             
             <button mat-raised-button class="mat-primary full-width mb-1" [disabled]="signinForm.invalid">Sign in</button>
+            <small *ngIf="error" class="form-error-msg">{{errorMessage}}</small>
             <div class="text-center">
               <!-- <a routerLink="" class="mat-primary text-center full-width">Forgot password</a> -->
               <span fxFlex></span>

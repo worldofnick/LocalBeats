@@ -92,8 +92,8 @@ export class TopbarComponent implements OnInit {
       this.numNotifications++;
     });
 
-    // Set Current Location if desired in future
-    // this.setCurrentPosition();
+    // Default search by current location
+    this.setCurrentPosition();
 
     // Load Places Autocomplete
     this.mapsAPILoader.load().then(() => {
