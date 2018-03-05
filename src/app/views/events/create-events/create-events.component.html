@@ -12,6 +12,9 @@
               <input matInput [(ngModel)]="this.event.eventName" name="eventName" formControlName="eventName" placeholder="Event Name (Min Length: 4, Max Length: 40)"
                 value="">
             </mat-form-field>
+            <small 
+            *ngIf="basicForm.controls['eventName'].hasError('required') && basicForm.controls['eventName'].touched" 
+            class="form-error-msg">The event must have a name</small>
           </div>
           <div class="pb-1">
             <mat-select formControlName="eventType" (change)="onChangeEventType($event)" placeholder="Event Type" [(ngModel)]="this.event.eventType" name="eventType"
@@ -20,6 +23,9 @@
                 {{event | capitalize}}
               </mat-option>
             </mat-select>
+            <small 
+            *ngIf="basicForm.controls['eventType'].hasError('required') && basicForm.controls['eventType'].touched" 
+            class="form-error-msg">The event must have a type</small>
           </div>
           <div class="pb-1">
             <mat-select formControlName="cancellationPolicy" placeholder="Cancellation Policy" [(ngModel)]="this.event.cancellation" name="cancellationPolicy"
@@ -28,6 +34,9 @@
                 {{policy | capitalize}}
               </mat-option>
             </mat-select>
+            <small 
+            *ngIf="basicForm.controls['cancellationPolicy'].hasError('required') && basicForm.controls['cancellationPolicy'].touched" 
+            class="form-error-msg">The event must have a cancellation policy</small>
             <mat-chip *ngIf="basicForm.controls['cancellationPolicy'].value == 'strict'" color='accent' selected="true">Either user who cancels a confirmed booking within 30 days of the calendar start date will be charged 15%.</mat-chip>
             <mat-chip *ngIf="basicForm.controls['cancellationPolicy'].value == 'flexible'" color='primary' selected="true">Either user who cancels a confirmed booking within 7 days of the calendar start date will be charged 15%.</mat-chip>
           </div>
@@ -42,6 +51,9 @@
               <input matInput currencyMask  [options]="{ align: 'left' }" [(ngModel)]="this.event.fixedPrice" name="fixedPrice" formControlName="fixedPrice" placeholder="Event Price"
                 value="">
             </mat-form-field>
+            <small 
+            *ngIf="basicForm.controls['fixedPrice'].hasError('required') && basicForm.controls['fixedPrice'].touched " 
+            class="form-error-msg">The event must have a price</small>
           </div>
           <div class="pb-1 pt-05">
             <mat-checkbox name="negotiable" formControlName="negotiable" class="pb-1">Price is negotiable</mat-checkbox>
@@ -49,9 +61,12 @@
           <div class="pb-1">
             <mat-form-field class="full-width">
               <input matInput [selectMode]="'range'"
-                [owlDateTimeTrigger]="dtPicker3" [owlDateTime]="dtPicker3 " [formControl]="basicForm.controls['date']">
+                [owlDateTimeTrigger]="dtPicker3" [owlDateTime]="dtPicker3 " [formControl]="basicForm.controls['date']" placeholder="Please select the beginning and ending dates / times for the event">
               <owl-date-time #dtPicker3></owl-date-time>
             </mat-form-field>
+            <small 
+            *ngIf="basicForm.controls['date'].hasError('required') && basicForm.controls['date'].touched" 
+            class="form-error-msg"> You must include a beginning and ending date / time for the event</small>
           </div>
           <!-- google maps widget -->
           <div class="pb-1">
@@ -59,16 +74,25 @@
               <input [(ngModel)]="cityState" matInput placeholder="City, State" autocorrect="off" autocapitalize="off" 
               spellcheck="off" type="text" #searchplaces [formControl]="basicForm.controls['location']">
             </mat-form-field>
-            </div>
+            <small 
+            *ngIf="basicForm.controls['location'].hasError('required') && basicForm.controls['location'].touched" 
+            class="form-error-msg"> You must include a location for the event</small>
+          </div>
           <div class="pb-1">
             <mat-form-field class="full-width">
               <mat-select [formControl]="basicForm.controls['genres']" name="genres" placeholder="Music Genres" multiple>
                 <mat-option *ngFor="let genre of genresList" [value]="genre" >{{genre | capitalize}}</mat-option>
               </mat-select>
+              <small 
+              *ngIf="basicForm.controls['genres'].hasError('required') && basicForm.controls['genres'].touched" 
+              class="form-error-msg"> You must select genres</small>
             </mat-form-field>
           </div>
           <div class="pb-1 pt-05">
             <mat-checkbox (click)="onAgreed()" name="agreed" formControlName="agreed" class="pb-1">I have read and agree to the terms of service.</mat-checkbox>
+            <small 
+              *ngIf="basicForm.controls['agreed'].hasError('required') && basicForm.controls['agreed'].touched" 
+              class="form-error-msg"> You must agree to terms and conditions</small>
           </div>
           <!-- </div>
           </div> -->
@@ -124,6 +148,9 @@
     
               <textarea matInput placeholder="Description" matTextareaAutosize matAutosizeMinRows="2"
               matAutosizeMaxRows="5" name="eventDescription" formControlName="eventDescription"></textarea>
+              <small 
+              *ngIf="basicForm.controls['eventDescription'].hasError('required') && basicForm.controls['eventDescription'].touched" 
+              class="form-error-msg"> Event Description is required </small>
           </div>
         </mat-card-content>
       </mat-card>

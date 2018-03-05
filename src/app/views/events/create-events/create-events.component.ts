@@ -159,7 +159,7 @@ export class CreateEventsComponent implements OnInit {
           Validators.maxLength(40),
           Validators.required
         ]),
-        eventType: new FormControl(this.event.eventType, [
+        eventType: new FormControl(this.event.eventType, [Validators.required
         ]),
         cancellationPolicy: new FormControl(this.event.cancellationPolicy, [Validators.required]),
         fixedPrice: new FormControl(this.event.fixedPrice, [
@@ -194,7 +194,7 @@ export class CreateEventsComponent implements OnInit {
           Validators.maxLength(40),
           Validators.required
         ]),
-        eventType: new FormControl('', [
+        eventType: new FormControl('', [Validators.required
         ]),
         cancellationPolicy: new FormControl('', [Validators.required]),
         fixedPrice: new FormControl('', [
@@ -202,7 +202,7 @@ export class CreateEventsComponent implements OnInit {
         ]),
         negotiable: new FormControl(false, [
         ]),
-        date: new FormControl(this.dateRange, [
+        date: new FormControl('', [
           Validators.required
         ]),
         eventDescription: new FormControl('', [
