@@ -94,7 +94,7 @@
   <div *ngIf="userService.isAuthenticated(); else login">
     <button 
     mat-icon-button
-    matTooltip="My Performances" 
+    matTooltip="Performances" 
     [style.overflow]="'visible'"
     routerLink="/bookingmanagement/myperformances"
     class="topbar-button-right">
@@ -103,7 +103,7 @@
 
     <button 
     mat-icon-button
-    matTooltip="My Events" 
+    matTooltip="Events" 
     [style.overflow]="'visible'"
     routerLink="/bookingmanagement/myevents"
     class="topbar-button-right">
@@ -128,6 +128,15 @@
     (click)="authorizeStripe()"
     class="topbar-button-right">
       <mat-icon>event</mat-icon>
+    </button>
+
+    <button 
+    mat-icon-button
+    matTooltip="Calendar" 
+    [style.overflow]="'visible'"
+    routerLink="/calendar"
+    class="topbar-button-right">
+      <mat-icon>date_range</mat-icon>
     </button>
 
      <!-- CHat toggle button -->

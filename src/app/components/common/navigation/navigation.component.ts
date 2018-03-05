@@ -46,14 +46,14 @@ export class NavigationComponent {
       {
         name: 'My Performances',
         type: 'link',
-        tooltip: 'My Performances',
+        tooltip: 'Performances',
         icon: 'music_note',
         state: 'bookingmanagement/myperformances'
       },
       {
         name: 'My Events',
         type: 'link',
-        tooltip: 'My Events',
+        tooltip: 'Events',
         icon: 'event_available',
         state: 'bookingmanagement/myevents'
       }
