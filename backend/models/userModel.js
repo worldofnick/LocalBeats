@@ -13,7 +13,7 @@ var UserSchema = new Schema({
     hashPassword  : {type: String, required: true},
     birthday      : {type: Date},
     joinDate      : {type: Date, default: Date.now},
-    profilePicUrl : {type: String, default: 'http://laoblogger.com/images/default-profile-picture-5.jpg'},
+    profilePicUrl : {type: String, default: 'https://www.vccircle.com/wp-content/uploads/2017/03/default-profile.png'},
     soundcloudID  : {type: String},
     spotifyID     : {type: String},
     stripeAccountId  : {type: String},
