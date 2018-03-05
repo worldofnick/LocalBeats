@@ -93,6 +93,24 @@
   <span fxFlex></span>
   <div *ngIf="userService.isAuthenticated(); else login">
     <button 
+    mat-icon-button
+    matTooltip="My Performances" 
+    [style.overflow]="'visible'"
+    routerLink="/bookingmanagement/myperformances"
+    class="topbar-button-right">
+      <mat-icon>music_note</mat-icon>
+    </button>
+
+    <button 
+    mat-icon-button
+    matTooltip="My Events" 
+    [style.overflow]="'visible'"
+    routerLink="/bookingmanagement/myevents"
+    class="topbar-button-right">
+      <mat-icon>event_available</mat-icon>
+    </button>
+
+    <button 
     *ngIf="userService.user.stripeAccountId"
     mat-icon-button
     matTooltip="Create Event" 

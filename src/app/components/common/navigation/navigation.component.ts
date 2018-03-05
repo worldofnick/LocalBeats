@@ -54,7 +54,7 @@ export class NavigationComponent {
         name: 'My Events',
         type: 'link',
         tooltip: 'My Events',
-        icon: 'music_note',
+        icon: 'event_available',
         state: 'bookingmanagement/myevents'
       }
     ];

@@ -100,7 +100,7 @@
                 <mat-chip class="text-center notify-chip mb-05" color="accent" [selected]="!completion.artViewed">{{completion.artistStatusMessage}}</mat-chip>
                 <mat-divider class="mt-05 mb-1"></mat-divider>
                 <button (click)="messageHost(completion)" class="text-muted" mat-icon-button matTooltip="Message Host"><mat-icon>chat</mat-icon></button>
-                <button *ngIf="completion.completed && performances.paymentStatues[i] == 'paid' && (performances.paymentStatues[i] != 'artist_cancel' && performances.paymentStatues[i] != 'host_cancel')" (click)="showRefundDialog(completion)" class="text-muted" mat-icon-button matTooltip="Refund Host"><mat-icon>money_off</mat-icon></button>
+                <button *ngIf="completion.completed && !completion.bothReviewed && performances.paymentStatues[i] == 'paid' && (performances.paymentStatues[i] != 'artist_cancel' && performances.paymentStatues[i] != 'host_cancel')" (click)="showRefundDialog(completion)" class="text-muted" mat-icon-button matTooltip="Refund Host"><mat-icon>money_off</mat-icon></button>
                 <button *ngIf="completion.completed && performances.paymentStatues[i] != 'waiting'" (click)="showPaymentHistoryDialog(completion)" class="text-muted" mat-icon-button matTooltip="Payment History"><mat-icon>history</mat-icon></button>
                 <button *ngIf="!completion.beenReviewedByArtist" (click)="reviewDialog(completion)" class="text-muted" mat-icon-button matTooltip="Review"><mat-icon>star</mat-icon></button>
                 <button *ngIf="completion.beenReviewedByArtist && !completion.bothReviewed" (click)="editReview(completion)" class="text-muted" mat-icon-button matTooltip="Edit Review"><mat-icon>mode_edit</mat-icon></button>

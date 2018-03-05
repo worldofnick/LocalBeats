@@ -23,13 +23,13 @@
           </mat-list-item>
 
           <ng-template [ngIf]="this.onOwnProfile">
-            <mat-list-item (click)="clickedOverview = false" [routerLink]="['/profile', 'events']" routerLinkActive="list-item-active">
+            <mat-list-item (click)="clickedOverview = false" [routerLink]="['/bookingmanagement', 'myevents']" routerLinkActive="list-item-active">
               <mat-icon>events</mat-icon>
               My Hosted Events
             </mat-list-item>
           </ng-template>
           <ng-template [ngIf]="this.onOwnProfile && this.userService.user.isArtist">
-            <mat-list-item (click)="clickedOverview = false" [routerLink]="['/profile', 'performances']" routerLinkActive="list-item-active">
+            <mat-list-item (click)="clickedOverview = false" [routerLink]="['/bookingmanagement', 'myperformances']" routerLinkActive="list-item-active">
               <mat-icon>music_note</mat-icon>
               My Performances
             </mat-list-item>

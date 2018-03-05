@@ -137,9 +137,12 @@ export class EventManagementComponent implements OnInit {
           if(booking.beenReviewedByArtist) {
             booking.artistStatusMessage = StatusMessages.reviewed;
             booking.hostStatusMessage = StatusMessages.needsReview;
-          } else {
+          } else if(booking.beenReviewedByHost){
             booking.artistStatusMessage = StatusMessages.needsReview;
             booking.hostStatusMessage = StatusMessages.reviewed;
+          } else {
+            booking.artistStatusMessage = StatusMessages.needsReview;
+            booking.hostStatusMessage = StatusMessages.needsReview;
           }
         } else if(status == PaymentStatus.refund) {
           booking.hostStatusMessage = StatusMessages.refund;
