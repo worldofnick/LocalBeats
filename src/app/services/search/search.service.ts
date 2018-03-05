@@ -25,25 +25,25 @@ export class SearchService {
         this.searchTypeSource.next(searchType);
     }
 
-    public eventTypes(): Promise<Object> {
+    public eventTypes(): Promise<[string]> {
         let current = (this.connection + 'eventTypes/')
         return this.http.get(current, { headers: this.headers } )
         .toPromise()
         .then((response: Response) => {
             const data = response.json();
-            const eventTypes = data.eventTypes as string[]
+            const eventTypes = data.eventTypes as string[];
             return eventTypes;
         })
         .catch(this.handleError);
     }
 
-    public genres(): Promise<Object> {
+    public genres(): Promise<[string]> {
         let current = (this.connection + 'genres/')
         return this.http.get(current, { headers: this.headers } )
         .toPromise()
         .then((response: Response) => {
             const data = response.json();
-            const genres = data.genres as Array<String>;
+            const genres = data.genres as string[];
             return genres;
         })
         .catch(this.handleError);

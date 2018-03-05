@@ -109,6 +109,15 @@ export class TopbarComponent implements OnInit {
         });
       });
     });
+
+    // Fetch genres and event types from the backend
+    this.searchService.eventTypes().then((eventTypes: [string]) => {
+      this.eventsList = eventTypes;
+    });
+
+    this.searchService.genres().then((genres: [string]) => {
+      this.genresList = genres;
+    });
   }
 
   // Helper method for Google Places
