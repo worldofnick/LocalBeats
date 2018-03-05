@@ -16,8 +16,8 @@
           <div class="pb-1">
             <mat-select formControlName="eventType" (change)="onChangeEventType($event)" placeholder="Event Type" [(ngModel)]="this.event.eventType" name="eventType"
               class="mb-1">
-              <mat-option *ngFor="let event of eventTypes" [value]="event.value" ngDefaultControl>
-                {{event.viewValue}}
+              <mat-option *ngFor="let event of eventsList" [value]="event" ngDefaultControl>
+                {{event | capitalize}}
               </mat-option>
             </mat-select>
           </div>
@@ -63,7 +63,7 @@
           <div class="pb-1">
             <mat-form-field class="full-width">
               <mat-select [formControl]="basicForm.controls['genres']" name="genres" placeholder="Music Genres" multiple>
-                <mat-option *ngFor="let genre of genresList" [value]="genre" >{{genre}}</mat-option>
+                <mat-option *ngFor="let genre of genresList" [value]="genre" >{{genre | capitalize}}</mat-option>
               </mat-select>
             </mat-form-field>
           </div>

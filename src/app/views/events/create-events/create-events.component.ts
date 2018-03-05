@@ -16,6 +16,7 @@ import 'rxjs/add/operator/startWith';
 import 'rxjs/add/operator/map';
 import { } from 'googlemaps';
 import { MapsAPILoader } from '@agm/core';
+import { SearchService } from '../../../services/search/search.service';
 // import { NgZone } from '@angular/core/src/zone/ng_zone';
 
 @Component({
@@ -58,11 +59,6 @@ export class CreateEventsComponent implements OnInit {
   cancellationPolicies = ['flexible', 'strict'];
 
   selectedEventType: string = 'wedding';
-  eventTypes = [
-    { value: 'wedding', viewValue: 'Wedding' },
-    { value: 'birthday', viewValue: 'Birthday' },
-    { value: 'business', viewValue: 'Business' }
-  ];
   checkedValues:Boolean[]
   
   // evenGenres:Array<string>;
@@ -90,11 +86,18 @@ export class CreateEventsComponent implements OnInit {
               public snackBar: MatSnackBar,
               private mapsAPILoader: MapsAPILoader,
               private ngZone: NgZone,
-              private stripeService: StripeService
+              private stripeService: StripeService,
+              private searchService: SearchService
               ) { }
 
               
   ngOnInit() {
+
+    this.searchService.eventTypes().then((types: string[]) => {
+      this.eventsList = types;
+    }).then(() => this.searchService.genres().then((types: string[]) => {
+      this.genresList = types;
+    }));
 
     
     this.event.eventType = "Wedding"
