@@ -26,7 +26,7 @@ module.exports = function(app) {
 		.get(stripeHandlers.bookingPaymentStatus);
 
 	app.route('/api/payments/cancel')
-		.put(stripeHandlers.cancelBoookingFee);
+		.post(stripeHandlers.cancelBoookingFee);
 
 	app.route('/api/payments/bookingPayments')
 		.get(stripeHandlers.bookingPayments);
