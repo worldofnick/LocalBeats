@@ -31,20 +31,20 @@ exports.getEventByID = function (req, res) {
 function getDefaultImage(eventType) {
   eventType = eventType.toLowerCase(); // just in case
   if (eventType == "birthday") {
-    return "http://clubsatrivercity.com/wp-content/uploads/2017/09/birthdaypic.jpg";
+    return "https://images.meredith.com/content/dam/bhg/Images/2014/1/17/101666877.jpg.rendition.largest.jpg";
   } else if (eventType == "wedding") {
-    return "http://dipiazzawedding.com/wp-content/uploads/2016/03/wedding-background.jpg";
+    return "http://gi-workshop.net/wp-content/uploads/2017/11/Beautiful-Simple-Garden-Wedding-Decorations-25-For-Diy-Wedding-Table-Decorations-with-Simple-Garden-Wedding-Decorations.jpg";
   } else if (eventType == "party") {
-    return "http://themocracy.com/wp-content/uploads/2016/12/Parties.jpg";
+    return "http://www.party-adviser.com/wp-content/uploads/2016/07/decorated-pool.jpg";
   } else if (eventType == "live music") {
-    return "https://media.timeout.com/images/101206597/image.jpg";
+    return "https://irp-cdn.multiscreensite.com/98107e77/dms3rep/multi/mobile/22519362_819398604905562_8445152196828072660_n.jpg";
   } else if (eventType == "business") {
-    return "http://biggromeo.com/wp-content/uploads/2017/12/59660399f9b09005a411905a.jpg";
+    return "http://www.makeevents.co.uk/wp-content/uploads/2017/11/MPAN-02.11.17-005-e1516629279700.jpg";
   } else if (eventType == "festival") {
-    return "https://www.nutickets.com/wp-content/uploads/2015/07/53da64d2740fb.jpg";
+    return "http://waneefestival.com/wp-content/uploads/2016/11/20160414-Wanee-Music-Festival-Live-Oak1358-2-1000x567.jpg";
   }
 
-  return "http://themocracy.com/wp-content/uploads/2016/12/Parties.jpg";
+  return "http://www.party-adviser.com/wp-content/uploads/2016/07/decorated-pool.jpg";
 }
 
 exports.defaultPic = function (req, res) {
