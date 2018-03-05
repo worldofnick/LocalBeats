@@ -12,6 +12,8 @@
     <mat-form-field class="full-width">
         <textarea matInput [formControl]="negotiationForm.controls['comment']" placeholder="Leave a comment"></textarea>
     </mat-form-field>
+    <small *ngIf="this.data.booking.eventEID.cancellationPolicy == 'strict' && this.data.booking.approved" class="form-error-msg">Either user who cancels a confirmed booking within 30 days of the calendar start date will be charged 15%.</small>
+    <small *ngIf="this.data.booking.eventEID.cancellationPolicy == 'flexible' && this.data.booking.approved" class="form-error-msg">Either user who cancels a confirmed booking within 7 days of the calendar start date will be charged 15%.</small>
 </form>
 <div mat-dialog-actions>
 <button 

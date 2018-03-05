@@ -13,7 +13,7 @@
         <p *ngIf="performances.applications.length == 0">You don't have any applications.</p>
         <div fxLayout="row" fxLayout.lt-sm="column" fxLayoutWrap="nowrap" fxLayoutGap="30px">
           <div *ngFor="let application of performances.applications; let i = index" fxFlex="33.33">
-            <mat-card>
+            <mat-card class="p-0 m-0">
               <img mat-card-image [src]="application.eventEID.eventPicUrl">
               <mat-card-content>
                 <h5><strong><a [routerLink]="['/events', application.eventEID._id]">{{application.eventEID.eventName}}</a></strong></h5>
