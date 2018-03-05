@@ -133,6 +133,7 @@ export class TopbarComponent implements OnInit {
     if(event.keyCode != 13 && !this.expand){
       this.expand = true;
     }
+    this.submit();
   }
   
   click() {
@@ -223,7 +224,7 @@ export class TopbarComponent implements OnInit {
         this.router.navigate(['/search'])
       });
     }
-    this.expand = false;
+
   }
 
   // Triggers the notification panel to sideload
