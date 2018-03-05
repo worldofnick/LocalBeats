@@ -182,32 +182,4 @@ export class ProfileSettingsComponent implements OnInit {
       });
     });
   }
-
-  // ======================================
-  // Social Accounts Tab Methods
-  // ======================================
-
-  unlinkSpotify() {
-    this.user.spotify = undefined;
-    this.userService.setUser(this.user);
-    this._spotifyClientService.removeSpotifyFromUser(this.user).then((unlinkedUser: User) => {
-      // this.user = unlinkedUser;
-      this.userService.setUser(this.user);
-      let snackBarRef = this.snackBar.open('Spotify Account Unlinked', '', {
-        duration: 1500,
-      });
-    });
-  }
-
-  unlinkSoundcloud() {
-    this.user.soundcloud = undefined;
-    this.userService.setUser(this.user);
-    this._spotifyClientService.removeSoundcloudFromUser(this.user).then((unlinkedUser: User) => {
-      // this.user = unlinkedUser;
-      this.userService.setUser(this.user);
-      let snackBarRef = this.snackBar.open('Soundcloud Account Unlinked', '', {
-        duration: 1500,
-      });
-    });
-  }
 }

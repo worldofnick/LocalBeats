@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ChangeDetectorRef, AfterViewChecked } from '@angular/core';
 import { ActivatedRoute } from "@angular/router";
 import { UserService } from '../../services/auth/user.service';
 import { BookingService } from '../../services/booking/booking.service';
@@ -17,13 +17,15 @@ import { Router } from '@angular/router';
 import { SpotifyClientService } from '../../services/music/spotify-client.service';
 import { DomSanitizer, SafeResourceUrl, SafeUrl } from '@angular/platform-browser';
 import {MatListModule} from '@angular/material/list';
+import { MatSnackBar } from '@angular/material';
+
 
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.css']
 })
-export class ProfileComponent implements OnInit {
+export class ProfileComponent implements OnInit, OnDestroy, AfterViewChecked {
   activeView: string = 'overview';
   user: User = new User; //changed this from null to new User
   onOwnProfile: boolean = null;
@@ -50,8 +52,8 @@ export class ProfileComponent implements OnInit {
     private router : Router,
     public userService: UserService,
     private bookingService: BookingService,
-    private eventService: EventService,
-    private notificationService: NotificationService,
+    private eventService: EventService, public snackBar: MatSnackBar,
+    private notificationService: NotificationService, private cdRef:ChangeDetectorRef,
     private sanitizer: DomSanitizer, private _sharedDataService: SharedDataService,
     private _socketService: SocketService, private _spotifyClientService: SpotifyClientService) {
 
@@ -76,6 +78,16 @@ export class ProfileComponent implements OnInit {
     });
   }
 
+  ngAfterViewChecked(): void {
+		this.cdRef.detectChanges();
+	}
+
+  ngOnDestroy() {
+    this.cdRef.detach(); // try this
+    // for me I was detect changes inside "subscribe" so was enough for me to just unsubscribe;
+    // this.authObserver.unsubscribe();
+  }
+
   ngOnInit() {
     this.user = this.userService.user;
     this.activeView = this.route.snapshot.params['view'];
@@ -98,7 +110,7 @@ export class ProfileComponent implements OnInit {
 
       this.userService.getUserByID(ID).then((gottenUser: User) => {
         this.user = gottenUser;
-        console.log('Profile got user: ', gottenUser);
+        // console.log('Profile got user: ', gottenUser);
         // Retreive and store the latest spotify albums of this user
         this.getSpotifyAlbumsAndSave();
       }).then(() => this.hasRequested());
@@ -109,7 +121,7 @@ export class ProfileComponent implements OnInit {
       this.user = user;
     });
 
-    console.log('User object: ', this.user);
+    // console.log('User object: ', this.user);
   }
 
   clickedOver() {
@@ -163,9 +175,9 @@ export class ProfileComponent implements OnInit {
    */
   onMusicTabSelectChange(event) {
     if (event.index === 0) {
-      console.log('Spotify tab is selected!');
+      // console.log('Spotify tab is selected!');
     } else {
-      console.log('Soundcloud tab is selected!');
+      // console.log('Soundcloud tab is selected!');
       if (this.user.soundcloud !== undefined && this.user.soundcloud !== null) {
         this.sanitizeSoundcloudUrl();
       }
@@ -177,14 +189,14 @@ export class ProfileComponent implements OnInit {
    *  set it to the user object's albums property
    */
   getSpotifyAlbumsAndSave() {
-    console.log('Profile user: ', this.user);
-    console.log(this.user.spotify !== null && this.user.spotify !== undefined);
+    // console.log('Profile user: ', this.user);
+    // console.log(this.user.spotify !== null && this.user.spotify !== undefined);
     if ( this.user !== null && this.user !== undefined ) {
       if (this.user.spotify !== null && this.user.spotify !== undefined) {
         this._spotifyClientService.requestAlbumsOwnedByAnArtist(this.user)
           .then((listOfSpotifyAlbumObjects: any) => {
             this.user.spotify.albums = listOfSpotifyAlbumObjects.albums.items;
-            console.log('Saved albums: ', this.user);
+            // console.log('Saved albums: ', this.user);
           });
       }
     }
@@ -196,7 +208,7 @@ export class ProfileComponent implements OnInit {
    * @param album The spotify album object that was clicked
    */
   public onAlbumRowClicked(album) {
-    console.log('Album ', album, 'clicked' );
+    // console.log('Album ', album, 'clicked' );
     this.onSpotifyWidget = true;
 
     let dangerousAlbumUrl = 'https://open.spotify.com/embed?uri=spotify%3Aalbum%3A' + album.id + '&theme=white';
@@ -219,7 +231,7 @@ export class ProfileComponent implements OnInit {
    */
   registerSoundcloudClicked(event) {
     if (event.keyCode === 13 && !event.shiftKey) {
-      console.log('Entered soundcloud id: %s', this.soundcloudIdFormInput);
+      // console.log('Entered soundcloud id: %s', this.soundcloudIdFormInput);
       
       // If the user entered non-blank id and hit send, communicate with server
       if (this.soundcloudIdFormInput.trim().length > 0) {
@@ -242,5 +254,34 @@ export class ProfileComponent implements OnInit {
     this.user.soundcloud.id + '&color=%23ff5500&auto_play=false&hide_related=false&show_comments=true&' +
     'show_user=true&show_reposts=false&show_teaser=true&visual=true';
     this.trustedSoundcloudUrl = this.sanitizer.bypassSecurityTrustResourceUrl(dangerousAlbumUrl);
+  }
+
+  
+  // ======================================
+  // Social Accounts Tab Methods
+  // ======================================
+
+  unlinkSpotify() {
+    this.user.spotify = undefined;
+    this.userService.setUser(this.user);
+    this._spotifyClientService.removeSpotifyFromUser(this.user).then((unlinkedUser: User) => {
+      // this.user = unlinkedUser;
+      this.userService.setUser(this.user);
+      let snackBarRef = this.snackBar.open('Spotify Account Unlinked', '', {
+        duration: 1500,
+      });
+    });
+  }
+
+  unlinkSoundcloud() {
+    this.user.soundcloud = undefined;
+    this.userService.setUser(this.user);
+    this._spotifyClientService.removeSoundcloudFromUser(this.user).then((unlinkedUser: User) => {
+      // this.user = unlinkedUser;
+      this.userService.setUser(this.user);
+      let snackBarRef = this.snackBar.open('Soundcloud Account Unlinked', '', {
+        duration: 1500,
+      });
+    });
   }
 }
