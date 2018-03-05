@@ -18,7 +18,7 @@
               <mat-card-content>
                 <h5><strong><a [routerLink]="['/events', application.eventEID._id]">{{application.eventEID.eventName}}</a></strong></h5>
                 <p class="mb-0">{{application.eventEID.eventType | capitalize}}</p>
-                <p class="mt-0 mb-0">{{application.eventEID.toDate | date:'MMM d, y, h:mm a'}}</p>
+                <p class="mt-0 mb-0">{{application.eventEID.fromDate | date:'MMM d, y, h:mm a'}} - {{application.eventEID.toDate | date:'MMM d, y, h:mm a'}}</p>
                 <p class="mt-0 mb-0">{{application.currentPrice | currency}} <span *ngIf="application.eventEID.negotiable">(Negotiable)</span></p>
                 <p class="mt-1">{{application.eventEID.description}}</p>
                 <mat-chip class="text-center notify-chip mb-05" color="accent" [selected]="!application.artViewed">{{application.artistStatusMessage}}</mat-chip>
@@ -43,7 +43,7 @@
               <mat-card-content>
                 <h5><strong><a [routerLink]="['/events', request.eventEID._id]">{{request.eventEID.eventName}}</a></strong></h5>
                 <p class="mb-0">{{request.eventEID.eventType | capitalize}}</p>
-                <p class="mt-0 mb-0">{{request.eventEID.toDate | date:'MMM d, y, h:mm a'}}</p>
+                <p class="mt-0 mb-0">{{request.eventEID.fromDate | date:'MMM d, y, h:mm a'}} - {{request.eventEID.toDate | date:'MMM d, y, h:mm a'}}</p>
                 <p class="mt-0 mb-0">{{request.currentPrice | currency}} <span *ngIf="request.eventEID.negotiable">(Negotiable)</span></p>
                 <p class="mt-1">{{request.eventEID.description}}</p>
                 <mat-chip class="text-center notify-chip mb-05" color="accent" [selected]="!request.artViewed">{{request.artistStatusMessage}}</mat-chip>
@@ -68,7 +68,7 @@
               <mat-card-content>
                 <h5><strong><a [routerLink]="['/events', confirmation.eventEID._id]">{{confirmation.eventEID.eventName}}</a></strong></h5>
                 <p class="mb-0">{{confirmation.eventEID.eventType | capitalize}}</p>
-                <p class="mt-0 mb-0">{{confirmation.eventEID.toDate | date:'MMM d, y, h:mm a'}}</p>
+                <p class="mt-0 mb-0">{{confirmation.eventEID.fromDate | date:'MMM d, y, h:mm a'}} - {{confirmation.eventEID.toDate | date:'MMM d, y, h:mm a'}}</p>
                 <p class="mt-0 mb-0">{{confirmation.currentPrice | currency}}</p>
                 <p class="mt-1">{{confirmation.eventEID.description}}</p>
                 <mat-chip class="text-center notify-chip mb-05" color="accent" [selected]="!confirmation.artViewed">{{confirmation.artistStatusMessage}}</mat-chip>
@@ -94,7 +94,7 @@
               <mat-card-content>
                 <h5><strong><a [routerLink]="['/events', completion.eventEID._id]">{{completion.eventEID.eventName}}</a></strong></h5>
                 <p class="mb-0">{{completion.eventEID.eventType | capitalize}}</p>
-                <p class="mt-0 mb-0">{{completion.eventEID.toDate | date:'MMM d, y, h:mm a'}}</p>
+                <p class="mt-0 mb-0">{{completion.eventEID.fromDate | date:'MMM d, y, h:mm a'}} - {{completion.eventEID.toDate | date:'MMM d, y, h:mm a'}}</p>
                 <p class="mt-0 mb-0">{{completion.currentPrice | currency}}</p>
                 <p class="mt-1">{{completion.eventEID.description}}</p>
                 <mat-chip class="text-center notify-chip mb-05" color="accent" [selected]="!completion.artViewed">{{completion.artistStatusMessage}}</mat-chip>
@@ -122,7 +122,7 @@
               <mat-card-content>
                 <h5><strong><a [routerLink]="['/events', cancellation.eventEID._id]">{{cancellation.eventEID.eventName}}</a></strong></h5>
                 <p class="mb-0">{{cancellation.eventEID.eventType | capitalize}}</p>
-                <p class="mt-0 mb-0">{{cancellation.eventEID.toDate | date:'MMM d, y, h:mm a'}}</p>
+                <p class="mt-0 mb-0">{{cancellation.eventEID.fromDate | date:'MMM d, y, h:mm a'}} - {{cancellation.eventEID.toDate | date:'MMM d, y, h:mm a'}}</p>
                 <p class="mt-0 mb-0">{{cancellation.currentPrice | currency}}</p>
                 <p class="mt-1">{{cancellation.eventEID.description}}</p>
                 <mat-chip class="text-center notify-chip mb-05" color="accent" [selected]="!cancellation.artViewed">{{cancellation.artistStatusMessage}}</mat-chip>

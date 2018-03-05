@@ -349,7 +349,7 @@ export class ProfileEventsComponent implements OnInit {
 
   openNegotiationDialog(booking: Booking, bookingIndex: number, eventIndex: number) {
     let view = "host";
-    this.bookingService.negotiate(booking, false, view)
+    this.bookingService.negotiate(booking, false, view, "")
     .subscribe((result) => {
       // Check to see if a response was recorded in the negotiation dialog box
       if (result != undefined) {

@@ -11,7 +11,7 @@
           <mat-card-content>
             <h5><strong><a [routerLink]="['/events', item.event._id]">{{item.event.eventName}}</a></strong></h5>
             <p class="mb-0">{{item.event.eventType | capitalize}}</p>
-            <p class="mt-0 mb-0">{{item.event.toDate | date:'MMM d, y, h:mm a'}}</p>
+            <p class="mt-0 mb-0">{{item.event.fromDate | date:'MMM d, y, h:mm a'}} - {{item.event.toDate | date:'MMM d, y, h:mm a'}}</p>
             <p class="mt-0 mb-0">{{item.event.fixedPrice | currency}} <span *ngIf="item.event.negotiable">(Negotiable)</span></p>
             <p class="mt-1">{{item.event.description}}</p>
             <mat-accordion>

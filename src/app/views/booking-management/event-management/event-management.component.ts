@@ -661,7 +661,7 @@ export class EventManagementComponent implements OnInit {
     if(this.negotiationSubscription) {
       this.negotiationSubscription.unsubscribe();
     }
-    this.negotiationSubscription = this.bookingService.negotiate(booking, false, view)
+    this.negotiationSubscription = this.bookingService.negotiate(booking, false, view, "")
     .subscribe((result) => {
       // Check to see if a response was recorded in the negotiation dialog box
       if (result != undefined) {

@@ -14,7 +14,7 @@
             </mat-form-field>
           </div>
           <div class="pb-1">
-            <mat-select formControlName="eventType" (change)="onChangeEventType($event)" id="langToggle" placeholder="Event Type" [(ngModel)]="this.event.eventType" name="eventType"
+            <mat-select formControlName="eventType" (change)="onChangeEventType($event)" placeholder="Event Type" [(ngModel)]="this.event.eventType" name="eventType"
               class="mb-1">
               <mat-option *ngFor="let event of eventTypes" [value]="event.value" ngDefaultControl>
                 {{event.viewValue}}
@@ -22,7 +22,7 @@
             </mat-select>
           </div>
           <div class="pb-1">
-            <mat-select formControlName="cancellationPolicy" (change)="onChangeCancellationPolicy($event)" id="langToggle" placeholder="Cancellation Policy" [(ngModel)]="this.event.cancellation" name="cancellationPolicy"
+            <mat-select formControlName="cancellationPolicy" placeholder="Cancellation Policy" [(ngModel)]="this.event.cancellation" name="cancellationPolicy"
               class="mb-1">
               <mat-option *ngFor="let policy of cancellationPolicies" [value]="policy" ngDefaultControl>
                 {{policy | capitalize}}

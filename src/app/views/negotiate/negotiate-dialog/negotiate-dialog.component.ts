@@ -35,15 +35,11 @@ export class NegotiateDialogComponent implements OnInit {
   negotiable: boolean;
   title: string = "Offer";
   subtext: string = "Please enter your offer or accept the current price:";
-  artistAvail: string = "";
-
-  // List of possible time conflicts for artist
-  artistEvents: Event[] = [];
 
   constructor(
     public dialogRef: MatDialogRef<NegotiateDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data:{booking: Booking, initial: boolean, view: string},
-    private formBuilder: FormBuilder, private eventService: EventService, private bookingService: BookingService
+    @Inject(MAT_DIALOG_DATA) public data:{booking: Booking, initial: boolean, view: string, artistAvail: string},
+    private formBuilder: FormBuilder
   ) {}
 
   ngOnInit() {
@@ -78,7 +74,6 @@ export class NegotiateDialogComponent implements OnInit {
           this.acceptButtonText = "Apply";
           this.declineButtonText = "Cancel Application";
         }
-        this.getArtistAvailability(false);
       } else {
         // Otherwise, it is a host request
         // Check if the event is negotiable
@@ -93,7 +88,6 @@ export class NegotiateDialogComponent implements OnInit {
           this.acceptButtonText = "Request";
           this.declineButtonText = "Cancel Request";
         }
-        this.getArtistAvailability(true);
       }
     } else if(!this.data.booking.approved){
       // Check what view it's coming from
@@ -156,31 +150,6 @@ export class NegotiateDialogComponent implements OnInit {
     }
     this.originalButtonText = this.acceptButtonText;
 
-  }
-
-  private getArtistAvailability(isRequest: boolean){
-    this.eventService.getEventsByUID(this.data.booking.performerUser._id).then( (eventList: Event[]) => {
-      for(let e of eventList){
-        this.artistEvents.push(e);
-      }
-      this.bookingService.getUserBookings(this.data.booking.performerUser, 'artist').then( (bookings: Booking[]) =>{
-        for(let b of bookings){
-          if(b.approved){
-            this.artistEvents.push(b.eventEID);
-          }
-        }
-        for (let e of this.artistEvents) {
-          if (isWithinRange(this.data.booking.eventEID.fromDate, e.fromDate, addMinutes(e.toDate, 5)) ||
-              isWithinRange(this.data.booking.eventEID.toDate, e.fromDate, addMinutes(e.toDate, 5))) {
-            if(isRequest){
-              this.artistAvail = 'Artist is currently not available for this event. You may still request the artist but confirm availability before booking this event.';
-            }else{
-              this.artistAvail = 'You are currently not available for this event. You may still apply, but confirm your availbility for this event before completing the booking process.'
-            }
-          }
-        }
-      });
-    });
   }
 
   accept() {

@@ -112,24 +112,27 @@ export class ProfileRequestComponent implements OnInit {
     let tempBooking = new Booking(undefined, BookingType.hostRequest, event.hostUser, this.artist, event, false, false, false, StatusMessages.waitingOnArtist, StatusMessages.hostOffer, false, true, event.fixedPrice, null, null);
     if(this.negotiationSubscription) {
       this.negotiationSubscription.unsubscribe();
+      this.negotiationSubscription = null;
     }
-    this.negotiationSubscription = this.bookingService.negotiate(tempBooking, true, "host").subscribe((result) => {
-      if (result != undefined) {
-        if (result.response == NegotiationResponses.new) {
-          tempBooking.currentPrice = result.price;
-          this.bookingService.createBooking(tempBooking).then((booking: Booking) => {
-            // Remove from available events
-            this.hostedEvents.availableEvents.splice(eventIndex, 1);
-            // Send notification to artist
-            this.createNotificationForArtist(booking, result.response, ['/events', booking.eventEID._id], 
-          'queue_music', booking.hostUser.firstName + " has requested you for an event called: " + booking.eventEID.eventName);
-          if(result.comment != null && result.comment != undefined) {
-            let privateMessage: Message = this.commentToArtist(result.comment, booking);
-            this._socketService.send(Action.SEND_PRIVATE_MSG, privateMessage);
+    this.bookingService.getArtistAvailability(tempBooking).then((artistAvail: string) => {
+      this.negotiationSubscription = this.bookingService.negotiate(tempBooking, true, "host", artistAvail).subscribe((result) => {
+        if (result != undefined) {
+          if (result.response == NegotiationResponses.new) {
+            tempBooking.currentPrice = result.price;
+            this.bookingService.createBooking(tempBooking).then((booking: Booking) => {
+              // Remove from available events
+              this.hostedEvents.availableEvents.splice(eventIndex, 1);
+              // Send notification to artist
+              this.createNotificationForArtist(booking, result.response, ['/events', booking.eventEID._id], 
+            'queue_music', booking.hostUser.firstName + " has requested you for an event called: " + booking.eventEID.eventName);
+            if(result.comment != null && result.comment != undefined) {
+              let privateMessage: Message = this.commentToArtist(result.comment, booking);
+              this._socketService.send(Action.SEND_PRIVATE_MSG, privateMessage);
+            }
+            });
           }
-          });
         }
-      }
+      });
     });
   }
 

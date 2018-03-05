@@ -168,32 +168,34 @@ export class EventSingletonComponent implements OnInit {
 
   newApplication() {
     this.userBooking = new Booking(undefined, BookingType.artistApply, this.model.hostUser, this.userService.user, this.model, false, false, false, StatusMessages.artistBid, StatusMessages.waitingOnHost, true, false, this.model.fixedPrice, null, null);
-    this.bookingService.negotiate(this.userBooking, true, "artist").subscribe((result) => {
-      if (result != undefined) {
-        if (result.response == NegotiationResponses.new) {
-          this.userBooking.currentPrice = result.price;
-          this.userBooking.hostViewed = false;
-          this.userBooking.artViewed = true;
-          this.bookingService.createBooking(this.userBooking).then((booking: Booking) => {
-            // Flag application
-            this.hasApplied = true;
-            this.userBooking = booking;
-            // Send notification to host
-            let message = '';
-            if(this.model.negotiable) {
-              message = booking.hostUser.firstName + " has bid on your event called: " + booking.eventEID.eventName;
-            } else {
-              message = booking.hostUser.firstName + " has applied to your event called: " + booking.eventEID.eventName;
-            }
-            this.createNotificationForHost(booking, result.response, ['/bookingmanagement', 'myevents'],
-            'queue_music', message);
-            if(result.comment != null && result.comment != undefined) {
-              let privateMessage: Message = this.commentToHost(result.comment);
-              this._socketService.send(Action.SEND_PRIVATE_MSG, privateMessage);
-            }
-          });
+    this.bookingService.getArtistAvailability(this.userBooking).then((artistAvail: string) => {
+      this.bookingService.negotiate(this.userBooking, true, "artist", artistAvail).subscribe((result) => {
+        if (result != undefined) {
+          if (result.response == NegotiationResponses.new) {
+            this.userBooking.currentPrice = result.price;
+            this.userBooking.hostViewed = false;
+            this.userBooking.artViewed = true;
+            this.bookingService.createBooking(this.userBooking).then((booking: Booking) => {
+              // Flag application
+              this.hasApplied = true;
+              this.userBooking = booking;
+              // Send notification to host
+              let message = '';
+              if(this.model.negotiable) {
+                message = booking.hostUser.firstName + " has bid on your event called: " + booking.eventEID.eventName;
+              } else {
+                message = booking.hostUser.firstName + " has applied to your event called: " + booking.eventEID.eventName;
+              }
+              this.createNotificationForHost(booking, result.response, ['/bookingmanagement', 'myevents'],
+              'queue_music', message);
+              if(result.comment != null && result.comment != undefined) {
+                let privateMessage: Message = this.commentToHost(result.comment);
+                this._socketService.send(Action.SEND_PRIVATE_MSG, privateMessage);
+              }
+            });
+          }
         }
-      }
+      });
     });
   }
 
