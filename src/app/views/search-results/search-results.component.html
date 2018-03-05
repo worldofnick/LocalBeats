@@ -62,3 +62,11 @@
     </mat-card>
   </div>
 </div>
+<div></div>
+<mat-paginator
+*ngIf="results.length > 0"
+[length]="results.length"
+[pageSize]="pageSize"
+[pageSizeOptions]="pageSizeOptions"
+(page)="pageEvent($event)">
+</mat-paginator>

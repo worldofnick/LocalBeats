@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { PageEvent } from '@angular/material';
 import { SearchService } from '../../services/search/search.service'
 
 @Component({
@@ -9,11 +10,20 @@ import { SearchService } from '../../services/search/search.service'
 export class SearchResultsComponent implements OnInit {
   results: any;
   searchType: string;
+  length = 100;
+  pageSize = 15;
+  pageSizeOptions = [15, 25, 50];
+
   constructor(private searchService: SearchService) { }
 
   ngOnInit() {
     this.searchService.results.subscribe(results => this.results = results);
     this.searchService.searchType.subscribe(searchType => this.searchType = searchType);
+  }
+  
+  private pageEvent(pageEvent: PageEvent) {
+    // Scroll to top of page 
+    window.scrollTo(0, 0);
   }
 
 }
