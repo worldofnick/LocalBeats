@@ -30,7 +30,7 @@
             </mat-list-item>
             <mat-list-item>
               <mat-icon mat-list-icon>date_range</mat-icon>
-              <p mat-line> {{model.fromDate | date:'MMM d, y, h:mm a'}} </p>
+              <p mat-line> {{model.fromDate | date:'MMM d, y, h:mm a'}} - {{model.toDate | date:'MMM d, y, h:mm a'}} </p>
             </mat-list-item>
             <mat-list-item>
               <mat-icon mat-list-icon>access_time</mat-icon>
@@ -49,8 +49,8 @@
               <p mat-line>Cancellation Policy: {{model.cancellationPolicy | capitalize}} </p>
             </mat-list-item>
             <mat-list-item>
-              <mat-chip *ngIf="model.cancellationPolicy == 'strict'" color='accent' selected="true">Either user who cancels a confirmed booking within 30 days of the calendar start date will be charged 15%.</mat-chip>
-              <mat-chip *ngIf="model.cancellationPolicy == 'flexible'" color='primary' selected="true">Either user who cancels a confirmed booking within 7 days of the calendar start date will be charged 15%.</mat-chip>
+              <small *ngIf="model.cancellationPolicy == 'strict'" class="form-error-msg">Either user who cancels a confirmed booking within 30 days of the calendar start date will be charged 15%.</small>
+              <small *ngIf="model.cancellationPolicy == 'flexible'" class="form-error-msg">Either user who cancels a confirmed booking within 7 days of the calendar start date will be charged 15%.</small>
             </mat-list-item>
           </mat-list>
 

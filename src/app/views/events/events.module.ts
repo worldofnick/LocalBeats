@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { AgmCoreModule, MapsAPILoader } from '@agm/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CurrencyMaskModule } from "ng2-currency-mask";
+import { OwlDateTimeModule, OwlNativeDateTimeModule } from 'ng-pick-datetime';
 import { 
   MatInputModule,
   MatDatepickerModule, 
@@ -55,6 +56,8 @@ import { CommonPipesModule } from "../../pipes/common/common-pipes.module";
     AgmCoreModule.forRoot({
       apiKey: "AIzaSyBCko4eEq6azFCzCXVXAF4_jylVNw4ZM7Q"
     }),
+    OwlDateTimeModule,
+    OwlNativeDateTimeModule,
     FormsModule,
     CurrencyMaskModule,
     ReactiveFormsModule,

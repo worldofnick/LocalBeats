@@ -3,6 +3,7 @@
 <div mat-dialog-content>{{subtext}}</div>
 <br>
 <form mat-dialog-content [formGroup]="negotiationForm" (ngSubmit)="submit()">
+    <small *ngIf="artistAvail != ''" class="mb-1 form-error-msg">{{artistAvail}}</small>
     <mat-form-field class="full-width">
         <input matInput currencyMask [options]="{ align: 'left' }" [formControl]="negotiationForm.controls['price']" autofocus="true" placeholder="Price" type="text" (keyup)="onPriceChange()">
     </mat-form-field>
