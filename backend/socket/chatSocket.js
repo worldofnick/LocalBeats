@@ -193,9 +193,11 @@ module.exports = function (io) {
                     if (err) {
                         return res.status(500).send("Failed to create booking notification");
                     }
+                    console.log('right here', notification);
+                    payload._id = notification._id;
+                    io.to(recipient).emit('sendNotification', payload);
                 });
                 
-                io.to(recipient).emit('sendNotification', payload);
             });
             // ===========
             // Having profile reflect settings after updating - live.

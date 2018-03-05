@@ -38,6 +38,8 @@ import {
   MatTooltipModule
 } from '@angular/material';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { OwlDateTimeModule, OwlNativeDateTimeModule } from 'ng-pick-datetime';
+// import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { QuillModule } from 'ngx-quill';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { FileUploadModule } from 'ng2-file-upload/ng2-file-upload';
@@ -60,6 +62,9 @@ import { ImageCropperComponent } from 'ngx-image-cropper/src/image-cropper.compo
     FormsModule,
     CurrencyMaskModule,
     ReactiveFormsModule,
+    OwlDateTimeModule,
+    // BrowserAnimationsModule,
+    OwlNativeDateTimeModule,
     MatInputModule,
     MatListModule,
     MatCardModule,

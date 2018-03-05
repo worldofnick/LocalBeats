@@ -1,5 +1,14 @@
 
 <h1 matDialogTitle>{{title}}</h1>
+
+<div  *ngIf="artistAvail != ''" style="padding-bottom: 25px; color: rgb(199, 33, 33);">
+
+        <div mat-dialog-content>WARNING:</div>
+    
+    <div mat-dialog-content>{{artistAvail}}</div>
+
+</div>
+
 <div mat-dialog-content>{{subtext}}</div>
 <br>
 <form mat-dialog-content [formGroup]="negotiationForm" (ngSubmit)="submit()">

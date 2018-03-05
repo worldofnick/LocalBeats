@@ -23,16 +23,14 @@ exports.getNotificationsForUser = function (req, res) {
 
 exports.deleteNotificationsByID = function (req, res) {
     //todo fix this so itll loop correctly.
-    Notifications.findByIdAndRemove(req.params.uid, function (err, event) {
+    Notifications.findByIdAndRemove(req.params.nid, function (err, message) {
         if (err) {
             return res.status(500).send("There was a problem deleting the notification.");
         } else {
-            if (event == null) {
+            if (message == null) {
                 return res.status(200).send("notification was already deleted.");
             } else {
-                Notifications.remove({eventEID: event._id}, function (err, bookings) {
-                    return res.status(200).send("notification " + Notifications.message + " is removed");
-                });
+                    return res.status(200).send({ notification: message, msg: 'Notification removed successfully'});
             }
         }
     });
@@ -40,17 +38,13 @@ exports.deleteNotificationsByID = function (req, res) {
 
 exports.saveNotification = function (req, res) {
 
-    let newNotification = new Notification();
-    newNotification = req.body;
+    var newNotification = new Notification(req.body);
 
     Notifications.save(function (err, newNotification) {
       if (err) {
-        return res.status(500).send("Failed to create booking notification");
+        return res.status(400).send("Failed to create notification");
+      }else{
+        //   console.log('returned notification', newNotification);
       }
     });
-};
-
-exports.getNotificationsCount = function (req, res) {
-    // No clue whats going on here - Nick
-    return 7;
 };

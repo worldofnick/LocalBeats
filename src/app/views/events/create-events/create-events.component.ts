@@ -37,16 +37,14 @@ export class CreateEventsComponent implements OnInit {
   updating:Boolean
   cityState:string;
 
-  agreed = false;
-  eventDescription: string = `<h1>Your Event Description</h1>
-  <p><a href="http://mhrafi.com" target="_blank"><strong>MH Rafi</strong></a></p>
-  <p><br></p><p><strong >Lorem Ipsum</strong>
-  <span>
-  &nbsp;is simply dummy text of the printing and typesetting industry. 
-  Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a 
-  galley of type and scrambled it to make a type specimen book. It has survived not only five centuries
-  </span></p>`;
+  public selectedMoment = new Date();
+  public selectedMoment2 = new FormControl(new Date());
+  // public dateRange = [new Date(2018, 1, 12, 10, 30), new Date(2018, 3, 21, 20, 30)];
+  public dateRange;
 
+
+
+  agreed = false;
 
   public place: google.maps.places.PlaceResult
   zoom: number;
@@ -101,6 +99,7 @@ export class CreateEventsComponent implements OnInit {
               
   ngOnInit() {
 
+    
     this.event.eventType = "Wedding"
   
     // this.openSnackBar();
@@ -127,13 +126,17 @@ export class CreateEventsComponent implements OnInit {
       // console.log(ID);
       this.updating = true;
     }
-    this.setForm();
+
+    this.dateRange = [new Date(), new Date()];
+
     if (this.updating) {
       this.eventService.getEventByEID(this.EID).then((eventEdit: Event) => {
         this.event = eventEdit;
+        this.dateRange = [this.event.fromDate, this.event.toDate];
+
         this.setForm();
 
-        //pre load maps input box
+        // pre load maps input box
        this.cityState = this.event.city + ',' + this.event.state + ', USA' ;
 
         for(let genre of this.genres){
@@ -145,10 +148,10 @@ export class CreateEventsComponent implements OnInit {
         }
       });
     }
-    
+    this.setForm();
   }
 
-  setForm(){
+  setForm() {
     this.basicForm = this.formBuilder.group({
       eventName: new FormControl(this.event.eventName, [
         Validators.minLength(4),
@@ -162,7 +165,9 @@ export class CreateEventsComponent implements OnInit {
       ]),
       negotiable: new FormControl(this.event.negotiable, [
       ]),
-      date: new FormControl(),
+      date: new FormControl(this.dateRange, [
+        Validators.required
+      ]),
       eventDescription: new FormControl(this.event.description, [
         Validators.required
       ]),
@@ -297,11 +302,15 @@ export class CreateEventsComponent implements OnInit {
     this.event.fixedPrice = this.basicForm.get('fixedPrice').value;
     this.event.toDate = this.basicForm.get('date').value;
     this.event.negotiable = this.basicForm.get('negotiable').value;
+    if(this.event.negotiable == null) { 
+      this.event.negotiable = false;
+    }
     this.event.eventGenres = this.basicForm.get('genres').value;
     this.event.description = this.basicForm.get('eventDescription').value;
     this.event.hostUser = this.user;
     this.event.hostEmail = this.user.email;
-
+    this.event.fromDate = this.basicForm.get('date').value[0];
+    this.event.toDate = this.basicForm.get('date').value[1];
 
 
     if (!this.updating) {
@@ -310,7 +319,7 @@ export class CreateEventsComponent implements OnInit {
       this.eventService.createEvent(this.event).then((newEvent: Event) => {
         this.event = newEvent;
         this.eventService.event = this.event;
-        this.router.navigate(['/events', this.event._id]); //this will go to the page about the event
+        this.router.navigate(['/events', this.event._id]); // this will go to the page about the event
       });
     } else {
       // console.log("updating event", this.event);
@@ -319,7 +328,7 @@ export class CreateEventsComponent implements OnInit {
         this.event = newEvent;
 
         this.eventService.event = this.event;
-        this.router.navigate(['/events', this.event._id]); //this will go to the page about the event
+        this.router.navigate(['/events', this.event._id]); // this will go to the page about the event
       });
     }
   }

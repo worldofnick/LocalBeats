@@ -269,8 +269,8 @@ export class EventSingletonComponent implements OnInit {
   }
 
   createNotificationForHost(booking: Booking, response: NegotiationResponses, route: string[], icon: string, message: string) {
-    let notification = new Notification(booking.performerUser, booking.hostUser, booking.eventEID._id,
-      booking, response, message, icon, route); 
+    let notification = new Notification(null, booking.performerUser, booking.hostUser, booking.eventEID._id,
+      booking, response, message, icon, new Date(), route); 
     this._socketService.sendNotification(SocketEvent.SEND_NOTIFICATION, notification);
   }
 
