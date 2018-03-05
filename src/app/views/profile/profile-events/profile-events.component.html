@@ -24,7 +24,7 @@
             </mat-card-content>
             <mat-card-actions>
               <button *ngIf="item.event.hostUser._id == this.user._id" (click)="onEditEvent(item.event, i)" mat-raised-button color="primary">Edit</button>
-              <button *ngIf="item.event.hostUser._id == this.user._id" (click)="onDeleteEvent(item.event, i)" mat-raised-button color="accent">Delete</button>
+              <button *ngIf="item.event.hostUser._id == this.user._id && item.confirmations.length == 0" (click)="onDeleteEvent(item.event, i)" mat-raised-button color="accent">Delete</button>
             </mat-card-actions>
           </mat-card>
         </mat-tab>
