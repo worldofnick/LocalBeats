@@ -53,8 +53,8 @@ export class ProfileSettingsComponent implements OnInit {
       if (params['stripe']) {
         this.userService.getUserByID(this.userService.user._id).then((user: User) => {
           this.user = user;
-          // this.userService.setUser(user);
-          this.userService.user = user;
+          this.userService.setUser(user);
+          // this.userService.user = user;
         }).then(() => this.selectedTabIndex = 2);
         
       }
