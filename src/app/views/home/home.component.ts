@@ -10,6 +10,7 @@ import { Notification } from '../../models/notification';
 import { Router } from '@angular/router';
 import { Action } from '../../services/chats/model/action';
 import { User } from '../../models/user';
+import { SharedDataService } from '../../services/shared/shared-data.service';
 
 @Component({
   selector: 'app-home',
@@ -39,7 +40,7 @@ export class HomeComponent implements OnInit {
     url: 'assets/images/wedding-pic.jpg'
   }];
 
-  constructor(private snackBar: MatSnackBar, private router : Router,
+  constructor(private snackBar: MatSnackBar, private router : Router, private _sharedDataService: SharedDataService,
               private _userService: UserService, private _socketService: SocketService) { }
 
   ngOnInit() {
@@ -99,15 +100,16 @@ export class HomeComponent implements OnInit {
    * @param message The original PM that is received
    */
   openNewMessageSnackBar(message: Message) {
+    // Only if on the recipient's profile:
     if (this._userService.user._id !== message.from._id) {
       let snackBarRef = this.snackBar.open('You have a new message from ' + message.from.firstName +
         ' ' + message.from.lastName, 'Go to message...', { duration: 3500 });
       
       snackBarRef.onAction().subscribe(() => {
         console.log('Going to the message...');
-
+        this._sharedDataService.setProfileMessageSharedProperties(message.from);
         this.router.navigate(['/chat']);
-        this._socketService.send(Action.OPEN_SNACK_BAR_PM, message);
+        // this._socketService.send(Action.OPEN_SNACK_BAR_PM, message);
       });
     };
   }
