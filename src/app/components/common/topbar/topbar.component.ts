@@ -105,6 +105,7 @@ export class TopbarComponent implements OnInit {
           this.latitude = place.geometry.location.lat();
           this.longitude = place.geometry.location.lng();
           this.zoom = 12;
+          this.submit();
         });
       });
     });
@@ -133,6 +134,7 @@ export class TopbarComponent implements OnInit {
     if(event.keyCode != 13 && !this.expand){
       this.expand = true;
     }
+    this.submit(false);
   }
   
   click() {
@@ -164,15 +166,17 @@ export class TopbarComponent implements OnInit {
   startDateOpen() {
     this.startDateOpened = !this.startDateOpened;
     this.startDateClosed = true;
+    this.submit();
   }
 
   endDateOpen() {
     this.endDateOpened = !this.endDateOpened;
     this.endDateClosed = true;
+    this.submit();
   }
 
   // Submission of search
-  submit() {
+  submit(expand: boolean = true) {
 
     this.currentSearch.from_date = this.searchForm.get('startDate').value;
     this.currentSearch.to_date = this.searchForm.get('endDate').value;
@@ -223,7 +227,7 @@ export class TopbarComponent implements OnInit {
         this.router.navigate(['/search'])
       });
     }
-    this.expand = false;
+    this.expand = expand;
   }
 
   // Triggers the notification panel to sideload

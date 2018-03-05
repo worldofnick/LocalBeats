@@ -96,6 +96,7 @@ export class RegisterComponent implements OnInit {
       _id: null,
       firstName: signupData.firstName,
       lastName: signupData.lastName,
+      fullName: signupData.firstName + " " + signupData.lastName,
       email: signupData.email,
       password: signupData.password,
       spotifyID: null,

@@ -43,6 +43,7 @@ export class AuthComponent implements OnInit {
       _id: null,
       firstName: null,
       lastName: null,
+      fullName: null,
       email: signinData.username,
       password: signinData.password,
       spotifyID: null,
