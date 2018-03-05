@@ -3,6 +3,7 @@ import { ActivatedRoute } from "@angular/router";
 import { SpotifyClientService } from '../../services/music/spotify-client.service';
 import { UserService } from '../../services/auth/user.service';
 import { Router } from '@angular/router';
+import { MatSnackBar, MatSnackBarRef } from '@angular/material';
 
 
 @Component({
@@ -14,7 +15,8 @@ export class CallbackComponent implements OnInit {
 
   spotifyCode: string;
 
-  constructor(private route: ActivatedRoute, private userService: UserService, private router : Router,
+  constructor(private route: ActivatedRoute, private snackBar: MatSnackBar, 
+              private userService: UserService, private router : Router,
               private _spotifyClientService: SpotifyClientService) { }
 
   ngOnInit() {
@@ -28,7 +30,7 @@ export class CallbackComponent implements OnInit {
    */
   getTokensProfileAndAlbums() {
     this._spotifyClientService.requestRefreshAndAccessTokens(this.spotifyCode).then((tokens: any) => {
-      console.log('Callback token data: ', tokens);
+      // console.log('Callback token data: ', tokens);
       return tokens;
     }).then( (tokens: any) => this.getSpotifyProfileDataOfMe(tokens));
   }
@@ -38,11 +40,20 @@ export class CallbackComponent implements OnInit {
    * @param tokens access_token, refresh_token, expires_in
    */
   getSpotifyProfileDataOfMe(tokens: any) {
-    console.log('Next promise\'s token data received: ', tokens);
+    // console.log('Next promise\'s token data received: ', tokens);
     this._spotifyClientService.requestSpotifyMyProfile(tokens).then((responseWithUserPayload: any) => {
-      console.log('My spotify profile: ', responseWithUserPayload);
+      // console.log('My spotify profile: ', responseWithUserPayload);
       return responseWithUserPayload;
-    }).then((responseWithUserPayload: any) => this.getAlbumsOfMe(responseWithUserPayload));
+    }).then((responseWithUserPayload: any) => {
+      if (responseWithUserPayload !== undefined) {
+        this.getAlbumsOfMe(responseWithUserPayload);
+      } else {
+        let snackBarRef = this.snackBar.open('Unable to link account. So please try again later.', '', {
+          duration: 6000,
+        });
+        this.router.navigate(['/profile', 'overview']);
+      }
+    });
   }
 
   /**
@@ -50,10 +61,21 @@ export class CallbackComponent implements OnInit {
    * @param responseWithUserPayload contains user object with spotify id, tokens
    */
   getAlbumsOfMe(responseWithUserPayload: any) {
-    console.log('Getting the albums of ' + responseWithUserPayload.user.spotify.email);
+    // console.log('Getting the albums of ' + responseWithUserPayload.user.spotify.email);
     this._spotifyClientService.requestAlbumsOwnedByAnArtist(responseWithUserPayload.user)
-      .then( (listOfSpotifyAlbumObjects: any) => this.saveToUserAndRedirect(responseWithUserPayload,
-                                                                      listOfSpotifyAlbumObjects) );
+      .then( (listOfSpotifyAlbumObjects: any) => {
+        if ( listOfSpotifyAlbumObjects !== undefined ) {
+          this.saveToUserAndRedirect(responseWithUserPayload, listOfSpotifyAlbumObjects);
+        } else {
+          let snackBarRef = this.snackBar.open('You are not registered as an artist on spotify...', '', {
+            duration: 6000,
+          });
+          this.router.navigate(['/profile', 'overview']);
+        }
+      })
+      .catch( (error: any) => {
+        console.log(error);
+      });
   }
 
   /**
@@ -62,7 +84,7 @@ export class CallbackComponent implements OnInit {
    * @param listOfSpotifyAlbumObjects contains the list of albums
    */
   saveToUserAndRedirect(responseWithUserPayload: any, listOfSpotifyAlbumObjects: any) {
-      console.log('List of albums: ', listOfSpotifyAlbumObjects);
+      // console.log('List of albums: ', listOfSpotifyAlbumObjects);
 
       const spotifyObject = {
         email: responseWithUserPayload.user.spotify.email,
@@ -73,7 +95,7 @@ export class CallbackComponent implements OnInit {
         refreshToken: responseWithUserPayload.user.spotify.refreshToken,
         albums: listOfSpotifyAlbumObjects.albums.items
       };
-      console.log('Spotify Object to save: ', spotifyObject);
+      // console.log('Spotify Object to save: ', spotifyObject);
       // Save the spotify profile and the albums to user service object
       let newUser = this.userService.user;
       newUser.spotify = spotifyObject;
@@ -88,17 +110,16 @@ export class CallbackComponent implements OnInit {
    */
   extractSpotifyCode(): string {
     const callbackURL = window.location.href;
-    console.log('URL: ', callbackURL);
+    // console.log('URL: ', callbackURL);
     if (callbackURL.indexOf('spotify') >= 0 ) {
       const typeIndex = callbackURL.indexOf('spotify');
-      console.log('Index: ', typeIndex);
+      // console.log('Index: ', typeIndex);
       if(callbackURL.indexOf('?code=') >= 0 ) {
         const codeStartIndex = callbackURL.indexOf('?code=');
         const code = callbackURL.substr(codeStartIndex+6);
-        console.log("Code: ", code);
+        // console.log("Code: ", code);
         return code;
       } else if (callbackURL.indexOf('?error=') >= 0 ) {
-        //TODO: no code, handle error (or just redirect to the profile/setting)
         this.router.navigate(['/profile', 'settings']);
         return '';
       }
