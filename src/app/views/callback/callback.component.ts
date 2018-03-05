@@ -29,10 +29,11 @@ export class CallbackComponent implements OnInit {
    * saves it to the logged in user object.
    */
   getTokensProfileAndAlbums() {
+    console.log('>> IN GET TOKENS');
     this._spotifyClientService.requestRefreshAndAccessTokens(this.spotifyCode).then((tokens: any) => {
       // console.log('Callback token data: ', tokens);
       return tokens;
-    }).then( (tokens: any) => this.getSpotifyProfileDataOfMe(tokens));
+    }).then( (tokens: any) =>this.getSpotifyProfileDataOfMe(tokens));
   }
 
   /**
@@ -40,12 +41,13 @@ export class CallbackComponent implements OnInit {
    * @param tokens access_token, refresh_token, expires_in
    */
   getSpotifyProfileDataOfMe(tokens: any) {
+    console.log('>> IN PROFILE DATA');
     // console.log('Next promise\'s token data received: ', tokens);
     this._spotifyClientService.requestSpotifyMyProfile(tokens).then((responseWithUserPayload: any) => {
       // console.log('My spotify profile: ', responseWithUserPayload);
       return responseWithUserPayload;
     }).then((responseWithUserPayload: any) => {
-      if (responseWithUserPayload !== undefined) {
+      if (responseWithUserPayload !== false) {
         this.getAlbumsOfMe(responseWithUserPayload);
       } else {
         let snackBarRef = this.snackBar.open('Unable to link account. So please try again later.', '', {
@@ -61,10 +63,11 @@ export class CallbackComponent implements OnInit {
    * @param responseWithUserPayload contains user object with spotify id, tokens
    */
   getAlbumsOfMe(responseWithUserPayload: any) {
+    console.log('>> IN GTE ALBUMS');
     // console.log('Getting the albums of ' + responseWithUserPayload.user.spotify.email);
     this._spotifyClientService.requestAlbumsOwnedByAnArtist(responseWithUserPayload.user)
       .then( (listOfSpotifyAlbumObjects: any) => {
-        if ( listOfSpotifyAlbumObjects !== undefined ) {
+        if ( listOfSpotifyAlbumObjects !== false ) {
           this.saveToUserAndRedirect(responseWithUserPayload, listOfSpotifyAlbumObjects);
         } else {
           let snackBarRef = this.snackBar.open('You are not registered as an artist on spotify...', '', {
@@ -85,7 +88,7 @@ export class CallbackComponent implements OnInit {
    */
   saveToUserAndRedirect(responseWithUserPayload: any, listOfSpotifyAlbumObjects: any) {
       // console.log('List of albums: ', listOfSpotifyAlbumObjects);
-
+      console.log('>> IN SAVE USER');
       const spotifyObject = {
         email: responseWithUserPayload.user.spotify.email,
         id: responseWithUserPayload.user.spotify.id,

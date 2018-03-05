@@ -57,7 +57,7 @@ export class SpotifyClientService {
             // console.log('User Object with Profile recieved: ', userObjectWithProfileData);
             return userObjectWithProfileData;
           } else {
-            return undefined;
+            return false;
           }
         })
         .catch(this.handleError);
@@ -65,8 +65,8 @@ export class SpotifyClientService {
 
   public requestAlbumsOwnedByAnArtist(userObject: any): Promise<any> {
     // TODO: @ash change it back to use the user's id
-    // const current = this.authorizeConnection + '/artists/' + userObject.spotify.id + '/albums';
-    const current = this.authorizeConnection + '/artists/0TnOYISbd1XYRBk9myaseg/albums';
+    const current = this.authorizeConnection + '/artists/' + userObject.spotify.id + '/albums';
+    // const current = this.authorizeConnection + '/artists/0TnOYISbd1XYRBk9myaseg/albums';
     // console.log('Spotify Token server url: ', current);
     // console.log('Albums request user received: ', userObject);
     return this.http.post(current, {user: this._userService.user,
@@ -79,7 +79,7 @@ export class SpotifyClientService {
             // console.log('Albums recieved: ', listOfSpotifyAlbumObjects);
             return listOfSpotifyAlbumObjects;
           } else {
-            return undefined;
+            return false;
           }
         })
         .catch(this.handleError);
@@ -115,6 +115,6 @@ export class SpotifyClientService {
     let errMsg = (error.message) ? error.message :
         error.status ? `${error.status} - ${error.statusText}` : 'Server error';
     console.error(errMsg); // log to console
-    return Promise.reject(errMsg);
+    return Promise.resolve(false);
 }
 }
