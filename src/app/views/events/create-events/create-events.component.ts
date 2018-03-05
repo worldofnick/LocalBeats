@@ -289,7 +289,7 @@ export class CreateEventsComponent implements OnInit {
     this.event.eventName = this.basicForm.get('eventName').value;
     this.event.eventType = this.basicForm.get('eventType').value;
     this.event.fixedPrice = this.basicForm.get('fixedPrice').value;
-    this.event.toDate = this.basicForm.get('date').value;
+    this.event.fromDate = this.basicForm.get('date').value;
     this.event.negotiable = this.basicForm.get('negotiable').value;
     this.event.eventGenres = this.basicForm.get('genres').value;
     this.event.description = this.basicForm.get('eventDescription').value;

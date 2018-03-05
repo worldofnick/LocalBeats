@@ -17,7 +17,7 @@ import { ReviewService } from 'app/services/reviews/review.service';
 // Data Models
 import { User } from 'app/models/user';
 import { Review } from 'app/models/review';
-import { Event } from 'app/models/event';
+import { Event, CancellationPolicy } from 'app/models/event';
 import { Booking, StatusMessages, NegotiationResponses, VerificationResponse, BookingType } from 'app/models/booking';
 import { Action } from 'app/services/chats/model/action'
 import { SocketEvent } from 'app/services/chats/model/event'
@@ -70,7 +70,8 @@ export class PerformanceManagementComponent implements OnInit {
     completionNotifications: number,
     cancellations: Booking[],
     cancellationNotifications: number,
-    paymentStatues: PaymentStatus[]};
+    paymentStatues: PaymentStatus[],
+    cancelledPaymentStatues: PaymentStatus[]};
 
   constructor(private eventService: EventService, 
     private userService: UserService,
@@ -97,7 +98,8 @@ export class PerformanceManagementComponent implements OnInit {
         completionNotifications: 0,
         cancellations: [],
         cancellationNotifications: 0,
-        paymentStatues: []};
+        paymentStatues: [],
+        cancelledPaymentStatues: []};
       this.getPerformances();
     }
 
@@ -133,26 +135,37 @@ export class PerformanceManagementComponent implements OnInit {
   */
   private updatePaymentStatues(booking: Booking) {
       // Update payment status
-    let idx = this.performances.completions.findIndex(b => b._id == booking._id);
-    this.bookingService.bookingPaymentStatus(booking).then((status: PaymentStatus) => {
-      this.performances.paymentStatues[idx] = status;
-      if(booking.completed && status == PaymentStatus.paid && booking.bothReviewed) {
-        booking.hostStatusMessage = StatusMessages.completed;
-        booking.artistStatusMessage = StatusMessages.completed;
-      } else if(booking.completed && status == PaymentStatus.paid) {
-        if(booking.beenReviewedByArtist) {
-          booking.artistStatusMessage = StatusMessages.reviewed;
-          booking.hostStatusMessage = StatusMessages.needsReview;
-        } else {
-          booking.artistStatusMessage = StatusMessages.needsReview;
-          booking.hostStatusMessage = StatusMessages.reviewed;
+    let idx = -1
+    idx = this.performances.completions.findIndex(b => b._id == booking._id);
+    if(idx > -1) {
+      this.bookingService.bookingPaymentStatus(booking).then((status: PaymentStatus) => {
+        this.performances.paymentStatues[idx] = status;
+        if(booking.completed && status == PaymentStatus.paid && booking.bothReviewed) {
+          booking.hostStatusMessage = StatusMessages.completed;
+          booking.artistStatusMessage = StatusMessages.completed;
+        } else if(booking.completed && status == PaymentStatus.paid) {
+          if(booking.beenReviewedByArtist) {
+            booking.artistStatusMessage = StatusMessages.reviewed;
+            booking.hostStatusMessage = StatusMessages.needsReview;
+          } else {
+            booking.artistStatusMessage = StatusMessages.needsReview;
+            booking.hostStatusMessage = StatusMessages.reviewed;
+          }
+        } else if(status == PaymentStatus.refund) {
+          booking.hostStatusMessage = StatusMessages.refund;
+          booking.artistStatusMessage = StatusMessages.refund;
         }
-      } else if(status == PaymentStatus.refund) {
-        booking.hostStatusMessage = StatusMessages.refund;
-        booking.artistStatusMessage = StatusMessages.refund;
-      }
-      this.bookingService.updateBooking(booking);
-    });
+        this.bookingService.updateBooking(booking);
+      });
+    } else {
+      idx = this.performances.cancellations.findIndex(b => b._id == booking._id);
+      this.bookingService.bookingPaymentStatus(booking).then((status: PaymentStatus) => {
+        this.performances.cancelledPaymentStatues[idx] = status;
+        booking.artistStatusMessage = StatusMessages.cancelled;
+        booking.hostStatusMessage = StatusMessages.cancelled;
+        this.bookingService.updateBooking(booking);
+      })
+    }
   }
 
   reviewDialog(booking: Booking) {
@@ -251,6 +264,7 @@ export class PerformanceManagementComponent implements OnInit {
       let cancelNotif: number = 0;
       let completeNotif: number = 0;
       let paymentStatues: PaymentStatus[] = [];
+      let cancelledPaymentStatues: PaymentStatus[] = [];
       for(let booking of bookings) {
         if(booking.approved) {
           if(booking.completed) {
@@ -274,6 +288,10 @@ export class PerformanceManagementComponent implements OnInit {
             if(!booking.artViewed) {
               cancelNotif++;
             }
+            // If a booking is cancelled, get its payment status
+            this.bookingService.bookingPaymentStatus(booking).then((status: PaymentStatus) => {
+              cancelledPaymentStatues.push(status);
+            })
           }
           
         } else {
@@ -305,7 +323,8 @@ export class PerformanceManagementComponent implements OnInit {
         completionNotifications: completeNotif,
         cancellations: cancelledBookings,
         cancellationNotifications: cancelNotif,
-        paymentStatues: paymentStatues};
+        paymentStatues: paymentStatues,
+        cancelledPaymentStatues: cancelledPaymentStatues};
     });
   }
 
@@ -389,6 +408,10 @@ export class PerformanceManagementComponent implements OnInit {
       this.performances.confirmations.splice(confirmationIndex, 1);
       this.performances.cancellationNotifications++;
       this.performances.cancellations.push(newBooking);
+      // If a booking is cancelled, check its payment status
+      this.bookingService.bookingPaymentStatus(newBooking).then((status: PaymentStatus) => {
+        this.performances.cancelledPaymentStatues.push(status);
+      })
     } else if(response == NegotiationResponses.complete) {
       // Find it in confirmations
       confirmationIndex = this.performances.confirmations.findIndex(a => a._id == newBooking._id);
@@ -410,28 +433,30 @@ export class PerformanceManagementComponent implements OnInit {
       this.performances.confirmationNotifications++;
     } else if(response == NegotiationResponses.payment) {
       // Update payment status of completed booking because a payment has happened
-      completionIndex = this.performances.completions.findIndex(a => a._id == newBooking._id);
-      this.bookingService.bookingPaymentStatus(newBooking).then((status: PaymentStatus) => {
-        this.performances.completions[completionIndex] = newBooking;
-        this.performances.completionNotifications++;
-        if(newBooking.completed && status == PaymentStatus.paid && newBooking.bothReviewed) {
-          newBooking.hostStatusMessage = StatusMessages.completed;
-          newBooking.artistStatusMessage = StatusMessages.completed;
-        } else if(newBooking.completed && status == PaymentStatus.paid) {
-          if(newBooking.beenReviewedByArtist) {
-            newBooking.hostStatusMessage = StatusMessages.needsReview;
-            newBooking.artistStatusMessage = StatusMessages.reviewed;
-          } else {
-            newBooking.hostStatusMessage = StatusMessages.reviewed;
-            newBooking.artistStatusMessage = StatusMessages.needsReview;
+      if(!newBooking.cancelled) {
+        completionIndex = this.performances.completions.findIndex(a => a._id == newBooking._id);
+        this.bookingService.bookingPaymentStatus(newBooking).then((status: PaymentStatus) => {
+          this.performances.completions[completionIndex] = newBooking;
+          this.performances.completionNotifications++;
+          if(newBooking.completed && status == PaymentStatus.paid && newBooking.bothReviewed) {
+            newBooking.hostStatusMessage = StatusMessages.completed;
+            newBooking.artistStatusMessage = StatusMessages.completed;
+          } else if(newBooking.completed && status == PaymentStatus.paid) {
+            if(newBooking.beenReviewedByArtist) {
+              newBooking.hostStatusMessage = StatusMessages.needsReview;
+              newBooking.artistStatusMessage = StatusMessages.reviewed;
+            } else {
+              newBooking.hostStatusMessage = StatusMessages.reviewed;
+              newBooking.artistStatusMessage = StatusMessages.needsReview;
+            }
+          } else if(status == PaymentStatus.refund) {
+            newBooking.hostStatusMessage = StatusMessages.refund;
+            newBooking.hostStatusMessage = StatusMessages.refund;
           }
-        } else if(status == PaymentStatus.refund) {
-          newBooking.hostStatusMessage = StatusMessages.refund;
-          newBooking.hostStatusMessage = StatusMessages.refund;
-        }
-        this.bookingService.updateBooking(newBooking);
-        this.performances.paymentStatues[completionIndex] = status;
-      });
+          this.bookingService.updateBooking(newBooking);
+          this.performances.paymentStatues[completionIndex] = status;
+        });
+      }
     } else if (response == NegotiationResponses.review) {
       completionIndex = this.performances.completions.findIndex(a => a._id == newBooking._id);
       this.performances.completions[completionIndex] = newBooking;
@@ -674,19 +699,64 @@ export class PerformanceManagementComponent implements OnInit {
           booking.cancelled = true;
           booking.artViewed = true;
           booking.hostViewed = false;
-          booking.hostViewed = false;
-          booking.artViewed = true;
           booking.hostStatusMessage = StatusMessages.cancelled;
           booking.artistStatusMessage = StatusMessages.cancelled;
-          // Creat enotification for host
-          this.bookingService.updateBooking(booking).then(() => {
+          // Check cancellation policy and dates
+          let today = new Date()
+          let endDate = subDays(booking.eventEID.fromDate,0);
+          let inRange = isWithinRange(subDays(today, 0), subDays(booking.eventEID.fromDate,30), subDays(booking.eventEID.fromDate,0));
+          console.log("today " + today);
+          let startDate = booking.eventEID.fromDate;
+          console.log("start date " + startDate);
+          startDate = subDays(booking.eventEID.fromDate, 30);
+          console.log("end date " + endDate);
+          if((booking.eventEID.cancellationPolicy == CancellationPolicy.flexible && isWithinRange(subDays(today, 0), subDays(booking.eventEID.fromDate,7), subDays(booking.eventEID.fromDate,0)) ||
+          booking.eventEID.cancellationPolicy == CancellationPolicy.strict && isWithinRange(subDays(today, 0), subDays(booking.eventEID.fromDate,30), subDays(booking.eventEID.fromDate,0)))) {
+            // Charge
+            console.log('booking:');
+            console.log(booking);
+            this.stripeService.cancelBookingFee(booking, PaymentStatus.artist_cancel).then((success: boolean) => {
+              if(success) {
+                this.bookingService.bookingPaymentStatus(booking).then((status: PaymentStatus) => {
+                  // If payment of fee was successful, push a new status
+                  this.performances.cancelledPaymentStatues.push(status);
+                  // Move the booking from confirmations to cancellations
+                  this.performances.confirmations.splice(bookingIndex,1);
+                  this.performances.cancellations.push(booking);
+                  this.performances.cancellationNotifications++;
+                  let snackBarRef = this.snackBar.open('Cancellation fee charged!', "", {
+                    duration: 1500,
+                  });
+                  // Update the model and send a notification if the model updates correctly
+                  this.bookingService.updateBooking(booking).then(() => {
+                    // Send notification to artist
+                    this.createNotificationForHost(booking, result.response, ['/bookingmanagement', 'myevents'],
+                    'event_busy', booking.performerUser.firstName + " has cancelled the confirmed booking for " + booking.eventEID.eventName + " and a 15% fee was charged.");
+                  });
+                });
+
+              } else {
+                // Fee charge failed
+                let snackBarRef = this.snackBar.open('Payment of fee failed.', "", {
+                  duration: 1500,
+                });
+              }
+            });
+          } else {
+            // Create notification for host
+            this.bookingService.updateBooking(booking).then(() => {
             // Update the model of the component
-            this.performances.confirmations.splice(bookingIndex,1);
-            this.performances.cancellations.push(booking);
-            this.performances.cancellationNotifications++;
-            this.createNotificationForHost(booking, result.response, ['/events', booking.eventEID._id],
-            'import_export', booking.hostUser.firstName + " has cancelled the confirmed booking for " + booking.eventEID.eventName);
+            this.bookingService.bookingPaymentStatus(booking).then((status: PaymentStatus) => {
+              // If payment of fee was successful, push a new status
+              this.performances.cancelledPaymentStatues.push(status);
+              this.performances.confirmations.splice(bookingIndex,1);
+              this.performances.cancellations.push(booking);
+              this.performances.cancellationNotifications++;
+              this.createNotificationForHost(booking, result.response, ['/bookingmanagement', 'myevents'],
+              'event_busy', booking.performerUser.firstName + " has cancelled the confirmed booking for " + booking.eventEID.eventName + " and no fee was charged.");
+            });
           });
+          }
         } else {
           // No change, the user kept their confirmed booking
         }
