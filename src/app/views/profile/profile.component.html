@@ -59,8 +59,8 @@
       </mat-card-content>
     </mat-card>
 
-    <!-- Spotify Widget -->
-    <mat-card class="default" *ngIf="this.userService.isAuthenticated()">
+    <!-- Music Corner -->
+    <mat-card class="default" *ngIf="this.userService.isAuthenticated() && this.user.isArtist">
       <mat-card-title>Music Corner</mat-card-title>
       <mat-card-content class="pt-0">
 
@@ -123,7 +123,7 @@
             </div>
           </mat-tab>
 
-          <mat-tab label="Account Services" *ngIf="(this.user.spotify !== undefined || this.user.soundcloud !== undefined)">
+          <mat-tab label="Account Services" *ngIf="(this.user.spotify !== undefined || this.user.soundcloud !== undefined) && this.user._id === this.userService.user._id">
             <mat-card-content class="mt-1">
               <div class="button-row">
                 <a *ngIf="this.user.spotify !== null && this.user.spotify !== undefined" mat-raised-button (click)="unlinkSpotify()" color="primary">Unlink Spotify</a>
