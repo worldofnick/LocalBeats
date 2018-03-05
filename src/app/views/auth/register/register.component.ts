@@ -122,7 +122,7 @@ export class RegisterComponent implements OnInit {
 
     this.userService.signupUser(this.user).then((user: User) => {
       this.user = user;
-      this.router.navigate(['/']);
+      this.router.navigate(['/profile', 'settings']);
     });
   }
 
