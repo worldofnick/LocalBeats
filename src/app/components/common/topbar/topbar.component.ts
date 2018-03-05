@@ -165,11 +165,13 @@ export class TopbarComponent implements OnInit {
   startDateOpen() {
     this.startDateOpened = !this.startDateOpened;
     this.startDateClosed = true;
+    this.submit();
   }
 
   endDateOpen() {
     this.endDateOpened = !this.endDateOpened;
     this.endDateClosed = true;
+    this.submit();
   }
 
   // Submission of search

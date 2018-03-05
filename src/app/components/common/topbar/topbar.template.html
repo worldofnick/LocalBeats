@@ -31,7 +31,7 @@
                 <input class="search-text" [formControl]="searchForm.controls['text']" autofocus="true" placeholder="Search" type="text" (click)="click()" (keyup)="onKey($event)">
             </mat-panel-title>
           </mat-expansion-panel-header>
-          <mat-button-toggle-group (changed)="submit()" [formControl]="searchForm.controls['type']" name="searchType" value="Artist">
+          <mat-button-toggle-group [formControl]="searchForm.controls['type']" name="searchType" value="Artist">
             <mat-button-toggle value="Artist">
               Artists
             </mat-button-toggle>
@@ -57,7 +57,7 @@
           </mat-form-field>
           <br>
           <mat-form-field>
-            <mat-select placeholder="Event Types" [formControl]="searchForm.controls['events']" (openedChange)="eventSelectOpen()" multiple>
+            <mat-select (change)="this.submit()" placeholder="Event Types" [formControl]="searchForm.controls['events']" (openedChange)="eventSelectOpen()" multiple>
               <mat-select-trigger class="additional-selection">
                 {{(searchForm.controls['events'].value ? searchForm.controls['events'].value[0] : '') | capitalize}}
                 <span *ngIf="searchForm.controls['events'].value?.length > 1">
