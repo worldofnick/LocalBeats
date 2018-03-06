@@ -97,7 +97,7 @@ export class TopbarComponent implements OnInit, OnDestroy {
     });
 
     // Default search by current location
-    this.setCurrentPosition();
+    // this.setCurrentPosition();
 
     // Load Places Autocomplete
     this.mapsAPILoader.load().then(() => {
