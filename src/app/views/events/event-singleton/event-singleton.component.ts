@@ -17,6 +17,7 @@ import { SocketService } from '../../../services/chats/socket.service';
 import { Message } from '../../../services/chats/model/message';
 import { MessageTypes } from '../../../services/chats/model/messageTypes';
 import { AgmCoreModule, MapsAPILoader } from '@agm/core';
+import { SharedDataService } from '../../../services/shared/shared-data.service';
 
 @Component({
   selector: 'app-event-singleton',
@@ -45,6 +46,7 @@ export class EventSingletonComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private _socketService: SocketService,
+    private _sharedDataService: SharedDataService,
     public datepipe: DatePipe
   ) { }
 
@@ -121,15 +123,16 @@ export class EventSingletonComponent implements OnInit {
   Takes user to their performances
   */
  onManageBooking() {
-    this.router.navigate(['/bookingmanagement/myperformances']);    
+    this.router.navigate(['/bookingmanagement/myperformances']); 
   }
 
   messageHost(){
     let message:Message = {
       to: this.model.hostUser
     };
+    // If the user clicked message to some other user, then initiate conversation with it
+    this._sharedDataService.setProfileMessageSharedProperties(this.user);
     this.router.navigate(['/chat']);
-    this._socketService.send(Action.REQUEST_MSG_FROM_PROFILE_BUTTON, message);
   }
 
   commentToHost(comment: string): Message {
