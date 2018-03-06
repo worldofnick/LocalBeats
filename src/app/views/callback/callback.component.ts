@@ -4,6 +4,7 @@ import { SpotifyClientService } from '../../services/music/spotify-client.servic
 import { UserService } from '../../services/auth/user.service';
 import { Router } from '@angular/router';
 import { MatSnackBar, MatSnackBarRef } from '@angular/material';
+import { User } from '../../models/user';
 
 
 @Component({
@@ -98,13 +99,16 @@ export class CallbackComponent implements OnInit {
         refreshToken: responseWithUserPayload.user.spotify.refreshToken,
         albums: listOfSpotifyAlbumObjects.albums.items
       };
-      // console.log('Spotify Object to save: ', spotifyObject);
+      
       // Save the spotify profile and the albums to user service object
       let newUser = this.userService.user;
       newUser.spotify = spotifyObject;
+      console.log('Spotify Object to save: ', newUser);
       this.userService.user = newUser;
-      // Redirect to the profile page to setup and display the spotify widget
-      this.router.navigate(['/profile', 'overview']);
+      this.userService.onEditProfile(this.userService.user).then((user: User) => {
+        // Redirect to the profile page to setup and display the spotify widget
+        this.router.navigate(['/profile', 'overview']);
+      });
   }
 
   /**
