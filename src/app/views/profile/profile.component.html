@@ -106,8 +106,8 @@
             <div class="soundcloud-tab-content" [style.overflow]="'auto'" [style.height.px]="'300'">
                 
                 <div *ngIf="(this.user.soundcloud === undefined || this.user.soundcloud === null) && this.user._id === this.userService.user._id" class="soundcloud-register-container">
-                  <mat-form-field (keydown)="registerSoundcloudClicked($event)" floatLabel="never" hintLabel="Tip: ID is the numeric sequence at end of the profile page's URL">
-                      <input matInput [(ngModel)]="soundcloudIdFormInput" placeholder="Register your SoundCloud ID">
+                  <mat-form-field (keydown)="registerSoundcloudClicked($event)" floatLabel="never" hintLabel="Tip: Your username can be found on the soundcloud profile page">
+                      <input matInput [(ngModel)]="soundcloudIdFormInput" placeholder="Register your SoundCloud Username">
                   </mat-form-field>
                 </div>
                 <div *ngIf="(this.user.soundcloud === undefined || this.user.soundcloud === null) && this.user._id !== this.userService.user._id" class="no-music-found-container">

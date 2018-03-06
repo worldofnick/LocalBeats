@@ -238,8 +238,10 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterViewChecked {
               username: updatedUser.soundcloud.username
             };
             console.log('This User: ', this.user);
-            this.userService.user = this.user;
-            this.sanitizeSoundcloudUrl();
+            this.userService.onEditProfile(this.user).then( (savedUser: User) => {
+              this.userService.user = this.user;
+              this.sanitizeSoundcloudUrl();
+            });
           } else {
             // Invalid soundcloud username. Notify user and keep the input
             let snackBarRef = this.snackBar.open('Invalid Soundcloud username. Try Again!', '', {
@@ -247,12 +249,6 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterViewChecked {
             });
           }
         });
-
-        // TODO: Save the soundcloud id to the DB
-        // this.user.soundcloud = { username: this.soundcloudIdFormInput };
-        // this.userService.onEditProfile(this.user).then( (userWithSoundcloud: User) => {
-        //   this.sanitizeSoundcloudUrl();
-        // });
       }
 
       this.soundcloudIdFormInput = '';
