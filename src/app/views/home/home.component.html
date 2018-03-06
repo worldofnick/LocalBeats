@@ -15,7 +15,7 @@
         <div fxFlex="100">
           <mat-icon >attach_money</mat-icon><span fxFlex="20px"></span> Pay through Stripe</div>
       </div>
-        <div fxLayout="row" fxLayout.lt-sm="column">
+        <div *ngIf="user == null" fxLayout="row" fxLayout.lt-sm="column">
           <button routerLink="/auth/register" color="primary" mat-raised-button mat-lg-button><mat-icon>person</mat-icon> Register</button>
           <span fxFlex="20px"></span>
           <button [routerLink]="['/auth']" color="accent" mat-raised-button mat-lg-button><mat-icon>subdirectory_arrow_right</mat-icon> Login</button>
