@@ -22,9 +22,13 @@ export class SpotifyClientService {
     return this.http.post(current, { headers: this.headers })
         .toPromise()
         .then((response: Response) => {
-          const data = response.json();
-          // console.log('Data SPotift: ', data);
-          return data.redirect_url;
+          if (response.status < 300) {
+            const data = response.json();
+            // console.log('Data SPotift: ', data);
+            return data.redirect_url;
+          } else {
+            return false;
+          }
         })
         .catch(this.handleError);
   }
@@ -35,9 +39,13 @@ export class SpotifyClientService {
     return this.http.post(current, {user: this._userService.user, code: code}, { headers: this.headers })
         .toPromise()
         .then((response: Response) => {
-          const data = response.json();
-          // console.log('Tokens recieved from getAuthTokens: ', data);
-          return data;
+          if (response.status < 300) {
+            const data = response.json();
+            // console.log('Tokens recieved from getAuthTokens: ', data);
+            return data;
+          } else {
+            return false;
+          }
         })
         .catch(this.handleError);
   }

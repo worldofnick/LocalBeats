@@ -73,12 +73,12 @@
             <div class="spotify-tab-content" [style.overflow]="'auto'" [style.height.px]="'300'">
               
               <!-- Link spotify button on logged in user's profile if no spotify account is linked -->
-              <div class="spotifyConnectButtonContainer" *ngIf="(this.user.spotify === undefined || this.user.spotify === null) && this.user._id === this.userService.user._id">
+              <div class="spotifyConnectButtonContainer" *ngIf="(this.user.spotify === undefined || this.user.spotify === null) && this.onOwnProfile">
                   <button class="btn" (click)="authorizeSpotify()"><i class="fa fa-spotify"></i> Connect your Spotify account</button>
               </div>
 
               <!-- No spotify linked message on other person's profile with no spotify account -->
-              <div *ngIf="(this.user.spotify === undefined || this.user.spotify === null) && this.user._id !== this.userService.user._id" class="no-music-found-container">
+              <div *ngIf="(this.user.spotify === undefined || this.user.spotify === null) && !this.onOwnProfile" class="no-music-found-container">
                   <h3>{{this.user.firstName}} has no Spotify music...</h3>
               </div>
               

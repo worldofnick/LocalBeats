@@ -34,7 +34,16 @@ export class CallbackComponent implements OnInit {
     this._spotifyClientService.requestRefreshAndAccessTokens(this.spotifyCode).then((tokens: any) => {
       // console.log('Callback token data: ', tokens);
       return tokens;
-    }).then( (tokens: any) =>this.getSpotifyProfileDataOfMe(tokens));
+    }).then( (tokens: any) => {
+      if (tokens !== false) {
+        this.getSpotifyProfileDataOfMe(tokens);
+      } else {
+        let snackBarRef = this.snackBar.open('Unable to link account. So please try again later.', '', {
+          duration: 6000,
+        });
+        this.router.navigate(['/']);
+      }
+    });
   }
 
   /**
@@ -54,7 +63,7 @@ export class CallbackComponent implements OnInit {
         let snackBarRef = this.snackBar.open('Unable to link account. So please try again later.', '', {
           duration: 6000,
         });
-        this.router.navigate(['/profile', 'overview']);
+        this.router.navigate(['/']);
       }
     });
   }
@@ -74,7 +83,7 @@ export class CallbackComponent implements OnInit {
           let snackBarRef = this.snackBar.open('You are not registered as an artist on spotify...', '', {
             duration: 6000,
           });
-          this.router.navigate(['/profile', 'overview']);
+          this.router.navigate(['/']);
         }
       })
       .catch( (error: any) => {
@@ -99,7 +108,7 @@ export class CallbackComponent implements OnInit {
         refreshToken: responseWithUserPayload.user.spotify.refreshToken,
         albums: listOfSpotifyAlbumObjects.albums.items
       };
-      
+
       // Save the spotify profile and the albums to user service object
       let newUser = this.userService.user;
       newUser.spotify = spotifyObject;
@@ -107,7 +116,7 @@ export class CallbackComponent implements OnInit {
       this.userService.user = newUser;
       this.userService.onEditProfile(this.userService.user).then((user: User) => {
         // Redirect to the profile page to setup and display the spotify widget
-        this.router.navigate(['/profile', 'overview']);
+        this.router.navigate(['/']);
       });
   }
 
@@ -127,7 +136,7 @@ export class CallbackComponent implements OnInit {
         // console.log("Code: ", code);
         return code;
       } else if (callbackURL.indexOf('?error=') >= 0 ) {
-        this.router.navigate(['/profile', 'settings']);
+        this.router.navigate(['/']);
         return '';
       }
     }
