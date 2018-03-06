@@ -116,6 +116,13 @@ export class CallbackComponent implements OnInit {
       this.userService.onEditProfile(this.userService.user).then((user: User) => {
         // Redirect to the profile page to setup and display the spotify widget
         this.router.navigate(['/']);
+        let snackBarRef = this.snackBar.open('Spotify linking successful 🎉',
+            'Go to Music Corner...', { duration: 3500 });
+
+        snackBarRef.onAction().subscribe(() => {
+          console.log('Going to the music corner...');
+          this.router.navigate(['/profile', 'overview']);
+      });
       });
   }
 
