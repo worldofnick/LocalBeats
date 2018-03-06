@@ -6,7 +6,6 @@ import { Router } from '@angular/router';
 import { MatSnackBar, MatSnackBarRef } from '@angular/material';
 import { User } from '../../models/user';
 
-
 @Component({
   selector: 'app-callback',
   templateUrl: './callback.component.html',

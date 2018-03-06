@@ -187,13 +187,11 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterViewChecked {
     // console.log(this.user.spotify !== null && this.user.spotify !== undefined);
     if ( this.user !== null && this.user !== undefined ) {
       if (this.user.spotify !== null && this.user.spotify !== undefined) {
-        if (this.user.spotify.albums !== null && this.user.spotify.albums !== undefined) {
         this._spotifyClientService.requestAlbumsOwnedByAnArtist(this.user)
           .then((listOfSpotifyAlbumObjects: any) => {
             this.user.spotify.albums = listOfSpotifyAlbumObjects.albums.items;
-            // console.log('Saved albums: ', this.user);
+            console.log('Saved albums: ', this.user);
           });
-        }
       }
     }
   }
