@@ -23,7 +23,7 @@
   fxFlex
   fxHide.lt-sm="true" 
   class="search-bar" (offClick)="offClick()">
-    <form [formGroup]="searchForm" class="top-search-form" (ngSubmit)="submit()">
+    <form [formGroup]="searchForm" class="top-search-form" (ngSubmit)="submit(false)">
       <mat-expansion-panel [expanded]="expand" [disabled]="true">
           <mat-expansion-panel-header>
             <mat-panel-title>
@@ -31,7 +31,7 @@
                 <input class="search-text" [formControl]="searchForm.controls['text']" autofocus="true" placeholder="Search" type="text" (click)="click()" (keyup)="onKey($event)">
             </mat-panel-title>
           </mat-expansion-panel-header>
-          <mat-button-toggle-group [formControl]="searchForm.controls['type']" name="searchType" value="Artist">
+          <mat-button-toggle-group [formControl]="searchForm.controls['type']" name="searchType" value="Artist" (change)="this.submit()">
             <mat-button-toggle value="Artist">
               Artists
             </mat-button-toggle>
@@ -45,7 +45,7 @@
           <br>
           <br>
           <mat-form-field>
-            <mat-select placeholder="Music Genres" [formControl]="searchForm.controls['genres']" (openedChange)="genreSelectOpen()" multiple>
+            <mat-select placeholder="Music Genres" [formControl]="searchForm.controls['genres']" (openedChange)="genreSelectOpen()" multiple (change)="this.submit()">
               <mat-select-trigger class="additional-selection">
                 {{(searchForm.controls['genres'].value ? searchForm.controls['genres'].value[0] : '') | capitalize}}
                 <span *ngIf="searchForm.controls['genres'].value?.length > 1">
@@ -57,7 +57,7 @@
           </mat-form-field>
           <br>
           <mat-form-field>
-            <mat-select placeholder="Event Types" [formControl]="searchForm.controls['events']" (openedChange)="eventSelectOpen()" multiple>
+            <mat-select placeholder="Event Types" [formControl]="searchForm.controls['events']" (openedChange)="eventSelectOpen()" multiple (change)="this.submit()">
               <mat-select-trigger class="additional-selection">
                 {{(searchForm.controls['events'].value ? searchForm.controls['events'].value[0] : '') | capitalize}}
                 <span *ngIf="searchForm.controls['events'].value?.length > 1">

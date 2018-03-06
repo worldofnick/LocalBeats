@@ -37,6 +37,7 @@ export class AuthComponent implements OnInit {
       _id: null,
       firstName: null,
       lastName: null,
+      fullName: null,
       email: '',
       password: '',
       genres: [],
