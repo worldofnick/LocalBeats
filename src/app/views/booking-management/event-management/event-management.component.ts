@@ -723,6 +723,8 @@ export class EventManagementComponent implements OnInit {
               this.events[eventIndex].confirmationNotifications++;
               this.createNotificationForArtist(booking, result.response, ['/bookingmanagement', 'myperformances'],
               'event_available', booking.hostUser.firstName + " has confirmed the booking" + booking.eventEID.eventName);
+              this.createNotificationForOtherPersistenHosts(booking, result.response, ['/bookingmanagement', 'myperformances'],
+              'event_available', booking.hostUser.firstName + " has confirmed the booking" + booking.eventEID.eventName);
             })
           }
         } else if (result.response == NegotiationResponses.decline) {
@@ -813,6 +815,12 @@ export class EventManagementComponent implements OnInit {
     let notification = new Notification(null, booking.hostUser, booking.performerUser, booking.eventEID._id,
     booking, response, message, icon, new Date(), route);
     this._socketService.sendNotification(SocketEvent.SEND_NOTIFICATION, notification);
+  }
+
+  createNotificationForOtherPersistenHosts(booking: Booking, response: NegotiationResponses, route: string[], icon: string, message: string) {
+    let notification = new Notification(null, booking.hostUser, booking.performerUser, booking.eventEID._id,
+    booking, response, message, icon, new Date(), route);
+    this._socketService.sendNotification(SocketEvent.NOTIFY_OTHER_HOSTS_BID_ACCEPTED, notification);
   }
 
   messageArtist(booking:Booking){

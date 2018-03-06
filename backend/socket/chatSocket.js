@@ -146,8 +146,8 @@ module.exports = function (io) {
 
         //TODO look at this for sending live notifications
         socket.on('sendPrivateMessage', (payload) => {
-            console.log('\n-----\nPM received from socket: ', socket.id);
-            console.log('\n-----\nPM payload: ', payload);
+            // console.log('\n-----\nPM received from socket: ', socket.id);
+            // console.log('\n-----\nPM payload: ', payload);
 
             // Svae the message to DB
             let newMessage = new Message();
@@ -161,9 +161,9 @@ module.exports = function (io) {
             // TODO: SAVE THE DATA TO DB
             newMessage.save(function (err, message) {
                 if (err) {
-                    console.log("Unable to save the message...");
+                    // console.log("Unable to save the message...");
                 }
-                console.log("Save successful: ", message);
+                // console.log("Save successful: ", message);
             });
 
             // Send the message to all the recipients (currently also the sender)
@@ -172,7 +172,7 @@ module.exports = function (io) {
             let allSocketsOfFromAndTo = fromSocketsArray.concat(toSocketsArray);
             console.log('>> All sockets: ', allSocketsOfFromAndTo);
             for (let i = 0; i < allSocketsOfFromAndTo.length; i++) {
-                console.log('> Sending message to', allSocketsOfFromAndTo[i]);
+                // console.log('> Sending message to', allSocketsOfFromAndTo[i]);
                 io.to(allSocketsOfFromAndTo[i]).emit('sendPrivateMessage', payload);
             }
         });
@@ -198,42 +198,33 @@ module.exports = function (io) {
 
             let socketArray = socketsHash[userID];
             for(socket of socketArray) {
-                socket.emit('notificationCount', number);
+                io.to(socket).emit('notificationCount', number);
             }
         });
 
-        // TODO add parans for function
-        socket.on('tellTopBar', numberOfNotifications => {
-            let thisSocketId = socket.id;
-            let sendArray = new Array();
-            for(socketArray of socketsHash) {
-                for(currentSocketId of socketArray) {
-                    if (currentSocketId === thisSocketId) {
-                        sendArray = socketArray;
-                    }
-                }
-            }
+        /**
+         * Server payload contains notification count
+         */
+        socket.on('tellTopBar', (msgPayloadWithNotificationLength) => {
+            console.log('TELL TOP BAR PAYLOAD: ');
 
-            for(socket of sendArray) {
-                socket.emit('notificationCount', numberOfNotifications);
+            let recipientArray = socketsHash[msgPayloadWithNotificationLength.from._id];
+
+            for(recipientSocket of recipientArray) {
+                io.to(recipientSocket).emit('notificationCount', msgPayloadWithNotificationLength.serverPayload);
             }
         })
 
-        socket.on('tellNotificationPanel', notifications => {
+        /**
+         * serverPayload contains the user notifications[]
+         */
+        socket.on('tellNotificationPanel', (userWithNotificationsPayload) => {
+            console.log('TELL NOTIFICATION PANEL: ');
 
-            let thisSocketId = socket.id;
-            let sendArray = new Array();
-            for(socketArray of socketsHash) {
-                for(currentSocketId of socketArray) {
-                    if (currentSocketId === thisSocketId) {
-                        sendArray = socketArray;
-                    }
-                }
-            }
+            let recipientArray = socketsHash[userWithNotificationsPayload.from._id];
 
-            for(socket of sendArray) {
-                // console.log(notifications);
-                socket.emit('notifications', notifications)
+            for(let recipientSocket of recipientArray) {
+                io.to(recipientSocket).emit('notifications', userWithNotificationsPayload.serverPayload);
             }
         })
 
@@ -241,19 +232,25 @@ module.exports = function (io) {
             // var notifications = notificationController.getNotificationsForUser(userID)
             
             let socketArray = socketsHash[userID];
-            for(socket of socketArray) {
-                socket.emit('notifications', 'test,test,test,test');
+            for(recipientSocket of socketArray) {
+                io.to(recipientSocket).emit('notifications', 'test,test,test,test');
             }
         });
 
         socket.on('sendNotification', (payload) => {
-            console.log('\n-----\N Notification received from socket: ', socket.id);
-            console.log('\n-----\N Notif payload: ', payload);
+            console.log('\n-----\n Notification received from socket: ', socket.id);
+            // console.log('\n-----\n Notif payload: ', payload);
 
             // Send the message to all the recipients (currently also the sender)
             let recipientSocketArray = socketsHash[payload.receiverID._id];
+            // let senderSocketArray = socketsHash[payload.senderID._id];
+            // for(let i = 0; i < senderSocketArray.length; i++) {
+            //     if (senderSocketArray[i] === socket.id) {
+            //         senderSocketArray.splice(i, 1);
+            //     }
+            // }
+            // let allSockets = recipientSocketArray.concat(senderSocketArray);
             console.log('> Sending notification to', recipientSocketArray);
-
 
             // save notification to db
             let notification = new Notifications(); // build notification "someone has requested you to play blah"
@@ -271,11 +268,29 @@ module.exports = function (io) {
                 payload._id = notification._id;
 
                 for(let recipientSocket of recipientSocketArray) {
+                    console.log('> Sending notification to', recipientSocket);
                     io.to(recipientSocket).emit('sendNotification', payload);
                 }
             });
 
         });
+
+        socket.on('bidOtherHostsBidAccepted', (payload) => {
+            console.log('\n-----\n Big accept received from socket: ', socket.id);
+            let senderSocketArray = socketsHash[payload.senderID._id];
+            console.log('> Sending notification to', senderSocketArray);
+            for(let i = 0; i < senderSocketArray.length; i++) {
+                    if (senderSocketArray[i] === socket.id) {
+                        senderSocketArray.splice(i, 1);
+                    }
+                }
+            for(let senderSocker of senderSocketArray) {
+                    console.log('> Sending notification to', senderSocker);
+                    io.to(senderSocker).emit('sendNotification', payload);
+                }
+        });
+
+        
         // ===========
         // Having profile reflect settings after updating - live.
         // ===========

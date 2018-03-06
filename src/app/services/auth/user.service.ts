@@ -221,7 +221,7 @@ export class UserService {
             .toPromise()
             .then((response: Response) => {
                 const data = response.json();
-                console.log(data)
+                console.log(data);
                 // this.accessToken = data.token;
                 // console.log(this.accessToken)
                 let temp = data.notifications as Notification[];
@@ -229,11 +229,12 @@ export class UserService {
                     return 0;
                 }
 
-                this._socketService.socket.emit('tellTopBar', temp.length)
-                // this._socketService.send(Action.REQUEST_NOTIFICATION_COUNT, {
-                //     from: 'tellTopBar',
-                //     action: Action.SMN_LOGGED_OUT
-                // });
+                // this._socketService.socket.emit('tellTopBar', temp.length);
+                this._socketService.send(Action.REQUEST_NOTIFICATION_COUNT, {
+                    from: this.user,
+                    action: Action.TELL_TOP_BAR,
+                    serverPayload: temp.length
+                });
 
                 return temp.length;
             })
@@ -264,7 +265,12 @@ export class UserService {
                     return t;
                 }
 
-                this._socketService.socket.emit('tellNotificationPanel', temp)
+                this._socketService.send(SocketEvent.TELL_NOTIFICATION_PANEL, {
+                    from: this.user,
+                    action: Action.TELL_NOTIFICATION_PANEL,
+                    serverPayload: temp
+                });
+                // this._socketService.socket.emit('tellNotificationPanel', temp)
                 // this._socketService.socket.emit('tellTopBar', temp.length)
 
                 return temp;

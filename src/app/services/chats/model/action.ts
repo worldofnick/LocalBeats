@@ -14,6 +14,9 @@ export enum Action {
     //notifications
     REQUEST_NOTIFICATIONS = 'notifications',
     REQUEST_NOTIFICATION_COUNT = 'notificationCount',
-    UPDATE_PROFILE = 'updateProfile'
+    TELL_NOTIFICATION_PANEL = 'tellNotificationPanel',
+    NOTIFY_OTHER_HOSTS_BID_ACCEPTED = 'bidOtherHostsBidAccepted',
+    UPDATE_PROFILE = 'updateProfile',
+    TELL_TOP_BAR = 'tellTopBar'
 }
 
