@@ -402,7 +402,6 @@ export class AppChatsComponent implements OnInit, AfterViewChecked, AfterViewIni
 
     if (this.messageEntered.trim().length > 0) {
 
-
       let privateMessage: Message;
       // CASE 1: Both users online. So do a socket event
       if (this.activeChatUser.isOnline) {
@@ -415,6 +414,7 @@ export class AppChatsComponent implements OnInit, AfterViewChecked, AfterViewIni
         privateMessage = this.createPMObject(false, MessageTypes.MSG);
 
       }
+      console.log('Sending message: ', privateMessage);
       // this.awaitMessageSaveResponse(privateMessage);
       this._socketService.send(Action.SEND_PRIVATE_MSG, privateMessage);
       this.resetMessageInputBox();
@@ -432,10 +432,18 @@ export class AppChatsComponent implements OnInit, AfterViewChecked, AfterViewIni
   }
 
   createPMObject(hasRead: boolean, messageType: MessageTypes): Message {
+    let messageToSend = '';
+    console.log('First char enter: ', this.messageEntered.charAt(0) === '\n')
+    if (this.messageEntered.charAt(0) === '\n') {
+      messageToSend = this.messageEntered.substr(1);
+    } else {
+      messageToSend = this.messageEntered;
+    }
+
     return {
       from: this.loggedInUser,
       to: this.activeChatUser,
-      content: this.messageEntered,
+      content: messageToSend,
       action: Action.SEND_PRIVATE_MSG,
       isRead: hasRead,                       // TODO: it needs to be true only when user read it! Show up in notification by default
       sentAt: new Date(Date.now()),
