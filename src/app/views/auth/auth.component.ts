@@ -96,9 +96,9 @@ export class AuthComponent implements OnInit {
       (data: any) => {
         // Correctly authenticated, redirect
         this.error = false;
+        this.userService.userLoaded(data.user, data.token, false, false);
         this.userService.getNotificationsCountForUser(data.user._id);
         this.userService.getNotificationsForUser(data.user._id);
-        this.userService.userLoaded(data.user, data.token, false, false);
         this.router.navigate(['/']);
 
       },

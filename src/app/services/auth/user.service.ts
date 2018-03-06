@@ -59,7 +59,7 @@ export class UserService {
     }
 
     // post("api/auth/passwordChange/:uid')
-    public signupUser(newUser: User): Promise<User> {
+    public signupUser(newUser: User): Promise<Object> {
         const current = this.connection + '/register';
         return this.http.post(current, newUser, { headers: this.headers })
             .toPromise()
@@ -77,7 +77,7 @@ export class UserService {
 
                 this.notifyServerToAddGreetBot(this.user);
 
-                return this.user;
+                return data;
             })
             .catch(this.handleError);
     }

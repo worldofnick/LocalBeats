@@ -121,9 +121,10 @@ export class RegisterComponent implements OnInit {
     this.submitButton.disabled = true;
     this.progressBar.mode = 'indeterminate';
 
-    this.userService.signupUser(this.user).then((user: User) => {
-      this.user = user;
-      this.router.navigate(['/profile', 'settings']);
+    this.userService.signupUser(this.user).then((data: any) => {
+      this.user = data.user;
+      this.userService.userLoaded(data.user, data.token, false, false);
+      this.router.navigate(['/']);
     });
   }
 

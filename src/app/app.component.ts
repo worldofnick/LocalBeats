@@ -33,7 +33,7 @@ export class AppComponent implements OnInit {
     const token = localStorage.getItem('token');
     if(token) {
       let decodedToken = jwtHelper.decodeToken(token);
-      this.userService.getUserByID(decodedToken.id).then((user:User) => {
+      this.userService.getUserByID(decodedToken.user.uid).then((user:User) => {
         this.userService.userLoaded(user, token, true, false);
       });
     }

@@ -1,4 +1,5 @@
 import { Component, OnDestroy, OnInit, ChangeDetectorRef, AfterViewChecked } from '@angular/core';
+import { ISubscription } from "rxjs/Subscription";
 import { ActivatedRoute } from "@angular/router";
 import { UserService } from '../../services/auth/user.service';
 import { BookingService } from '../../services/booking/booking.service';
