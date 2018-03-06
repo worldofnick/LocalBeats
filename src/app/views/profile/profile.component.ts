@@ -28,7 +28,8 @@ import { MatSnackBar } from '@angular/material';
 })
 export class ProfileComponent implements OnInit, OnDestroy, AfterViewChecked {
   activeView: string = 'overview';
-  user: User = new User; //changed this from null to new User
+  user: User = null;
+  private userSubscription: ISubscription;
   onOwnProfile: boolean = null;
   userID: any = null;
   requested: boolean = null;
@@ -84,13 +85,12 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterViewChecked {
 	}
 
   ngOnDestroy() {
-    this.cdRef.detach(); // try this
-    // for me I was detect changes inside "subscribe" so was enough for me to just unsubscribe;
-    // this.authObserver.unsubscribe();
+    this.cdRef.detach();
+    this.userSubscription.unsubscribe();
   }
 
   ngOnInit() {
-    this.user = this.userService.user;
+    this.userSubscription = this.userService.userResult.subscribe(user => this.user = user);
     this.activeView = this.route.snapshot.params['view'];
     
 
