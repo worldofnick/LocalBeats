@@ -7,6 +7,7 @@ import { UserService } from '../../../services/auth/user.service';
 import { User } from '../../../models/user';
 import { } from 'googlemaps';
 import { MapsAPILoader } from '@agm/core';
+import { SearchService } from '../../../services/search/search.service';
 
 @Component({
   selector: 'app-register',
@@ -34,12 +35,19 @@ export class RegisterComponent implements OnInit {
     private router: Router,
     private mapsAPILoader: MapsAPILoader,
     private ngZone: NgZone,
-    private changeDetector: ChangeDetectorRef
+    private changeDetector: ChangeDetectorRef,
+    private searchService: SearchService
   ) {}
 
   ngOnInit() {
     const password = new FormControl('', Validators.required);
     const confirmPassword = new FormControl('', CustomValidators.equalTo(password));
+
+    this.searchService.eventTypes().then((types: string[]) => {
+      this.eventsList = types;
+    }).then(() => this.searchService.genres().then((types: string[]) => {
+      this.genresList = types;
+    }));
 
     this.signupForm = new FormGroup({
       firstName: new FormControl('', Validators.required),

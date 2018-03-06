@@ -16,6 +16,7 @@ import { Action } from '../../../services/chats/model/action';
 import { Message } from '../../../services/chats/model/message';
 import { MatSnackBar } from '@angular/material';
 import { Router } from '@angular/router';
+import { SearchService } from '../../../services/search/search.service';
 
 @Component({
   selector: 'app-profile-settings',
@@ -43,17 +44,20 @@ export class ProfileSettingsComponent implements OnInit {
   constructor(private route: ActivatedRoute, private userService: UserService, private router : Router,
               private imgurService: ImgurService, private formBuilder: FormBuilder,
               private _socketService: SocketService, public snackBar: MatSnackBar, private stripeService: StripeService,
-            private _spotifyClientService: SpotifyClientService) { 
+            private _spotifyClientService: SpotifyClientService, private searchService: SearchService) { 
               }
 
 
   ngOnInit() {
     this.createForm();
+    this.searchService.eventTypes().then((types: string[]) => {
+      this.eventsList = types;
+    }).then(() => this.searchService.genres().then((types: string[]) => {
+      this.genresList = types;
+    }));
     this.userSubscription = this.userService.userResult.subscribe(user => 
       {
         this.user = user;
-        console.log('got user');
-        console.log(this.user);
         this.nowArtist = this.user.isArtist;
         this.settingsForm.patchValue({
           firstName: this.user.firstName,
