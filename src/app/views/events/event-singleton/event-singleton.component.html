@@ -32,10 +32,6 @@
               <mat-icon mat-list-icon>date_range</mat-icon>
               <p mat-line> {{model.fromDate | date:'MMM d, y, h:mm a'}} - {{model.toDate | date:'MMM d, y, h:mm a'}} </p>
             </mat-list-item>
-            <mat-list-item>
-              <mat-icon mat-list-icon>access_time</mat-icon>
-              <p mat-line>1:30 - 3:30 PM MST </p>
-            </mat-list-item>
             <mat-list-item *ngIf="this.model.negotiable">
               <mat-icon mat-list-icon>import_export</mat-icon>
               <p mat-line>Price is negotiable</p>

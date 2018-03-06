@@ -185,9 +185,9 @@ export class EventSingletonComponent implements OnInit {
               // Send notification to host
               let message = '';
               if(this.model.negotiable) {
-                message = booking.hostUser.firstName + " has bid on your event called: " + booking.eventEID.eventName;
+                message = booking.performerUser.firstName + " has bid on your event called: " + booking.eventEID.eventName;
               } else {
-                message = booking.hostUser.firstName + " has applied to your event called: " + booking.eventEID.eventName;
+                message = booking.performerUser.firstName + " has applied to your event called: " + booking.eventEID.eventName;
               }
               this.createNotificationForHost(booking, result.response, ['/bookingmanagement', 'myevents'],
               'queue_music', message);
