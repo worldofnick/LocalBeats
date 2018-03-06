@@ -10,6 +10,7 @@ import { MatTabChangeEvent } from '@angular/material';
 import { FormGroup, FormControl, Validators, FormArray, FormBuilder } from '@angular/forms';
 import { SocketService } from '../../../services/chats/socket.service';
 import { StripeService } from '../../../services/payments/stripe.service';
+import { SpotifyClientService } from '../../../services/music/spotify-client.service';
 import { Action } from '../../../services/chats/model/action';
 import { Message } from '../../../services/chats/model/message';
 import { MatSnackBar } from '@angular/material';
@@ -28,11 +29,19 @@ export class ProfileSettingsComponent implements OnInit {
   eventsList: string[] = ['wedding', 'birthday', 'business'];
   settingsForm: FormGroup;
   nowArtist = false;
+
+  imageChangedEvent: any = '';
+  croppedImage: any = '';
+  showCropper: boolean = false;
+
+  selectedTabIndex = 0;
+
   public uploader: FileUploader = new FileUploader({ url: 'upload_url' });
   public hasBaseDropZoneOver: boolean = false;
   constructor(private route: ActivatedRoute, private userService: UserService, private router : Router,
               private imgurService: ImgurService, private formBuilder: FormBuilder,
-              private _socketService: SocketService, public snackBar: MatSnackBar, private stripeService: StripeService) { 
+              private _socketService: SocketService, public snackBar: MatSnackBar, private stripeService: StripeService,
+            private _spotifyClientService: SpotifyClientService) { 
               }
 
 
@@ -40,6 +49,16 @@ export class ProfileSettingsComponent implements OnInit {
     this.user = this.userService.user;
     this.nowArtist = this.user.isArtist;
     this.createForm();
+    this.route.queryParams.subscribe(params => {
+      if (params['stripe']) {
+        this.userService.getUserByID(this.userService.user._id).then((user: User) => {
+          this.user = user;
+          this.userService.setUser(user);
+          // this.userService.user = user;
+        }).then(() => this.selectedTabIndex = 2);
+        
+      }
+    });
   }
 
   createForm(){
@@ -85,37 +104,44 @@ export class ProfileSettingsComponent implements OnInit {
 
     this.userService.onEditProfile(this.user).then((user: User) => {
       this.user = user;
-      this.userService.user = user;
+      this.userService.setUser(user);
       this._socketService.sendToProfile('updateProfile', this.user);
     });
   }
 
-
-  onChange(event: EventTarget) {
-      let eventObj: MSInputMethodContext = <MSInputMethodContext> event;
-      let target: HTMLInputElement = <HTMLInputElement> eventObj.target;
-      let files: FileList = target.files;
-      let file: File = files[0];
-      let blob = file as Blob;
-      if (!blob) {
-        return;
-      }
+  private prepareBlob() {
+    fetch(this.croppedImage).then(res => res.blob()).then(blob => this.uploadImage(blob));
+  }
+ 
+  uploadImage(blob: Blob) {
       this.progressBar.mode = 'indeterminate';
-      this.imgurService.uploadToImgur(file).then(link => {
+      this.imgurService.uploadToImgur(blob).then(link => {
         this.user.profilePicUrl = link as string;
       }).then(link => {
           // update the image view
           this.userService.onEditProfile(this.user).then((user: User) => {
             this.user = user;
-            this.userService.user = this.user;
+            this.userService.setUser(user);
             this.progressBar.mode = 'determinate';
+            this.showCropper = false;
+            this.croppedImage = null;
             this._socketService.sendToProfile('updateProfile', this.user);
           });
         }).catch(err => {
           console.log(err);
           this.progressBar.mode = 'determinate';
-          //this.router.navigate(['/profile']); //this will go back to my events.
+          this.showCropper = false;
+          this.croppedImage = null;
       });
+  }
+
+  fileChangeEvent(event: EventTarget) {
+    this.showCropper = true;
+    this.imageChangedEvent = event;
+  }
+
+  imageCropped(image: String) {
+    this.croppedImage = image;
   }
 
    // STRIPE
@@ -150,11 +176,10 @@ export class ProfileSettingsComponent implements OnInit {
     this.user.stripeAccountId = null;
     this.userService.onEditProfile(this.user).then((user: User) => {
       this.user = user;
-      this.userService.user = this.user
-      let snackBarRef = this.snackBar.open('Stripe Account Unlinked', "", {
+      this.userService.setUser(user);
+      let snackBarRef = this.snackBar.open('Stripe Account Unlinked', '', {
         duration: 1500,
       });
     });
   }
-
 }

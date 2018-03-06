@@ -26,7 +26,6 @@ exports.getUserByID = function (req, res) {
           return res.status(200).send({ user: user });
       }
   });
-
 };
 
 exports.updateUserByID = function (req, res, next) {

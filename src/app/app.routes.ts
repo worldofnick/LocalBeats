@@ -64,6 +64,12 @@ export const rootRouterConfig: Routes = [
         loadChildren: './views/app-chats/app-chats.module#AppChatsModule',
         canActivate: [UserGuard],  
         data: { title: 'Chat', breadcrumb: 'CHAT'}
+      },
+      {
+        path: 'callback',
+        loadChildren: './views/callback/callback.module#CallbackModule',
+        // canActivate: [UserGuard],  
+        data: { title: 'Callback', breadcrumb: 'CALLBACK'}
       }
     ]
   },

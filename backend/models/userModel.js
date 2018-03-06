@@ -14,9 +14,8 @@ var UserSchema = new Schema({
     birthday      : {type: Date},
     joinDate      : {type: Date, default: Date.now},
     profilePicUrl : {type: String, default: 'https://www.vccircle.com/wp-content/uploads/2017/03/default-profile.png'},
-    soundcloudID  : {type: String},
     spotifyID     : {type: String},
-    stripeAccountId  : {type: String, default: null},
+    stripeAccountId  : {type: String},
     genres        : {type: Array}, // Kept empty if the user is not an artist
     eventTypes    : {type: Array}, // Kept empty if the user is not an artist
     isArtist      : {type: Boolean, default: false},
@@ -26,7 +25,20 @@ var UserSchema = new Schema({
     location: {
         type: [Number],  // [<longitude>, <latitude>]
         index: '2d'      // create the geospatial index
-      }
+      },
+    spotify: {
+        id              : { type: String },
+        email           : { type: String, lowercase: true },
+        uri             : { type: String },
+        href            : { type: String },
+        refreshToken    : { type: String },
+        accessToken     : { type: String }
+    },
+    soundcloud: {
+        id              : { type: String },
+        username        : { type: String },
+        avatar_url      : { tyep: String }
+    }
 }, {strict: true}, {versionKey: false});
 
 /**

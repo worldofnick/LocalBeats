@@ -39,7 +39,6 @@ export class AuthComponent implements OnInit {
       lastName: null,
       email: '',
       password: '',
-      spotifyID: null,
       genres: [],
       isArtist: true,
       profilePicUrl: "https://www.vccircle.com/wp-content/uploads/2017/03/default-profile.png",
@@ -48,7 +47,9 @@ export class AuthComponent implements OnInit {
       city: '',
       state: '',
       location: null,
-      isOnline: true, 
+      isOnline: true,
+      spotify: null,
+      soundcloud: null,
       stripeAccountId: null
     };
     // Checks to see if the user credentials have been stored locally via 'remember me'
