@@ -1,4 +1,5 @@
-import { Component, OnInit, EventEmitter, Input, Output, ElementRef, NgZone, ViewChild, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, EventEmitter, Input, Output, ElementRef, NgZone, ViewChild, ChangeDetectorRef, OnDestroy } from '@angular/core';
+import { ISubscription } from "rxjs/Subscription";
 import { Router } from '@angular/router';
 import { Validators, FormGroup, FormControl, FormArray, FormBuilder } from '@angular/forms';
 import { MatDialog, MatDialogRef} from '@angular/material';
@@ -25,7 +26,9 @@ import { StripeDialogComponent } from '../../../views/events/event-singleton/str
   templateUrl: './topbar.template.html',
   styleUrls: ['./topbar.component.css']
 })
-export class TopbarComponent implements OnInit {
+export class TopbarComponent implements OnInit, OnDestroy {
+  private user: User = null;
+  private userSubscription: ISubscription;
   @Input() sidenav;
   @Input() notificPanel;
   @Output() onSearchTypeChange = new EventEmitter<any>();
@@ -74,6 +77,7 @@ export class TopbarComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.userSubscription = this.userService.userResult.subscribe(user => this.user = user);
     this.searchService.eventTypes().then((types: string[]) => {
       this.eventsList = types;
     }).then(() => this.searchService.genres().then((types: string[]) => {
@@ -115,6 +119,10 @@ export class TopbarComponent implements OnInit {
     });
   }
 
+  ngOnDestroy() {
+    this.userSubscription.unsubscribe();
+  }
+
   // Helper method for Google Places
   private setCurrentPosition() {
     if ("geolocation" in navigator) {
@@ -128,6 +136,7 @@ export class TopbarComponent implements OnInit {
 
   // Logs user out
   logout() {
+    localStorage.removeItem('token');
     this.userService.logout();
     this.numNotifications = 0;
     this.router.navigate(['/']);

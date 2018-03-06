@@ -20,7 +20,7 @@ export class AuthComponent implements OnInit {
 
   signinForm: FormGroup;
   user: User;
-  notificationsList:Notification[] = []
+  notificationsList:Notification[] = [];
   rememberMe: boolean = false;
   error: boolean = false;
   errorMessage: string = '';
@@ -97,6 +97,7 @@ export class AuthComponent implements OnInit {
         this.error = false;
         this.userService.getNotificationsCountForUser(data.user._id);
         this.userService.getNotificationsForUser(data.user._id);
+        this.userService.userLoaded(data.user, data.token, false, false);
         this.router.navigate(['/']);
 
       },

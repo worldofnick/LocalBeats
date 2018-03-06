@@ -6,6 +6,9 @@ import 'rxjs/add/operator/filter';
 import { RoutePartsService } from "./services/route-parts/route-parts.service";
 import { SocketService } from 'app/services/chats/socket.service';
 import { MatSnackBar } from '@angular/material';
+import { UserService } from './services/auth/user.service';
+import { JwtHelper } from 'angular2-jwt';
+import { User } from './models/user';
 
 @Component({
   selector: 'app-root',
@@ -21,11 +24,21 @@ export class AppComponent implements OnInit {
     private activeRoute: ActivatedRoute,
     public snackBar: MatSnackBar,
     private routePartsService: RoutePartsService,
+    private userService: UserService,
     private _socketService: SocketService) { }
 
   ngOnInit() {
-    this.changePageTitle();
     this._socketService.initSocket();
+    let jwtHelper: JwtHelper = new JwtHelper();
+    const token = localStorage.getItem('token');
+    if(token) {
+      let decodedToken = jwtHelper.decodeToken(token);
+      this.userService.getUserByID(decodedToken.id).then((user:User) => {
+        this.userService.userLoaded(user, token, true, false);
+      });
+    }
+    this.changePageTitle();
+    
     // Init User Tour
     setTimeout(() => {
       hopscotch.startTour(this.tourSteps());

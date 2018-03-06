@@ -91,7 +91,7 @@
     </form>
   </div>  
   <span fxFlex></span>
-  <div *ngIf="userService.isAuthenticated(); else login">
+  <div *ngIf="user; else login">
     <button 
     mat-icon-button
     matTooltip="Performances" 
