@@ -59,14 +59,14 @@ export class UserService {
     }
 
     // post("api/auth/passwordChange/:uid')
-    public signupUser(newUser: User): Promise<User> {
+    public signupUser(newUser: User): Promise<Object> {
         const current = this.connection + '/register';
         return this.http.post(current, newUser, { headers: this.headers })
             .toPromise()
             .then((response: Response) => {
                 const data = response.json();
                 this.accessToken = data.token;
-                localStorage.setItem('token', JSON.stringify({ accessToken: this.accessToken }))
+                sessionStorage.setItem('token', JSON.stringify({ accessToken: this.accessToken }))
                 this.user = data.user as User;
 
                 // Notify server that a new user user logged in
@@ -77,7 +77,7 @@ export class UserService {
 
                 this.notifyServerToAddGreetBot(this.user);
 
-                return this.user;
+                return data;
             })
             .catch(this.handleError);
     }
@@ -110,7 +110,7 @@ export class UserService {
                 console.log('IN LOGIn');
                 const data = response.json();
                 this.accessToken = data.token;
-                localStorage.setItem('token', JSON.stringify({ accessToken: this.accessToken }))
+                sessionStorage.setItem('token', JSON.stringify({ accessToken: this.accessToken }))
                 this.user = data.user as User;
                 // Notify server that a new user user logged in
                 this._socketService.send(Action.NEW_LOG_IN, {

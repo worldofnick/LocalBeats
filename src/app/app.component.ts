@@ -30,11 +30,14 @@ export class AppComponent implements OnInit {
   ngOnInit() {
     this._socketService.initSocket();
     let jwtHelper: JwtHelper = new JwtHelper();
-    const token = localStorage.getItem('token');
+    const token = sessionStorage.getItem('token');
     if(token) {
       let decodedToken = jwtHelper.decodeToken(token);
+      console.log(decodedToken);
       this.userService.getUserByID(decodedToken.id).then((user:User) => {
         this.userService.userLoaded(user, token, true, false);
+        this.userService.getNotificationsCountForUser(user._id);
+        this.userService.getNotificationsForUser(user._id);
       });
     }
     this.changePageTitle();
