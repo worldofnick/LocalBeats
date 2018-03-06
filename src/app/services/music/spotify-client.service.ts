@@ -74,7 +74,7 @@ export class SpotifyClientService {
   public requestAlbumsOwnedByAnArtist(userObject: any): Promise<any> {
     // TODO: @ash change it back to use the user's id
     // const current = this.authorizeConnection + '/artists/' + userObject.spotify.id + '/albums';
-    const current = this.authorizeConnection + '/artists/0TnOYISbd1XYRBk9myaseg/albums';
+    const current = this.authorizeConnection + '/artists/711MCceyCBcFnzjGY4Q7Un/albums';
     // console.log('Spotify Token server url: ', current);
     // console.log('Albums request user received: ', userObject);
     return this.http.post(current, {user: this._userService.user,
