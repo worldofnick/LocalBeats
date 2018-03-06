@@ -27,15 +27,7 @@ exports.register = function (req, res) {
         user.hashPassword = undefined;
         user.__v = undefined;
         // create a token
-        var token = jwt.sign({
-          user: {
-            uid: user._id,
-            firstName: user.firstName,
-            lastName: user.lastName,
-            email: user.email,
-            joinDate: user.joinDate
-          }
-        },
+        var token = jwt.sign({ id: user._id },
           config.secret, {
             expiresIn: 86400 // expires in 24 hours
           }
