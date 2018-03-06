@@ -188,6 +188,10 @@ export class EventSingletonComponent implements OnInit {
               }
               this.createNotificationForHost(booking, result.response, ['/bookingmanagement', 'myevents'],
               'queue_music', message);
+
+              this.createNotificationForOtherPersistenHosts(booking, result.response, [''],
+              'queue_music', message);
+
               if(result.comment != null && result.comment != undefined) {
                 let privateMessage: Message = this.commentToHost(result.comment);
                 this._socketService.send(Action.SEND_PRIVATE_MSG, privateMessage);
@@ -203,6 +207,12 @@ export class EventSingletonComponent implements OnInit {
     let notification = new Notification(null, booking.performerUser, booking.hostUser, booking.eventEID._id,
       booking, response, message, icon, new Date(), route); 
     this._socketService.sendNotification(SocketEvent.SEND_NOTIFICATION, notification);
+  }
+
+  createNotificationForOtherPersistenHosts(booking: Booking, response: NegotiationResponses, route: string[], icon: string, message: string) {
+    let notification = new Notification(null, booking.performerUser, booking.hostUser,  booking.eventEID._id,
+    booking, response, message, icon, new Date(), route);
+    this._socketService.sendNotification(SocketEvent.NOTIFY_OTHER_HOSTS_BID_ACCEPTED, notification);
   }
 
 }

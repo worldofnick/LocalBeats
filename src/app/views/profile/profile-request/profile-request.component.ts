@@ -125,7 +125,7 @@ export class ProfileRequestComponent implements OnInit {
               // Send notification to artist
               this.createNotificationForArtist(booking, result.response, ['/events', booking.eventEID._id], 
             'queue_music', booking.hostUser.firstName + " has requested you for an event called: " + booking.eventEID.eventName);
-            this.createNotificationForOtherPersistenHosts(booking, result.response, ['/events', booking.eventEID._id], 
+            this.createNotificationForOtherPersistenHosts(booking, result.response, [''], 
             'queue_music', booking.hostUser.firstName + " has requested you for an event called: " + booking.eventEID.eventName);
             
             if(result.comment != null && result.comment != undefined) {
