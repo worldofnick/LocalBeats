@@ -125,6 +125,10 @@ exports.searchUsers = function (req, res) {
     }
   }
 
+  query.email = {
+    "$ne": "beatbot@localbeats.com"
+  }
+
   User.find(query).limit(limit).skip(skip).exec(function (err, doc) {
     if (err) {
       return res.status(500).send(err);
