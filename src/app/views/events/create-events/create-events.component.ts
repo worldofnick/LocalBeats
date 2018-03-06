@@ -76,10 +76,6 @@ export class CreateEventsComponent implements OnInit {
   minDate = new Date(Date.now());
   maxDate = new Date(2020, 0, 1);
 
-  imageChangedEvent: any = '';
-  croppedImage: any = '';
-  showCropper: boolean = false;
-
   constructor(private route: ActivatedRoute,
               private userService: UserService,
               private bookingService: BookingService,
@@ -156,39 +152,76 @@ export class CreateEventsComponent implements OnInit {
   }
 
   setForm() {
-    this.basicForm = this.formBuilder.group({
-      eventName: new FormControl(this.event.eventName, [
-        Validators.minLength(4),
-        Validators.maxLength(40),
-        Validators.required
-      ]),
-      eventType: new FormControl(this.event.eventType, [
-      ]),
-      cancellationPolicy: new FormControl(this.event.cancellationPolicy, [Validators.required]),
-      fixedPrice: new FormControl(this.event.fixedPrice, [
-        Validators.required
-      ]),
-      negotiable: new FormControl(this.event.negotiable, [
-      ]),
-      date: new FormControl(this.dateRange, [
-        Validators.required
-      ]),
-      eventDescription: new FormControl(this.event.description, [
-        Validators.required
-      ]),
-      imageUploaded: new FormControl(),
-      genres: new FormControl(this.event.eventGenres,[
-
-      ]),
-      location: new FormControl('',[Validators.required]),
-      agreed: new FormControl('', (control: FormControl) => {
-        const agreed = control.value;
-        if(!agreed) {
-          return { agreed: true }
-        }
-        return null;
-      })
-    })
+    if(this.updating){
+      this.basicForm = this.formBuilder.group({
+        eventName: new FormControl(this.event.eventName, [
+          Validators.minLength(4),
+          Validators.maxLength(40),
+          Validators.required
+        ]),
+        eventType: new FormControl(this.event.eventType, [Validators.required
+        ]),
+        cancellationPolicy: new FormControl(this.event.cancellationPolicy, [Validators.required]),
+        fixedPrice: new FormControl(this.event.fixedPrice, [
+          Validators.required
+        ]),
+        negotiable: new FormControl(this.event.negotiable, [
+        ]),
+        date: new FormControl(this.dateRange, [
+          Validators.required
+        ]),
+        eventDescription: new FormControl(this.event.description, [
+          Validators.required
+        ]),
+        imageUploaded: new FormControl(),
+        genres: new FormControl(this.event.eventGenres,[
+  
+        ]),
+        location: new FormControl('',[Validators.required]),
+        agreed: new FormControl('', (control: FormControl) => {
+          const agreed = control.value;
+          if(!agreed) {
+            return { agreed: true }
+          }
+          return null;
+        })
+      });
+    }else {
+      // creating new event
+      this.basicForm = this.formBuilder.group({
+        eventName: new FormControl('', [
+          Validators.minLength(4),
+          Validators.maxLength(40),
+          Validators.required
+        ]),
+        eventType: new FormControl('', [Validators.required
+        ]),
+        cancellationPolicy: new FormControl('', [Validators.required]),
+        fixedPrice: new FormControl('', [
+          Validators.required
+        ]),
+        negotiable: new FormControl(false, [
+        ]),
+        date: new FormControl('', [
+          Validators.required
+        ]),
+        eventDescription: new FormControl('', [
+          Validators.required
+        ]),
+        imageUploaded: new FormControl(),
+        genres: new FormControl('',[
+  
+        ]),
+        location: new FormControl('',[Validators.required]),
+        agreed: new FormControl('', (control: FormControl) => {
+          const agreed = control.value;
+          if(!agreed) {
+            return { agreed: true }
+          }
+          return null;
+        })
+      });
+    }
   }
   
   
@@ -231,34 +264,28 @@ export class CreateEventsComponent implements OnInit {
     this.locationChosen = true;
   }
 
-  private prepareBlob() {
-    fetch(this.croppedImage).then(res => res.blob()).then(blob => this.uploadImage(blob));
-  }
+  onChange(event: EventTarget) {
+      let eventObj: MSInputMethodContext = <MSInputMethodContext> event;
+      let target: HTMLInputElement = <HTMLInputElement> eventObj.target;
+      let files: FileList = target.files;
+      let file: File = files[0];
+      let blob = file as Blob;
 
-  uploadImage(blob: Blob) {
+      if (!blob) {
+        return;
+      }
       this.progressBar.mode = 'indeterminate';
-      this.imgurService.uploadToImgur(blob).then(link => {
+      this.imgurService.uploadToImgur(file).then(link => {
         this.event.eventPicUrl = link as string;
       }).then(link => {
           this.uploadedImage = true;
           this.progressBar.mode = 'determinate';
-          this.showCropper = false;
-          this.croppedImage = null;
+          // update the image view
         }).catch(err => {
           console.log(err);
           this.progressBar.mode = 'determinate';
-          this.showCropper = false;
-          this.croppedImage = null;
+          //this.router.navigate(['/profile']); //this will go back to my events.
       });
-  }
-
-  fileChangeEvent(event: EventTarget) {
-    this.showCropper = true;
-    this.imageChangedEvent = event;
-  }
-
-  imageCropped(image: String) {
-    this.croppedImage = image;
   }
 
   private setCurrentPosition() {
@@ -300,16 +327,12 @@ export class CreateEventsComponent implements OnInit {
       this.event.state = state;
       this.event.city = city;
     }
-    // console.log("creating this event: ")
-    
+
     this.event.eventName = this.basicForm.get('eventName').value;
     this.event.eventType = this.basicForm.get('eventType').value;
     this.event.fixedPrice = this.basicForm.get('fixedPrice').value;
     this.event.toDate = this.basicForm.get('date').value;
     this.event.negotiable = this.basicForm.get('negotiable').value;
-    if(this.event.negotiable == null) { 
-      this.event.negotiable = false;
-    }
     this.event.eventGenres = this.basicForm.get('genres').value;
     this.event.description = this.basicForm.get('eventDescription').value;
     this.event.hostUser = this.user;
@@ -317,6 +340,7 @@ export class CreateEventsComponent implements OnInit {
     this.event.fromDate = this.basicForm.get('date').value[0];
     this.event.toDate = this.basicForm.get('date').value[1];
     this.event.cancellationPolicy = this.basicForm.get('cancellationPolicy').value;
+    console.log("event: ", this.event)
 
 
     if (!this.updating) {
