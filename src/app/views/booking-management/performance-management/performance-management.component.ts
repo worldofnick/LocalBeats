@@ -573,6 +573,8 @@ export class PerformanceManagementComponent implements OnInit {
                   // Send notification to artist
                   this.createNotificationForHost(booking, response, ['/bookingmanagement', 'myevents'],
                   'event_available', notificationMessage);
+                  this.createNotificationForOtherPersistenHosts(booking, response, [''],
+                  'event_available', notificationMessage);
                 });
               });
             } else {
@@ -591,6 +593,8 @@ export class PerformanceManagementComponent implements OnInit {
                 // Send notification to artist
                 this.createNotificationForHost(booking, response, ['/bookingmanagement', 'myevents'],
                 'event_available', notificationMessage);
+                this.createNotificationForOtherPersistenHosts(booking, response, [''],
+                'event_available', notificationMessage);
               });
             }
           });
@@ -601,6 +605,8 @@ export class PerformanceManagementComponent implements OnInit {
           this.bookingService.updateBooking(booking).then(() => {
             // Send notification to artist
             this.createNotificationForHost(booking, response, ['/bookingmanagement', 'myevents'],
+            'event_available', notificationMessage);
+            this.createNotificationForOtherPersistenHosts(booking, response, [''],
             'event_available', notificationMessage);
           });
         }
@@ -648,6 +654,9 @@ export class PerformanceManagementComponent implements OnInit {
             }
             this.createNotificationForHost(booking, result.response, ['/bookingmanagement', 'myevents'],
             'import_export', booking.performerUser.firstName + " has made a new bid on " + booking.eventEID.eventName);
+            this.createNotificationForOtherPersistenHosts(booking, result.response, [''],
+            'import_export', booking.performerUser.firstName + " has made a new bid on " + booking.eventEID.eventName);
+            
           });
         } else if (result.response == NegotiationResponses.accept) {
           // Accept, the user accepted an offer from the host or they reconfirmed their previous bid
@@ -675,6 +684,8 @@ export class PerformanceManagementComponent implements OnInit {
               this.performances.confirmationNotifications++;
               this.createNotificationForHost(booking, result.response, ['/bookingmanagement', 'myevents'],
               'event_available', booking.performerUser.firstName + " has confirmed the booking" + booking.eventEID.eventName);
+              this.createNotificationForOtherPersistenHosts(booking, result.response, [''],
+              'event_available', booking.performerUser.firstName + " has confirmed the booking" + booking.eventEID.eventName);
             })
           }
         } else if (result.response == NegotiationResponses.decline) {
@@ -694,6 +705,8 @@ export class PerformanceManagementComponent implements OnInit {
               this.performances.requestNotifications--;
             }
             this.createNotificationForHost(booking, result.response, ['/events', booking.eventEID._id],
+            'event_busy', booking.performerUser.firstName + " has cancelled the request on " + booking.eventEID.eventName);
+            this.createNotificationForOtherPersistenHosts(booking, result.response, [''],
             'event_busy', booking.performerUser.firstName + " has cancelled the request on " + booking.eventEID.eventName);
           })
         } else if(result.response == NegotiationResponses.cancel) {
@@ -727,6 +740,8 @@ export class PerformanceManagementComponent implements OnInit {
                     // Send notification to artist
                     this.createNotificationForHost(booking, result.response, ['/bookingmanagement', 'myevents'],
                     'event_busy', booking.performerUser.firstName + " has cancelled the confirmed booking for " + booking.eventEID.eventName + " and a 15% fee was charged.");
+                    this.createNotificationForOtherPersistenHosts(booking, result.response, [''],
+                    'event_busy', booking.performerUser.firstName + " has cancelled the confirmed booking for " + booking.eventEID.eventName + " and a 15% fee was charged.");
                   });
                 });
 
@@ -748,6 +763,8 @@ export class PerformanceManagementComponent implements OnInit {
               this.performances.cancellations.push(booking);
               this.performances.cancellationNotifications++;
               this.createNotificationForHost(booking, result.response, ['/bookingmanagement', 'myevents'],
+              'event_busy', booking.performerUser.firstName + " has cancelled the confirmed booking for " + booking.eventEID.eventName + " and no fee was charged.");
+              this.createNotificationForOtherPersistenHosts(booking, result.response, [''],
               'event_busy', booking.performerUser.firstName + " has cancelled the confirmed booking for " + booking.eventEID.eventName + " and no fee was charged.");
             });
           });
@@ -776,6 +793,12 @@ export class PerformanceManagementComponent implements OnInit {
     let notification = new Notification(null, booking.performerUser, booking.hostUser, booking.eventEID._id,
     booking, response, message, icon, new Date(), route); 
     this._socketService.sendNotification(SocketEvent.SEND_NOTIFICATION, notification);
+  }
+
+  createNotificationForOtherPersistenHosts(booking: Booking, response: NegotiationResponses, route: string[], icon: string, message: string) {
+    let notification = new Notification(null, booking.performerUser, booking.hostUser,  booking.eventEID._id,
+    booking, response, message, icon, new Date(), route);
+    this._socketService.sendNotification(SocketEvent.NOTIFY_OTHER_HOSTS_BID_ACCEPTED, notification);
   }
 
   messageHost(booking:Booking){
