@@ -124,6 +124,8 @@ export class RegisterComponent implements OnInit {
     this.userService.signupUser(this.user).then((data: any) => {
       this.user = data.user;
       this.userService.userLoaded(data.user, data.token, false, false);
+      this.userService.getNotificationsCountForUser(data.user._id);
+      this.userService.getNotificationsForUser(data.user._id);
       this.router.navigate(['/']);
     });
   }

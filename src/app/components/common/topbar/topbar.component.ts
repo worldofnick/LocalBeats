@@ -136,7 +136,7 @@ export class TopbarComponent implements OnInit, OnDestroy {
 
   // Logs user out
   logout() {
-    localStorage.removeItem('token');
+    sessionStorage.removeItem('token');
     this.userService.logout();
     this.numNotifications = 0;
     this.router.navigate(['/']);
