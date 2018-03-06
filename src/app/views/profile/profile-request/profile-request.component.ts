@@ -125,6 +125,9 @@ export class ProfileRequestComponent implements OnInit {
               // Send notification to artist
               this.createNotificationForArtist(booking, result.response, ['/events', booking.eventEID._id], 
             'queue_music', booking.hostUser.firstName + " has requested you for an event called: " + booking.eventEID.eventName);
+            this.createNotificationForOtherPersistenHosts(booking, result.response, ['/events', booking.eventEID._id], 
+            'queue_music', booking.hostUser.firstName + " has requested you for an event called: " + booking.eventEID.eventName);
+            
             if(result.comment != null && result.comment != undefined) {
               let privateMessage: Message = this.commentToArtist(result.comment, booking);
               this._socketService.send(Action.SEND_PRIVATE_MSG, privateMessage);
@@ -153,6 +156,12 @@ export class ProfileRequestComponent implements OnInit {
     let notification = new Notification(null, booking.hostUser, booking.performerUser, booking.eventEID._id,
       booking, response, message, icon, new Date(), route);
     this._socketService.sendNotification(SocketEvent.SEND_NOTIFICATION, notification);
+  }
+
+  createNotificationForOtherPersistenHosts(booking: Booking, response: NegotiationResponses, route: string[], icon: string, message: string) {
+    let notification = new Notification(null, booking.hostUser, booking.performerUser, booking.eventEID._id,
+    booking, response, message, icon, new Date(), route);
+    this._socketService.sendNotification(SocketEvent.NOTIFY_OTHER_HOSTS_BID_ACCEPTED, notification);
   }
 
 }
