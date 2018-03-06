@@ -674,7 +674,7 @@ export class PerformanceManagementComponent implements OnInit {
               this.performances.confirmations.push(booking);
               this.performances.confirmationNotifications++;
               this.createNotificationForHost(booking, result.response, ['/bookingmanagement', 'myevents'],
-              'event_available', booking.performerUser.firstName + " has confirmed the booking" + booking.eventEID.eventName);
+              'event_available', booking.performerUser.firstName + " has confirmed the booking " + booking.eventEID.eventName);
             })
           }
         } else if (result.response == NegotiationResponses.decline) {

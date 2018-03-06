@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { ISubscription } from "rxjs/Subscription";
 import { SocketService } from 'app/services/chats/socket.service';
 import { SocketEvent } from 'app/services/chats/model/event';
 import { Message } from 'app/services/chats/model/message';
@@ -18,6 +19,8 @@ import { SharedDataService } from '../../services/shared/shared-data.service';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
+  private user: User = null;
+  private userSubscription: ISubscription;
   artists = [{
     name: 'Featured Drummer',
     url: 'assets/images/drums-image.png'
@@ -46,6 +49,11 @@ export class HomeComponent implements OnInit {
   ngOnInit() {
     this.initIoConnection();            // Listen to server for any registered events inside this method
     this.showSnackBarIfNeeded();
+    this.userSubscription = this._userService.userResult.subscribe(user => this.user = user);
+  }
+
+  ngOnDestroy(){
+    this.userSubscription.unsubscribe();
   }
 
   // Shows the snackbar if needed when coming back from a redirect
