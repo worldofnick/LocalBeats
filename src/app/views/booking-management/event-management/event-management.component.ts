@@ -696,6 +696,8 @@ export class EventManagementComponent implements OnInit {
             }
             this.createNotificationForArtist(booking, result.response, ['/bookingmanagement', 'myperformances'],
             'import_export', booking.hostUser.firstName + " has updated the offer on " + booking.eventEID.eventName);
+            this.createNotificationForOtherPersistenHosts(booking, result.response, ['/bookingmanagement', 'myperformances'],
+            'import_export', booking.hostUser.firstName + " has updated the offer on " + booking.eventEID.eventName);
           });
         } else if (result.response == NegotiationResponses.accept) {
           // Accept, the user accepted a bid from an artist or they reconfirmed their previous offer to the artist
@@ -747,6 +749,8 @@ export class EventManagementComponent implements OnInit {
             }
             this.createNotificationForArtist(booking, result.response, ['/events', booking.eventEID._id],
             'event_busy', booking.hostUser.firstName + " has cancelled the request on " + booking.eventEID.eventName);
+            this.createNotificationForOtherPersistenHosts(booking, result.response, ['/events', booking.eventEID._id],
+            'event_busy', booking.hostUser.firstName + " has cancelled the request on " + booking.eventEID.eventName);
           })
         } else if(result.response == NegotiationResponses.cancel) {
           // Cancellation, the user cancelled a confirmed booking
@@ -779,6 +783,8 @@ export class EventManagementComponent implements OnInit {
                     // Send notification to artist
                     this.createNotificationForArtist(booking, result.response, ['/bookingmanagement', 'myperformances'],
                     'event_busy', booking.performerUser.firstName + " has cancelled the confirmed booking for " + booking.eventEID.eventName + " and a 15% fee was charged.");
+                    this.createNotificationForOtherPersistenHosts(booking, result.response, ['/bookingmanagement', 'myperformances'],
+                    'event_busy', booking.performerUser.firstName + " has cancelled the confirmed booking for " + booking.eventEID.eventName + " and a 15% fee was charged.");
                   });
                 });
 
@@ -800,6 +806,8 @@ export class EventManagementComponent implements OnInit {
                 this.events[eventIndex].cancellations.push(booking);
                 this.events[eventIndex].cancellationNotifications++;
                 this.createNotificationForArtist(booking, result.response, ['/events', booking.eventEID._id],
+                'import_export', booking.hostUser.firstName + " has cancelled the confirmed booking for " + booking.eventEID.eventName);
+                this.createNotificationForOtherPersistenHosts(booking, result.response, ['/events', booking.eventEID._id],
                 'import_export', booking.hostUser.firstName + " has cancelled the confirmed booking for " + booking.eventEID.eventName);
               });
             });
