@@ -76,6 +76,10 @@ export class CreateEventsComponent implements OnInit {
   minDate = new Date(Date.now());
   maxDate = new Date(2020, 0, 1);
 
+  imageChangedEvent: any = '';
+  croppedImage: any = '';
+  showCropper: boolean = false;
+
   constructor(private route: ActivatedRoute,
               private userService: UserService,
               private bookingService: BookingService,
@@ -264,28 +268,34 @@ export class CreateEventsComponent implements OnInit {
     this.locationChosen = true;
   }
 
-  onChange(event: EventTarget) {
-      let eventObj: MSInputMethodContext = <MSInputMethodContext> event;
-      let target: HTMLInputElement = <HTMLInputElement> eventObj.target;
-      let files: FileList = target.files;
-      let file: File = files[0];
-      let blob = file as Blob;
+  private prepareBlob() {
+    fetch(this.croppedImage).then(res => res.blob()).then(blob => this.uploadImage(blob));
+  }
 
-      if (!blob) {
-        return;
-      }
+  uploadImage(blob: Blob) {
       this.progressBar.mode = 'indeterminate';
-      this.imgurService.uploadToImgur(file).then(link => {
+      this.imgurService.uploadToImgur(blob).then(link => {
         this.event.eventPicUrl = link as string;
       }).then(link => {
           this.uploadedImage = true;
           this.progressBar.mode = 'determinate';
-          // update the image view
+          this.showCropper = false;
+          this.croppedImage = null;
         }).catch(err => {
           console.log(err);
           this.progressBar.mode = 'determinate';
-          //this.router.navigate(['/profile']); //this will go back to my events.
+          this.showCropper = false;
+          this.croppedImage = null;
       });
+  }
+
+  fileChangeEvent(event: EventTarget) {
+    this.showCropper = true;
+    this.imageChangedEvent = event;
+  }
+
+  imageCropped(image: String) {
+    this.croppedImage = image;
   }
 
   private setCurrentPosition() {
@@ -340,7 +350,7 @@ export class CreateEventsComponent implements OnInit {
     this.event.fromDate = this.basicForm.get('date').value[0];
     this.event.toDate = this.basicForm.get('date').value[1];
     this.event.cancellationPolicy = this.basicForm.get('cancellationPolicy').value;
-    console.log("event: ", this.event)
+    // console.log("event: ", this.event)
 
 
     if (!this.updating) {
