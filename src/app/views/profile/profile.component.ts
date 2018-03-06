@@ -239,7 +239,7 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterViewChecked {
               username: updatedUser.soundcloud.username
             };
             console.log('This User: ', this.user);
-            this.userService.setUser(this.user);
+            this.userService.user = this.user;
             this.sanitizeSoundcloudUrl();
           } else {
             // Invalid soundcloud username. Notify user and keep the input
@@ -276,10 +276,10 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterViewChecked {
 
   unlinkSpotify() {
     this.user.spotify = undefined;
-    this.userService.setUser(this.user);
+    this.userService.user = this.user;
     this._spotifyClientService.removeSpotifyFromUser(this.user).then((unlinkedUser: User) => {
       // this.user = unlinkedUser;
-      this.userService.setUser(this.user);
+      this.userService.user = this.user;
       let snackBarRef = this.snackBar.open('Spotify Account Unlinked', '', {
         duration: 1500,
       });
@@ -288,10 +288,10 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterViewChecked {
 
   unlinkSoundcloud() {
     this.user.soundcloud = undefined;
-    this.userService.setUser(this.user);
+    this.userService.user = this.user;
     this._spotifyClientService.removeSoundcloudFromUser(this.user).then((unlinkedUser: User) => {
       // this.user = unlinkedUser;
-      this.userService.setUser(this.user);
+      this.userService.user = this.user;
       let snackBarRef = this.snackBar.open('Soundcloud Account Unlinked', '', {
         duration: 1500,
       });
