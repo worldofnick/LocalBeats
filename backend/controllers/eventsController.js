@@ -33,7 +33,7 @@ function getDefaultImage(eventType) {
   if (eventType == "birthday") {
     return "https://images.meredith.com/content/dam/bhg/Images/2014/1/17/101666877.jpg.rendition.largest.jpg";
   } else if (eventType == "wedding") {
-    return "http://gi-workshop.net/wp-content/uploads/2017/11/Beautiful-Simple-Garden-Wedding-Decorations-25-For-Diy-Wedding-Table-Decorations-with-Simple-Garden-Wedding-Decorations.jpg";
+    return "http://dipiazzawedding.com/wp-content/uploads/2016/03/wedding-background.jpg";
   } else if (eventType == "party") {
     return "http://www.party-adviser.com/wp-content/uploads/2016/07/decorated-pool.jpg";
   } else if (eventType == "live music") {

@@ -47,7 +47,7 @@ export class AuthComponent implements OnInit {
       password: signinData.password,
       genres: [],
       isArtist: true,
-      profilePicUrl: "http://laoblogger.com/images/default-profile-picture-5.jpg",
+      profilePicUrl: "https://www.vccircle.com/wp-content/uploads/2017/03/default-profile.png",
       eventTypes: [],
       socket: null,
       city: '',

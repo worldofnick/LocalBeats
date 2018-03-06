@@ -156,7 +156,6 @@ exports.getAccessRefreshTokens = function (req, res) {
 }
 
 exports.spotifyAuthorizeClient = function (req, res) {
-  console.log('In spotify Authorize!');
   // Prepare the authorize spotify parameters.
   let parameters = {
     client_id: config.spotify.clientID,
@@ -166,7 +165,6 @@ exports.spotifyAuthorizeClient = function (req, res) {
   };
 
   // Redirect to spotify to ask for permissions.
-  console.log('Authorize SPotify URL : ',config.spotify.authorizeUri + '?' + querystring.stringify(parameters) )
   res.send({"redirect_url": config.spotify.authorizeUri + '?' + querystring.stringify(parameters)});
 }
 
@@ -223,8 +221,6 @@ exports.getSoundcloudUserProfile = function(req, res) {
 exports.grantClientCredentials = function () {
   spotifyApi.clientCredentialsGrant()
     .then(function (data) {
-      // console.log('The access token expires in ' + data.body['expires_in']);
-      // console.log('The access token is ' + data.body['access_token']);
 
       // Save the access token so that it's used in future calls
       spotifyApi.setAccessToken(data.body['access_token']);
@@ -263,7 +259,6 @@ exports.getFirstPlaylist = function (req, res) {
     .then(function (data) {
       // console.log('IS JSON EMPYT?: ', isResultEmpty(data.body));
       if (!isResultEmpty(data.body)) {
-        console.log(data.body);
         for (var playlist of data.body.items) {
           if (playlist.owner.id == req.params.username) {
             return res.status(200).send({ uri: playlist.uri });
@@ -297,7 +292,6 @@ exports.getFirstPlaylistByUIDAfterProfileUpdate = function (req, res) {
       .then(function (data) {
         // console.log('IS JSON EMPYT?: ', isResultEmpty(data.body));
         if (!isResultEmpty(data.body)) {
-          // console.log(data.body);
           for (var playlist of data.body.items) {
             if (playlist.owner.id == user.spotifyID) {
               user.hashPassword = undefined;
@@ -376,7 +370,6 @@ exports.getFirstPlaylistByUID = function (req, res) {
       .then(function (data) {
         // console.log('IS JSON EMPYT?: ', isResultEmpty(data.body));
         if (!isResultEmpty(data.body)) {
-          // console.log(data.body);
           for (var playlist of data.body.items) {
             if (playlist.owner.id == user.spotifyID) {
               return res.status(200).send({ uri: playlist.uri });
