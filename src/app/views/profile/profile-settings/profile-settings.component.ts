@@ -1,4 +1,5 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
+import { ISubscription } from "rxjs/Subscription";
 import { MatProgressBar, MatButton } from '@angular/material';
 import { FileUploader } from 'ng2-file-upload';
 import { UserService } from '../../../services/auth/user.service';
@@ -15,6 +16,7 @@ import { Action } from '../../../services/chats/model/action';
 import { Message } from '../../../services/chats/model/message';
 import { MatSnackBar } from '@angular/material';
 import { Router } from '@angular/router';
+import { SearchService } from '../../../services/search/search.service';
 
 @Component({
   selector: 'app-profile-settings',
@@ -24,7 +26,8 @@ import { Router } from '@angular/router';
 export class ProfileSettingsComponent implements OnInit {
   @ViewChild(MatProgressBar) progressBar: MatProgressBar;
 
-  user: User;
+  user: User = null;
+  private userSubscription: ISubscription;
   genresList: string[] = ['rock', 'country', 'jazz', 'blues', 'rap'];
   eventsList: string[] = ['wedding', 'birthday', 'business'];
   settingsForm: FormGroup;
@@ -41,42 +44,63 @@ export class ProfileSettingsComponent implements OnInit {
   constructor(private route: ActivatedRoute, private userService: UserService, private router : Router,
               private imgurService: ImgurService, private formBuilder: FormBuilder,
               private _socketService: SocketService, public snackBar: MatSnackBar, private stripeService: StripeService,
-            private _spotifyClientService: SpotifyClientService) { 
+            private _spotifyClientService: SpotifyClientService, private searchService: SearchService) { 
               }
 
 
   ngOnInit() {
-    this.user = this.userService.user;
-    this.nowArtist = this.user.isArtist;
     this.createForm();
+    this.searchService.eventTypes().then((types: string[]) => {
+      this.eventsList = types;
+    }).then(() => this.searchService.genres().then((types: string[]) => {
+      this.genresList = types;
+    }));
+    this.userSubscription = this.userService.userResult.subscribe(user => 
+      {
+        this.user = user;
+        this.nowArtist = this.user.isArtist;
+        this.settingsForm.patchValue({
+          firstName: this.user.firstName,
+          lastName: this.user.lastName,
+          email: this.user.email,
+          isArtist: this.user.isArtist,
+          genres: this.user.genres,
+          eventTypes: this.user.eventTypes,
+        });
+      });
+    
     this.route.queryParams.subscribe(params => {
       if (params['stripe']) {
         this.userService.getUserByID(this.userService.user._id).then((user: User) => {
           this.user = user;
-          // this.userService.setUser(user);
           this.userService.user = user;
+          // this.userService.user = user;
         }).then(() => this.selectedTabIndex = 2);
         
       }
     });
   }
 
+  ngOnDestroy() {
+    this.userSubscription.unsubscribe();
+  }
+
   createForm(){
     this.settingsForm = this.formBuilder.group({
-      firstName: new FormControl(this.user.firstName, [
+      firstName: new FormControl('', [
         Validators.required
       ]),
-      lastName: new FormControl(this.user.lastName, [
+      lastName: new FormControl('', [
         Validators.required
       ]),
-      email: new FormControl(this.user.email, [
+      email: new FormControl('', [
         Validators.email,
         Validators.required
       ]),
-      isArtist: new FormControl(this.user.isArtist, [
+      isArtist: new FormControl('', [
       ]),
-      genres: new FormControl(this.user.genres,[]),
-      eventTypes: new FormControl(this.user.eventTypes,[])  
+      genres: new FormControl([],[]),
+      eventTypes: new FormControl([],[])  
     })
   }
 
@@ -176,21 +200,10 @@ export class ProfileSettingsComponent implements OnInit {
     this.user.stripeAccountId = null;
     this.userService.onEditProfile(this.user).then((user: User) => {
       this.user = user;
-      this.userService.user = this.user
-      let snackBarRef = this.snackBar.open('Stripe Account Unlinked', "", {
+      this.userService.user = user;
+      let snackBarRef = this.snackBar.open('Stripe Account Unlinked', '', {
         duration: 1500,
       });
     });
-  }
-
-  // SPOTIFY
-  authorizeSpotify() {
-    this._spotifyClientService.authorizeSpotify().then((url: string) => {
-      window.open(url);
-    });
-  }
-
-  callbackTest() {
-    this.router.navigate(['/callback', 'spotify']);
   }
 }

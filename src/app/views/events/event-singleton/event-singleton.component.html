@@ -26,18 +26,11 @@
             </mat-list-item>
             <mat-list-item>
               <mat-icon mat-list-icon>monetization_on</mat-icon>
-              <!-- <h4 mat-line>Price:</h4> -->
               <p mat-line> ${{model.fixedPrice}} </p>
             </mat-list-item>
             <mat-list-item>
               <mat-icon mat-list-icon>date_range</mat-icon>
-              <!-- <h4 mat-line>Date:</h4> -->
-              <p mat-line> {{model.toDate | date:'MMM d, y, h:mm a'}} </p>
-            </mat-list-item>
-            <mat-list-item>
-              <mat-icon mat-list-icon>access_time</mat-icon>
-              <!-- <h4 mat-line>Time:</h4> -->
-              <p mat-line>1:30 - 3:30 PM MST </p>
+              <p mat-line> {{model.fromDate | date:'MMM d, y, h:mm a'}} - {{model.toDate | date:'MMM d, y, h:mm a'}} </p>
             </mat-list-item>
             <mat-list-item *ngIf="this.model.negotiable">
               <mat-icon mat-list-icon>import_export</mat-icon>
@@ -47,9 +40,17 @@
               <mat-icon mat-list-icon>import_export</mat-icon>
               <p mat-line>Price is non-negotiable</p>
             </mat-list-item>
+            <mat-list-item>
+              <mat-icon mat-list-icon>event_busy</mat-icon>
+              <p mat-line>Cancellation Policy: {{model.cancellationPolicy | capitalize}} </p>
+            </mat-list-item>
+            <mat-list-item>
+              <small *ngIf="model.cancellationPolicy == 'strict'" class="form-error-msg">Either user who cancels a confirmed booking within 30 days of the calendar start date will be charged 15%.</small>
+              <small *ngIf="model.cancellationPolicy == 'flexible'" class="form-error-msg">Either user who cancels a confirmed booking within 7 days of the calendar start date will be charged 15%.</small>
+            </mat-list-item>
           </mat-list>
 
-          <mat-divider>
+          <mat-divider class="mt-1">
 
           </mat-divider>
 
@@ -68,8 +69,8 @@
         <button *ngIf="isCurrentUser && userService.isAuthenticated()" (click)="onDeleteEvent()" mat-raised-button color="accent">Delete Event</button>
         <button *ngIf="!isCurrentUser && userService.isAuthenticated()" (click)="messageHost()" mat-raised-button color="primary">Message Host</button>
         <button *ngIf="!isCurrentUser && userService.isAuthenticated() && !hasApplied && userService.user.isArtist" (click)="newApplication()" mat-raised-button color="accent">{{buttonText}}</button>
-        <button *ngIf="!isCurrentUser && userService.isAuthenticated() && hasApplied && userService.user.isArtist" (click)="openNegotiationDialog()" mat-raised-button color="accent">{{buttonText}}</button>
-     
+        <button *ngIf="!isCurrentUser && userService.isAuthenticated() && hasApplied && userService.user.isArtist && userBooking != null && !userBooking.approved" (click)="onManageBooking()" mat-raised-button color="accent">Manage Application</button>
+        <button *ngIf="!isCurrentUser && userService.isAuthenticated() && hasApplied && userService.user.isArtist && userBooking != null && userBooking.approved" (click)="onManageBooking()" mat-raised-button color="accent">Manage Booking</button>
       </mat-card>
       <!-- </div> -->
 

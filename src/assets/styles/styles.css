@@ -37,6 +37,7 @@
 @import '~@swimlane/ngx-datatable/release/index.css';
 @import '~@swimlane/ngx-datatable/release/themes/material.css';
 @import '~@swimlane/ngx-datatable/release/assets/icons.css';
+@import "~ng-pick-datetime/assets/style/picker.min.css";
 
 /*---- Globals -----*/
 html {
@@ -148,11 +149,17 @@ code {
 .m-1 {
     margin: 1rem !important;
 }
+.mt-05 {
+    margin-top: 0.5rem !important;
+}
 .mt-1 {
     margin-top: 1rem !important;
 }
 .mt-0 {
     margin-top: 0 !important;
+}
+.mr-05 {
+    margin-right: 0.5rem !important;
 }
 .mr-1 {
     margin-right: 1rem !important;
@@ -207,6 +214,9 @@ code {
 }
 .p-1 {
     padding: 1rem !important;
+}
+.p-2 {
+    padding: 2rem !important;
 }
 .p-05 {
     padding: .5rem !important;
@@ -298,6 +308,10 @@ code {
     line-height: 13px;
     height: 13px;
     width: 13px;
+}
+
+.mat-card {
+    border-radius: 10px !important;
 }
 
 .mat-card.default {

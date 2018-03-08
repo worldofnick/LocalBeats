@@ -1,7 +1,46 @@
-.background {
-    position: relative;
+.home-intro-section {
+  background: url('../../../assets/images/concert-pic2.png') no-repeat center center;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  padding: 180px 0;
+  color: #ffffff;
+  overflow: hidden
 }
 
-.home-title {
-  text-align: center;
+.home-intro-title {
+  margin: 0 0 24px;
+  font-size: 48px;
+  font-weight: 900;
+  line-height: 52px;
+  text-shadow: 0 4px 4px rgba(0, 0, 0, 0.22);
+}
+.home-intro-desc {
+  margin: 0 0 40px;
+  font-size: 22px;
+  font-weight: 400;
+  line-height: 32px;
+}
+.intro-list {
+  margin: 0 0 40px;
+}
+
+@media (max-width: 767px) {
+  .home-intro-section {
+    padding: 100px 0 60px;
+  }
+  .home-intro-title {
+    margin: 0 0 30px;
+    font-size: 32px;
+    font-weight: 900;
+    line-height: 38px;
+    text-shadow: 0 4px 4px rgba(0, 0, 0, 0.22);
+  }
+  .home-intro-desc {
+    margin: 0 0 40px;
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 27px;
+  }
 }

@@ -4,7 +4,7 @@ module.exports = function(app) {
 	var userHandlers = require('../controllers/userController.js');
 	var spotifyHandlers = require('../controllers/spotifyController.js');
 	// var tokenVerificationHandler = require('../controllers/tokenVerificationController.js');
-	spotifyHandlers.grantClientCredentials();
+	// spotifyHandlers.grantClientCredentials();
 	// Users routes
 	app.route('/api/users')
 		.get(userHandlers.listAllUsers);

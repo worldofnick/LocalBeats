@@ -9,12 +9,12 @@ var Schema = mongoose.Schema;
 var UserSchema = new Schema({
     firstName     : {type: String, required: true},
     lastName      : {type: String, required: true},
+    fullName      : {type: String},
     email         : {type: String, unique: true, lowercase: true, required: true},
     hashPassword  : {type: String, required: true},
     birthday      : {type: Date},
     joinDate      : {type: Date, default: Date.now},
     profilePicUrl : {type: String, default: 'https://www.vccircle.com/wp-content/uploads/2017/03/default-profile.png'},
-    soundcloudID  : {type: String},
     spotifyID     : {type: String},
     stripeAccountId  : {type: String},
     genres        : {type: Array}, // Kept empty if the user is not an artist
@@ -26,7 +26,20 @@ var UserSchema = new Schema({
     location: {
         type: [Number],  // [<longitude>, <latitude>]
         index: '2d'      // create the geospatial index
-      }
+      },
+    spotify: {
+        id              : { type: String },
+        email           : { type: String, lowercase: true },
+        uri             : { type: String },
+        href            : { type: String },
+        refreshToken    : { type: String },
+        accessToken     : { type: String }
+    },
+    soundcloud: {
+        id              : { type: String },
+        username        : { type: String },
+        avatar_url      : { tyep: String }
+    }
 }, {strict: true}, {versionKey: false});
 
 /**

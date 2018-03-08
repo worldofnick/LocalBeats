@@ -6,8 +6,8 @@ export class User {
     public _id: string;
     public firstName: string;
     public lastName: string;
+    public fullName: string;
     public email: string;
-    public spotifyID: string;
     public password: string;
     public genres: string[];
     public isArtist: boolean;
@@ -19,7 +19,24 @@ export class User {
     public location: number[];
     public stripeAccountId: string;
 
+    // Music properties
+    public spotify?: {              // TODO: turn it into a spotyf object and have only 1 entry in user
+        email?: string,
+        id?: string,
+        uri?: string,
+        href?: string,
+        accessToken?: string,
+        refreshToken?: string,
+        albums?: any[]
+    };
+
+    public soundcloud?: {
+        id?: string,
+        username?: string,
+        avatar_url?: string
+    };
+
     // Chat properties
-    public isOnline: boolean = false;
+    public isOnline?: boolean = false;
 }
 

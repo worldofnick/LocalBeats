@@ -146,7 +146,7 @@ exports.stripeTransfers = async function (req, res) {
      res.sendStatus(403);
    }
   stripe.charges.create({
-    amount: booking.currentPrice,
+    amount: Math.round(booking.currentPrice * 100),
     currency: "usd",
     source: "tok_visa_debit",
     destination: {
@@ -247,13 +247,14 @@ exports.stripeTransfers = async function (req, res) {
   */
   exports.cancelBoookingFee = function (req, res) {
     // If cancel_type == "host-cancel", then charge the host
-    var stripeAccountId = req.body.booking.hostUser;
+    const booking = req.body.booking;
+    var stripeAccountId = booking.hostUser.stripeAccountId;
     if (req.query.cancel_type == "artist-cancel") {
-      stripeAccountId = req.body.booking.performerUser;
+      stripeAccountId = booking.performerUser.stripeAccountId;
     }
     var feeAmount = booking.currentPrice * 0.15;
     stripe.charges.create({
-      amount: feeAmount,
+      amount: Math.round(feeAmount * 100),
       currency: "usd",
       source: "tok_visa",
       destination: {
@@ -269,7 +270,7 @@ exports.stripeTransfers = async function (req, res) {
       payment.hostUser = booking.hostUser;
       payment.performerUser = booking.performerUser;
       payment.booking =  booking;
-      payment.amount =  booking.currentPrice;
+      payment.amount =  feeAmount;
       payment.date = new Date();
       payment.stripeChargeId = charge.id; // check if this is right
       payment.type = req.query.cancel_type;

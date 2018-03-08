@@ -1,0 +1,67 @@
+#spotifyList:hover {
+    background-color: rgba(230,230,230,0.6);
+}
+
+#spotifyList:active {
+    background-color: rgba(220,220,220,0.6)
+}
+
+#spotifyList {
+    border-bottom: 1px solid rgba(243,243,243, 1.0);
+}
+
+.soundcloud-register-container {
+    display: flex;
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    flex-direction: column;
+    width : 100%;
+}
+
+.no-music-found-container {
+    display: flex;
+    margin: 0;
+    position: absolute;
+    text-align: center;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    flex-direction: column;
+    width : 100%;
+}
+
+.spotifyConnectButtonContainer {
+    display: flex;
+    margin: 0;
+    position: absolute;
+    text-align: center;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    flex-direction: column;
+    width : 100%;
+}
+
+/* Style Music buttons */
+.btn {
+    background-color:rgba(29,186,83,1.0); /* Blue background */
+    border: none; /* Remove borders */
+    color: white; /* White text */
+    padding: 12px 16px; /* Some padding */
+    font-size: 18px; /* Set a font size */
+    cursor: pointer; /* Mouse pointer on hover */
+    border-radius: 40px;
+}
+
+.btn:hover {
+    opacity: 0.85;
+}
+
+.fa-spotify {
+    font-size: 20px;
+    background: rgba(29,186,83,1.0);
+    color: white;
+}

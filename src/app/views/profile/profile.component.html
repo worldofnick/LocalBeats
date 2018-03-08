@@ -1,4 +1,4 @@
-<div fxLayout="row" fxLayoutWrap="wrap">
+<div *ngIf="user != null" fxLayout="row" fxLayoutWrap="wrap">
   <div *ngIf="this.user" fxFlex="100" fxFlex.gt-md="300px" fxFlex.gt-sm="50">
     <mat-card class="profile-sidebar mb-1 pb-0">
       <div class="propic text-center">
@@ -12,7 +12,8 @@
       </div>
       <div class="profile-actions text-center mb-1">
         <button *ngIf="!this.onOwnProfile && this.userService.isAuthenticated()" mat-raised-button color="primary" (click)="onStartNewConversationFromProfileButtonClick()">Message</button>
-        <button *ngIf="!this.onOwnProfile && this.userService.isAuthenticated() && this.user.isArtist" mat-raised-button color="accent" (click)="clickedRequestArtist = true">Request Artist</button>
+        <button *ngIf="!this.onOwnProfile && this.userService.isAuthenticated() && this.user.isArtist" mat-raised-button color="accent"
+          (click)="clickedRequestArtist = true">Request Artist</button>
       </div>
       <div class="profile-nav">
         <mat-nav-list>
@@ -23,13 +24,13 @@
           </mat-list-item>
 
           <ng-template [ngIf]="this.onOwnProfile">
-            <mat-list-item (click)="clickedOverview = false" [routerLink]="['/profile', 'events']" routerLinkActive="list-item-active">
+            <mat-list-item (click)="clickedOverview = false" [routerLink]="['/bookingmanagement', 'myevents']" routerLinkActive="list-item-active">
               <mat-icon>events</mat-icon>
               My Hosted Events
             </mat-list-item>
           </ng-template>
           <ng-template [ngIf]="this.onOwnProfile && this.userService.user.isArtist">
-            <mat-list-item (click)="clickedOverview = false" [routerLink]="['/profile', 'performances']" routerLinkActive="list-item-active">
+            <mat-list-item (click)="clickedOverview = false" [routerLink]="['/bookingmanagement', 'myperformances']" routerLinkActive="list-item-active">
               <mat-icon>music_note</mat-icon>
               My Performances
             </mat-list-item>
@@ -52,16 +53,100 @@
       <mat-card-title>Contact Information</mat-card-title>
       <mat-card-content class="pt-0">
         <mat-list>
-            <mat-list-item><mat-icon class="mr-1">email</mat-icon> {{this.user.email}}</mat-list-item>
+          <mat-list-item>
+            <mat-icon class="mr-1">email</mat-icon> {{this.user.email}}</mat-list-item>
         </mat-list>
       </mat-card-content>
     </mat-card>
 
-    <mat-card class="default">
-      <mat-card-title>Spotify Widget</mat-card-title>
+    <!-- Music Corner -->
+    <mat-card class="default" *ngIf="this.userService.isAuthenticated() && this.user.isArtist">
+      <mat-card-title>Music Corner</mat-card-title>
       <mat-card-content class="pt-0">
-       <iframe src="https://open.spotify.com/embed?uri=spotify%3Auser%3Aspotify%3Aplaylist%3A2PXdUld4Ueio2pHcB6sM8j&theme=white" width="100%" height="380" frameborder="0" allowtransparency="true"></iframe>
+
+        <mat-tab-group class="music-tab-group" (selectChange)='onMusicTabSelectChange($event)'>
+          
+          <mat-tab label="Spotify">
+            <!-- <ng-template mat-tab-label> -->
+              <!-- <mat-icon>security</mat-icon> -->
+            <!-- </ng-template> -->
+            <div class="spotify-tab-content" [style.overflow]="'auto'" [style.height.px]="'300'">
+              
+              <!-- Link spotify button on logged in user's profile if no spotify account is linked -->
+              <div class="spotifyConnectButtonContainer" *ngIf="(this.user.spotify === undefined || this.user.spotify === null) && this.onOwnProfile">
+                  <button class="btn" (click)="authorizeSpotify()"><i class="fa fa-spotify"></i> Connect your Spotify account</button>
+              </div>
+
+              <!-- No spotify linked message on other person's profile with no spotify account -->
+              <div *ngIf="(this.user.spotify === undefined || this.user.spotify === null) && !this.onOwnProfile" class="no-music-found-container">
+                  <h3>{{this.user.firstName}} has no Spotify music...</h3>
+              </div>
+              
+              <!-- Spotify list of albums -->
+              <mat-list dense *ngIf="(this.user.spotify !== undefined && this.user.spotify !== null) && !this.onSpotifyWidget">
+                <h3 mat-subheader>Albums</h3>
+                <mat-list-item id="spotifyList" *ngFor="let album of this.user.spotify.albums" (click)="onAlbumRowClicked(album)">
+                  <!-- <mat-icon mat-list-icon>folder</mat-icon> -->
+                  <img matListAvatar [src]="this.getSanitizedUrl(album.images[2].url)" alt="album.name">
+                  <h3 mat-line>{{album.name}}</h3>
+                  <p mat-line> Released on {{album.release_date}} </p>
+                </mat-list-item>
+              </mat-list>
+
+              <!-- Spotify album widget for clicked album listItem -->
+              <iframe *ngIf="this.onSpotifyWidget" [src]="this.trustedAlbumUrl" width=100% height=100% frameborder="0" allowtransparency="true"></iframe>
+            </div>
+          </mat-tab>
+
+
+          <mat-tab label="SoundCloud">
+            <!-- <ng-template mat-tab-label>
+              <mat-icon>attach_file</mat-icon>
+            </ng-template> -->
+            <div class="soundcloud-tab-content" [style.overflow]="'auto'" [style.height.px]="'300'">
+                
+                <div *ngIf="(this.user.soundcloud === undefined || this.user.soundcloud === null) && this.user._id === this.userService.user._id" class="soundcloud-register-container">
+                  <mat-form-field (keydown)="registerSoundcloudClicked($event)" floatLabel="never" hintLabel="Tip: Your username can be found on the soundcloud profile page">
+                      <input matInput [(ngModel)]="soundcloudIdFormInput" placeholder="Register your SoundCloud Username">
+                  </mat-form-field>
+                </div>
+                <div *ngIf="(this.user.soundcloud === undefined || this.user.soundcloud === null) && this.user._id !== this.userService.user._id" class="no-music-found-container">
+                  <!-- TODO: Add tear eye emoji -->
+                  <h3>{{this.user.firstName}} has no SoundCloud music...</h3>
+                    <!-- <mat-form-field (keydown)="registerSoundcloudClicked($event)" floatLabel="never" hintLabel="Tip: ID is the numeric sequence at end of the profile page's URL">
+                        <input matInput [(ngModel)]="soundcloudIdFormInput" placeholder="Register your SoundCloud ID">
+                    </mat-form-field> -->
+                </div>
+                
+                <iframe *ngIf="(this.user.soundcloud !== undefined && this.user.soundcloud !== null)" [src]="this.trustedSoundcloudUrl" width="100%" height="300" scrolling="no" frameborder="no"></iframe>
+
+            </div>
+          </mat-tab>
+
+          <mat-tab label="Account Services" *ngIf="(this.user.spotify !== undefined || this.user.soundcloud !== undefined) && this.user._id === this.userService.user._id">
+            <mat-card-content class="mt-1">
+              <div class="button-row">
+                <a *ngIf="this.user.spotify !== null && this.user.spotify !== undefined" mat-raised-button (click)="unlinkSpotify()" color="primary">Unlink Spotify</a>
+                <!-- <a *ngIf="this.user.spotify === null && this.user.spotify === undefined"  mat-raised-button (click)="callbackTest()" color="primary">Link Spotify</a> -->
+                
+                <a *ngIf="this.user.soundcloud !== null && this.user.soundcloud !== undefined" mat-raised-button (click)="unlinkSoundcloud()" color="primary">Unlink SoundCloud</a>          
+                <!-- <a mat-raised-button (click)="callbackTest()" color="primary">Link SoundCloud</a> -->
+                <p class="accountEmptyContainer" *ngIf="(this.user.spotify === null || this.user.spotify === undefined) && 
+                (this.user.soundcloud === null || this.user.soundcloud === undefined)">Nothing to see here...</p>
+            </div>
+            </mat-card-content>
+          </mat-tab>
+
+        </mat-tab-group>
+
+
       </mat-card-content>
+
+      <mat-card-actions>
+        <!-- <h4 mat-subheader *ngIf="!this.onSpotifyWidget">Album Count : {{this.user.spotify.albums.length}}</h4> -->
+        <button mat-button *ngIf="this.onSpotifyWidget" (click)="backToSpotifyAlbumsClicked()">
+          <mat-icon>arrow_back</mat-icon> Back to Albums</button>
+      </mat-card-actions>
     </mat-card>
   </div>
 

@@ -6,6 +6,9 @@ import 'rxjs/add/operator/filter';
 import { RoutePartsService } from "./services/route-parts/route-parts.service";
 import { SocketService } from 'app/services/chats/socket.service';
 import { MatSnackBar } from '@angular/material';
+import { UserService } from './services/auth/user.service';
+import { JwtHelper } from 'angular2-jwt';
+import { User } from './models/user';
 
 @Component({
   selector: 'app-root',
@@ -21,11 +24,24 @@ export class AppComponent implements OnInit {
     private activeRoute: ActivatedRoute,
     public snackBar: MatSnackBar,
     private routePartsService: RoutePartsService,
+    private userService: UserService,
     private _socketService: SocketService) { }
 
   ngOnInit() {
-    this.changePageTitle();
     this._socketService.initSocket();
+    let jwtHelper: JwtHelper = new JwtHelper();
+    const token = sessionStorage.getItem('token');
+    if(token) {
+      let decodedToken = jwtHelper.decodeToken(token);
+      console.log(decodedToken);
+      this.userService.getUserByID(decodedToken.id).then((user:User) => {
+        this.userService.userLoaded(user, token, true, false);
+        this.userService.getNotificationsCountForUser(user._id);
+        this.userService.getNotificationsForUser(user._id);
+      });
+    }
+    this.changePageTitle();
+    
     // Init User Tour
     setTimeout(() => {
       hopscotch.startTour(this.tourSteps());
@@ -59,9 +75,9 @@ export class AppComponent implements OnInit {
         },
         {
           title: 'Front Page',
-          content: 'An eye catching free front page.',
+          content: 'Welcome to LocalBeats',
           target: 'frontend-btn', // Element ID
-          placement: 'bottom',
+          placement: 'top',
           xOffset: 20
         }
       ]

@@ -1,6 +1,19 @@
 import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
 import { CalendarEvent, CalendarEventAction, CalendarEventTimesChangedEvent } from 'angular-calendar';
 import { Subject } from 'rxjs/Subject';
+import { Router } from "@angular/router";
+
+// Models
+import { Event } from 'app/models/event';
+import { Booking } from 'app/models/booking';
+
+// Services
+import { EventService } from 'app/services/event/event.service';
+import { UserService } from 'app/services/auth/user.service';
+import { BookingService } from 'app/services/booking/booking.service';
+
+
+
 import { MatDialog, MatDialogRef } from '@angular/material';
 import {
   startOfDay,
@@ -21,13 +34,9 @@ import {
 export class AppCalendarComponent implements OnInit {
   view = 'month';
   viewDate = new Date();
-  @ViewChild('modalContent') modalContent: TemplateRef<any>;
-  dialogRef;
 
-  constructor(public dialogBox: MatDialog) { }
-
-  ngOnInit() {
-  }
+  events: CalendarEvent[] = [];
+  userEvents: Event[];
   modalData: {
     action: string,
     event: CalendarEvent
@@ -49,52 +58,95 @@ export class AppCalendarComponent implements OnInit {
   };
 
   actions: CalendarEventAction[] = [{
-    label: '<i class="material-icons icon-sm">edit</i>',
+    label: '<i class="material-icons icon-sm" matTooltip="Edit Event">edit</i>',
     onClick: ({ event }: { event: CalendarEvent }): void => {
       this.handleEvent('Edited', event);
     }
-  }, {
-    label: '<i class="material-icons icon-sm">close</i>',
+  },
+  {
+    label: '<i class="material-icons icon-sm" matTooltip="Manage Events">event_available</i>',
     onClick: ({ event }: { event: CalendarEvent }): void => {
-      this.events = this.events.filter(iEvent => iEvent !== event);
-      this.handleEvent('Deleted', event);
+      this.handleEvent('Events', event);
     }
-  }];
+  }
+    ]  ;
+
+  bookingActions: CalendarEventAction[] = [{
+    label: '<i class="material-icons icon-sm" matTooltip="View Event">visibility</i>',
+    onClick: ({ event }: { event: CalendarEvent }): void => {
+      this.handleEvent('Singleton', event);
+    }
+  },
+  {
+    label: '<i class="material-icons icon-sm" matTooltip="Manage Performances">event_note</i>',
+    onClick: ({ event }: { event: CalendarEvent }): void => {
+      this.handleEvent('Bookings', event);
+    }
+  }
+
+];
 
   refresh: Subject<any> = new Subject();
-  events: CalendarEvent[] = [{
-    start: subDays(startOfDay(new Date()), 1),
-    end: addDays(new Date(), 1),
-    title: 'A 3 day event',
-    color: this.colors.red,
-    actions: this.actions
-  }, {
-    start: startOfDay(new Date()),
-    title: 'An event with no end date',
-    color: this.colors.yellow,
-    actions: this.actions
-  }, {
-    start: subDays(endOfMonth(new Date()), 3),
-    end: addDays(endOfMonth(new Date()), 3),
-    title: 'A long event that spans 2 months',
-    color: this.colors.blue
-  }, {
-    start: addHours(startOfDay(new Date()), 2),
-    end: new Date(),
-    title: 'A draggable and resizable event',
-    color: this.colors.yellow,
-    actions: this.actions,
-    resizable: {
-      beforeStart: true,
-      afterEnd: true
-    },
-    draggable: true
-  }];
 
   activeDayIsOpen: boolean = true;
+  @ViewChild('modalContent') modalContent: TemplateRef<any>;
+  dialogRef;
+
+  constructor(public dialogBox: MatDialog, private eventService: EventService,
+    private userService: UserService, private bookingService: BookingService,
+    private router: Router) { 
+      console.log('constructor calendar');
+    }
+
+
+  ngOnInit() {
+    console.log('initialize calendar');
+    this.eventService.getEventsByUID(this.userService.user._id).then( (eventList: Event[]) => {
+      for (let event of eventList) {
+        const calendarEvent: CalendarEvent = {
+          start: subDays(event.fromDate, 0),
+          end: subDays(event.toDate,0),
+          title: event.eventName,
+          color: this.colors.red,
+          actions: this.actions,
+          meta: event._id
+        };
+        this.events.push(calendarEvent);
+      }
+
+      if(this.userService.user.isArtist) {
+        this.bookingService.getUserBookings(this.userService.user, 'artist').then( (bookings: Booking[]) => {
+          for(let booking of bookings){
+            if(!booking.cancelled) {
+            const calendarEvent: CalendarEvent = {
+              start: subDays(booking.eventEID.fromDate, 0),
+              end: subDays(booking.eventEID.toDate, 0),
+              title: booking.eventEID.eventName,
+              color: this.colors.yellow,
+              actions: this.bookingActions,
+              meta: booking.eventEID._id
+            };
+            this.events.push(calendarEvent);
+          }
+          }
+          this.refresh.next();
+        });
+      }
+    });
+
+  }
+
+
   handleEvent(action: string, event: CalendarEvent): void {
-    this.modalData = { event, action };
-    this.dialogRef = this.dialogBox.open(this.modalContent);
+    if (action == 'Edited') {
+      this.router.navigate(['/events', 'update', event.meta]); // this will go to the page about the event
+    } else if (action == 'Singleton') {
+      this.router.navigate(['/events', event.meta]); // this will go to the page about the event
+    } else if (action == 'Bookings') {
+      this.router.navigate(['/bookingmanagement', 'myperformances']); // this will go to the page about the event
+    } else if (action == 'Events') {
+      this.router.navigate(['/bookingmanagement', 'myevents']); // this will go to the page about the event
+    }
   }
   dayClicked({ date, events }: { date: Date, events: CalendarEvent[] }): void {
 

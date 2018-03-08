@@ -17,6 +17,7 @@ const Events        = require('./backend/models/eventsModel');
 const Bookings      = require('./backend/models/bookingsModel');
 const Notification  = require('./backend/models/notificationModel');
 const Message       = require('./backend/models/messageModel');
+const Review        = require('./backend/models/reviewsModel');
 var Payments = require('./backend/models/paymentModel');
 
 var distDir = __dirname + "/dist/";
@@ -69,6 +70,7 @@ var bookingsRoutes        = require('./backend/routes/bookingsRoutes.js');
 var spotifyRoutes 		    = require('./backend/routes/spotifyRoutes.js');
 var notificationRoutes 		= require('./backend/routes/notificationRoutes.js');
 var messagesRoutes 		    = require('./backend/routes/messageRoutes.js');
+var reviewsRoutes   		    = require('./backend/routes/reviewsRoutes.js');
 var stripeRoutes 		      = require('./backend/routes/stripeRoutes.js');
 userRoutes(app);
 authenticationRoutes(app);
@@ -77,6 +79,7 @@ bookingsRoutes(app);
 spotifyRoutes(app);
 notificationRoutes(app);
 messagesRoutes(app);
+reviewsRoutes(app);
 stripeRoutes(app);
 
 var privateChatSocket     = require('./backend/socket/chatSocket.js');

@@ -7,7 +7,8 @@ import {
   MatInputModule,
   MatButtonModule,
   MatProgressBarModule,
-  MatCheckboxModule
+  MatCheckboxModule,
+  MatChipsModule
  } from '@angular/material';
 import { NgModule } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -21,6 +22,7 @@ import { VerifyDialogComponent } from './verify-dialog/verify-dialog.component';
     CommonModule,
     CurrencyMaskModule,
     MatDialogModule,
+    MatChipsModule,
     MatButtonModule,
     MatCardModule,
     MatInputModule,

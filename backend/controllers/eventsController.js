@@ -268,6 +268,6 @@ exports.searchEvents = function(req, res) {
 };
 
 exports.getEventTypes = function (req, res) {
-    var eventTypes = ["All Events", "Wedding", "Birthday", "Business", "Live Music", "Party", "Festival"];
+    var eventTypes = ["Wedding", "Birthday", "Business", "Live Music", "Party", "Festival"];
     return res.status(200).send( {"eventTypes": eventTypes} );
   };

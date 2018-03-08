@@ -1,4 +1,4 @@
-<mat-card class="p-0">
+<mat-card *ngIf="user != null" class="p-0">
   <mat-tab-group [selectedIndex]="selectedTabIndex">
 
     <mat-tab label="Edit Account">
@@ -48,7 +48,7 @@
               [imageChangedEvent]="imageChangedEvent"
               [maintainAspectRatio]="true"
               [aspectRatio]="1 / 1"
-              [resizeToWidth]="256"
+              [resizeToWidth]="512"
               format="png,jpeg"
               (imageCropped)="imageCropped($event)"
               style="max-width:512px; max-height:512px"
@@ -65,24 +65,10 @@
       <mat-card-content class="mt-1">
         <p>If you plan on performing at an event or hosting an event you'll need to setup a payout method.</p>
         <div class="button-row">
-        <a [disabled]="this.user.stripeAccountId" mat-raised-button (click)="authorizeStripe()" color="primary">Connect with Stripe</a>
+        <a *ngIf="!this.user.stripeAccountId" mat-raised-button (click)="authorizeStripe()" color="primary">Connect with Stripe</a>
         <a *ngIf="this.user.stripeAccountId" mat-raised-button (click)="requestPayout()" color="accent">Request Payout</a>
         <a *ngIf="this.user.stripeAccountId" mat-raised-button (click)="viewStripeTransfers()" color="white">Manage Stripe Account</a>
         <a *ngIf="this.user.stripeAccountId" mat-raised-button (click)="unlinkStripe()" color="warn">Unlink Stripe Account</a>
-      </div>
-      </mat-card-content>
-    </mat-tab>
-
-    <mat-tab label="Social Accounts">
-      <mat-card-content class="mt-1">
-        <p>Link your social accounts here...</p>
-        <div class="button-row">
-          <a mat-raised-button (click)="authorizeSpotify()" color="primary">Connect Spotify</a>
-          <a mat-raised-button (click)="callbackTest()" color="primary">Callback Test</a>
-        <!-- <a [disabled]="this.user.stripeAccountId" mat-raised-button (click)="authorizeStripe()" color="primary">Connect with Stripe</a> -->
-        <!-- <a *ngIf="this.user.stripeAccountId" mat-raised-button (click)="requestPayout()" color="accent">Request Payout</a> -->
-        <!-- <a *ngIf="this.user.stripeAccountId" mat-raised-button (click)="viewStripeTransfers()" color="white">Manage Stripe Account</a> -->
-        <!-- <a *ngIf="this.user.stripeAccountId" mat-raised-button (click)="unlinkStripe()" color="warn">Unlink Stripe Account</a> -->
       </div>
       </mat-card-content>
     </mat-tab>

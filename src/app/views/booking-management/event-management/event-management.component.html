@@ -1,0 +1,186 @@
+<section id="portfolio-section" class="portfolio home-section" [ngClass]="{'light-gray': backgroundGray}">
+  <div class="container">
+    <div class="section-header">
+      <h2>My Events</h2>
+      <p *ngIf="events.length == 0">You have not hosted any events</p>
+    </div>
+    <div *ngIf="events.length > 0" fxLayout="row" fxLayoutWrap="wrap" >
+      <div fxFlex="100" fxFlex.gt-xs="33" *ngFor="let item of this.events; let j = index">
+        <mat-card class="p-0">
+          <img mat-card-image [src]="item.event.eventPicUrl" class="cover-image">
+          <mat-card-content>
+            <h5><strong><a [routerLink]="['/events', item.event._id]">{{item.event.eventName}}</a></strong></h5>
+            <p class="mb-0">{{item.event.eventType | capitalize}}</p>
+            <p class="mt-0 mb-0">{{item.event.fromDate | date:'MMM d, y, h:mm a'}} - {{item.event.toDate | date:'MMM d, y, h:mm a'}}</p>
+            <p class="mt-0 mb-0">{{item.event.fixedPrice | currency}} <span *ngIf="item.event.negotiable">(Negotiable)</span></p>
+            <p class="mt-1">{{item.event.description}}</p>
+            <mat-accordion>
+              <mat-expansion-panel *ngIf="item.applications.length > 0" class="no-shadow">
+                <mat-expansion-panel-header>
+                  <mat-panel-title>
+                    Applicants
+                  </mat-panel-title>
+                  <mat-panel-description>
+                    <span *ngIf="item.applicationNotifications > 0" class="notification-value mat-bg-warn">{{item.applicationNotifications}}</span>
+                  </mat-panel-description>
+                </mat-expansion-panel-header>
+                <div fxLayout="column" fxLayoutAlign="space-between center" fxLayoutGap="10px">
+                  <mat-card *ngFor="let application of item.applications; let i = index" class="p-1 full-width">
+                    <div fxLayout="column">
+                      <div fxFlex="90" fxLayout="row" fxLayout.lt-xs="column"class="mb-05">
+                        <div fxFlex="20" style="float: left;">
+                          <a [routerLink]="['/profile', application.performerUser._id]"><img mat-card-avatar style="float: left;" [src]="application.performerUser.profilePicUrl"></a>
+                        </div>
+                        <div fxFlex="80" style="float: left;">
+                          <mat-card-title class="mb-05"><a [routerLink]="['/profile', application.performerUser._id]">{{application.performerUser.firstName}} {{application.performerUser.lastName}}</a></mat-card-title>
+                          <mat-card-subtitle class="mb-0">{{application.currentPrice | currency}}</mat-card-subtitle>
+                        </div>
+                      </div>
+                      <mat-chip fxFlex="10" class="text-center notify-chip mb-05" color="accent" [selected]="!application.hostViewed">{{application.hostStatusMessage}}</mat-chip>
+                      <mat-divider class="mb-05"></mat-divider>
+                    </div>
+                    <div fxLayout="row" fxLayoutGap="10px">
+                      <button (click)="openNegotiationDialog(application, i, j)" class="text-muted" mat-icon-button matTooltip="View Application"><mat-icon>event_available</mat-icon></button>
+                      <button (click)="messageArtist(application)" class="text-muted" mat-icon-button matTooltip="Message Artist"><mat-icon>chat</mat-icon></button>
+                    </div>
+                  </mat-card>
+                </div>
+              </mat-expansion-panel>
+              <mat-expansion-panel *ngIf="item.requests.length > 0" class="no-shadow">
+                <mat-expansion-panel-header>
+                  <mat-panel-title>
+                    Requests
+                  </mat-panel-title>
+                  <mat-panel-description>
+                    <span *ngIf="item.requestNotifications > 0" class="notification-value mat-bg-warn">{{item.requestNotifications}}</span>
+                  </mat-panel-description>
+                </mat-expansion-panel-header>
+                <div fxLayout="column" fxLayoutAlign="space-between center" fxLayoutGap="10px">
+                  <mat-card *ngFor="let request of item.requests; let i = index" class="p-1 full-width">
+                    <div fxLayout="column">
+                      <div fxFlex="90" fxLayout="row" fxLayout.lt-xs="column"class="mb-05">
+                        <div fxFlex="20" style="float: left;">
+                          <a [routerLink]="['/profile', request.performerUser._id]"><img mat-card-avatar style="float: left;" [src]="request.performerUser.profilePicUrl"></a>
+                        </div>
+                        <div fxFlex="80" style="float: left;">
+                          <mat-card-title class="mb-05"><a [routerLink]="['/profile', request.performerUser._id]">{{request.performerUser.firstName}} {{request.performerUser.lastName}}</a></mat-card-title>
+                          <mat-card-subtitle class="mb-0">{{request.currentPrice | currency}}</mat-card-subtitle>
+                        </div>
+                      </div>
+                      <mat-chip fxFlex="10" class="text-center notify-chip mb-05" color="accent" [selected]="!request.hostViewed">{{request.hostStatusMessage}}</mat-chip>
+                      <mat-divider class="mb-05"></mat-divider>
+                    </div>
+                    <div fxLayout="row" fxLayoutGap="10px" >
+                      <button (click)="openNegotiationDialog(request, i, j)" class="text-muted" mat-icon-button matTooltip="View Application"><mat-icon>event_available</mat-icon></button>
+                      <button (click)="messageArtist(request)" class="text-muted" mat-icon-button matTooltip="Message Artist"><mat-icon>chat</mat-icon></button>
+                    </div>
+                  </mat-card>
+                </div>
+              </mat-expansion-panel>
+              <mat-expansion-panel *ngIf="item.confirmations.length > 0" (click)="resetConfirmationNotifications(j)" class="no-shadow">
+                <mat-expansion-panel-header>
+                  <mat-panel-title>
+                    Confirmed
+                  </mat-panel-title>
+                  <mat-panel-description>
+                    <span *ngIf="item.confirmationNotifications > 0" class="notification-value mat-bg-warn">{{item.confirmationNotifications}}</span>
+                  </mat-panel-description>
+                </mat-expansion-panel-header>
+                <div fxLayout="column" fxLayoutAlign="space-between center" fxLayoutGap="10px">
+                  <mat-card *ngFor="let booking of item.confirmations; let i = index" class="p-1 full-width">
+                    <div fxLayout="column">
+                      <div fxFlex="90" fxLayout="row" fxLayout.lt-xs="column"class="mb-05">
+                        <div fxFlex="20" style="float: left;">
+                          <a [routerLink]="['/profile', booking.performerUser._id]"><img mat-card-avatar style="float: left;" [src]="booking.performerUser.profilePicUrl"></a>
+                        </div>
+                        <div fxFlex="80" style="float: left;">
+                          <mat-card-title class="mb-05"><a [routerLink]="['/profile', booking.performerUser._id]">{{booking.performerUser.firstName}} {{booking.performerUser.lastName}}</a></mat-card-title>
+                          <mat-card-subtitle class="mb-0">{{booking.currentPrice | currency}}</mat-card-subtitle>
+                        </div>
+                      </div>
+                      <mat-chip fxFlex="10" class="text-center notify-chip mb-05" color="accent" [selected]="!booking.hostViewed">{{booking.hostStatusMessage}}</mat-chip>
+                      <mat-divider class="mb-05"></mat-divider>
+                    </div>
+                    <div fxLayout="row" fxLayoutGap="10px" >
+                      <button *ngIf="!booking.hostVerified" (click)="hostVerify(booking, i, j)" class="text-muted" mat-icon-button matTooltip="Verify and Pay Artist"><mat-icon>lock</mat-icon></button>
+                      <button (click)="messageArtist(booking)" class="text-muted" mat-icon-button matTooltip="Message Artist"><mat-icon>chat</mat-icon></button>
+                      <button (click)="openNegotiationDialog(booking, i, j)" class="text-muted" mat-icon-button matTooltip="Cancel Booking"><mat-icon>event_busy</mat-icon></button>
+                    </div>
+                  </mat-card>
+                </div>
+              </mat-expansion-panel>
+              <mat-expansion-panel *ngIf="item.completions.length > 0" (click)="resetCompletionNotifications(j)" class="no-shadow">
+                <mat-expansion-panel-header>
+                  <mat-panel-title>
+                    Completed
+                  </mat-panel-title>
+                  <mat-panel-description>
+                    <span *ngIf="item.completionNotifications > 0" class="notification-value mat-bg-warn">{{item.completionNotifications}}</span>
+                  </mat-panel-description>
+                </mat-expansion-panel-header>
+                <div fxLayout="column" fxLayoutAlign="space-between center" fxLayoutGap="10px">
+                  <mat-card *ngFor="let booking of item.completions; let i = index" class="p-1 full-width">
+                    <div fxLayout="column">
+                      <div fxFlex="90" fxLayout="row" fxLayout.lt-xs="column"class="mb-05">
+                        <div fxFlex="20" style="float: left;">
+                          <a [routerLink]="['/profile', booking.performerUser._id]"><img mat-card-avatar style="float: left;" [src]="booking.performerUser.profilePicUrl"></a>
+                        </div>
+                        <div fxFlex="80" style="float: left;">
+                          <mat-card-title class="mb-05"><a [routerLink]="['/profile', booking.performerUser._id]">{{booking.performerUser.firstName}} {{booking.performerUser.lastName}}</a></mat-card-title>
+                          <mat-card-subtitle class="mb-0">{{booking.currentPrice | currency}}</mat-card-subtitle>
+                        </div>
+                      </div>
+                      <mat-chip fxFlex="10" class="text-center notify-chip mb-05" color="accent" [selected]="!booking.hostViewed">{{booking.hostStatusMessage}}</mat-chip>
+                      <mat-divider class="mb-05"></mat-divider>
+                    </div>
+                    <div fxLayout="row" fxLayoutGap="10px" >
+                      <button (click)="messageArtist(booking)" class="text-muted" mat-icon-button matTooltip="Message Artist"><mat-icon>chat</mat-icon></button>
+                      <button [disabled]="!this.canPay" *ngIf="booking.completed && !booking.bothReviewed && item.paymentStatues[i] != 'paid' && (item.paymentStatues[i] != 'host_cancel' && item.paymentStatues[i] != 'artist_cancel')" (click)="showPayDialog(booking)" class="text-muted" mat-icon-button matTooltip="Pay Artist"><mat-icon>attach_money</mat-icon></button>
+                      <button *ngIf="booking.completed && item.paymentStatues[i] != 'waiting'" (click)="showPaymentHistoryDialog(booking)" class="text-muted" mat-icon-button matTooltip="Payment History"><mat-icon>history</mat-icon></button>
+                      <button *ngIf="!booking.beenReviewedByHost" class="text-muted" (click)="reviewDialog(booking)" mat-icon-button matTooltip="Review"><mat-icon>star</mat-icon></button>
+                      <button *ngIf="booking.beenReviewedByHost && !booking.bothReviewed" (click)="editReview(booking)" class="text-muted" mat-icon-button matTooltip="Edit Review"><mat-icon>mode_edit</mat-icon></button>
+                    </div>
+                  </mat-card>
+                </div>
+              </mat-expansion-panel>
+              <mat-expansion-panel *ngIf="item.cancellations.length > 0" (click)="resetCancellationNotifications(j)" class="no-shadow">
+                <mat-expansion-panel-header>
+                  <mat-panel-title>
+                    Cancelled
+                  </mat-panel-title>
+                  <mat-panel-description>
+                    <span *ngIf="item.cancellationNotifications > 0" class="notification-value mat-bg-warn">{{item.cancellationNotifications}}</span>
+                  </mat-panel-description>
+                </mat-expansion-panel-header>
+                <div fxLayout="column" fxLayoutAlign="space-between center" fxLayoutGap="10px">
+                  <mat-card *ngFor="let booking of item.cancellations; let i = index" class="p-1 full-width">
+                    <div fxLayout="column">
+                      <div fxFlex="90" fxLayout="row" fxLayout.lt-xs="column"class="mb-05">
+                        <div fxFlex="20" style="float: left;">
+                          <a [routerLink]="['/profile', booking.performerUser._id]"><img mat-card-avatar style="float: left;" [src]="booking.performerUser.profilePicUrl"></a>
+                        </div>
+                        <div fxFlex="80" style="float: left;">
+                          <mat-card-title class="mb-05"><a [routerLink]="['/profile', booking.performerUser._id]">{{booking.performerUser.firstName}} {{booking.performerUser.lastName}}</a></mat-card-title>
+                          <mat-card-subtitle class="mb-0">{{booking.currentPrice | currency}}</mat-card-subtitle>
+                        </div>
+                      </div>
+                      <mat-chip fxFlex="10" class="text-center notify-chip mb-05" color="accent" [selected]="!booking.hostViewed">{{booking.hostStatusMessage}}</mat-chip>
+                      <mat-divider class="mb-05"></mat-divider>
+                    </div>
+                    <div fxLayout="row" fxLayoutGap="10px" >
+                      <button (click)="messageArtist(booking)" class="text-muted" mat-icon-button matTooltip="Message Artist"><mat-icon>chat</mat-icon></button>
+                      <button *ngIf="booking.cancelled && item.cancelledPaymentStatues[i] != 'waiting'" (click)="showPaymentHistoryDialog(booking)" class="text-muted" mat-icon-button matTooltip="Payment History"><mat-icon>history</mat-icon></button>
+                    </div>
+                  </mat-card>
+                </div>
+              </mat-expansion-panel>
+            </mat-accordion>
+            <mat-divider class="mt-05 mb-1"></mat-divider>
+            <button (click)="onEditEvent(item.event, j)" class="text-muted" mat-icon-button matTooltip="Edit Event"><mat-icon>mode_edit</mat-icon></button>
+            <button (click)="onDeleteEvent(item.event, j)" class="text-muted" mat-icon-button matTooltip="Delete Event"><mat-icon>delete</mat-icon></button>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+  </div>
+</section>

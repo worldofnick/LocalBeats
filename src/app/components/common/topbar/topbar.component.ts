@@ -1,4 +1,5 @@
-import { Component, OnInit, EventEmitter, Input, Output, ElementRef, NgZone, ViewChild, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, EventEmitter, Input, Output, ElementRef, NgZone, ViewChild, ChangeDetectorRef, OnDestroy } from '@angular/core';
+import { ISubscription } from "rxjs/Subscription";
 import { Router } from '@angular/router';
 import { Validators, FormGroup, FormControl, FormArray, FormBuilder } from '@angular/forms';
 import { MatDialog, MatDialogRef} from '@angular/material';
@@ -25,7 +26,9 @@ import { StripeDialogComponent } from '../../../views/events/event-singleton/str
   templateUrl: './topbar.template.html',
   styleUrls: ['./topbar.component.css']
 })
-export class TopbarComponent implements OnInit {
+export class TopbarComponent implements OnInit, OnDestroy {
+  private user: User = null;
+  private userSubscription: ISubscription;
   @Input() sidenav;
   @Input() notificPanel;
   @Output() onSearchTypeChange = new EventEmitter<any>();
@@ -74,6 +77,12 @@ export class TopbarComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.userSubscription = this.userService.userResult.subscribe(user => this.user = user);
+    this.searchService.eventTypes().then((types: string[]) => {
+      this.eventsList = types;
+    }).then(() => this.searchService.genres().then((types: string[]) => {
+      this.genresList = types;
+    }));
     // Initialize the menu to be collapsed
     domHelper.toggleClass(document.body, 'collapsed-menu');
 
@@ -87,7 +96,7 @@ export class TopbarComponent implements OnInit {
       this.numNotifications++;
     });
 
-    // Set Current Location if desired in future
+    // Default search by current location
     // this.setCurrentPosition();
 
     // Load Places Autocomplete
@@ -105,9 +114,14 @@ export class TopbarComponent implements OnInit {
           this.latitude = place.geometry.location.lat();
           this.longitude = place.geometry.location.lng();
           this.zoom = 12;
+          this.submit();
         });
       });
     });
+  }
+
+  ngOnDestroy() {
+    this.userSubscription.unsubscribe();
   }
 
   // Helper method for Google Places
@@ -123,6 +137,7 @@ export class TopbarComponent implements OnInit {
 
   // Logs user out
   logout() {
+    sessionStorage.removeItem('token');
     this.userService.logout();
     this.numNotifications = 0;
     this.router.navigate(['/']);
@@ -133,6 +148,7 @@ export class TopbarComponent implements OnInit {
     if(event.keyCode != 13 && !this.expand){
       this.expand = true;
     }
+    this.submit(false);
   }
   
   click() {
@@ -164,15 +180,17 @@ export class TopbarComponent implements OnInit {
   startDateOpen() {
     this.startDateOpened = !this.startDateOpened;
     this.startDateClosed = true;
+    this.submit();
   }
 
   endDateOpen() {
     this.endDateOpened = !this.endDateOpened;
     this.endDateClosed = true;
+    this.submit();
   }
 
   // Submission of search
-  submit() {
+  submit(expand: boolean = true) {
 
     this.currentSearch.from_date = this.searchForm.get('startDate').value;
     this.currentSearch.to_date = this.searchForm.get('endDate').value;
@@ -223,7 +241,7 @@ export class TopbarComponent implements OnInit {
         this.router.navigate(['/search'])
       });
     }
-    this.expand = false;
+    this.expand = expand;;
   }
 
   // Triggers the notification panel to sideload

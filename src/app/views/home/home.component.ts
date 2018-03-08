@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { ISubscription } from "rxjs/Subscription";
 import { SocketService } from 'app/services/chats/socket.service';
 import { SocketEvent } from 'app/services/chats/model/event';
 import { Message } from 'app/services/chats/model/message';
@@ -10,6 +11,7 @@ import { Notification } from '../../models/notification';
 import { Router } from '@angular/router';
 import { Action } from '../../services/chats/model/action';
 import { User } from '../../models/user';
+import { SharedDataService } from '../../services/shared/shared-data.service';
 
 @Component({
   selector: 'app-home',
@@ -17,6 +19,8 @@ import { User } from '../../models/user';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
+  private user: User = null;
+  private userSubscription: ISubscription;
   artists = [{
     name: 'Featured Drummer',
     url: 'assets/images/drums-image.png'
@@ -39,12 +43,17 @@ export class HomeComponent implements OnInit {
     url: 'assets/images/wedding-pic.jpg'
   }];
 
-  constructor(private snackBar: MatSnackBar, private router : Router,
+  constructor(private snackBar: MatSnackBar, private router : Router, private _sharedDataService: SharedDataService,
               private _userService: UserService, private _socketService: SocketService) { }
 
   ngOnInit() {
     this.initIoConnection();            // Listen to server for any registered events inside this method
     this.showSnackBarIfNeeded();
+    this.userSubscription = this._userService.userResult.subscribe(user => this.user = user);
+  }
+
+  ngOnDestroy(){
+    this.userSubscription.unsubscribe();
   }
 
   // Shows the snackbar if needed when coming back from a redirect
@@ -99,15 +108,16 @@ export class HomeComponent implements OnInit {
    * @param message The original PM that is received
    */
   openNewMessageSnackBar(message: Message) {
+    // Only if on the recipient's profile:
     if (this._userService.user._id !== message.from._id) {
       let snackBarRef = this.snackBar.open('You have a new message from ' + message.from.firstName +
         ' ' + message.from.lastName, 'Go to message...', { duration: 3500 });
       
       snackBarRef.onAction().subscribe(() => {
         console.log('Going to the message...');
-
+        this._sharedDataService.setProfileMessageSharedProperties(message.from);
         this.router.navigate(['/chat']);
-        this._socketService.send(Action.OPEN_SNACK_BAR_PM, message);
+        // this._socketService.send(Action.OPEN_SNACK_BAR_PM, message);
       });
     };
   }
@@ -117,9 +127,11 @@ export class HomeComponent implements OnInit {
    * @param message The original notification that is received
    */
   openNotificationSnackBar(message: Notification) {
-    // if (this._userService.user._id !== message.senderID._id) {
-      this.snackBar.open('You have a new notification from ' + message.senderID.firstName + ' ' + message.senderID.lastName,
-                        'close', { duration: 3500 });
-    // };
+    let snackBarRef = this.snackBar.open('You have a new notification from ' + message.senderID.firstName + ' ' + message.senderID.lastName,
+                           'Go to...', { duration: 3500 });
+
+          snackBarRef.onAction().subscribe(() => {
+            this.router.navigate(message.route);
+    });
   }
 }

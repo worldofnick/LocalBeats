@@ -38,6 +38,11 @@ export const rootRouterConfig: Routes = [
         data: { title: 'Profile', breadcrumb: 'PROFILE'}
       },
       {
+        path: 'bookingmanagement',
+        loadChildren: './views/booking-management/booking-management.module#BookingManagementModule',
+        data: { title: 'Booking Management', breadcrumb: 'MY BOOKINGS'}
+      },
+      {
         path: 'events', 
         loadChildren: './views/events/events.module#EventsModule', 
         //canActivate: [UserGuard], 

@@ -62,18 +62,20 @@ export class StripeService {
 
   // Makes a request to our backend to request the Stripe API to charge the event host
   // This will need an extra visa parameter for event host stripe charge info
-  public charge(booking: Booking): Promise<boolean> {
+  public charge(booking: Booking, initial: boolean): Promise<boolean> {
     const current = this.connection + '/charge';
     return this.http.post(current, { booking: booking }, { headers: this.headers })
         .toPromise()
         .then((response: Response) => {
             if (response.status == 200) {
             // Send notification
-            let message = booking.hostUser.firstName + " " + booking.hostUser.lastName + " has paid you $" + booking.currentPrice +   " for " + booking.eventEID.eventName;
-            let notification = new Notification(booking.hostUser, booking.performerUser, booking.eventEID._id,
-              booking, NegotiationResponses.payment, message, "payment", ['/events', booking.eventEID._id]);
-            this._socketService.sendNotification(SocketEvent.SEND_NOTIFICATION, notification);
-              return true;
+            if(!initial) {
+              let message = booking.hostUser.firstName + " " + booking.hostUser.lastName + " has paid you $" + booking.currentPrice +   " for " + booking.eventEID.eventName;
+              let notification = new Notification(null, booking.hostUser, booking.performerUser, booking.eventEID._id,
+                booking, NegotiationResponses.payment, message, "payment", new Date(), ['/events', booking.eventEID._id]);
+              this._socketService.sendNotification(SocketEvent.SEND_NOTIFICATION, notification);
+            }
+            return true;
             } else {
               return false;
             }
@@ -90,8 +92,8 @@ export class StripeService {
             if (response.status == 200) {
               // Send notification
               let message = booking.performerUser.firstName + " " + booking.performerUser.lastName + " has refunded you $" + booking.currentPrice +   " for " + booking.eventEID.eventName;
-              let notification = new Notification(booking.performerUser, booking.hostUser, booking.eventEID._id,
-                booking, NegotiationResponses.payment, message, "payment", ['/events', booking.eventEID._id]);
+              let notification = new Notification(null, booking.performerUser, booking.hostUser, booking.eventEID._id,
+                booking, NegotiationResponses.payment, message, "payment", new Date(), ['/events', booking.eventEID._id]);
               this._socketService.sendNotification(SocketEvent.SEND_NOTIFICATION, notification);
               return true;
             } else {
@@ -115,7 +117,7 @@ export class StripeService {
   // Make a request to our backend to charge the user for cancelling
   // Returns true if successful, false otherwise.
   public cancelBookingFee(booking: Booking, cancelType: string): Promise<boolean> {
-    const current = this.connection + '/cancel?cancel_type=' + cancelType;
+    const current = this.connectionPayments + '/cancel/?cancel_type=' + cancelType;
     return this.http.post(current, { booking: booking }, { headers: this.headers })
         .toPromise()
         .then((response: Response) => {
@@ -127,8 +129,8 @@ export class StripeService {
                 rec = booking.hostUser;
               }
               let message = sender.firstName + " " + sender.lastName + " has paid you $" + booking.currentPrice +   " for cancelling " + booking.eventEID.eventName;
-              let notification = new Notification(sender, rec, booking.eventEID._id,
-                booking, NegotiationResponses.payment, message, "payment", ['/events', booking.eventEID._id]);
+              let notification = new Notification(null, sender, rec, booking.eventEID._id,
+                booking, NegotiationResponses.payment, message, "payment", new Date(), ['/events', booking.eventEID._id]);
               this._socketService.sendNotification(SocketEvent.SEND_NOTIFICATION, notification);
               return true;
             } else {

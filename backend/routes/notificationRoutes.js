@@ -2,11 +2,10 @@
 
 module.exports = function(app) {
 	var notificationHandlers = require('../controllers/notificationController.js');
-	// var tokenVerificationHandler = require('../controllers/tokenVerificationController.js');
-
-    // TODO: restrict access via user log in??
 
 	app.route('/api/notification/:uid')
-		.get(notificationHandlers.getNotificationsForUser)
-		.delete(notificationHandlers.deleteNotificationsByID)
+		.get(notificationHandlers.getNotificationsForUser);
+	
+	app.route('/api/notification/:nid')
+		.delete(notificationHandlers.deleteNotificationsByID);
 };

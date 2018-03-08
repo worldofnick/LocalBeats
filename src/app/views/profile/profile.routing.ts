@@ -4,8 +4,6 @@ import { ProfileComponent } from "./profile.component";
 import { ProfileOverviewComponent } from "./profile-overview/profile-overview.component";
 import { ProfileSettingsComponent } from "./profile-settings/profile-settings.component";
 import { ProfileBlankComponent } from "./profile-blank/profile-blank.component";
-import { ProfileEventsComponent} from "./profile-events/profile-events.component";
-import { ProfilePerformancesComponent } from "./profile-performances/profile-performances/profile-performances.component";
 
 export const ProfileRoutes: Routes = [
   {
@@ -22,16 +20,6 @@ export const ProfileRoutes: Routes = [
       component: ProfileSettingsComponent,
       data: { title: 'Settings', breadcrumb: 'SETTINGS' }
     }, 
-    {
-      path: 'events',
-      component: ProfileEventsComponent,
-      data: { title: 'Events', breadcrumb: 'EVENTS' }
-    }, 
-    {
-      path: 'performances',
-      component: ProfilePerformancesComponent,
-      data: { title: 'Performances', breadcrumb: 'PERFORMANCES' }
-    },
     {
       path: 'blank',
       component: ProfileBlankComponent,

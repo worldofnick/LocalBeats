@@ -2,6 +2,24 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { Component, Inject, OnInit } from '@angular/core';
 import { Validators, FormGroup, FormControl, FormArray, FormBuilder } from '@angular/forms';
 import { Booking, NegotiationResponses } from 'app/models/booking';
+import { Event } from 'app/models/event';
+// Services
+import { BookingService } from '../../../services/booking/booking.service';
+import { EventService } from '../../../services/event/event.service';
+import { UserService } from '../../../services/auth/user.service';
+import { SocketService } from '../../../services/chats/socket.service';
+import {
+  startOfDay,
+  endOfDay,
+  subDays,
+  addMinutes,
+  addDays,
+  endOfMonth,
+  isSameDay,
+  isSameMonth,
+  addHours,
+  isWithinRange
+} from 'date-fns';
 
 @Component({
   selector: 'app-negotiate-dialog',
@@ -20,7 +38,7 @@ export class NegotiateDialogComponent implements OnInit {
 
   constructor(
     public dialogRef: MatDialogRef<NegotiateDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data:{booking: Booking, initial: boolean, view: string},
+    @Inject(MAT_DIALOG_DATA) public data:{booking: Booking, initial: boolean, view: string, artistAvail: string},
     private formBuilder: FormBuilder
   ) {}
 

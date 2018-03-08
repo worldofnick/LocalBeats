@@ -26,10 +26,10 @@ exports.getUserByID = function (req, res) {
           return res.status(200).send({ user: user });
       }
   });
-
 };
 
 exports.updateUserByID = function (req, res, next) {
+  req.body.user.fullName = req.body.user.firstName + " " + req.body.user.lastName;
   User.findByIdAndUpdate(req.params.uid, req.body.user, { new: true }, function (err, user) {
     if (err) {
       return res.status(520).send({ message: "Error finding the user from this UID...", error: err });
@@ -89,7 +89,7 @@ exports.searchUsers = function (req, res) {
   }
 
   if (req.query.name != null) {
-    query.firstName = new RegExp(req.query.name, 'gi');
+    query.fullName = new RegExp(req.query.name, 'gi'); 
   }
 
   if (req.query.artist != null) {
@@ -125,6 +125,10 @@ exports.searchUsers = function (req, res) {
     }
   }
 
+  query.email = {
+    "$ne": "beatbot@localbeats.com"
+  }
+
   User.find(query).limit(limit).skip(skip).exec(function (err, doc) {
     if (err) {
       return res.status(500).send(err);
@@ -140,6 +144,6 @@ exports.searchUsers = function (req, res) {
 };
 
 exports.getGenres = function (req, res) {
-  var genres = ["All Genres", "Rock", "Classical", "Electronic", "Jazz", "Blues", "Hip-Hop", "Rap", "Alternative", "Country"];
+  var genres = ["Rock", "Classical", "Electronic", "Jazz", "Blues", "Hip-Hop", "Rap", "Alternative", "Country"];
   return res.status(200).send({ "genres": genres });
 };

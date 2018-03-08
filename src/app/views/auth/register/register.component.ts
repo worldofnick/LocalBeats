@@ -7,6 +7,7 @@ import { UserService } from '../../../services/auth/user.service';
 import { User } from '../../../models/user';
 import { } from 'googlemaps';
 import { MapsAPILoader } from '@agm/core';
+import { SearchService } from '../../../services/search/search.service';
 
 @Component({
   selector: 'app-register',
@@ -34,12 +35,19 @@ export class RegisterComponent implements OnInit {
     private router: Router,
     private mapsAPILoader: MapsAPILoader,
     private ngZone: NgZone,
-    private changeDetector: ChangeDetectorRef
+    private changeDetector: ChangeDetectorRef,
+    private searchService: SearchService
   ) {}
 
   ngOnInit() {
     const password = new FormControl('', Validators.required);
     const confirmPassword = new FormControl('', CustomValidators.equalTo(password));
+
+    this.searchService.eventTypes().then((types: string[]) => {
+      this.eventsList = types;
+    }).then(() => this.searchService.genres().then((types: string[]) => {
+      this.genresList = types;
+    }));
 
     this.signupForm = new FormGroup({
       firstName: new FormControl('', Validators.required),
@@ -96,9 +104,11 @@ export class RegisterComponent implements OnInit {
       _id: null,
       firstName: signupData.firstName,
       lastName: signupData.lastName,
+      fullName: signupData.firstName + " " + signupData.lastName,
       email: signupData.email,
       password: signupData.password,
-      spotifyID: null,
+      spotify: null,
+      soundcloud: null,
       genres: signupData.genres,
       isArtist: signupData.isArtist,
       profilePicUrl: "https://www.vccircle.com/wp-content/uploads/2017/03/default-profile.png",
@@ -120,8 +130,11 @@ export class RegisterComponent implements OnInit {
     this.submitButton.disabled = true;
     this.progressBar.mode = 'indeterminate';
 
-    this.userService.signupUser(this.user).then((user: User) => {
-      this.user = user;
+    this.userService.signupUser(this.user).then((data: any) => {
+      this.user = data.user;
+      this.userService.userLoaded(data.user, data.token, false, false);
+      this.userService.getNotificationsCountForUser(data.user._id);
+      this.userService.getNotificationsForUser(data.user._id);
       this.router.navigate(['/']);
     });
   }

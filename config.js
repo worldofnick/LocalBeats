@@ -13,7 +13,11 @@ module.exports = {
       clientSecret : 'ced120445fe74bdca660090161898476',
       authorizeUri: 'https://accounts.spotify.com/authorize',
       tokenUri: 'https://accounts.spotify.com/api/token',
-      redirectUri : 'https://localbeats.herokuapp.com/callback/spotify'  //TODO: CHANGE_ROUTE change to heroku.localbeats
+      redirectUri : 'https://localbeats.herokuapp.com/callback/spotify'
+      // http://localhost:4200/callback/spotify'  //TODO: CHANGE_ROUTE change to heroku.localbeats
+    },
+    soundcloud: {
+      clientID: '4e3fe497717451e398ca2719842a7e20'
     },
     // Configuration for Stripe.
     stripe: {
