@@ -1,10 +1,10 @@
-import { NgEgretPage } from './app.po';
+import { LocalBeatsPage } from './app.po';
 
-describe('ng-egret App', () => {
-  let page: NgEgretPage;
+describe('LocalBeats App', () => {
+  let page: LocalBeatsPage;
 
   beforeEach(() => {
-    page = new NgEgretPage();
+    page = new LocalBeatsPage();
   });
 
   it('should display message saying app works', () => {

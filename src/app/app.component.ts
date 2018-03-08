@@ -56,7 +56,7 @@ export class AppComponent implements OnInit {
   tourSteps(): any {
     let self = this;
     return {
-      id: 'hello-egret',
+      id: 'hello-localbeats',
       showPrevButton: true,
       onEnd: function() {
         self.snackBar.open('Awesome! Now let\'s explore LocalsBeats\'s cool features.', 'close', { duration: 5000 });

@@ -73,17 +73,17 @@ $md-accent: (
 
 
 // mandatory stuff for theming
-$egret-primary: mat-palette($md-primary);
-$egret-accent:  mat-palette($md-accent);
+$localbeats-primary: mat-palette($md-primary);
+$localbeats-accent:  mat-palette($md-accent);
 
 // include the custom theme components into a theme object
-$egret-theme: mat-light-theme($egret-primary, $egret-accent);
+$localbeats-theme: mat-light-theme($localbeats-primary, $localbeats-accent);
 
 $primary-dark: darken( map-get($md-primary, 500), 8% );
 
 // include the custom theme object into the angular material theme
-.egret-blue {
-    @include angular-material-theme($egret-theme);
+.localbeats-blue {
+    @include angular-material-theme($localbeats-theme);
 
     .mat-bg-primary,
     .topbar,
