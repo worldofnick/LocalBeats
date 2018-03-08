@@ -1,4 +1,5 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
+import { ISubscription } from "rxjs/Subscription";
 import { MatProgressBar, MatButton } from '@angular/material';
 import { FileUploader } from 'ng2-file-upload';
 import { UserService } from '../../../services/auth/user.service';
@@ -24,7 +25,8 @@ import { Router } from '@angular/router';
 export class ProfileSettingsComponent implements OnInit {
   @ViewChild(MatProgressBar) progressBar: MatProgressBar;
 
-  user: User;
+  user: User = null;
+  private userSubscription: ISubscription;
   genresList: string[] = ['rock', 'country', 'jazz', 'blues', 'rap'];
   eventsList: string[] = ['wedding', 'birthday', 'business'];
   settingsForm: FormGroup;
@@ -46,9 +48,23 @@ export class ProfileSettingsComponent implements OnInit {
 
 
   ngOnInit() {
-    this.user = this.userService.user;
-    this.nowArtist = this.user.isArtist;
     this.createForm();
+    this.userSubscription = this.userService.userResult.subscribe(user => 
+      {
+        this.user = user;
+        console.log('got user');
+        console.log(this.user);
+        this.nowArtist = this.user.isArtist;
+        this.settingsForm.patchValue({
+          firstName: this.user.firstName,
+          lastName: this.user.lastName,
+          email: this.user.email,
+          isArtist: this.user.isArtist,
+          genres: this.user.genres,
+          eventTypes: this.user.eventTypes,
+        });
+      });
+    
     this.route.queryParams.subscribe(params => {
       if (params['stripe']) {
         this.userService.getUserByID(this.userService.user._id).then((user: User) => {
@@ -61,22 +77,26 @@ export class ProfileSettingsComponent implements OnInit {
     });
   }
 
+  ngOnDestroy() {
+    this.userSubscription.unsubscribe();
+  }
+
   createForm(){
     this.settingsForm = this.formBuilder.group({
-      firstName: new FormControl(this.user.firstName, [
+      firstName: new FormControl('', [
         Validators.required
       ]),
-      lastName: new FormControl(this.user.lastName, [
+      lastName: new FormControl('', [
         Validators.required
       ]),
-      email: new FormControl(this.user.email, [
+      email: new FormControl('', [
         Validators.email,
         Validators.required
       ]),
-      isArtist: new FormControl(this.user.isArtist, [
+      isArtist: new FormControl('', [
       ]),
-      genres: new FormControl(this.user.genres,[]),
-      eventTypes: new FormControl(this.user.eventTypes,[])  
+      genres: new FormControl([],[]),
+      eventTypes: new FormControl([],[])  
     })
   }
 

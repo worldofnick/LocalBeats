@@ -197,43 +197,49 @@ module.exports = function (io) {
             let number = notificationController.getNotificationsCount();
 
             let socketArray = socketsHash[userID];
-            for(socket of socketArray) {
-                socket.emit('notificationCount', number);
+            for(senderSocket of socketArray) {
+                io.to(senderSocket).emit('notificationCount', number);
             }
         });
 
         // TODO add parans for function
         socket.on('tellTopBar', numberOfNotifications => {
-            let thisSocketId = socket.id;
             let sendArray = new Array();
-            for(socketArray of socketsHash) {
-                for(currentSocketId of socketArray) {
-                    if (currentSocketId === thisSocketId) {
+            for(let key in socketsHash) {
+                let socketArray = socketsHash[key];
+                // console.log('Array: ', socketArray);
+                for(let currentSocket of socketArray) {
+                    // console.log('CURRENT SOCKE: ', currentSocket);
+                    if(currentSocket === socket.id) {
                         sendArray = socketArray;
                     }
                 }
             }
+            console.log('TELL TOP BAR: ', sendArray);
 
-            for(socket of sendArray) {
-                socket.emit('notificationCount', numberOfNotifications);
+            for(let senderSocket of sendArray) {
+                io.to(senderSocket).emit('notificationCount', numberOfNotifications);
             }
         })
 
         socket.on('tellNotificationPanel', notifications => {
-
-            let thisSocketId = socket.id;
             let sendArray = new Array();
-            for(socketArray of socketsHash) {
-                for(currentSocketId of socketArray) {
-                    if (currentSocketId === thisSocketId) {
+            for(let key in socketsHash) {
+                let socketArray = socketsHash[key];
+                // console.log('Array: ', socketArray);
+                for(let currentSocket of socketArray) {
+                    // console.log('CURRENT SOCKE: ', currentSocket);
+                    if(currentSocket === socket.id) {
                         sendArray = socketArray;
                     }
                 }
             }
 
-            for(socket of sendArray) {
+            console.log('TELL NOTIFICATION PANEL: ', sendArray);
+
+            for(let senderSocket of sendArray) {
                 // console.log(notifications);
-                socket.emit('notifications', notifications)
+                io.to(senderSocket).emit('notifications', notifications)
             }
         })
 
@@ -241,8 +247,8 @@ module.exports = function (io) {
             // var notifications = notificationController.getNotificationsForUser(userID)
             
             let socketArray = socketsHash[userID];
-            for(socket of socketArray) {
-                socket.emit('notifications', 'test,test,test,test');
+            for(senderSocket of socketArray) {
+                io.to(senderSocket).emit('notifications', 'test,test,test,test');
             }
         });
 
@@ -281,7 +287,21 @@ module.exports = function (io) {
         // ===========
 
         socket.on('updateProfile', (payload) => {
-            socket.emit('updateProfile', payload);
+            let sendArray = new Array();
+            for(let key in socketsHash) {
+                let socketArray = socketsHash[key];
+                // console.log('Array: ', socketArray);
+                for(let currentSocket of socketArray) {
+                    // console.log('CURRENT SOCKE: ', currentSocket);
+                    if(currentSocket === socket.id) {
+                        sendArray = socketArray;
+                    }
+                }
+            }
+            for(let senderSocket of sendArray) {
+                // console.log(notifications);
+                io.to(senderSocket).emit('updateProfile', payload);
+            }
         })
     });
 }

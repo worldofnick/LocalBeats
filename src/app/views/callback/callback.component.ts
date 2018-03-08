@@ -4,7 +4,7 @@ import { SpotifyClientService } from '../../services/music/spotify-client.servic
 import { UserService } from '../../services/auth/user.service';
 import { Router } from '@angular/router';
 import { MatSnackBar, MatSnackBarRef } from '@angular/material';
-
+import { User } from '../../models/user';
 
 @Component({
   selector: 'app-callback',
@@ -33,7 +33,16 @@ export class CallbackComponent implements OnInit {
     this._spotifyClientService.requestRefreshAndAccessTokens(this.spotifyCode).then((tokens: any) => {
       // console.log('Callback token data: ', tokens);
       return tokens;
-    }).then( (tokens: any) =>this.getSpotifyProfileDataOfMe(tokens));
+    }).then( (tokens: any) => {
+      if (tokens !== false) {
+        this.getSpotifyProfileDataOfMe(tokens);
+      } else {
+        let snackBarRef = this.snackBar.open('Unable to link account. So please try again later.', '', {
+          duration: 6000,
+        });
+        this.router.navigate(['/']);
+      }
+    });
   }
 
   /**
@@ -53,7 +62,7 @@ export class CallbackComponent implements OnInit {
         let snackBarRef = this.snackBar.open('Unable to link account. So please try again later.', '', {
           duration: 6000,
         });
-        this.router.navigate(['/profile', 'overview']);
+        this.router.navigate(['/']);
       }
     });
   }
@@ -73,7 +82,7 @@ export class CallbackComponent implements OnInit {
           let snackBarRef = this.snackBar.open('You are not registered as an artist on spotify...', '', {
             duration: 6000,
           });
-          this.router.navigate(['/profile', 'overview']);
+          this.router.navigate(['/']);
         }
       })
       .catch( (error: any) => {
@@ -98,13 +107,23 @@ export class CallbackComponent implements OnInit {
         refreshToken: responseWithUserPayload.user.spotify.refreshToken,
         albums: listOfSpotifyAlbumObjects.albums.items
       };
-      // console.log('Spotify Object to save: ', spotifyObject);
+
       // Save the spotify profile and the albums to user service object
       let newUser = this.userService.user;
       newUser.spotify = spotifyObject;
+      console.log('Spotify Object to save: ', newUser);
       this.userService.user = newUser;
-      // Redirect to the profile page to setup and display the spotify widget
-      this.router.navigate(['/profile', 'overview']);
+      this.userService.onEditProfile(this.userService.user).then((user: User) => {
+        // Redirect to the profile page to setup and display the spotify widget
+        this.router.navigate(['/']);
+        let snackBarRef = this.snackBar.open('Spotify linking successful 🎉',
+            'Go to Music Corner...', { duration: 3500 });
+
+        snackBarRef.onAction().subscribe(() => {
+          console.log('Going to the music corner...');
+          this.router.navigate(['/profile', 'overview']);
+      });
+      });
   }
 
   /**
@@ -123,7 +142,7 @@ export class CallbackComponent implements OnInit {
         // console.log("Code: ", code);
         return code;
       } else if (callbackURL.indexOf('?error=') >= 0 ) {
-        this.router.navigate(['/profile', 'settings']);
+        this.router.navigate(['/']);
         return '';
       }
     }

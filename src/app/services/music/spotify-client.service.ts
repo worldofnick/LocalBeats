@@ -22,9 +22,13 @@ export class SpotifyClientService {
     return this.http.post(current, { headers: this.headers })
         .toPromise()
         .then((response: Response) => {
-          const data = response.json();
-          // console.log('Data SPotift: ', data);
-          return data.redirect_url;
+          if (response.status < 300) {
+            const data = response.json();
+            // console.log('Data SPotift: ', data);
+            return data.redirect_url;
+          } else {
+            return false;
+          }
         })
         .catch(this.handleError);
   }
@@ -35,9 +39,13 @@ export class SpotifyClientService {
     return this.http.post(current, {user: this._userService.user, code: code}, { headers: this.headers })
         .toPromise()
         .then((response: Response) => {
-          const data = response.json();
-          // console.log('Tokens recieved from getAuthTokens: ', data);
-          return data;
+          if (response.status < 300) {
+            const data = response.json();
+            // console.log('Tokens recieved from getAuthTokens: ', data);
+            return data;
+          } else {
+            return false;
+          }
         })
         .catch(this.handleError);
   }
@@ -66,7 +74,7 @@ export class SpotifyClientService {
   public requestAlbumsOwnedByAnArtist(userObject: any): Promise<any> {
     // TODO: @ash change it back to use the user's id
     // const current = this.authorizeConnection + '/artists/' + userObject.spotify.id + '/albums';
-    const current = this.authorizeConnection + '/artists/0TnOYISbd1XYRBk9myaseg/albums';
+    const current = this.authorizeConnection + '/artists/711MCceyCBcFnzjGY4Q7Un/albums';
     // console.log('Spotify Token server url: ', current);
     // console.log('Albums request user received: ', userObject);
     return this.http.post(current, {user: this._userService.user,

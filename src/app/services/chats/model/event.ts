@@ -13,8 +13,11 @@ export enum SocketEvent {
     OPEN_SNACK_BAR_PM = 'openPmSnackBarThread',
     //notifications
     REQUEST_NOTIFICATIONS = 'notifications',
+    TELL_TOP_BAR = 'tellTopBar',
+    TELL_NOTIFICATION_PANEL = 'tellNotificationPanel',
     REQUEST_NOTIFICATION_COUNT = 'notificationCount',
     SEND_NOTIFICATION = 'sendNotification',
+    NOTIFY_OTHER_HOSTS_BID_ACCEPTED = 'bidOtherHostsBidAccepted',
     UPDATE_PROFILE = 'updateProfile',
     NEW_REVIEW = 'newReview'
 }

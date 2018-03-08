@@ -16,6 +16,9 @@ module.exports = {
       redirectUri : 'https://localbeats.herokuapp.com/callback/spotify'
       // http://localhost:4200/callback/spotify'  //TODO: CHANGE_ROUTE change to heroku.localbeats
     },
+    soundcloud: {
+      clientID: '4e3fe497717451e398ca2719842a7e20'
+    },
     // Configuration for Stripe.
     stripe: {
       secretKey: 'sk_test_XnYNA52kavV92IkcJyh1dQBw',

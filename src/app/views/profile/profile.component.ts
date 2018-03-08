@@ -28,7 +28,8 @@ import { MatSnackBar } from '@angular/material';
 })
 export class ProfileComponent implements OnInit, OnDestroy, AfterViewChecked {
   activeView: string = 'overview';
-  user: User = new User; //changed this from null to new User
+  user: User = null;
+  private userSubscription: ISubscription;
   onOwnProfile: boolean = null;
   userID: any = null;
   requested: boolean = null;
@@ -84,13 +85,12 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterViewChecked {
 	}
 
   ngOnDestroy() {
-    this.cdRef.detach(); // try this
-    // for me I was detect changes inside "subscribe" so was enough for me to just unsubscribe;
-    // this.authObserver.unsubscribe();
+    this.cdRef.detach();
+    this.userSubscription.unsubscribe();
   }
 
   ngOnInit() {
-    this.user = this.userService.user;
+    this.userSubscription = this.userService.userResult.subscribe(user => this.user = user);
     this.activeView = this.route.snapshot.params['view'];
     
 
@@ -187,13 +187,11 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterViewChecked {
     // console.log(this.user.spotify !== null && this.user.spotify !== undefined);
     if ( this.user !== null && this.user !== undefined ) {
       if (this.user.spotify !== null && this.user.spotify !== undefined) {
-        if (this.user.spotify.albums !== null && this.user.spotify.albums !== undefined) {
         this._spotifyClientService.requestAlbumsOwnedByAnArtist(this.user)
           .then((listOfSpotifyAlbumObjects: any) => {
             this.user.spotify.albums = listOfSpotifyAlbumObjects.albums.items;
-            // console.log('Saved albums: ', this.user);
+            console.log('Saved albums: ', this.user);
           });
-        }
       }
     }
   }
@@ -240,8 +238,10 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterViewChecked {
               username: updatedUser.soundcloud.username
             };
             console.log('This User: ', this.user);
-            this.userService.user = this.user;
-            this.sanitizeSoundcloudUrl();
+            this.userService.onEditProfile(this.user).then( (savedUser: User) => {
+              this.userService.user = this.user;
+              this.sanitizeSoundcloudUrl();
+            });
           } else {
             // Invalid soundcloud username. Notify user and keep the input
             let snackBarRef = this.snackBar.open('Invalid Soundcloud username. Try Again!', '', {
@@ -249,12 +249,6 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterViewChecked {
             });
           }
         });
-
-        // TODO: Save the soundcloud id to the DB
-        // this.user.soundcloud = { username: this.soundcloudIdFormInput };
-        // this.userService.onEditProfile(this.user).then( (userWithSoundcloud: User) => {
-        //   this.sanitizeSoundcloudUrl();
-        // });
       }
 
       this.soundcloudIdFormInput = '';

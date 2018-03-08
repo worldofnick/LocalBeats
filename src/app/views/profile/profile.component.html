@@ -1,4 +1,4 @@
-<div fxLayout="row" fxLayoutWrap="wrap">
+<div *ngIf="user != null" fxLayout="row" fxLayoutWrap="wrap">
   <div *ngIf="this.user" fxFlex="100" fxFlex.gt-md="300px" fxFlex.gt-sm="50">
     <mat-card class="profile-sidebar mb-1 pb-0">
       <div class="propic text-center">
@@ -73,12 +73,12 @@
             <div class="spotify-tab-content" [style.overflow]="'auto'" [style.height.px]="'300'">
               
               <!-- Link spotify button on logged in user's profile if no spotify account is linked -->
-              <div class="spotifyConnectButtonContainer" *ngIf="(this.user.spotify === undefined || this.user.spotify === null) && this.user._id === this.userService.user._id">
+              <div class="spotifyConnectButtonContainer" *ngIf="(this.user.spotify === undefined || this.user.spotify === null) && this.onOwnProfile">
                   <button class="btn" (click)="authorizeSpotify()"><i class="fa fa-spotify"></i> Connect your Spotify account</button>
               </div>
 
               <!-- No spotify linked message on other person's profile with no spotify account -->
-              <div *ngIf="(this.user.spotify === undefined || this.user.spotify === null) && this.user._id !== this.userService.user._id" class="no-music-found-container">
+              <div *ngIf="(this.user.spotify === undefined || this.user.spotify === null) && !this.onOwnProfile" class="no-music-found-container">
                   <h3>{{this.user.firstName}} has no Spotify music...</h3>
               </div>
               
@@ -106,8 +106,8 @@
             <div class="soundcloud-tab-content" [style.overflow]="'auto'" [style.height.px]="'300'">
                 
                 <div *ngIf="(this.user.soundcloud === undefined || this.user.soundcloud === null) && this.user._id === this.userService.user._id" class="soundcloud-register-container">
-                  <mat-form-field (keydown)="registerSoundcloudClicked($event)" floatLabel="never" hintLabel="Tip: ID is the numeric sequence at end of the profile page's URL">
-                      <input matInput [(ngModel)]="soundcloudIdFormInput" placeholder="Register your SoundCloud ID">
+                  <mat-form-field (keydown)="registerSoundcloudClicked($event)" floatLabel="never" hintLabel="Tip: Your username can be found on the soundcloud profile page">
+                      <input matInput [(ngModel)]="soundcloudIdFormInput" placeholder="Register your SoundCloud Username">
                   </mat-form-field>
                 </div>
                 <div *ngIf="(this.user.soundcloud === undefined || this.user.soundcloud === null) && this.user._id !== this.userService.user._id" class="no-music-found-container">

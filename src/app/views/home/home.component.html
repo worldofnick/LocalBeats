@@ -7,15 +7,17 @@
         </div>
         <div class="intro-list" fxLayout="column" fxLayoutGap="30px">
           <div fxFlex="100">
-            <mat-icon >event_available</mat-icon><span fxFlex="20px"></span> Host your Event</div>
+            <mat-icon >event</mat-icon><span fxFlex="20px"></span> Host your Event</div>
           <div fxFlex="100">
             <mat-icon >search</mat-icon><span fxFlex="20px"></span> Search for Musicians in your Area</div>
           <div fxFlex="100">
             <mat-icon >music_note</mat-icon><span fxFlex="20px"></span> Listen to their Music on Spotify</div>
+            <div fxFlex="100">
+              <mat-icon >event_available</mat-icon><span fxFlex="20px"></span> Book them to Play at your Event</div>
         <div fxFlex="100">
           <mat-icon >attach_money</mat-icon><span fxFlex="20px"></span> Pay through Stripe</div>
       </div>
-        <div fxLayout="row" fxLayout.lt-sm="column">
+        <div *ngIf="user == null" fxLayout="row" fxLayout.lt-sm="column">
           <button routerLink="/auth/register" color="primary" mat-raised-button mat-lg-button><mat-icon>person</mat-icon> Register</button>
           <span fxFlex="20px"></span>
           <button [routerLink]="['/auth']" color="accent" mat-raised-button mat-lg-button><mat-icon>subdirectory_arrow_right</mat-icon> Login</button>
