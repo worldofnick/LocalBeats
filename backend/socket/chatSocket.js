@@ -146,8 +146,8 @@ module.exports = function (io) {
 
         //TODO look at this for sending live notifications
         socket.on('sendPrivateMessage', (payload) => {
-            console.log('\n-----\nPM received from socket: ', socket.id);
-            console.log('\n-----\nPM payload: ', payload);
+            // console.log('\n-----\nPM received from socket: ', socket.id);
+            // console.log('\n-----\nPM payload: ', payload);
 
             // Svae the message to DB
             let newMessage = new Message();
@@ -170,9 +170,9 @@ module.exports = function (io) {
             let fromSocketsArray = socketsHash[payload.from._id];
             let toSocketsArray = socketsHash[payload.to._id];
             let allSocketsOfFromAndTo = fromSocketsArray.concat(toSocketsArray);
-            console.log('>> All sockets: ', allSocketsOfFromAndTo);
+            // console.log('>> All sockets: ', allSocketsOfFromAndTo);
             for (let i = 0; i < allSocketsOfFromAndTo.length; i++) {
-                console.log('> Sending message to', allSocketsOfFromAndTo[i]);
+                // console.log('> Sending message to', allSocketsOfFromAndTo[i]);
                 io.to(allSocketsOfFromAndTo[i]).emit('sendPrivateMessage', payload);
             }
         });
@@ -215,7 +215,7 @@ module.exports = function (io) {
                     }
                 }
             }
-            console.log('TELL TOP BAR: ', sendArray);
+            // console.log('TELL TOP BAR: ', sendArray);
 
             for(let senderSocket of sendArray) {
                 io.to(senderSocket).emit('notificationCount', numberOfNotifications);
@@ -253,12 +253,12 @@ module.exports = function (io) {
         });
 
         socket.on('sendNotification', (payload) => {
-            console.log('\n-----\N Notification received from socket: ', socket.id);
-            console.log('\n-----\N Notif payload: ', payload);
+            // console.log('\n-----\N Notification received from socket: ', socket.id);
+            // console.log('\n-----\N Notif payload: ', payload);
 
             // Send the message to all the recipients (currently also the sender)
             let recipientSocketArray = socketsHash[payload.receiverID._id];
-            console.log('> Sending notification to', recipientSocketArray);
+            // console.log('> Sending notification to', recipientSocketArray);
 
 
             // save notification to db
@@ -273,7 +273,7 @@ module.exports = function (io) {
                 if (err) {
                     return res.status(500).send("Failed to create booking notification");
                 }
-                console.log('right here', notification);
+                // console.log('right here', notification);
                 payload._id = notification._id;
 
                 for(let recipientSocket of recipientSocketArray) {

@@ -67,13 +67,9 @@ export class AppChatsComponent implements OnInit, AfterViewChecked, AfterViewIni
   loggedInUser: User = new User();
   activeChatUser: User = new User();    //TODO: set to first user in connectedUsers list or one with highest unread count
   connectedUsers: User[] = new Array();
-  // isProfileUserRequestPending = false;
-  // isSnackBarRequestPending = false;
-  // profileRecipient: User = new User();
-  // snackBarRecipient: User = new User();
 
   options: User[] = new Array();  // All users list to populate autocomplete with
-  
+
   // ==============================================
   // Init Methods
   // ==============================================
@@ -102,7 +98,7 @@ export class AppChatsComponent implements OnInit, AfterViewChecked, AfterViewIni
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed with result: ', result);
+      // console.log('The dialog was closed with result: ', result);
       if (result === undefined) {
         console.log('Undefined object. No action taken');
       }
@@ -197,20 +193,6 @@ export class AppChatsComponent implements OnInit, AfterViewChecked, AfterViewIni
         }
         // TODO: refresh UI?
       });
-      
-      // this._socketService.onEvent(SocketEvent.REQUEST_MSG_FROM_PROFILE_BUTTON)
-      // .subscribe((message: Message) => {
-      //   console.log('Messaging from profile requested for (chat event): ', message);
-      //   this.profileRecipient = message.to as User;
-      //   this.isProfileUserRequestPending = true;
-      // });
-
-      // this._socketService.onEvent(SocketEvent.OPEN_SNACK_BAR_PM)
-      // .subscribe((message: Message) => {
-      //   // console.log('Opening message from snackbar action (chat event): ', message);
-      //   this.snackBarRecipient = message.from as User;
-      //   this.isSnackBarRequestPending = true;
-      // });
   }
 
   isUserInConnectedUsers(message): boolean {
@@ -324,33 +306,9 @@ export class AppChatsComponent implements OnInit, AfterViewChecked, AfterViewIni
   changeActiveUser(user) {
     // Check if a blank new conversation was halfway started while switched to an existing user. If so, remove it.
     if (this.connectedUsers.length > 0) {
-      // if (this.connectedUsers[0].firstName === 'New ' && this.connectedUsers[0].lastName === 'Message') {
-      //   this.connectedUsers.shift();
-      //   // this.newConversationClicked = false;
-      // }
 
       let connection;
-      // if (this.isProfileUserRequestPending) {
-      //   this.isProfileUserRequestPending = false;
-      //   let indexInConnectedUsers = this.isUserObjInConnectedUsers(this.profileRecipient);
-      //   if ( indexInConnectedUsers === -1 ) {
-      //     this.connectedUsers.unshift(this.profileRecipient);  // Add user to connected Users
-      //   }
-      //   this.activeChatUser = this.profileRecipient;
-      // } 
-      // else 
-      // if (this.isSnackBarRequestPending) {
-      //   this.isSnackBarRequestPending = false;
-      //   let indexInConnectedUsers = this.isUserObjInConnectedUsers(this.snackBarRecipient);
-      //   if ( indexInConnectedUsers === -1 ) {
-      //     this.connectedUsers.unshift(this.snackBarRecipient);  // Add user to connected Users
-      //   }
-      //   this.activeChatUser = this.snackBarRecipient;
-      // }
-      // else {
         this.activeChatUser = user;
-        // console.log('New User clicked:', this.activeChatUser);
-      // }
 
       this._chatsService.getPMsBetweenActiveAndLoggedInUser(this.loggedInUser, this.activeChatUser).subscribe(
         data => {
@@ -414,7 +372,7 @@ export class AppChatsComponent implements OnInit, AfterViewChecked, AfterViewIni
         privateMessage = this.createPMObject(false, MessageTypes.MSG);
 
       }
-      console.log('Sending message: ', privateMessage);
+      // console.log('Sending message: ', privateMessage);
       // this.awaitMessageSaveResponse(privateMessage);
       this._socketService.send(Action.SEND_PRIVATE_MSG, privateMessage);
       this.resetMessageInputBox();
@@ -433,7 +391,7 @@ export class AppChatsComponent implements OnInit, AfterViewChecked, AfterViewIni
 
   createPMObject(hasRead: boolean, messageType: MessageTypes): Message {
     let messageToSend = '';
-    console.log('First char enter: ', this.messageEntered.charAt(0) === '\n')
+    // console.log('First char enter: ', this.messageEntered.charAt(0) === '\n')
     if (this.messageEntered.charAt(0) === '\n') {
       messageToSend = this.messageEntered.substr(1);
     } else {

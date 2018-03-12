@@ -29,7 +29,7 @@ export class CallbackComponent implements OnInit {
    * saves it to the logged in user object.
    */
   getTokensProfileAndAlbums() {
-    console.log('>> IN GET TOKENS');
+    // console.log('>> IN GET TOKENS');
     this._spotifyClientService.requestRefreshAndAccessTokens(this.spotifyCode).then((tokens: any) => {
       // console.log('Callback token data: ', tokens);
       return tokens;
@@ -50,7 +50,7 @@ export class CallbackComponent implements OnInit {
    * @param tokens access_token, refresh_token, expires_in
    */
   getSpotifyProfileDataOfMe(tokens: any) {
-    console.log('>> IN PROFILE DATA');
+    // console.log('>> IN PROFILE DATA');
     // console.log('Next promise\'s token data received: ', tokens);
     this._spotifyClientService.requestSpotifyMyProfile(tokens).then((responseWithUserPayload: any) => {
       // console.log('My spotify profile: ', responseWithUserPayload);
@@ -72,7 +72,7 @@ export class CallbackComponent implements OnInit {
    * @param responseWithUserPayload contains user object with spotify id, tokens
    */
   getAlbumsOfMe(responseWithUserPayload: any) {
-    console.log('>> IN GTE ALBUMS');
+    // console.log('>> IN GTE ALBUMS');
     // console.log('Getting the albums of ' + responseWithUserPayload.user.spotify.email);
     this._spotifyClientService.requestAlbumsOwnedByAnArtist(responseWithUserPayload.user)
       .then( (listOfSpotifyAlbumObjects: any) => {
@@ -97,7 +97,7 @@ export class CallbackComponent implements OnInit {
    */
   saveToUserAndRedirect(responseWithUserPayload: any, listOfSpotifyAlbumObjects: any) {
       // console.log('List of albums: ', listOfSpotifyAlbumObjects);
-      console.log('>> IN SAVE USER');
+      // console.log('>> IN SAVE USER');
       const spotifyObject = {
         email: responseWithUserPayload.user.spotify.email,
         id: responseWithUserPayload.user.spotify.id,
@@ -111,7 +111,7 @@ export class CallbackComponent implements OnInit {
       // Save the spotify profile and the albums to user service object
       let newUser = this.userService.user;
       newUser.spotify = spotifyObject;
-      console.log('Spotify Object to save: ', newUser);
+      // console.log('Spotify Object to save: ', newUser);
       this.userService.user = newUser;
       this.userService.onEditProfile(this.userService.user).then((user: User) => {
         // Redirect to the profile page to setup and display the spotify widget
@@ -120,7 +120,7 @@ export class CallbackComponent implements OnInit {
             'Go to Music Corner...', { duration: 3500 });
 
         snackBarRef.onAction().subscribe(() => {
-          console.log('Going to the music corner...');
+          // console.log('Going to the music corner...');
           this.router.navigate(['/profile', 'overview']);
       });
       });

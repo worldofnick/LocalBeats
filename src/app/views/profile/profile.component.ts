@@ -190,7 +190,7 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterViewChecked {
         this._spotifyClientService.requestAlbumsOwnedByAnArtist(this.user)
           .then((listOfSpotifyAlbumObjects: any) => {
             this.user.spotify.albums = listOfSpotifyAlbumObjects.albums.items;
-            console.log('Saved albums: ', this.user);
+            // console.log('Saved albums: ', this.user);
           });
       }
     }
@@ -225,7 +225,7 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterViewChecked {
    */
   registerSoundcloudClicked(event) {
     if (event.keyCode === 13 && !event.shiftKey) {
-      console.log('Entered soundcloud id: %s', this.soundcloudIdFormInput);
+      // console.log('Entered soundcloud id: %s', this.soundcloudIdFormInput);
 
       // If the user entered non-blank id and hit send, communicate with server
       if (this.soundcloudIdFormInput.trim().length > 0) {
@@ -237,7 +237,7 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterViewChecked {
               avatar_url: updatedUser.soundcloud.avatar_url,
               username: updatedUser.soundcloud.username
             };
-            console.log('This User: ', this.user);
+            // console.log('This User: ', this.user);
             this.userService.onEditProfile(this.user).then( (savedUser: User) => {
               this.userService.user = this.user;
               this.sanitizeSoundcloudUrl();
