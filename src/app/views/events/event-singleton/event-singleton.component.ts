@@ -83,7 +83,9 @@ export class EventSingletonComponent implements OnInit {
   }
 
   ngOnDestroy() {
-    this.subscription.unsubscribe();
+    if(this.subscription) {
+      this.subscription.unsubscribe();
+    }
   }
 
   private updateModel(newBooking: Booking, response: NegotiationResponses) {
