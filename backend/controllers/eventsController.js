@@ -213,16 +213,21 @@ exports.searchEvents = function(req, res) {
     if (Date(req.query.from_date) > Date(req.query.to_date)) {
         res.status(400).send({"error": "from date comes after to date"});
     }
+  } 
 
-    // Will need this when we have two dates for an event
-    query.toDate = {
+  if (req.query.from_date != null) {
+    query.fromDate = {
       "$gte": Date(req.query.from_date)
     }
-
+  }
+  
+  if (req.query.to_date != null) {
     query.toDate = {
-      "$lte": Date(req.query.to_date)
+      "$gte": Date(req.query.to_date)
     }
-  } else {
+  }
+  
+  if (req.query.to_date == null && req.query.from_date == null) {
       // No date provided, only show events playing from now onwards
       query.fromDate = {
         "$gte": Date()
