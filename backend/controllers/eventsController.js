@@ -31,20 +31,20 @@ exports.getEventByID = function (req, res) {
 function getDefaultImage(eventType) {
   eventType = eventType.toLowerCase(); // just in case
   if (eventType == "birthday") {
-    return "https://images.meredith.com/content/dam/bhg/Images/2014/1/17/101666877.jpg.rendition.largest.jpg";
+    return "https://i.imgur.com/COiWRnm.jpg";
   } else if (eventType == "wedding") {
-    return "https://www.claridges.co.uk/siteassets/meetings--events/wedding-detail-1.jpg";
+    return "https://i.imgur.com/kqIx4ii.jpg";
   } else if (eventType == "party") {
-    return "http://www.party-adviser.com/wp-content/uploads/2016/07/decorated-pool.jpg";
+    return "https://i.imgur.com/TY1Qr5C.jpg";
   } else if (eventType == "live music") {
-    return "https://irp-cdn.multiscreensite.com/98107e77/dms3rep/multi/mobile/22519362_819398604905562_8445152196828072660_n.jpg";
+    return "https://i.imgur.com/HpWZCJh.jpg";
   } else if (eventType == "business") {
-    return "http://www.makeevents.co.uk/wp-content/uploads/2017/11/MPAN-02.11.17-005-e1516629279700.jpg";
+    return "https://i.imgur.com/5azJhu4.jpg";
   } else if (eventType == "festival") {
-    return "http://waneefestival.com/wp-content/uploads/2016/11/20160414-Wanee-Music-Festival-Live-Oak1358-2-1000x567.jpg";
+    return "https://i.imgur.com/MhKFrxn.jpg";
   }
 
-  return "http://www.party-adviser.com/wp-content/uploads/2016/07/decorated-pool.jpg";
+  return "https://i.imgur.com/TY1Qr5C.jpg";
 }
 
 exports.defaultPic = function (req, res) {
@@ -215,18 +215,18 @@ exports.searchEvents = function(req, res) {
     }
 
     // Will need this when we have two dates for an event
-    // query.toDate = {
-    //   "$gte": Date(req.query.from_date)
-    // }
-
-    // query.toDate = {
-    //   "$lte": Date(req.query.to_date)
-    // }
+    query.toDate = {
+      "$gte": Date(req.query.from_date)
+    }
 
     query.toDate = {
-        "$gte": new Date(req.query.from_date),
-        "$lte": new Date(req.query.to_date)
+      "$lte": Date(req.query.to_date)
     }
+  } else {
+      // No date provided, only show events playing from now onwards
+      query.fromDate = {
+        "$gte": Date()
+      }
   }
 
   if (req.query.min_budget != null && req.query.max_budget != null) {
