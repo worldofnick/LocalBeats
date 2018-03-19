@@ -53,21 +53,21 @@ exports.stripeAuthorize = function (req, res) {
      json: true
    }, (err, response, body) => {
      if (err || body.error) {
-       res.redirect('https://localbeats.live/profile/stripe/?success=false');
+       res.redirect('http://localbeats.live/profile/stripe/?success=false');
      } else {
        // Update the model and store the Stripe account ID in the DB.
        stripe.accounts.retrieve(
          body.stripe_user_id,
          function(err, account) {
            if (err) {
-             res.redirect('https://localbeats.live/profile/stripe/?success=false');
+             res.redirect('http://localbeats.live/profile/stripe/?success=false');
            }
 
            User.findOne({email: account.email}, function (err, user) {
             user.stripeAccountId = body.stripe_user_id;
             user.save(function (err) {
               if(err) {
-                res.redirect('https://localbeats.live/profile/stripe/?success=false');
+                res.redirect('http://localbeats.live/profile/stripe/?success=false');
               }
             });
           });
@@ -76,7 +76,7 @@ exports.stripeAuthorize = function (req, res) {
        );
      }
      // Redirect to the final stage.
-     res.redirect('https://localbeats.live/profile/stripe/?success=true');
+     res.redirect('http://localbeats.live/profile/stripe/?success=true');
    });
 
  };
