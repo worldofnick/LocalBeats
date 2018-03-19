@@ -41,7 +41,7 @@
       <mat-card-content>
         <div class="mb-1 mt-1">
           <p>Upload a profile picture</p>
-          <input type="file" (change)="fileChangeEvent($event)" accept=".jpg,.png"/>
+          <input type="file" (change)="fileChangeEvent($event)" accept=".jpg,.png,.jpeg"/>
           
           <image-cropper 
               *ngIf="showCropper"

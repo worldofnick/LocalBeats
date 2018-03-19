@@ -147,7 +147,7 @@
             
             <mat-progress-bar mode="determinate" class="session-progress"></mat-progress-bar>
          <p></p>
-         <input type="file" (change)="fileChangeEvent($event)" accept=".jpg,.png"/>
+         <input type="file" (change)="fileChangeEvent($event)" accept=".jpg,.png,.jpeg"/>
          <p></p>
             <a *ngIf="croppedImage" (click)="prepareBlob()" mat-raised-button >Crop and Upload</a>
           </div>
