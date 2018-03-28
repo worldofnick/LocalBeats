@@ -125,16 +125,26 @@ exports.searchUsers = function (req, res) {
     }
   }
 
-  User.find(query).limit(limit).skip(skip).exec(function (err, doc) {
+  User.find(query).exec(function (err, doc) {
     if (err) {
       return res.status(500).send(err);
     } else {
-      var users = [];
-      doc.forEach(function (user) {
-        users.push({ "user": user });
-      });
+      var count = doc.length;
 
-      return res.status(200).send({ "users": doc });
+      User.find(query).limit(skip).skip(skip).exec(function (err, doc) {
+        if (err) {
+          return res.status(500).send(err);
+        }
+        var users = [];
+        doc.forEach(function (user) {
+          users.push({ "user": user });
+        });
+        
+        return res.status(200).send({ "totalResults": count, "users": doc });
+      });
+      
+
+      
     }
   });
 };
