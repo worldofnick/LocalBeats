@@ -87,7 +87,6 @@ export class SearchService {
             .then((response: Response) => {
                 const data = response.json();
                 const events = data.events as Array<Event>;
-                const totalResults = data.totalResults as Number;
                 return events;
             })
             .catch(this.handleError);

@@ -258,21 +258,11 @@ exports.searchEvents = function(req, res) {
     }
   }
 
-
-
   Events.find(query).limit(limit).skip(skip).sort(sort).populate('hostUser').populate('performerUser').exec(function (err, doc) {
       if (err) {
           return res.status(500).send(err);
       } else {
-        var count = doc.length;
-        Events.find(query).exec(function (err, doc) {
-            if (err) {
-                return res.status(500).send(err);
-            }
-            return res.status(200).send({"totalResults": count, "events": doc});
-        });
-
-            
+            return res.status(200).send({"events": doc});
       }
   });
 };
