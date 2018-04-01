@@ -32,6 +32,7 @@ export class TopbarComponent implements OnInit {
   @ViewChild("searchplaces") searchElementRef: ElementRef;
   genreSelectOpened: boolean = false;
   eventSelectOpened: boolean = false;
+  sortSelectOpened: boolean = false;
   startDateOpened: boolean = false;
   startDateClosed: boolean = false;
   endDateOpened: boolean = false;
@@ -42,6 +43,7 @@ export class TopbarComponent implements OnInit {
     genres: new FormControl(),
     events: new FormControl(),
     location: new FormControl(),
+    sort: new FormControl(),
     startDate: new FormControl(),
     endDate: new FormControl()
   });
@@ -159,6 +161,10 @@ export class TopbarComponent implements OnInit {
 
   eventSelectOpen() {
     this.eventSelectOpened = !this.eventSelectOpened;
+  }
+
+  sortSelectOpen() {
+    this.sortSelectOpened = !this.sortSelectOpened;
   }
 
   startDateOpen() {

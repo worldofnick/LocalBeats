@@ -38,13 +38,30 @@ export class SearchService {
     }
 
     public genres(): Promise<Object> {
-        let current = (this.connection + 'genres/')
+        let current = (this.connection + 'genres/');
         return this.http.get(current, { headers: this.headers } )
         .toPromise()
         .then((response: Response) => {
             const data = response.json();
             const genres = data.genres as Array<String>;
             return genres;
+        })
+        .catch(this.handleError);
+    }
+
+    public sorts(userSorts: boolean): Promise<Object> {
+        var route = "eventSorts/"
+        if (userSorts) {
+            route = "userSorts/"
+        }
+
+        let current = (this.connection + route);
+        return this.http.get(current, { headers: this.headers } )
+        .toPromise()
+        .then((response: Response) => {
+            const data = response.json();
+            const sorts = data.sorts;
+            return sorts;
         })
         .catch(this.handleError);
     }

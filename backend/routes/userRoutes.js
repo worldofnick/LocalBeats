@@ -20,4 +20,7 @@ module.exports = function(app) {
 
 	app.route('/api/genres')
 		.get(userHandlers.getGenres);
+
+	app.route('/api/userSorts')
+		.get(userHandlers.getUserSortTypes);
 };
