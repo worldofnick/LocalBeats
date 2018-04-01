@@ -263,7 +263,7 @@ exports.searchEvents = function(req, res) {
     }
   }
 
-  Events.find(query).limit(limit).skip(skip).sort(sort).populate('hostUser').populate('performerUser').exec(function (err, doc) {
+  Events.find(query).limit(100).skip(skip).sort(sort).populate('hostUser').populate('performerUser').exec(function (err, doc) {
       if (err) {
           return res.status(500).send(err);
       } else {
@@ -276,3 +276,11 @@ exports.getEventTypes = function (req, res) {
     var eventTypes = ["wedding", "birthday", "business", "live music", "party", "festival"];
     return res.status(200).send( {"eventTypes": eventTypes} );
   };
+
+  
+exports.getEventSortTypes = function (req, res) {
+    // "Price High to Low", "Price Low to High", "Soonest"];
+    var sorts = [{"Best Match": ""}, {"Rating": "rating-asc"}, {"Distance": "distance-asc"}, 
+    {"Price High to Low": "price-desc"}, {"Price Low to High": "price-asc"}];
+    return res.status(200).send({ "sorts": sorts });
+};

@@ -129,7 +129,7 @@ exports.searchUsers = function (req, res) {
     "$ne": "beatbot@localbeats.com"
   }
 
-  User.find(query).limit(limit).skip(skip).exec(function (err, doc) {
+  User.find(query).limit(100).skip(skip).exec(function (err, doc) {
     if (err) {
       return res.status(500).send(err);
     } else {
@@ -146,4 +146,9 @@ exports.searchUsers = function (req, res) {
 exports.getGenres = function (req, res) {
   var genres = ["rock", "classical", "electronic", "jazz", "blues", "hip-hop", "rap", "alternative", "country"];
   return res.status(200).send({ "genres": genres });
+};
+
+exports.getUserSortTypes = function (req, res) {
+  var sorts = [{"Best Match": ""}, {"Name": "name-asc"}, {"Rating": "rating-asc"}, {"Distance": "distance-asc"}];
+  return res.status(200).send({ "sorts": sorts });
 };

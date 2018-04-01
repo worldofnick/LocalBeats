@@ -35,6 +35,7 @@ export class TopbarComponent implements OnInit, OnDestroy {
   @ViewChild("searchplaces") searchElementRef: ElementRef;
   genreSelectOpened: boolean = false;
   eventSelectOpened: boolean = false;
+  sortSelectOpened: boolean = false;
   startDateOpened: boolean = false;
   startDateClosed: boolean = false;
   endDateOpened: boolean = false;
@@ -44,6 +45,7 @@ export class TopbarComponent implements OnInit, OnDestroy {
     type: new FormControl('Artist', Validators.required),
     genres: new FormControl(),
     events: new FormControl(),
+    sort: new FormControl(),
     location: new FormControl(),
     startDate: new FormControl(),
     endDate: new FormControl()
@@ -175,6 +177,10 @@ export class TopbarComponent implements OnInit, OnDestroy {
 
   eventSelectOpen() {
     this.eventSelectOpened = !this.eventSelectOpened;
+  }
+
+  srotSelectOpen() {
+    this.sortSelectOpened = !this.sortSelectOpened;
   }
 
   startDateOpen() {

@@ -49,6 +49,23 @@ export class SearchService {
         .catch(this.handleError);
     }
 
+    public sorts(userSorts: boolean): Promise<Object> {
+        var route = "eventSorts/"
+        if (userSorts) {
+            route = "userSorts/"
+        }
+
+        let current = (this.connection + route);
+        return this.http.get(current, { headers: this.headers } )
+        .toPromise()
+        .then((response: Response) => {
+            const data = response.json();
+            const sorts = data.sorts;
+            return sorts;
+        })
+        .catch(this.handleError);
+    }
+
     public eventSearch(searchTerms: SearchTerms): Promise<Object> {
         let current = (this.connection + 'searchEvents/')
         let params: URLSearchParams = new URLSearchParams();

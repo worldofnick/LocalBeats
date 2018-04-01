@@ -9,14 +9,15 @@ import {
   MatButtonModule,
   MatChipsModule,
   MatListModule,
-  MatGridListModule
+  MatGridListModule,
+  MatPaginator
  } from '@angular/material';
 import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { ChartsModule } from 'ng2-charts/ng2-charts';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { CommonPipesModule } from "../../pipes/common/common-pipes.module";
-
+import { MatPaginatorModule } from '@angular/material/paginator';
 import { SearchResultsComponent } from './search-results.component';
 import { SearchRoutes } from "./search.routing";
 
@@ -36,6 +37,7 @@ import { SearchRoutes } from "./search.routing";
     ChartsModule,
     NgxDatatableModule,
     CommonPipesModule,
+    MatPaginatorModule,
     RouterModule.forChild(SearchRoutes)
   ],
   declarations: [SearchResultsComponent],
