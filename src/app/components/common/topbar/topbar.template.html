@@ -86,17 +86,23 @@
               </mat-form-field>
           </div>
           <br>
-          <mat-form-field>
-              <mat-select placeholder="Sort by" [formControl]="searchForm.controls['sort']" (openedChange)="sortSelectOpen()" multiple>
-                <mat-select-trigger>
-                  {{(searchForm.controls['genres'].value ? searchForm.controls['genres'].value[0] : '') | capitalize}}
-                  <span *ngIf="searchForm.controls['genres'].value?.length > 1">
-                    (+{{searchForm.controls['genres'].value.length - 1}} others)
-                  </span>
+          <mat-form-field *ngIf="searchForm.controls['type'].value != 'Event'">
+              <mat-select placeholder="Sort Type" [formControl]="searchForm.controls['sort']" (openedChange)="sortSelectOpen()" (change)="this.submit()">
+                <mat-select-trigger class="additional-selection">
+                  {{(searchForm.controls['sort'].value ? searchForm.controls['sort'].value : '') | capitalize}}
                 </mat-select-trigger>
-                <mat-option *ngFor="let genre of genresList" [value]="genre">{{genre | capitalize}}</mat-option>
+                <mat-option *ngFor="let type of userSortTypes" [value]="type">{{type | capitalize}}</mat-option>
               </mat-select>
             </mat-form-field>
+
+            <mat-form-field *ngIf="searchForm.controls['type'].value == 'Event'">
+                <mat-select placeholder="Sort Type" [formControl]="searchForm.controls['sort']" (openedChange)="sortSelectOpen()" (change)="this.submit()">
+                  <mat-select-trigger class="additional-selection">
+                    {{(searchForm.controls['sort'].value ? searchForm.controls['sort'].value : '') | capitalize}}
+                  </mat-select-trigger>
+                  <mat-option *ngFor="let type of eventSortTypes" [value]="type">{{type | capitalize}}</mat-option>
+                </mat-select>
+              </mat-form-field>
           <br>
           <button mat-raised-button class="mr-1">Submit</button>
         </mat-expansion-panel>

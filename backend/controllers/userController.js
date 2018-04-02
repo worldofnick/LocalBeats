@@ -67,6 +67,18 @@ function isString(x) {
     return Object.prototype.toString.call(x) === "[object String]"
 }
 
+function buildSort(req) {
+  //var sorts = ["Best Match", "Name", "Rating", "Distance"];
+  var sort = {};
+  if (req.query.sort == 'Name') {
+      sort = { firstName: 1 };
+  } else if (req.query.sort == 'Distance' || req.query.sort == 'Best Match') {
+      sort = {}
+  }
+
+  return sort;
+}
+
 // Params
 // name (string) name of the user
 // artist (boolean) true to return only artists, false to return all. Defaults to true
@@ -79,6 +91,7 @@ exports.searchUsers = function (req, res) {
   var query = {}
   var limit = 15;
   var skip = 0;
+  var sort = buildSort(req);
 
   if (req.query.limit != null) {
     limit = parseInt(req.query.limit);
@@ -129,7 +142,7 @@ exports.searchUsers = function (req, res) {
     "$ne": "beatbot@localbeats.com"
   }
 
-  User.find(query).limit(100).skip(skip).exec(function (err, doc) {
+  User.find(query).limit(100).skip(skip).sort(sort).exec(function (err, doc) {
     if (err) {
       return res.status(500).send(err);
     } else {
@@ -149,6 +162,6 @@ exports.getGenres = function (req, res) {
 };
 
 exports.getUserSortTypes = function (req, res) {
-  var sorts = [{"Best Match": ""}, {"Name": "name-asc"}, {"Rating": "rating-asc"}, {"Distance": "distance-asc"}];
+  var sorts = ["Best Match", "Name", "Rating", "Distance"];
   return res.status(200).send({ "sorts": sorts });
 };

@@ -60,7 +60,7 @@ export class SearchService {
         .toPromise()
         .then((response: Response) => {
             const data = response.json();
-            const sorts = data.sorts;
+            const sorts = data.sorts as Array<String>;
             return sorts;
         })
         .catch(this.handleError);
@@ -98,7 +98,11 @@ export class SearchService {
         if (searchTerms.text != null && searchTerms.text.length != 0) {
             params.set('name', searchTerms.text)
         }
-        
+
+        if (searchTerms.sort != null) {
+            params.set('sort', searchTerms.sort);
+        }
+
         return this.http.get(current, { headers: this.headers, search: params } )
             .toPromise()
             .then((response: Response) => {
@@ -131,6 +135,10 @@ export class SearchService {
         params.set('limit', '15');
         if (searchTerms.text != null && searchTerms.text.length != 0) {
             params.set('name', searchTerms.text)
+        }
+
+        if (searchTerms.sort != null) {
+            params.set('sort', searchTerms.sort);
         }
         
         return this.http.get(current, { headers: this.headers, search: params } )

@@ -62,7 +62,9 @@ export class TopbarComponent implements OnInit, OnDestroy {
   searchTypes: string[] = ['artist', 'host', 'event'];
   genresList: string[] = ['rock', 'country', 'jazz', 'blues', 'rap'];
   eventsList: string[] = ['wedding', 'birthday', 'business'];
-  currentSearch: SearchTerms = new SearchTerms(this.searchTypes[0], '', null, this.genresList, this.eventsList, null, null, null);
+  userSortTypes: string[];
+  eventSortTypes: string[];
+  currentSearch: SearchTerms = new SearchTerms(this.searchTypes[0], '', null, this.genresList, this.eventsList, null, null, null, null);
   public results: any = null;
 
   constructor(private formBuilder: FormBuilder,
@@ -85,6 +87,13 @@ export class TopbarComponent implements OnInit, OnDestroy {
     }).then(() => this.searchService.genres().then((types: string[]) => {
       this.genresList = types;
     }));
+
+    this.searchService.sorts(false).then((eventSorts: string[]) => {
+      this.eventSortTypes = eventSorts;
+    }).then(() => this.searchService.sorts(true).then((userSorts: string[]) => {
+      this.userSortTypes = userSorts;
+    }));
+
     // Initialize the menu to be collapsed
     domHelper.toggleClass(document.body, 'collapsed-menu');
 
@@ -160,7 +169,7 @@ export class TopbarComponent implements OnInit, OnDestroy {
   }
 
   offClick() {
-    if(!this.startDateOpened && !this.genreSelectOpened && !this.eventSelectOpened) {
+    if(!this.startDateOpened && !this.genreSelectOpened && !this.eventSelectOpened && !this.sortSelectOpened) {
       if(!this.startDateClosed && !this.endDateClosed) {
         this.expand = false;
       } else {
@@ -179,7 +188,7 @@ export class TopbarComponent implements OnInit, OnDestroy {
     this.eventSelectOpened = !this.eventSelectOpened;
   }
 
-  srotSelectOpen() {
+  sortSelectOpen() {
     this.sortSelectOpened = !this.sortSelectOpened;
   }
 
@@ -194,9 +203,12 @@ export class TopbarComponent implements OnInit, OnDestroy {
     this.endDateClosed = true;
     this.submit();
   }
-
+  
   // Submission of search
   submit(expand: boolean = true) {
+
+    console.log("value");
+    console.log(this.searchForm.get('sort').value);
 
     this.currentSearch.from_date = this.searchForm.get('startDate').value;
     this.currentSearch.to_date = this.searchForm.get('endDate').value;
@@ -235,19 +247,21 @@ export class TopbarComponent implements OnInit, OnDestroy {
     }
 
     if (this.currentSearch.searchType === 'Artist' || this.currentSearch.searchType === 'Host') {
+      this.currentSearch.sort = this.searchForm.get('sort').value;
       this.searchService.userSearch(this.currentSearch).then((users: User[]) => {
         this.results = users;
         this.searchService.changeResult(this.results, this.currentSearch.searchType);
         this.router.navigate(['/search'])
       });
     } else {
+      this.currentSearch.sort = this.searchForm.get('sort').value;
       this.searchService.eventSearch(this.currentSearch).then((events: Event[]) => {
         this.results = events;
         this.searchService.changeResult(this.results, this.currentSearch.searchType);
         this.router.navigate(['/search'])
       });
     }
-    this.expand = expand;;
+    this.expand = expand;
   }
 
   // Triggers the notification panel to sideload
