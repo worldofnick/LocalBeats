@@ -206,10 +206,6 @@ export class TopbarComponent implements OnInit, OnDestroy {
   
   // Submission of search
   submit(expand: boolean = true) {
-
-    console.log("value");
-    console.log(this.searchForm.get('sort').value);
-
     this.currentSearch.from_date = this.searchForm.get('startDate').value;
     this.currentSearch.to_date = this.searchForm.get('endDate').value;
     // Set location for submission
