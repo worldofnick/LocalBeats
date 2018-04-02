@@ -13,7 +13,7 @@ export class SearchResultsComponent implements OnInit {
   searchType: string;
 
   pageIndex: number = 0;
-  pageSize = 5; // default page size is 15
+  pageSize = 15; // default page size is 15
   pageSizeOptions = [15, 25, 50];
   
   constructor(private searchService: SearchService) { }
