@@ -37,12 +37,12 @@
                 class="form-error-msg"> Password is required </small>
             </div> -->
             
-            <!-- <div class="pb-1">
+            <div class="pb-1">
               <mat-checkbox
                 name="rememberMe"
                 [formControl]="signinForm.controls['rememberMe']"
                 class="pb-1">Remember this computer</mat-checkbox>
-            </div> -->
+            </div>
             
             <button mat-raised-button class="mat-primary full-width mb-1" [disabled]="signinForm.invalid">Send me a magic link!</button>
             <small *ngIf="error" class="form-error-msg">{{errorMessage}}</small>

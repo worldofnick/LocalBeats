@@ -58,35 +58,36 @@ export class AuthComponent implements OnInit {
     const data = JSON.parse(localStorage.getItem('rememberMe'));
     if (data) {
       this.user.email = data.email;
-      this.user.password = data.password;
+      // this.user.password = data.password;
       this.rememberMe = true;
     } else {
       this.rememberMe = false;
     }
-    if(this.rememberMe) {
+    if (this.rememberMe) {
       this.signinForm = new FormGroup({
         username: new FormControl(this.user.email.valueOf(), Validators.required),
-        password: new FormControl(this.user.password.valueOf(), Validators.required),
+        // password: new FormControl(this.user.password.valueOf(), Validators.required),
         rememberMe: new FormControl(this.rememberMe)
       });
     } else {
       this.signinForm = new FormGroup({
         username: new FormControl('', Validators.required),
-        password: new FormControl('', Validators.required),
+        // password: new FormControl('', Validators.required),
         rememberMe: new FormControl(this.rememberMe)
       });
     }
   }
 
   signin() {
-    const signinData = this.signinForm.value
+    const signinData = this.signinForm.value;
     this.user.email = this.signinForm.controls['username'].value;
-    this.user.password = this.signinForm.controls['password'].value;
+    // this.user.password = this.signinForm.controls['password'].value;
     this.rememberMe = this.signinForm.controls['rememberMe'].value;
 
     if(this.rememberMe) {
       localStorage.setItem('rememberMe',
-        JSON.stringify({ email: this.user.email, password: this.user.password }));
+        // JSON.stringify({ email: this.user.email, password: this.user.password }));
+        JSON.stringify({ email: this.user.email }));
     } else {
       localStorage.removeItem('rememberMe');
     }
