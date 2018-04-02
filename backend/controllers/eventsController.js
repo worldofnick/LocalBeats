@@ -119,6 +119,8 @@ exports.getUserEventsByUID = function (req, res) {
 
     }
 
+    limit = 100;
+
     if (req.params.skip != null) {
         skip = parseInt(req.query.skip);
     }
@@ -185,6 +187,8 @@ exports.searchEvents = function(req, res) {
   if(req.query.skip != null) {
     skip = parseInt(req.query.skip);
   }
+
+  limit = 100;
 
   if(req.query.limit != null) {
     limit = parseInt(req.query.limit);
@@ -263,7 +267,7 @@ exports.searchEvents = function(req, res) {
     }
   }
 
-  Events.find(query).limit(100).skip(skip).sort(sort).populate('hostUser').populate('performerUser').exec(function (err, doc) {
+  Events.find(query).limit(limit).skip(skip).sort(sort).populate('hostUser').populate('performerUser').exec(function (err, doc) {
       if (err) {
           return res.status(500).send(err);
       } else {

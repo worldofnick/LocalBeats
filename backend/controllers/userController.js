@@ -97,6 +97,8 @@ exports.searchUsers = function (req, res) {
     limit = parseInt(req.query.limit);
   }
 
+  limit = 100;
+
   if (req.query.skip != null) {
     skip = parseInt(req.query.skip);
   }
@@ -142,7 +144,7 @@ exports.searchUsers = function (req, res) {
     "$ne": "beatbot@localbeats.com"
   }
 
-  User.find(query).limit(100).skip(skip).sort(sort).exec(function (err, doc) {
+  User.find(query).limit(limit).skip(skip).sort(sort).exec(function (err, doc) {
     if (err) {
       return res.status(500).send(err);
     } else {
