@@ -1,8 +1,10 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { 
   MatIconModule,
   MatCardModule,
+  MatInputModule,
   MatMenuModule,
   MatProgressBarModule,
   MatButtonModule,
@@ -23,6 +25,7 @@ import { HomeRoutes } from "./home.routing";
   imports: [
     CommonModule,
     MatIconModule,
+    MatInputModule,
     MatCardModule,
     MatMenuModule,
     MatProgressBarModule,
@@ -34,6 +37,8 @@ import { HomeRoutes } from "./home.routing";
     ChartsModule,
     NgxDatatableModule,
     CommonPipesModule,
+    FormsModule,
+    ReactiveFormsModule,
     RouterModule.forChild(HomeRoutes)
   ],
   declarations: [HomeComponent],

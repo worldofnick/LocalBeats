@@ -1,4 +1,5 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input } from '@angular/core';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ISubscription } from "rxjs/Subscription";
 import { SocketService } from 'app/services/chats/socket.service';
 import { SocketEvent } from 'app/services/chats/model/event';
@@ -21,6 +22,8 @@ import { SharedDataService } from '../../services/shared/shared-data.service';
 export class HomeComponent implements OnInit {
   private user: User = null;
   private userSubscription: ISubscription;
+  @Input('backgroundGray') public backgroundGray;
+  contactForm: FormGroup;
   artists = [{
     name: 'Featured Drummer',
     url: 'assets/images/drums-image.png'
@@ -43,13 +46,25 @@ export class HomeComponent implements OnInit {
     url: 'assets/images/wedding-pic.jpg'
   }];
 
-  constructor(private snackBar: MatSnackBar, private router : Router, private _sharedDataService: SharedDataService,
-              private _userService: UserService, private _socketService: SocketService) { }
+  constructor(
+    private snackBar: MatSnackBar,
+    private router : Router,
+    private _sharedDataService: SharedDataService,
+    private _userService: UserService,
+    private _socketService: SocketService,
+    private fb: FormBuilder
+  ) { }
 
   ngOnInit() {
     this.initIoConnection();            // Listen to server for any registered events inside this method
     this.showSnackBarIfNeeded();
     this.userSubscription = this._userService.userResult.subscribe(user => this.user = user);
+    this.contactForm = this.fb.group({
+      name: ['', [Validators.required]],
+      email: ['', [Validators.email]],
+      subject: ['', [Validators.required]],
+      message: ['', Validators.required]
+    });
   }
 
   ngOnDestroy(){
