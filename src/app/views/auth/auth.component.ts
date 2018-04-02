@@ -78,6 +78,13 @@ export class AuthComponent implements OnInit {
     }
   }
 
+  /**
+   * Password less sign in handler.
+   * Steps:
+   * 1. REST call server to send verification magic link to the provided email
+   * 2. If error (email invalid or not in DB), display email not valid error message
+   *    Else, redirect to the mail-client website?
+   */
   signin() {
     const signinData = this.signinForm.value;
     this.user.email = this.signinForm.controls['username'].value;
