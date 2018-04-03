@@ -181,10 +181,12 @@ export class UserService {
                 this.user = null;
                 sessionStorage.clear();
 
-                this._socketService.send(Action.YOU_LOGGED_OUT,{
+                this._socketService.send(Action.YOU_LOGGED_OUT, {
                     from: from,
                     action: Action.YOU_LOGGED_OUT
                 });
+
+                
 
                 // Notify server that a new user user logged in
                 this._socketService.send(Action.SMN_LOGGED_OUT, {

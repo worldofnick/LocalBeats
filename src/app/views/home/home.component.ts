@@ -44,6 +44,10 @@ export class HomeComponent implements OnInit {
   allResults: any[] = [];
   searchType: string;
 
+  // Google Places
+  latitude: number;
+  longitude: number;
+
   pageIndex: number = 0;
   pageSize = 4; // default page size is 15
   pageSizeOptions = [4];
@@ -77,6 +81,8 @@ export class HomeComponent implements OnInit {
 
     if (this._userService.isAuthenticated()) {
       this.setupSuggestions();
+    }else{
+      this.setupDefaultSuggestions();
     }
     // listening for real time notification
     this.loginSub = this._socketService.onEvent(SocketEvent.NEW_LOG_IN)
@@ -85,6 +91,33 @@ export class HomeComponent implements OnInit {
     });
 
   }
+
+  setupDefaultSuggestions() {
+    this.currentSearch = new SearchTerms('', '', null, null, null, null, null, null);
+
+    this.setCurrentPosition();
+
+    this.currentSearch.location = {
+      longitude: this.longitude,
+      latitude: this.latitude
+    };
+
+    this.currentSearch.genres = ['all genres'];
+    this.currentSearch.event_types = ['all events'];
+
+
+  }
+
+    // Helper method for Google Places
+    private setCurrentPosition() {
+      if ("geolocation" in navigator) {
+        navigator.geolocation.getCurrentPosition((position) => {
+          this.latitude = position.coords.latitude;
+          this.longitude = position.coords.longitude;
+          // this.zoom = 12;
+        });
+      }
+    }
 
   setupSuggestions() {
     // set suggestions type
