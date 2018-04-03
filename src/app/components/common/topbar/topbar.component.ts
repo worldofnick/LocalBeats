@@ -229,6 +229,7 @@ export class TopbarComponent implements OnInit, OnDestroy {
     }
 
     if (this.currentSearch.searchType === 'Artist' || this.currentSearch.searchType === 'Host') {
+      console.log(this.currentSearch);
       this.searchService.userSearch(this.currentSearch).then((users: User[]) => {
         this.results = users;
         this.searchService.changeResult(this.results, this.currentSearch.searchType);
@@ -241,7 +242,7 @@ export class TopbarComponent implements OnInit, OnDestroy {
         this.router.navigate(['/search'])
       });
     }
-    this.expand = expand;;
+    this.expand = expand;
   }
 
   // Triggers the notification panel to sideload

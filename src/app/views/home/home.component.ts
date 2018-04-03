@@ -10,6 +10,8 @@ import { NotificationService } from '../../services/notification/notification.se
 import * as socketIO from 'socket.io-client';
 import { Notification } from '../../models/notification';
 import { Router } from '@angular/router';
+import { SearchTerms, Location } from '../../models/search';
+import { SearchService } from '../../services/search/search.service';
 import { Action } from '../../services/chats/model/action';
 import { User } from '../../models/user';
 import { SharedDataService } from '../../services/shared/shared-data.service';
@@ -29,15 +31,22 @@ export class HomeComponent implements OnInit {
   private userSubscription: ISubscription;
   @Input('backgroundGray') public backgroundGray;
   contactForm: FormGroup;
- 
 
-  results: any;
+
+  // suggested info
+  searchTypes: string[] = ['artist', 'host', 'event'];
+  genresList: string[] = ['rock', 'country', 'jazz', 'blues', 'rap'];
+  eventsList: string[] = ['wedding', 'birthday', 'business'];
+  currentSearch: SearchTerms = new SearchTerms('Artist', '', null, ['all genres'], ['all events'],
+                                this._userService.user._id, null, null);
+
+  results: User[] = [];
   allResults: User[] = [];
   searchType: string;
 
   pageIndex: number = 0;
-  pageSize = 15; // default page size is 15
-  pageSizeOptions = [15, 25, 50];
+  pageSize = 4; // default page size is 15
+  pageSizeOptions = [4];
 
   constructor(
     private snackBar: MatSnackBar,
@@ -45,12 +54,11 @@ export class HomeComponent implements OnInit {
     private _sharedDataService: SharedDataService,
     private _userService: UserService,
     private _socketService: SocketService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private searchService: SearchService,
   ) { }
 
   ngOnInit() {
-   let adam:User = new User();
-   this.allResults.push(adam);
 
     this.initIoConnection();            // Listen to server for any registered events inside this method
     this.showSnackBarIfNeeded();
@@ -61,11 +69,20 @@ export class HomeComponent implements OnInit {
       subject: ['', [Validators.required]],
       message: ['', Validators.required]
     });
+
+    // search for event or artist not event
+    this.searchService.userSearch(this.currentSearch).then((users: User[]) => {
+      this.allResults = users;
+      // this.searchService.changeResult(this.results, this.currentSearch.searchType);
+      this.updateResults();
+    });
+
   }
 
   ngOnDestroy(){
     this.userSubscription.unsubscribe();
   }
+
 
 
   private updateResults() {
@@ -84,7 +101,7 @@ export class HomeComponent implements OnInit {
     this.pageIndex = pageEvent.pageIndex;
     this.pageSize = pageEvent.pageSize;
     this.updateResults();
-    // Scroll to top of page 
+    // Scroll to top of page
     window.scrollTo(0, 0);
   }
   // Shows the snackbar if needed when coming back from a redirect

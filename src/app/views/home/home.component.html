@@ -39,40 +39,9 @@
         <h2>Search Results</h2>
         <!-- <p *ngIf="results.length == 0">We're sorry.  There are no results that fit the parameters of your search.</p> -->
       </div>
-      <!-- <div *ngIf="results.length > 0" fxLayout="row" fxLayoutWrap="wrap">
-        <div fxFlex="100" fxFlex.gt-xs="33" *ngFor="let result of results">
-          <mat-card class="p-0" *ngIf="searchType == 'Event'" [routerLink]="['/events', result._id]">
-            <mat-card-title class="mat-bg-primary m-0">
-                <div class="card-title-text">
-                  <span>{{result.eventName}}</span>
-                  <span fxFlex></span>
-                </div>
-                <mat-divider></mat-divider>
-              </mat-card-title>
-            <img mat-card-image [src]="result.eventPicUrl">
-            <mat-card-content>
-              <div fxLayout="row" fxLayoutWrap="wrap">
-                <div fxFlex="100" fxFlex.gt-xs="50">
-                  <p><em><b>Event Details:</b></em></p>
-                  <p>{{result.city}}, {{result.state}}</p>
-                  <p>{{result.toDate | date:'MMM d, y'}}</p>
-                  <p *ngIf="result.negotiable">{{result.fixedPrice | currency}}</p>
-                  <p *ngIf="!result.negotiable">{{result.fixedPrice | currency}}</p>
-                </div>
-                <div fxFlex="100" fxFlex.gt-xs="50">
-                  <p><em><b>Music Style:</b></em></p>
-                  <p *ngFor="let g of result.eventGenres">{{g | capitalize}}</p>
-                </div>
-              </div>
-              <div fxLayout="row" fxLayoutWrap="wrap">
-                  <div fxFlex="100" fxFlex.gt-xs="100">
-                      <p><em><b>Description:</b></em></p>
-                      <p>{{result.description}}</p>
-                  </div>
-                </div>
-            </mat-card-content>
-          </mat-card>
-          <mat-card class="p-0" *ngIf="searchType == 'Artist' || searchType == 'Host'" [routerLink]="['/profile', result._id]">
+      <div *ngIf="results.length > 0" fxLayout="row" fxLayoutWrap="wrap">
+        <div fxFlex="100" fxFlex.gt-xs="25" *ngFor="let result of results">
+          <mat-card class="p-0" [routerLink]="['/profile', result._id]">
             <mat-card-title class="mat-bg-primary m-0">
               <div class="card-title-text">
                 <span>{{result.firstName}} {{result.lastName}}</span>
@@ -97,7 +66,7 @@
             </mat-card-content>
           </mat-card>
         </div>
-      </div> -->
+      </div>
     </div>
     <br>
     <mat-paginator
@@ -110,6 +79,8 @@
 </section>
 
 
+
+<!-- EMAIL US SECTION -->
   <section id="contact-section" class="home-section" [ngClass]="{'light-gray': backgroundGray}">
     <div class="container">
       <div class="section-header">
