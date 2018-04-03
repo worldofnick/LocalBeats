@@ -13,6 +13,11 @@ import { Router } from '@angular/router';
 import { Action } from '../../services/chats/model/action';
 import { User } from '../../models/user';
 import { SharedDataService } from '../../services/shared/shared-data.service';
+import { PageEvent } from '@angular/material';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { allResolved } from 'q';
+
+
 
 @Component({
   selector: 'app-home',
@@ -24,27 +29,15 @@ export class HomeComponent implements OnInit {
   private userSubscription: ISubscription;
   @Input('backgroundGray') public backgroundGray;
   contactForm: FormGroup;
-  artists = [{
-    name: 'Featured Drummer',
-    url: 'assets/images/drums-image.png'
-  }, {
-    name: 'Featured Trumpet',
-    url: 'assets/images/trumpet-pic.png'
-  }, {
-    name: 'Featured Guitarist',
-    url: 'assets/images/guitar-pic.jpg'
-  }];
+ 
 
-  events = [{
-    name: 'Featured Restaurant',
-    url: 'assets/images/coffee-shop-pic.jpg'
-  }, {
-    name: 'Featured Concert',
-    url: 'assets/images/concert-pic.jpeg'
-  }, {
-    name: 'Featured Wedding',
-    url: 'assets/images/wedding-pic.jpg'
-  }];
+  results: any;
+  allResults: User[] = [];
+  searchType: string;
+
+  pageIndex: number = 0;
+  pageSize = 15; // default page size is 15
+  pageSizeOptions = [15, 25, 50];
 
   constructor(
     private snackBar: MatSnackBar,
@@ -56,6 +49,9 @@ export class HomeComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+   let adam:User = new User();
+   this.allResults.push(adam);
+
     this.initIoConnection();            // Listen to server for any registered events inside this method
     this.showSnackBarIfNeeded();
     this.userSubscription = this._userService.userResult.subscribe(user => this.user = user);
@@ -71,6 +67,26 @@ export class HomeComponent implements OnInit {
     this.userSubscription.unsubscribe();
   }
 
+
+  private updateResults() {
+    let startingIndex = (this.pageIndex + 1) * this.pageSize - this.pageSize;
+    let endIndex = startingIndex + this.pageSize;
+    var i: number;
+
+    this.results = Array<any>();
+    // Slice the results array
+    for (i = startingIndex; i < endIndex && i < this.allResults.length; i++) {
+      this.results.push(this.allResults[i]);
+    }
+
+  }
+  private pageEvent(pageEvent: PageEvent) {
+    this.pageIndex = pageEvent.pageIndex;
+    this.pageSize = pageEvent.pageSize;
+    this.updateResults();
+    // Scroll to top of page 
+    window.scrollTo(0, 0);
+  }
   // Shows the snackbar if needed when coming back from a redirect
   showSnackBarIfNeeded() {
     if (this.router.url.indexOf('success=true') >= 0) {

@@ -17,9 +17,11 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { ChartsModule } from 'ng2-charts/ng2-charts';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { CommonPipesModule } from "../../pipes/common/common-pipes.module";
-
+import { MatPaginatorModule } from '@angular/material/paginator';
 import { HomeComponent } from './home.component';
 import { HomeRoutes } from "./home.routing";
+
+
 
 @NgModule({
   imports: [
@@ -39,6 +41,7 @@ import { HomeRoutes } from "./home.routing";
     CommonPipesModule,
     FormsModule,
     ReactiveFormsModule,
+    MatPaginatorModule,
     RouterModule.forChild(HomeRoutes)
   ],
   declarations: [HomeComponent],
