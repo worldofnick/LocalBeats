@@ -81,7 +81,8 @@ export class HomeComponent implements OnInit {
 
     if (this._userService.isAuthenticated()) {
       this.setupSuggestions();
-    }else{
+    }else {
+      this.setCurrentPosition();
       this.setupDefaultSuggestions();
     }
     // listening for real time notification
@@ -95,17 +96,24 @@ export class HomeComponent implements OnInit {
   setupDefaultSuggestions() {
     this.currentSearch = new SearchTerms('', '', null, null, null, null, null, null);
 
-    this.setCurrentPosition();
+    this.currentSearch.searchType = 'Event';
+    this.searchType = 'Event';
 
     this.currentSearch.location = {
-      longitude: this.longitude,
-      latitude: this.latitude
+      longitude: -111.891047,
+      latitude: 40.760779
     };
+
+
 
     this.currentSearch.genres = ['all genres'];
     this.currentSearch.event_types = ['all events'];
+    this.suggestedTitle = 'Events In Salt Lake City';
 
-
+    this.searchService.eventSearch(this.currentSearch).then((events: Event[]) => {
+      this.allResults = events;
+      this.updateResults();
+    });
   }
 
     // Helper method for Google Places
@@ -114,9 +122,9 @@ export class HomeComponent implements OnInit {
         navigator.geolocation.getCurrentPosition((position) => {
           this.latitude = position.coords.latitude;
           this.longitude = position.coords.longitude;
-          // this.zoom = 12;
         });
       }
+      // console.log(this.latitude, this.longitude);
     }
 
   setupSuggestions() {
@@ -249,7 +257,7 @@ export class HomeComponent implements OnInit {
 
       this._socketService.onEvent(SocketEvent.YOU_LOGGED_OUT)
       .subscribe((message: Message) => {
-        this.searchType = null;
+        this.setupDefaultSuggestions();
       });
   }
 
