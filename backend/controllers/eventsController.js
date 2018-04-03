@@ -148,12 +148,12 @@ exports.deleteUserEventsByUID = function (req, res) {
 };
 
 function buildSort(req) {
-    var sort = { fromDate: -1 };
+    var sort = {};
     if (req.query.sort == 'Soonest') {
         sort = { fromDate: 1 };
     } else if (req.query.sort == 'Price High to Low') {
         sort = { fixedPrice: -1 }
-    } else if (req.query.sort == 'Price Low to High"') {
+    } else if (req.query.sort == 'Price Low to High') {
         sort = { fixedPrice: 1 }
     } else if (req.query.sort == 'Distance' || req.query.sort == 'Best Match') {
         sort = {}
@@ -284,7 +284,6 @@ exports.getEventTypes = function (req, res) {
   
 exports.getEventSortTypes = function (req, res) {
     // "Price High to Low", "Price Low to High", "Soonest"];
-    var sorts = ["Best Match", "Rating", "Distance", 
-    "Price High to Low", "Price Low to High", "Soonest"];
+    var sorts = ["Best Match", "Price High to Low", "Price Low to High", "Soonest", "Rating", "Distance"];
     return res.status(200).send({ "sorts": sorts });
 };

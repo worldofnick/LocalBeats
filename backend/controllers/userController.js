@@ -164,6 +164,6 @@ exports.getGenres = function (req, res) {
 };
 
 exports.getUserSortTypes = function (req, res) {
-  var sorts = ["Best Match", "Name", "Rating", "Distance"];
+  var sorts = ["Best Match", "Rating", "Distance"];
   return res.status(200).send({ "sorts": sorts });
 };
