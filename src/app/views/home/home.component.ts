@@ -89,35 +89,53 @@ export class HomeComponent implements OnInit {
   setupSuggestions() {
     // set suggestions type
     if (this._userService.user.isArtist) {
+      // user is an artist
       this.searchType = 'Artist';
       this.suggestedTitle = 'Suggested Events:';
     } else {
+      // user is event host.
       this.searchType = 'Event';
       this.suggestedTitle = 'Suggested Artists:';
     }
 
-    // search for event or artist not event
+
+    // set current search. then configure it.
+    this.currentSearch = new SearchTerms('', '', null, null, null, null, null, null);
+
+    // configure genres.
+    if (this._userService.user.genres == null || this._userService.user.genres.length == 0) {
+      this.currentSearch.genres = ['all genres'];
+    } else {
+      this.currentSearch.genres = this._userService.user.genres;
+    }
+
+    // configure event types
+    if (this._userService.user.eventTypes == null || this._userService.user.eventTypes.length == 0) {
+      this.currentSearch.event_types = ['all events'];
+    } else {
+      this.currentSearch.event_types = this._userService.user.eventTypes;
+    }
+
+    // configure location
+    this.currentSearch.location = {
+      longitude: this._userService.user.location[0],
+      latitude: this._userService.user.location[1]
+    };
+
     if (this.searchType === 'Artist') {
-      this.currentSearch = new SearchTerms('Event', '', null, this._userService.user.genres, this._userService.user.eventTypes,
-        this._userService.user._id, null, null);
+      // user is an artist so search for event
+      this.currentSearch.searchType = 'Event';
       this.searchService.eventSearch(this.currentSearch).then((events: Event[]) => {
         this.results = events;
-        // this.searchService.changeResult(this.results, this.currentSearch.searchType);
+        console.log(this.allResults);
         this.updateResults();
       });
     } else {
       // its an event host. so search for artists.
-      this.currentSearch = new SearchTerms('Artist', '', null, this._userService.user.genres, this._userService.user.eventTypes,
-        this._userService.user._id, null, null);
-        this.currentSearch.location = {
-          longitude: this._userService.user.location[0],
-          latitude: this._userService.user.location[1]
-        };
-
+      this.currentSearch.searchType = 'Artist';
       this.searchService.userSearch(this.currentSearch).then((users: User[]) => {
         this.allResults = users;
         console.log(this.allResults);
-        // this.searchService.changeResult(this.results, this.currentSearch.searchType);
         this.updateResults();
       });
     }
