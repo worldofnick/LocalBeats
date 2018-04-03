@@ -107,8 +107,12 @@ export class HomeComponent implements OnInit {
       });
     } else {
       // its an event host. so search for artists.
-      this.currentSearch = new SearchTerms('Artist', '', this._userService.user.location, this._userService.user.genres, this._userService.user.eventTypes,
+      this.currentSearch = new SearchTerms('Artist', '', null, this._userService.user.genres, this._userService.user.eventTypes,
         this._userService.user._id, null, null);
+        this.currentSearch.location = {
+          longitude: this._userService.user.location[0],
+          latitude: this._userService.user.location[1]
+        };
 
       this.searchService.userSearch(this.currentSearch).then((users: User[]) => {
         this.allResults = users;
