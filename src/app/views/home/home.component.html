@@ -1,127 +1,187 @@
 <script src="//code.jquery.com/jquery-3.2.1.min.js"></script>
-<link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/jquery.slick/1.6.0/slick.css"/>
-<link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/jquery.slick/1.6.0/slick-theme.css"/>
+<link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/jquery.slick/1.6.0/slick.css" />
+<link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/jquery.slick/1.6.0/slick-theme.css" />
 <script src="https://unpkg.com/slick-carousel@1.6.0/slick/slick.js"></script>
 
 <section id="intro-section" class="home-intro-section">
-    <div class="container" fxLayout="row" fxLayout.lt-md="column" fxLayoutWrap="nowrap" fxLayoutGap="30px">
-      <div fxFlex="50">
-        <h1 class="home-intro-title">LocalBeats</h1>
-        <div class="home-intro-desc">
-          Find musicians near you for your next event
-        </div>
-        <div class="intro-list" fxLayout="column" fxLayoutGap="30px">
-          <div fxFlex="100">
-            <mat-icon >event</mat-icon><span fxFlex="20px"></span> Host your Event</div>
-          <div fxFlex="100">
-            <mat-icon >search</mat-icon><span fxFlex="20px"></span> Search for Musicians in your Area</div>
-          <div fxFlex="100">
-            <mat-icon >music_note</mat-icon><span fxFlex="20px"></span> Listen to their Music on Spotify</div>
-            <div fxFlex="100">
-              <mat-icon >event_available</mat-icon><span fxFlex="20px"></span> Book them to Play at your Event</div>
+  <div class="container" fxLayout="row" fxLayout.lt-md="column" fxLayoutWrap="nowrap" fxLayoutGap="30px">
+    <div fxFlex="50">
+      <h1 class="home-intro-title">LocalBeats</h1>
+      <div class="home-intro-desc">
+        Find musicians near you for your next event
+      </div>
+      <div class="intro-list" fxLayout="column" fxLayoutGap="30px">
         <div fxFlex="100">
-          <mat-icon >attach_money</mat-icon><span fxFlex="20px"></span> Pay through Stripe</div>
+          <mat-icon>event</mat-icon>
+          <span fxFlex="20px"></span> Host your Event</div>
+        <div fxFlex="100">
+          <mat-icon>search</mat-icon>
+          <span fxFlex="20px"></span> Search for Musicians in your Area</div>
+        <div fxFlex="100">
+          <mat-icon>music_note</mat-icon>
+          <span fxFlex="20px"></span> Listen to their Music on Spotify</div>
+        <div fxFlex="100">
+          <mat-icon>event_available</mat-icon>
+          <span fxFlex="20px"></span> Book them to Play at your Event</div>
+        <div fxFlex="100">
+          <mat-icon>attach_money</mat-icon>
+          <span fxFlex="20px"></span> Pay through Stripe</div>
       </div>
-        <div *ngIf="user == null" fxLayout="row" fxLayout.lt-sm="column">
-          <button routerLink="/auth/register" color="primary" mat-raised-button mat-lg-button><mat-icon>person</mat-icon> Register</button>
-          <span fxFlex="20px"></span>
-          <button [routerLink]="['/auth']" color="accent" mat-raised-button mat-lg-button><mat-icon>subdirectory_arrow_right</mat-icon> Login</button>
-        </div>
-      </div>
-    </div>
-  </section>
-  <!-- You can now use your library component in app.component.html -->
-
-
-  <section id="portfolio-section" class="portfolio home-section" [ngClass]="{'light-gray': backgroundGray}">
-    <div class="container">
-      <div class="section-header">
-        <h2>Search Results</h2>
-        <!-- <p *ngIf="results.length == 0">We're sorry.  There are no results that fit the parameters of your search.</p> -->
-      </div>
-      <div *ngIf="results.length > 0" fxLayout="row" fxLayoutWrap="wrap">
-        <div fxFlex="100" fxFlex.gt-xs="25" *ngFor="let result of results">
-          <mat-card class="p-0" [routerLink]="['/profile', result._id]">
-            <mat-card-title class="mat-bg-primary m-0">
-              <div class="card-title-text">
-                <span>{{result.firstName}} {{result.lastName}}</span>
-                <span fxFlex></span>
-              </div>
-              <mat-divider></mat-divider>
-            </mat-card-title>
-            <img mat-card-image [src]="result.profilePicUrl">
-            <mat-card-content>
-              <mat-card-title *ngIf="result.isArtist"><b>Artist</b> - {{result.city}}, {{result.state}}</mat-card-title>
-              <mat-card-title *ngIf="!result.isArtist"><b>Host</b> - {{result.city}}, {{result.state}}</mat-card-title>
-              <div fxLayout="row" fxLayoutWrap="wrap">
-                <div fxFlex="100" fxFlex.gt-xs="50">
-                  <p><em><b>Music Style:</b></em></p>
-                  <p *ngFor="let g of result.genres">{{g | capitalize}}</p>
-                </div>
-                <div fxFlex="100" fxFlex.gt-xs="50">
-                  <p><em><b>Preferred Events:</b></em></p>
-                  <p *ngFor="let e of result.eventTypes">{{e | capitalize}}</p>
-                </div>
-              </div>
-            </mat-card-content>
-          </mat-card>
-        </div>
+      <div *ngIf="user == null" fxLayout="row" fxLayout.lt-sm="column">
+        <button routerLink="/auth/register" color="primary" mat-raised-button mat-lg-button>
+          <mat-icon>person</mat-icon> Register</button>
+        <span fxFlex="20px"></span>
+        <button [routerLink]="['/auth']" color="accent" mat-raised-button mat-lg-button>
+          <mat-icon>subdirectory_arrow_right</mat-icon> Login</button>
       </div>
     </div>
-    <br>
-    <mat-paginator
-    *ngIf="allResults && allResults.length > 0"
-    [length]="allResults.length"
-    [pageSize]="pageSize"
-    [pageSizeOptions]="pageSizeOptions"
+  </div>
+</section>
+
+
+
+<section id="portfolio-section" class="portfolio home-section" [ngClass]="{'light-gray': backgroundGray}">
+  <div class="container">
+    <div class="section-header">
+      <h2>{{suggestedTitle}}</h2>
+      <!-- <p *ngIf="results.length == 0">We're sorry.  There are no results that fit the parameters of your search.</p> -->
+    </div>
+    <div *ngIf="results.length > 0" fxLayout="row" fxLayoutWrap="wrap">
+      <div fxFlex="100" fxFlex.gt-xs="25" *ngFor="let result of results">
+
+        <mat-card class="p-0" *ngIf="searchType == 'Artist'" [routerLink]="['/events', result._id]">
+          <mat-card-title class="mat-bg-primary m-0">
+            <div class="card-title-text">
+              <span>{{result.eventName}}</span>
+              <span fxFlex></span>
+            </div>
+            <mat-divider></mat-divider>
+          </mat-card-title>
+          <img mat-card-image [src]="result.eventPicUrl">
+          <mat-card-content>
+            <div fxLayout="row" fxLayoutWrap="wrap">
+              <div fxFlex="100" fxFlex.gt-xs="50">
+                <p>
+                  <em>
+                    <b>Event Details:</b>
+                  </em>
+                </p>
+                <p>{{result.city}}, {{result.state}}</p>
+                <p>{{result.toDate | date:'MMM d, y'}}</p>
+                <p *ngIf="result.negotiable">{{result.fixedPrice | currency}}</p>
+                <p *ngIf="!result.negotiable">{{result.fixedPrice | currency}}</p>
+              </div>
+              <div fxFlex="100" fxFlex.gt-xs="50">
+                <p>
+                  <em>
+                    <b>Music Style:</b>
+                  </em>
+                </p>
+                <p *ngFor="let g of result.eventGenres">{{g | capitalize}}</p>
+              </div>
+            </div>
+            <div fxLayout="row" fxLayoutWrap="wrap">
+              <div fxFlex="100" fxFlex.gt-xs="100">
+                <p>
+                  <em>
+                    <b>Description:</b>
+                  </em>
+                </p>
+                <p>{{result.description}}</p>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="p-0" *ngIf="searchType == 'Event'" [routerLink]="['/profile', result._id]">
+          <mat-card-title class="mat-bg-primary m-0">
+            <div class="card-title-text">
+              <span>{{result.firstName}} {{result.lastName}}</span>
+              <span fxFlex></span>
+            </div>
+            <mat-divider></mat-divider>
+          </mat-card-title>
+          <img mat-card-image [src]="result.profilePicUrl">
+          <mat-card-content>
+            <mat-card-title *ngIf="result.isArtist">
+              <b>Artist</b> - {{result.city}}, {{result.state}}</mat-card-title>
+            <mat-card-title *ngIf="!result.isArtist">
+              <b>Host</b> - {{result.city}}, {{result.state}}</mat-card-title>
+            <div fxLayout="row" fxLayoutWrap="wrap">
+              <div fxFlex="100" fxFlex.gt-xs="50">
+                <p>
+                  <em>
+                    <b>Music Style:</b>
+                  </em>
+                </p>
+                <p *ngFor="let g of result.genres">{{g | capitalize}}</p>
+              </div>
+              <div fxFlex="100" fxFlex.gt-xs="50">
+                <p>
+                  <em>
+                    <b>Preferred Events:</b>
+                  </em>
+                </p>
+                <p *ngFor="let e of result.eventTypes">{{e | capitalize}}</p>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+  </div>
+  <br>
+  <mat-paginator *ngIf="allResults && allResults.length > 0" [length]="allResults.length" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions"
     (page)="pageEvent($event)">
-    </mat-paginator>
+  </mat-paginator>
 </section>
 
 
 
 <!-- EMAIL US SECTION -->
-  <section id="contact-section" class="home-section" [ngClass]="{'light-gray': backgroundGray}">
-    <div class="container">
-      <div class="section-header">
-        <h2>Send Us An Email</h2>
-      </div>
-      <form [formGroup]="contactForm">
-        <div fxLayout="row" fxLayout.lt-md="column" fxLayoutWrap="wrap">
-          <div fxFlex="100">
-            <div class="pb-1">
-              <mat-form-field class="full-width">
-                <input matInput name="name" [formControl]="contactForm.controls['name']" placeholder="Your Name">
-              </mat-form-field>
-              <small *ngIf="contactForm.controls.name.touched && contactForm.controls.name.errors?.required" class="form-error-msg">Name is required</small>
-            </div>
-            <div class="pb-1">
-              <mat-form-field class="full-width">
-                <input matInput name="email" [formControl]="contactForm.controls['email']" placeholder="Your Email">
-              </mat-form-field>
-              <small *ngIf="contactForm.controls.email.touched && contactForm.controls.email.errors?.email" class="form-error-msg">Invalid Email</small>
-            </div>
-  
+<section id="contact-section" class="home-section" [ngClass]="{'light-gray': backgroundGray}">
+  <div class="container">
+    <div class="section-header">
+      <h2>Send Us An Email</h2>
+    </div>
+    <form [formGroup]="contactForm">
+      <div fxLayout="row" fxLayout.lt-md="column" fxLayoutWrap="wrap">
+        <div fxFlex="100">
+          <div class="pb-1">
+            <mat-form-field class="full-width">
+              <input matInput name="name" [formControl]="contactForm.controls['name']" placeholder="Your Name">
+            </mat-form-field>
+            <small *ngIf="contactForm.controls.name.touched && contactForm.controls.name.errors?.required" class="form-error-msg">Name is required</small>
           </div>
-          <div fxFlex="100">
-            <div class="pb-1">
-              <mat-form-field class="full-width">
-                <input matInput name="subject" [formControl]="contactForm.controls['subject']" placeholder="Subject">
-              </mat-form-field>
-              <small *ngIf="contactForm.controls.subject.touched && contactForm.controls.subject.errors?.required" class="form-error-msg">Subject is required</small>
-            </div>
-            <div class="pb-1">
-              <mat-form-field class="full-width">
-                <textarea matInput row="8" name="message" [formControl]="contactForm.controls['message']" placeholder="Message"></textarea>
-              </mat-form-field>
-              <small *ngIf="contactForm.controls.message.touched && contactForm.controls.message.errors?.required" class="form-error-msg">Message is required</small>
-            </div>
+          <div class="pb-1">
+            <mat-form-field class="full-width">
+              <input matInput name="email" [formControl]="contactForm.controls['email']" placeholder="Your Email">
+            </mat-form-field>
+            <small *ngIf="contactForm.controls.email.touched && contactForm.controls.email.errors?.email" class="form-error-msg">Invalid Email</small>
           </div>
-  
-          <div fxFlex="100">
-            <button mat-fab color="primary" [disabled]="!contactForm.valid"><mat-icon>send</mat-icon></button>
+
+        </div>
+        <div fxFlex="100">
+          <div class="pb-1">
+            <mat-form-field class="full-width">
+              <input matInput name="subject" [formControl]="contactForm.controls['subject']" placeholder="Subject">
+            </mat-form-field>
+            <small *ngIf="contactForm.controls.subject.touched && contactForm.controls.subject.errors?.required" class="form-error-msg">Subject is required</small>
+          </div>
+          <div class="pb-1">
+            <mat-form-field class="full-width">
+              <textarea matInput row="8" name="message" [formControl]="contactForm.controls['message']" placeholder="Message"></textarea>
+            </mat-form-field>
+            <small *ngIf="contactForm.controls.message.touched && contactForm.controls.message.errors?.required" class="form-error-msg">Message is required</small>
           </div>
         </div>
-      </form>
-    </div>
-  </section>
+
+        <div fxFlex="100">
+          <button mat-fab color="primary" [disabled]="!contactForm.valid">
+            <mat-icon>send</mat-icon>
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</section>
