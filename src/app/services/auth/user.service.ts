@@ -47,7 +47,7 @@ export class UserService {
             this.ioConnection = this._socketService.onEvent(SocketEvent.NEW_LOG_IN)
                 .subscribe((message: Message) => {
                     // this.messages.push(message);
-                    console.log('Server Msg to user service', message);
+                    // console.log('Server Msg to user service', message);
                 });
         if (persisted) {
             let message: Message = {
@@ -227,7 +227,7 @@ export class UserService {
             .toPromise()
             .then((response: Response) => {
                 const data = response.json();
-                console.log(data)
+                // console.log(data)
                 // this.accessToken = data.token;
                 // console.log(this.accessToken)
                 let temp = data.notifications as Notification[];
