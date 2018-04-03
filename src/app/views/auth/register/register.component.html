@@ -126,6 +126,7 @@
             </div>
   
             <button mat-raised-button class="mat-primary full-width mb-1" [disabled]="signupForm.invalid">Sign up</button>
+            <small *ngIf="error" class="form-error-msg">{{errorMessage}}</small>
             <div class="text-center">
               <a routerLink="/auth" class="mat-primary text-center full-width">Sign in to existing account</a>
             </div>
