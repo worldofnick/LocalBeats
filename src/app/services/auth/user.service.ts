@@ -107,7 +107,6 @@ export class UserService {
         const current = this.connection + '/authenticate';
         return this.http.post(current, returningUser, { headers: this.headers })
             .map((response: Response) => {
-                console.log('IN LOGIn');
                 const data = response.json();
                 this.accessToken = data.token;
                 sessionStorage.setItem('token', JSON.stringify({ accessToken: this.accessToken }))
@@ -182,11 +181,18 @@ export class UserService {
                 this.user = null;
                 sessionStorage.clear();
 
+                this._socketService.send(Action.YOU_LOGGED_OUT,{
+                    from: from,
+                    action: Action.YOU_LOGGED_OUT
+                });
+
                 // Notify server that a new user user logged in
                 this._socketService.send(Action.SMN_LOGGED_OUT, {
                     from: from,
                     action: Action.SMN_LOGGED_OUT
                 });
+
+
 
                 this.userLoaded(null, null, false, true);
             })

@@ -41,7 +41,7 @@
 
 
 <!-- suggestions -->
-<section id="portfolio-section" class="portfolio home-section" [ngClass]="{'light-gray': backgroundGray}">
+<section id="portfolio-section" class="portfolio home-section" [ngClass]="{'light-gray': backgroundGray}" *ngIf="searchType != null">
   <div class="container">
     <div class="section-header">
       <h2>{{suggestedTitle}}</h2>

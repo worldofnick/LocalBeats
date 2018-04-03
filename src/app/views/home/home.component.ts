@@ -128,10 +128,8 @@ export class HomeComponent implements OnInit {
     if (this.searchType === 'Event') {
       // user is an artist so search for event
       this.currentSearch.searchType = 'Event';
-      console.log(this.currentSearch);
       this.searchService.eventSearch(this.currentSearch).then((events: Event[]) => {
         this.allResults = events;
-        console.log(this.allResults);
         this.updateResults();
       });
     } else {
@@ -139,7 +137,6 @@ export class HomeComponent implements OnInit {
       this.currentSearch.searchType = 'Artist';
       this.searchService.userSearch(this.currentSearch).then((users: User[]) => {
         this.allResults = users;
-        console.log(this.allResults);
         this.updateResults();
       });
     }
@@ -215,6 +212,11 @@ export class HomeComponent implements OnInit {
         console.log('Notification from server (home app module): ', message);
         const temp: Notification = message as Notification;
         this.openNotificationSnackBar(temp);
+      });
+
+      this._socketService.onEvent(SocketEvent.YOU_LOGGED_OUT)
+      .subscribe((message: Message) => {
+        this.searchType = null;
       });
   }
 

@@ -96,6 +96,15 @@ module.exports = function (io) {
             }
         });
 
+        // adams code to fix home page bug with suggestions when logging out.
+        socket.on('youLoggedOut', (payload) => {
+            let fromSocketsArray = socketsHash[payload.from._id];
+            for (let i = 0; i < fromSocketsArray.length; i++) {
+                io.to(fromSocketsArray[i]).emit('youLoggedOut', payload);
+            }
+        });
+
+
         socket.on('addBeatBotToUserMessage', (payload) => {
             console.log('Adding beat bot to new user...');
 
