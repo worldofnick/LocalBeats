@@ -75,7 +75,7 @@ export class HomeComponent implements OnInit {
 
 
 
-    if (this._userService.isAuthenticated()){
+    if (this._userService.isAuthenticated()) {
       this.setupSuggestions();
     }
     // listening for real time notification
@@ -90,11 +90,11 @@ export class HomeComponent implements OnInit {
     // set suggestions type
     if (this._userService.user.isArtist) {
       // user is an artist
-      this.searchType = 'Artist';
+      this.searchType = 'Event';
       this.suggestedTitle = 'Suggested Events:';
     } else {
       // user is event host.
-      this.searchType = 'Event';
+      this.searchType = 'Artist';
       this.suggestedTitle = 'Suggested Artists:';
     }
 
@@ -122,11 +122,15 @@ export class HomeComponent implements OnInit {
       latitude: this._userService.user.location[1]
     };
 
-    if (this.searchType === 'Artist') {
+    // configure uid
+    this.currentSearch.uid = this._userService.user._id;
+
+    if (this.searchType === 'Event') {
       // user is an artist so search for event
       this.currentSearch.searchType = 'Event';
+      console.log(this.currentSearch);
       this.searchService.eventSearch(this.currentSearch).then((events: Event[]) => {
-        this.results = events;
+        this.allResults = events;
         console.log(this.allResults);
         this.updateResults();
       });
