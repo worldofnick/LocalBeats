@@ -119,6 +119,8 @@ exports.getUserEventsByUID = function (req, res) {
 
     }
 
+    limit = 100;
+
     if (req.params.skip != null) {
         skip = parseInt(req.query.skip);
     }
@@ -146,14 +148,14 @@ exports.deleteUserEventsByUID = function (req, res) {
 };
 
 function buildSort(req) {
-    var sort = { fromDate: -1 };
-    if (req.query.sort == 'date-asc') {
+    var sort = {};
+    if (req.query.sort == 'Soonest') {
         sort = { fromDate: 1 };
-    } else if (req.query.sort == 'price-desc') {
+    } else if (req.query.sort == 'Price High to Low') {
         sort = { fixedPrice: -1 }
-    } else if (req.query.sort == 'price-asc') {
+    } else if (req.query.sort == 'Price Low to High') {
         sort = { fixedPrice: 1 }
-    } else if (req.query.sort == 'distance-desc' || req.query.sort == 'distance-asc') {
+    } else if (req.query.sort == 'Distance' || req.query.sort == 'Best Match') {
         sort = {}
     }
 
@@ -185,6 +187,8 @@ exports.searchEvents = function(req, res) {
   if(req.query.skip != null) {
     skip = parseInt(req.query.skip);
   }
+
+  limit = 100;
 
   if(req.query.limit != null) {
     limit = parseInt(req.query.limit);
@@ -276,3 +280,10 @@ exports.getEventTypes = function (req, res) {
     var eventTypes = ["wedding", "birthday", "business", "live music", "party", "festival"];
     return res.status(200).send( {"eventTypes": eventTypes} );
   };
+
+  
+exports.getEventSortTypes = function (req, res) {
+    // "Price High to Low", "Price Low to High", "Soonest"];
+    var sorts = ["Best Match", "Price High to Low", "Price Low to High", "Soonest", "Rating", "Distance"];
+    return res.status(200).send({ "sorts": sorts });
+};

@@ -67,6 +67,18 @@ function isString(x) {
     return Object.prototype.toString.call(x) === "[object String]"
 }
 
+function buildSort(req) {
+  //var sorts = ["Best Match", "Name", "Rating", "Distance"];
+  var sort = {};
+  if (req.query.sort == 'Name') {
+      sort = { firstName: 1 };
+  } else if (req.query.sort == 'Distance' || req.query.sort == 'Best Match') {
+      sort = {}
+  }
+
+  return sort;
+}
+
 // Params
 // name (string) name of the user
 // artist (boolean) true to return only artists, false to return all. Defaults to true
@@ -79,10 +91,13 @@ exports.searchUsers = function (req, res) {
   var query = {}
   var limit = 15;
   var skip = 0;
+  var sort = buildSort(req);
 
   if (req.query.limit != null) {
     limit = parseInt(req.query.limit);
   }
+
+  limit = 100;
 
   if (req.query.skip != null) {
     skip = parseInt(req.query.skip);
@@ -129,7 +144,7 @@ exports.searchUsers = function (req, res) {
     "$ne": "beatbot@localbeats.com"
   }
 
-  User.find(query).limit(limit).skip(skip).exec(function (err, doc) {
+  User.find(query).limit(limit).skip(skip).sort(sort).exec(function (err, doc) {
     if (err) {
       return res.status(500).send(err);
     } else {
@@ -146,4 +161,9 @@ exports.searchUsers = function (req, res) {
 exports.getGenres = function (req, res) {
   var genres = ["rock", "classical", "electronic", "jazz", "blues", "hip-hop", "rap", "alternative", "country"];
   return res.status(200).send({ "genres": genres });
+};
+
+exports.getUserSortTypes = function (req, res) {
+  var sorts = ["Best Match", "Rating", "Distance"];
+  return res.status(200).send({ "sorts": sorts });
 };

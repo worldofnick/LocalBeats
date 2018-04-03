@@ -86,6 +86,24 @@
               </mat-form-field>
           </div>
           <br>
+          <mat-form-field *ngIf="searchForm.controls['type'].value != 'Event'">
+              <mat-select placeholder="Sort Type" [formControl]="searchForm.controls['sort']" (openedChange)="sortSelectOpen()" (change)="this.submit()">
+                <mat-select-trigger class="additional-selection">
+                  {{(searchForm.controls['sort'].value ? searchForm.controls['sort'].value : '') | capitalize}}
+                </mat-select-trigger>
+                <mat-option *ngFor="let type of userSortTypes" [value]="type">{{type | capitalize}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <mat-form-field *ngIf="searchForm.controls['type'].value == 'Event'">
+                <mat-select placeholder="Sort Type" [formControl]="searchForm.controls['sort']" (openedChange)="sortSelectOpen()" (change)="this.submit()">
+                  <mat-select-trigger class="additional-selection">
+                    {{(searchForm.controls['sort'].value ? searchForm.controls['sort'].value : '') | capitalize}}
+                  </mat-select-trigger>
+                  <mat-option *ngFor="let type of eventSortTypes" [value]="type">{{type | capitalize}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+          <br>
           <button mat-raised-button class="mr-1">Submit</button>
         </mat-expansion-panel>
     </form>

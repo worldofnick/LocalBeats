@@ -64,4 +64,12 @@
         </div>
       </div>
     </div>
+    <br>
+    <mat-paginator
+    *ngIf="allResults.length > 0"
+    [length]="allResults.length"
+    [pageSize]="pageSize"
+    [pageSizeOptions]="pageSizeOptions"
+    (page)="pageEvent($event)">
+    </mat-paginator>
 </section>
