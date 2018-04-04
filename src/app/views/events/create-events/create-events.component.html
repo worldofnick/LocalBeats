@@ -1,10 +1,10 @@
 <form [formGroup]="basicForm" (ngSubmit)="onCreateEvent()">
 
-<mat-card>
+<!-- <mat-card>
     <mat-card-title>Event Creation</mat-card-title>
     <mat-card-subtitle>Please fill out all fields about your event</mat-card-subtitle>
-    <mat-card-content>
-      <div class="containerX">
+    <mat-card-content> -->
+      
         <div fxLayout="row" fxLayout.xs="column" fxLayout.sm="column" fxFlex>
           <div fxFlex> 
             
@@ -134,27 +134,16 @@
                     <mat-divider></mat-divider>
                   </mat-card-title>
                   <mat-card-content>
-                    <div class="propic text-center">
-                      <img *ngIf="!this.event.eventPicUrl" mat-card-image style="-webkit-user-select: none;
-                    background-position: 0px 0px, 10px 10px;
-                    background-size: 20px 20px;
-                    background-image:linear-gradient(45deg, #eee 25%, transparent 25%, transparent 75%, #eee 75%, #eee 100%),
-                    linear-gradient(45deg, #eee 25%, white 25%, white 75%, #eee 75%, #eee 100%);
-                    max-width:512px;
-                    max-height:512px;
-                    width:auto;
-                    height:auto;" src="http://www.upalumni.ph/wp-content/themes/upaa/img/placeholder.png">
+                    <div style="min-width: 0;
+                    margin: 5px;">
+                      <img *ngIf="!this.event.eventPicUrl" mat-card-image style="width: 450px;
+                      max-width: 100%; 
+                      max-height: 450px; " src="http://www.upalumni.ph/wp-content/themes/upaa/img/placeholder.png">
           
           
-                      <img *ngIf="this.event.eventPicUrl" mat-card-image [src]="this.event.eventPicUrl" style="-webkit-user-select: none;
-                    background-position: 0px 0px, 10px 10px;
-                    background-size: 20px 20px;
-                    background-image:linear-gradient(45deg, #eee 25%, transparent 25%, transparent 75%, #eee 75%, #eee 100%),
-                    linear-gradient(45deg, #eee 25%, white 25%, white 75%, #eee 75%, #eee 100%);
-                    max-width:512px;
-                    max-height:512px;
-                    width:auto;
-                    height:auto;">
+                      <img *ngIf="this.event.eventPicUrl" mat-card-image [src]="this.event.eventPicUrl" style="width: 450px;
+                      max-width: 100%; 
+                      max-height: 450px; ">
                     </div>
                     <div class="mb-1 mt-1">
                       <!-- <p>Upload an event picture (optional)</p> -->
@@ -194,13 +183,9 @@
                     </div>
                   </mat-card-content>
                 </mat-card>
-          
-          
-          
-          
+
           </div>
         </div>
-      </div>
-    </mat-card-content>
-  </mat-card>
+    <!-- </mat-card-content>
+  </mat-card> -->
 </form>
