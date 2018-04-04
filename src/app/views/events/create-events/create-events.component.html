@@ -1,18 +1,18 @@
 <form [formGroup]="basicForm" (ngSubmit)="onCreateEvent()">
 
-<!-- <mat-card>
+<mat-card>
     <mat-card-title>Event Creation</mat-card-title>
     <mat-card-subtitle>Please fill out all fields about your event</mat-card-subtitle>
-    <mat-card-content> -->
+    <mat-card-content>
       
         <div fxLayout="row" fxLayout.xs="column" fxLayout.sm="column" fxFlex>
-          <div fxFlex> 
+          <div fxFlex = "45" > 
             
           
           
           
           
-              <mat-card class="p-0">
+              <!-- <mat-card class="p-0 full-width"> -->
                   <mat-card-title class="">
                     <div class="card-title-text">Event Information:</div>
                     <mat-divider></mat-divider>
@@ -110,7 +110,7 @@
                     <button *ngIf="!this.updating" mat-raised-button color="primary" [disabled]="!basicForm.valid">Create Event</button>
                     <button *ngIf="this.updating" mat-raised-button color="primary" [disabled]="!basicForm.valid">Update Event</button>
                   </mat-card-content>
-                </mat-card>
+                <!-- </mat-card> -->
           
           
           
@@ -121,14 +121,18 @@
 
 
 
+          <div fxFlex  style="max-width: 10%">
+
+
+          </div>
 
 
 
 
-          <div fxFlex> 
+          <div fxFlex="45"> 
             
           
-              <mat-card class="p-0">
+              <!-- <mat-card class="p-0 full-width"> -->
                   <mat-card-title class="">
                     <div class="card-title-text">Upload an Event Picture (optional)</div>
                     <mat-divider></mat-divider>
@@ -182,10 +186,10 @@
                         class="form-error-msg"> Event Description is required </small>
                     </div>
                   </mat-card-content>
-                </mat-card>
+                <!-- </mat-card> -->
 
           </div>
         </div>
-    <!-- </mat-card-content>
-  </mat-card> -->
+    </mat-card-content>
+  </mat-card>
 </form>
