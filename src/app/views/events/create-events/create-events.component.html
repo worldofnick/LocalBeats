@@ -7,12 +7,6 @@
 
       <div fxLayout="row" fxLayout.xs="column" fxLayout.sm="column" fxFlex>
         <div fxFlex="40">
-
-          <!-- <mat-card-title class="">
-            <div class="card-title-text">Event Information:</div>
-            <mat-divider></mat-divider>
-          </mat-card-title> -->
-          <!-- <mat-card-content> -->
             <div class="pb-1">
               <mat-form-field class="full-width">
                 <input matInput [(ngModel)]="this.event.eventName" name="eventName" formControlName="eventName" placeholder="Event Name (Min Length: 4, Max Length: 40)"
@@ -109,13 +103,12 @@
 
 
           <!-- <mat-card class="p-0 full-width"> -->
-          <!-- <mat-card-title class="">
-            <div class="card-title-text">Upload an Event Picture (optional)</div>
-            <mat-divider></mat-divider>
-          </mat-card-title> -->
+
           <!-- <mat-card-content> -->
-            <div style="min-width: 0;
-                    margin: 5px;">
+            <div class="pb-1">
+              <mat-card-title class="">
+                  <div class="card-title-text">Upload an Event Picture (optional)</div>
+                </mat-card-title>
               <img *ngIf="!this.event.eventPicUrl" mat-card-image style="width: 450px;
                       max-width: 100%; 
                       max-height: 450px; " src="http://www.upalumni.ph/wp-content/themes/upaa/img/placeholder.png">
