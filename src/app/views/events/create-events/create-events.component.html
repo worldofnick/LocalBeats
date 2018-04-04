@@ -1,154 +1,205 @@
 <form [formGroup]="basicForm" (ngSubmit)="onCreateEvent()">
-  <div fxLayout="row" fxFlex="100" fxFlex.gt-md="40">
-    <mat-card class="p-0">
-      <mat-card-title class="">
-        <div class="card-title-text">Create Event</div>
-        <mat-divider></mat-divider>
-      </mat-card-title>
-      <mat-card-content>
-        <div class="pb-1">
-          <mat-form-field class="full-width">
-            <input matInput [(ngModel)]="this.event.eventName" name="eventName" formControlName="eventName" placeholder="Event Name (Min Length: 4, Max Length: 40)"
-              value="">
-          </mat-form-field>
-          <small *ngIf="basicForm.controls['eventName'].hasError('required') && basicForm.controls['eventName'].touched" class="form-error-msg">The event must have a name</small>
-        </div>
-        <div class="pb-1">
-          <mat-select formControlName="eventType" (change)="onChangeEventType($event)" placeholder="Event Type" [(ngModel)]="this.event.eventType"
-            name="eventType" class="mb-1">
-            <mat-option *ngFor="let event of eventsList" [value]="event" ngDefaultControl>
-              {{event | capitalize}}
-            </mat-option>
-          </mat-select>
-          <small *ngIf="basicForm.controls['eventType'].hasError('required') && basicForm.controls['eventType'].touched" class="form-error-msg">The event must have a type</small>
-        </div>
-        <div class="pb-1">
-          <mat-select formControlName="cancellationPolicy" placeholder="Cancellation Policy" [(ngModel)]="this.event.cancellation"
-            name="cancellationPolicy" class="mb-1">
-            <mat-option *ngFor="let policy of cancellationPolicies" [value]="policy" ngDefaultControl>
-              {{policy | capitalize}}
-            </mat-option>
-          </mat-select>
-          <small *ngIf="basicForm.controls['cancellationPolicy'].hasError('required') && basicForm.controls['cancellationPolicy'].touched"
-            class="form-error-msg">The event must have a cancellation policy</small>
-          <mat-chip *ngIf="basicForm.controls['cancellationPolicy'].value == 'strict'" color='accent' selected="true">Either user who cancels a confirmed booking within 30 days of the calendar start date will be charged 15%.</mat-chip>
-          <mat-chip *ngIf="basicForm.controls['cancellationPolicy'].value == 'flexible'" color='primary' selected="true">Either user who cancels a confirmed booking within 7 days of the calendar start date will be charged 15%.</mat-chip>
-        </div>
-        <!-- img stuff iirc -->
-        <div *ngFor="let interest of interests; let i = index">
-          <mat-checkbox class="example-margin" (change)="onChange($event)" [checked]="interestFormGroup.get('interests').value.indexOf(interest) > -1"
-            [value]="interest">{{interest}}</mat-checkbox>
-        </div>
-        <!-- event price input field. still needs to be formatted for numbers -->
-        <div class="pb-1">
-          <mat-form-field class="full-width">
-            <input matInput currencyMask [options]="{ align: 'left' }" [(ngModel)]="this.event.fixedPrice" name="fixedPrice" formControlName="fixedPrice"
-              placeholder="Event Price" value="">
-          </mat-form-field>
-          <small *ngIf="basicForm.controls['fixedPrice'].hasError('required') && basicForm.controls['fixedPrice'].touched " class="form-error-msg">The event must have a price</small>
-        </div>
-        <div class="pb-1 pt-05">
-          <mat-checkbox name="negotiable" formControlName="negotiable" class="pb-1">Price is negotiable</mat-checkbox>
-        </div>
-        <div class="pb-1">
-          <mat-form-field class="full-width">
-            <input matInput [selectMode]="'range'" [owlDateTimeTrigger]="dtPicker3" [owlDateTime]="dtPicker3 " [formControl]="basicForm.controls['date']"
-              placeholder="Please select the beginning and ending dates / times for the event">
-            <owl-date-time #dtPicker3></owl-date-time>
-          </mat-form-field>
-          <small *ngIf="basicForm.controls['date'].hasError('required') && basicForm.controls['date'].touched" class="form-error-msg">
-            You must include a beginning and ending date / time for the event</small>
-        </div>
-        <!-- google maps widget -->
-        <div class="pb-1">
-          <mat-form-field class="full-width">
-            <input [(ngModel)]="cityState" matInput placeholder="City, State" autocorrect="off" autocapitalize="off" spellcheck="off"
-              type="text" #searchplaces [formControl]="basicForm.controls['location']">
-          </mat-form-field>
-          <small *ngIf="basicForm.controls['location'].hasError('required') && basicForm.controls['location'].touched" class="form-error-msg">
-            You must include a location for the event</small>
-        </div>
-        <div class="pb-1">
-          <mat-form-field class="full-width">
-            <mat-select [formControl]="basicForm.controls['genres']" name="genres" placeholder="Music Genres" multiple>
-              <mat-option *ngFor="let genre of genresList" [value]="genre">{{genre | capitalize}}</mat-option>
-            </mat-select>
-            <small *ngIf="basicForm.controls['genres'].hasError('required') && basicForm.controls['genres'].touched" class="form-error-msg">
-              You must select genres</small>
-          </mat-form-field>
-        </div>
-        <div class="pb-1 pt-05">
-          <mat-checkbox (click)="onAgreed()" name="agreed" formControlName="agreed" class="pb-1">I have read and agree to the terms of service.</mat-checkbox>
-          <small *ngIf="basicForm.controls['agreed'].hasError('required') && basicForm.controls['agreed'].touched" class="form-error-msg">
-            You must agree to terms and conditions</small>
-        </div>
-        <!-- </div>
-          </div> -->
-        <button *ngIf="!this.updating" mat-raised-button color="primary" [disabled]="!basicForm.valid">Create Event</button>
-        <button *ngIf="this.updating" mat-raised-button color="primary" [disabled]="!basicForm.valid">Update Event</button>
-      </mat-card-content>
-    </mat-card>
-  </div>
 
-
-
-
-  <!-- second column on the right now..inclulding picture uploading  -->
-
-  <mat-card class="p-0">
-    <mat-card-title class="">
-      <div class="card-title-text">Upload an Event Picture (optional)</div>
-      <mat-divider></mat-divider>
-    </mat-card-title>
+<mat-card>
+    <mat-card-title>Event Creation</mat-card-title>
+    <mat-card-subtitle>Please fill out all fields about your event</mat-card-subtitle>
     <mat-card-content>
-      <div class="propic text-center">
-        <img *ngIf="!this.event.eventPicUrl" mat-card-image style="-webkit-user-select: none;
-          background-position: 0px 0px, 10px 10px;
-          background-size: 20px 20px;
-          background-image:linear-gradient(45deg, #eee 25%, transparent 25%, transparent 75%, #eee 75%, #eee 100%),
-          linear-gradient(45deg, #eee 25%, white 25%, white 75%, #eee 75%, #eee 100%);
-          max-width:512px;
-          max-height:512px;
-          width:auto;
-          height:auto;" src="http://www.upalumni.ph/wp-content/themes/upaa/img/placeholder.png">
+      <div class="containerX">
+        <div fxLayout="row" fxLayout.xs="column" fxLayout.sm="column" fxFlex>
+          <div fxFlex> 
+            
+          
+          
+          
+          
+              <mat-card class="p-0">
+                  <mat-card-title class="">
+                    <div class="card-title-text">Event Information:</div>
+                    <mat-divider></mat-divider>
+                  </mat-card-title>
+                  <mat-card-content>
+                    <div class="pb-1">
+                      <mat-form-field class="full-width">
+                        <input matInput [(ngModel)]="this.event.eventName" name="eventName" formControlName="eventName" placeholder="Event Name (Min Length: 4, Max Length: 40)"
+                          value="">
+                      </mat-form-field>
+                      <small 
+                      *ngIf="basicForm.controls['eventName'].hasError('required') && basicForm.controls['eventName'].touched" 
+                      class="form-error-msg">The event must have a name</small>
+                    </div>
+                    <div class="pb-1">
+                      <mat-select formControlName="eventType" (change)="onChangeEventType($event)" placeholder="Event Type" [(ngModel)]="this.event.eventType" name="eventType"
+                        class="mb-1">
+                        <mat-option *ngFor="let event of eventsList" [value]="event" ngDefaultControl>
+                          {{event | capitalize}}
+                        </mat-option>
+                      </mat-select>
+                      <small 
+                      *ngIf="basicForm.controls['eventType'].hasError('required') && basicForm.controls['eventType'].touched" 
+                      class="form-error-msg">The event must have a type</small>
+                    </div>
+                    <div class="pb-1">
+                      <mat-select formControlName="cancellationPolicy" placeholder="Cancellation Policy" [(ngModel)]="this.event.cancellation" name="cancellationPolicy"
+                        class="mb-1">
+                        <mat-option *ngFor="let policy of cancellationPolicies" [value]="policy" ngDefaultControl>
+                          {{policy | capitalize}}
+                        </mat-option>
+                      </mat-select>
+                      <small 
+                      *ngIf="basicForm.controls['cancellationPolicy'].hasError('required') && basicForm.controls['cancellationPolicy'].touched" 
+                      class="form-error-msg">The event must have a cancellation policy</small>
+                      <mat-chip *ngIf="basicForm.controls['cancellationPolicy'].value == 'strict'" color='accent' selected="true">Either user who cancels a confirmed booking within 30 days of the calendar start date will be charged 15%.</mat-chip>
+                      <mat-chip *ngIf="basicForm.controls['cancellationPolicy'].value == 'flexible'" color='primary' selected="true">Either user who cancels a confirmed booking within 7 days of the calendar start date will be charged 15%.</mat-chip>
+                    </div>
+                    <!-- img stuff iirc -->
+                    <div *ngFor="let interest of interests; let i = index">
+                      <mat-checkbox class="example-margin" (change)="onChange($event)" [checked]="interestFormGroup.get('interests').value.indexOf(interest) > -1"
+                        [value]="interest">{{interest}}</mat-checkbox>
+                    </div>
+                    <!-- event price input field. still needs to be formatted for numbers -->
+                    <div class="pb-1">
+                      <mat-form-field class="full-width">
+                        <input matInput currencyMask  [options]="{ align: 'left' }" [(ngModel)]="this.event.fixedPrice" name="fixedPrice" formControlName="fixedPrice" placeholder="Event Price"
+                          value="">
+                      </mat-form-field>
+                      <small 
+                      *ngIf="basicForm.controls['fixedPrice'].hasError('required') && basicForm.controls['fixedPrice'].touched " 
+                      class="form-error-msg">The event must have a price</small>
+                    </div>
+                    <div class="pb-1 pt-05">
+                      <mat-checkbox name="negotiable" formControlName="negotiable" class="pb-1">Price is negotiable</mat-checkbox>
+                    </div>
+                    <div class="pb-1">
+                      <mat-form-field class="full-width">
+                        <input matInput [selectMode]="'range'"
+                          [owlDateTimeTrigger]="dtPicker3" [owlDateTime]="dtPicker3 " [formControl]="basicForm.controls['date']" placeholder="Please select the beginning and ending dates / times for the event">
+                        <owl-date-time #dtPicker3></owl-date-time>
+                      </mat-form-field>
+                      <small 
+                      *ngIf="basicForm.controls['date'].hasError('required') && basicForm.controls['date'].touched" 
+                      class="form-error-msg"> You must include a beginning and ending date / time for the event</small>
+                    </div>
+                    <!-- google maps widget -->
+                    <div class="pb-1">
+                    <mat-form-field class="full-width">
+                        <input [(ngModel)]="cityState" matInput placeholder="City, State" autocorrect="off" autocapitalize="off" 
+                        spellcheck="off" type="text" #searchplaces [formControl]="basicForm.controls['location']">
+                      </mat-form-field>
+                      <small 
+                      *ngIf="basicForm.controls['location'].hasError('required') && basicForm.controls['location'].touched" 
+                      class="form-error-msg"> You must include a location for the event</small>
+                    </div>
+                    <div class="pb-1">
+                      <mat-form-field class="full-width">
+                        <mat-select [formControl]="basicForm.controls['genres']" name="genres" placeholder="Music Genres" multiple>
+                          <mat-option *ngFor="let genre of genresList" [value]="genre" >{{genre | capitalize}}</mat-option>
+                        </mat-select>
+                        <small 
+                        *ngIf="basicForm.controls['genres'].hasError('required') && basicForm.controls['genres'].touched" 
+                        class="form-error-msg"> You must select genres</small>
+                      </mat-form-field>
+                    </div>
+                    <div class="pb-1 pt-05">
+                      <mat-checkbox (click)="onAgreed()" name="agreed" formControlName="agreed" class="pb-1">I have read and agree to the terms of service.</mat-checkbox>
+                      <small 
+                        *ngIf="basicForm.controls['agreed'].hasError('required') && basicForm.controls['agreed'].touched" 
+                        class="form-error-msg"> You must agree to terms and conditions</small>
+                    </div>
+                    <!-- </div>
+                    </div> -->
+                    <button *ngIf="!this.updating" mat-raised-button color="primary" [disabled]="!basicForm.valid">Create Event</button>
+                    <button *ngIf="this.updating" mat-raised-button color="primary" [disabled]="!basicForm.valid">Update Event</button>
+                  </mat-card-content>
+                </mat-card>
+          
+          
+          
+          
+          
+          
+          </div>
 
 
-        <img *ngIf="this.event.eventPicUrl" mat-card-image [src]="this.event.eventPicUrl" style="-webkit-user-select: none;
-          background-position: 0px 0px, 10px 10px;
-          background-size: 20px 20px;
-          background-image:linear-gradient(45deg, #eee 25%, transparent 25%, transparent 75%, #eee 75%, #eee 100%),
-          linear-gradient(45deg, #eee 25%, white 25%, white 75%, #eee 75%, #eee 100%);
-          max-width:512px;
-          max-height:512px;
-          width:auto;
-          height:auto;">
-      </div>
-      <div class="mb-1 mt-1">
-        <!-- <p>Upload an event picture (optional)</p> -->
-
-        <image-cropper *ngIf="showCropper" [imageChangedEvent]="imageChangedEvent" [maintainAspectRatio]="true" [aspectRatio]="1 / 1"
-          [resizeToWidth]="512" format="png,jpeg" (imageCropped)="imageCropped($event)" style="max-width:512px; max-height:512px"></image-cropper>
-
-        <mat-progress-bar mode="determinate" class="session-progress"></mat-progress-bar>
-        <p></p>
-        <input type="file" (change)="fileChangeEvent($event)" accept=".jpg,.png,.jpeg" />
-        <p></p>
-        <a *ngIf="croppedImage" (click)="prepareBlob()" mat-raised-button>Crop and Upload</a>
-      </div>
 
 
-      <!-- event descriptoin rich text editor -->
-      <div class="pb-1">
-        <mat-card-title class="">
-          <mat-divider></mat-divider>
-          <div class="card-title-text">Describe your event</div>
-          <mat-divider></mat-divider>
-        </mat-card-title>
 
-        <textarea matInput placeholder="Description" matTextareaAutosize matAutosizeMinRows="2" matAutosizeMaxRows="5" name="eventDescription"
-          formControlName="eventDescription"></textarea>
-        <small *ngIf="basicForm.controls['eventDescription'].hasError('required') && basicForm.controls['eventDescription'].touched"
-          class="form-error-msg"> Event Description is required </small>
+
+
+          <div fxFlex> 
+            
+          
+              <mat-card class="p-0">
+                  <mat-card-title class="">
+                    <div class="card-title-text">Upload an Event Picture (optional)</div>
+                    <mat-divider></mat-divider>
+                  </mat-card-title>
+                  <mat-card-content>
+                    <div class="propic text-center">
+                      <img *ngIf="!this.event.eventPicUrl" mat-card-image style="-webkit-user-select: none;
+                    background-position: 0px 0px, 10px 10px;
+                    background-size: 20px 20px;
+                    background-image:linear-gradient(45deg, #eee 25%, transparent 25%, transparent 75%, #eee 75%, #eee 100%),
+                    linear-gradient(45deg, #eee 25%, white 25%, white 75%, #eee 75%, #eee 100%);
+                    max-width:512px;
+                    max-height:512px;
+                    width:auto;
+                    height:auto;" src="http://www.upalumni.ph/wp-content/themes/upaa/img/placeholder.png">
+          
+          
+                      <img *ngIf="this.event.eventPicUrl" mat-card-image [src]="this.event.eventPicUrl" style="-webkit-user-select: none;
+                    background-position: 0px 0px, 10px 10px;
+                    background-size: 20px 20px;
+                    background-image:linear-gradient(45deg, #eee 25%, transparent 25%, transparent 75%, #eee 75%, #eee 100%),
+                    linear-gradient(45deg, #eee 25%, white 25%, white 75%, #eee 75%, #eee 100%);
+                    max-width:512px;
+                    max-height:512px;
+                    width:auto;
+                    height:auto;">
+                    </div>
+                    <div class="mb-1 mt-1">
+                      <!-- <p>Upload an event picture (optional)</p> -->
+                      
+                      <image-cropper 
+                          *ngIf="showCropper"
+                          [imageChangedEvent]="imageChangedEvent"
+                          [maintainAspectRatio]="true"
+                          [aspectRatio]="1 / 1"
+                          [resizeToWidth]="512"
+                          format="png,jpeg"
+                          (imageCropped)="imageCropped($event)"
+                          style="max-width:512px; max-height:512px"
+                      ></image-cropper>
+                      
+                      <mat-progress-bar mode="determinate" class="session-progress"></mat-progress-bar>
+                   <p></p>
+                   <input type="file" (change)="fileChangeEvent($event)" accept=".jpg,.png,.jpeg"/>
+                   <p></p>
+                      <a *ngIf="croppedImage" (click)="prepareBlob()" mat-raised-button >Crop and Upload</a>
+                    </div>
+          
+          
+                    <!-- event descriptoin rich text editor -->
+                    <div class="pb-1">
+                      <mat-card-title class="">
+                        <mat-divider></mat-divider>
+                        <div class="card-title-text">Describe your event</div>
+                        <mat-divider></mat-divider>
+                      </mat-card-title>
+              
+                        <textarea matInput placeholder="Description" matTextareaAutosize matAutosizeMinRows="2"
+                        matAutosizeMaxRows="5" name="eventDescription" formControlName="eventDescription"></textarea>
+                        <small 
+                        *ngIf="basicForm.controls['eventDescription'].hasError('required') && basicForm.controls['eventDescription'].touched" 
+                        class="form-error-msg"> Event Description is required </small>
+                    </div>
+                  </mat-card-content>
+                </mat-card>
+          
+          
+          
+          
+          </div>
+        </div>
       </div>
     </mat-card-content>
   </mat-card>
