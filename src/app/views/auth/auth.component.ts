@@ -105,8 +105,8 @@ export class AuthComponent implements OnInit {
 
     console.log('Magic link clicked by Username: ' + this.user.email);
 
-    // TODO: set it true on 200 email sent confirmation, else, show error message
-    this.magicLinkButtonClicked = true;
+    // ***********************************************************
+    // PROPER LOG IN MECHANISM
 
     // this.userService.signinUser(this.user).subscribe(
     //   (data: any) => {
@@ -125,6 +125,27 @@ export class AuthComponent implements OnInit {
     //     this.submitButton.disabled = false;
     //     this.progressBar.mode = 'determinate';
     //   });
-    }
 
+    // ***************************************************************
+
+    this.userService.requestMagicLink(this.user).subscribe(
+      (data: any) => {
+        // Magic link successfully sent!
+        this.error = false;
+        this.magicLinkButtonClicked = true;
+        // this.userService.userLoaded(data.user, data.token, false, false);
+        // this.userService.getNotificationsCountForUser(data.user._id);
+        // this.userService.getNotificationsForUser(data.user._id);
+        // this.router.navigate(['/']);
+
+      },
+      (error) => {
+        // Show user error message
+        this.magicLinkButtonClicked = false;
+        this.errorMessage = error;
+        this.error = true;
+        this.submitButton.disabled = false;
+        this.progressBar.mode = 'determinate';
+      });
+    }
 }
