@@ -15,10 +15,16 @@
   .eventImage{
     max-width: 300px;
     /* height: auto; */
-    margin: auto;
+    /* float: left; */
+    /* margin: auto; */
   }
 
   .map{
     max-width: 300px;
     /* height: auto; */
+  }
+
+
+  .wrapper{
+    align: left;
   }

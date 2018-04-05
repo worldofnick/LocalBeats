@@ -1,7 +1,9 @@
 <mat-card>
-  <mat-card-title>{{model.eventName}}</mat-card-title>
-  <mat-card-subtitle (click)="onSelectHost()"> Host: {{model.hostUser?.firstName}} {{model.hostUser?.lastName}}</mat-card-subtitle>
-  <mat-card-content>
+  <mat-card-header>
+    <mat-card-title>{{model.eventName}}</mat-card-title>
+    <mat-card-subtitle (click)="onSelectHost()"> Host: {{model.hostUser?.firstName}} {{model.hostUser?.lastName}}</mat-card-subtitle>
+  </mat-card-header>
+    <mat-card-content>
 
     <div fxLayout="row" fxLayout.xs="column" fxLayout.sm="column" fxFlex>
       <div fxFlex="50">
@@ -78,19 +80,23 @@
       </div>
       <div fxFlex="40">
 
+        <div class="wrapper">
+
+
           <div class="eventImage">
-
-              <img mat-card-image [src]="model.eventPicUrl">
-    
-            </div>
-        <div class="map">
-
-          <agm-map [zoom]="zoom" [latitude]="lat" [longitude]="lng" [scrollwheel]="false">
-            <agm-marker [latitude]="lat" [longitude]="lng"></agm-marker>
-          </agm-map>
-
+            
+            <img  [src]="model.eventPicUrl">
+            
+          </div>
+          <div class="map pb-1">
+            
+            <agm-map [zoom]="zoom" [latitude]="lat" [longitude]="lng" [scrollwheel]="false">
+              <agm-marker [latitude]="lat" [longitude]="lng"></agm-marker>
+            </agm-map>
+            
+          </div>
+          
         </div>
-
       </div>
 
 
