@@ -107,7 +107,7 @@ exports.register = function (req, res) {
 
   exports.sendMagicLink = function (req, res) {
     const receivedEmail = req.body.email;
-    
+    // Find the user with the requested email
     User.findOne({ email: req.body.email }, function (err, foundUser) {
       if (err) { 
         return res.status(500).send('Error on the sign-in server.');
@@ -116,7 +116,18 @@ exports.register = function (req, res) {
         return res.status(404).send('No such user (' + req.body.email + ') in the database...');
       }
 
-      res.status(200).send( { user: foundUser, message: 'User via email found!' } );
+      // If the user's found, generate a JWT token with its uid
+      let localAccessToken = jwt.sign({ id: foundUser._id }, config.secret, {
+        expiresIn: 86400 // expires in 24 hours
+      });
+      console.log('>> Local access token: ', localAccessToken);
+      
+      foundUser.hashPassword = undefined;
+      res.status(200).send( { user: foundUser, message: 'User via email found!', localAccessToken: localAccessToken } );
+
+      
+
+      
     });
   }
   
