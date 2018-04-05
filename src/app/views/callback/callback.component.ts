@@ -14,6 +14,7 @@ import { User } from '../../models/user';
 export class CallbackComponent implements OnInit {
 
   spotifyCode: string;
+  localAuthToken: string;
 
   constructor(private route: ActivatedRoute, private snackBar: MatSnackBar, 
               private userService: UserService, private router : Router,
@@ -27,8 +28,8 @@ export class CallbackComponent implements OnInit {
       this.spotifyCode = this.extractSpotifyCode();
       this.getTokensProfileAndAlbums();
     } else if (callbackUrl.indexOf('?localAccessAuth=') >= 0) {
-      this.extractAuthCode();
-      // console.log('>> URL: ' + window.location.href);
+      this.localAuthToken = this.extractAuthCode();
+      this.verifyLocalAccessJwtAndRedirect();
     }
   }
 
@@ -165,5 +166,9 @@ export class CallbackComponent implements OnInit {
       return code;
     }
     return '';
+  }
+
+  verifyLocalAccessJwtAndRedirect() {
+    // TODO: contact server and log in and redirect
   }
 }
