@@ -129,6 +129,25 @@ export class UserService {
             });
     }
 
+    public requestMagicLink(returningUser: User): Observable<Object> {
+        const requestUrl = this.connection + '/magicLink';
+        return this.http.post(requestUrl, returningUser, { headers: this.headers })
+            .map((response: Response) => {
+                console.log('>> In request magic link...');
+                const data = response.json();
+                // this.accessToken = data.token;
+                // sessionStorage.setItem('token', JSON.stringify({ accessToken: this.accessToken }))
+                // this.user = data.user as User;
+                return data;
+            }).catch((error: Response) => {
+                if (error.status === 404) {
+                    return Observable.throw('Wrong email.  Please try again.');
+                } else {
+                    return Observable.throw('Error Unknown');
+                }
+            });
+    }
+
     /**
      * 
      * @param user 
