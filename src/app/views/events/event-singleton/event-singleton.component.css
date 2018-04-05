@@ -17,14 +17,15 @@
     /* height: auto; */
     /* float: left; */
     /* margin: auto; */
+    /* background-color: red; */
   }
 
   .map{
     max-width: 300px;
+    /* background-color: green; */
     /* height: auto; */
   }
 
-
-  .wrapper{
-    align: left;
+  .space{
+    padding-bottom:200px;
   }
