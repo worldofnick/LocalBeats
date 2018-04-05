@@ -135,13 +135,16 @@ export class UserService {
             .map((response: Response) => {
                 console.log('>> In request magic link...');
                 const data = response.json();
+
+                // TODO: anything else?
+
                 // this.accessToken = data.token;
                 // sessionStorage.setItem('token', JSON.stringify({ accessToken: this.accessToken }))
                 // this.user = data.user as User;
                 return data;
             }).catch((error: Response) => {
                 if (error.status === 404) {
-                    return Observable.throw('Email cannot be found. Check if it correct and try again.');
+                    return Observable.throw('\'' + returningUser.email + '\' cannot be found. Check if it correct and try again.');
                 } else {
                     return Observable.throw('An unknown error has occured... Please try again later.');
                 }
