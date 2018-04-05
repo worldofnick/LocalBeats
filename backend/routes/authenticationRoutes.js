@@ -11,6 +11,9 @@ module.exports = function(app) {
 	app.route('/api/auth/magicLink')
 		.post(autheticationHandler.sendMagicLink);
 
+	app.route('/api/auth/verifyLocalJwt')
+		.post(autheticationHandler.verifyLocalJwtAndReturnUser);
+
 	app.route('/api/auth/register')
 		.post(autheticationHandler.register);
 
