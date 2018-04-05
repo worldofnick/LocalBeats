@@ -119,6 +119,8 @@ export class HomeComponent implements OnInit {
     this.searchService.eventSearch(this.currentSearch).then((events: Event[]) => {
       this.allResults = events;
       this.updateResults();
+    }).then(() => {
+
     });
 
     this.currentSearch.searchType = 'Artist';
@@ -181,21 +183,21 @@ export class HomeComponent implements OnInit {
     // configure uid
     this.currentSearch.uid = this._userService.user._id;
 
-    if (this.searchType === 'Event') {
+   
       // user is an artist so search for event
       this.currentSearch.searchType = 'Event';
       this.searchService.eventSearch(this.currentSearch).then((events: Event[]) => {
         this.allResults = events;
         this.updateResults();
       });
-    } else {
+
       // its an event host. so search for artists.
       this.currentSearch.searchType = 'Artist';
       this.searchService.userSearch(this.currentSearch).then((users: User[]) => {
-        this.allResults = users;
-        this.updateResults();
+        this.allResultsArtists = users;
+        this.updateResults2();
       });
-    }
+    
   }
 
   ngOnDestroy() {
