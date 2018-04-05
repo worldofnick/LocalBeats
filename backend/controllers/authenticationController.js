@@ -135,7 +135,7 @@ exports.sendMagicLink = function (req, res) {
       to: foundUser.email,
       subject: 'localBeats passowrdless sign-on link',
       text: 'Hello, ' + foundUser.firstName,
-      html: '<p><b>Hello, ' + foundUser.firstName +'<br>' +
+      html: '<p><b>Hello, ' + foundUser.firstName +'!<br>' + 
       '<br>Click this link to verify your identity and get logged into your account: <br><br>' +
       callbackUrl + 
       '<br><br> Thanks<br>'
