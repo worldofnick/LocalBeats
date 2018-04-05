@@ -181,6 +181,10 @@ export class CallbackComponent implements OnInit {
       },
       (error: any) => {
         console.log('>> Error: ', error);
+        this.router.navigate(['/auth']);
+        this.snackBar.open(error, '', {
+          duration: 7000,
+        });
       });
   }
 }
