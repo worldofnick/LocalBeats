@@ -33,4 +33,7 @@ module.exports = function(app) {
 
 	app.route('/api/eventsDefault')
 		.get(eventHandlers.defaultPic);
+
+	app.route('/api/eventSorts')
+	.get(eventHandlers.getEventSortTypes);
 };

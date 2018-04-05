@@ -8,7 +8,8 @@ export class SearchTerms {
         public event_types: string[],
         public uid: string,
         public from_date: Date,
-        public to_date: Date
+        public to_date: Date, 
+        public sort: string
       ) {  }
     }
 

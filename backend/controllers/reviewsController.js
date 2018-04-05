@@ -85,6 +85,8 @@ exports.getUserReviewsByUIDTo = function (req, res) {
 
   }
 
+  limit = 100;
+
   if (req.params.skip != null) {
       skip = parseInt(req.query.skip);
   }
@@ -106,6 +108,8 @@ exports.getUserReviewsByUIDFrom = function (req, res) {
       limit = parseInt(req.query.limit);
 
   }
+
+  limit = 100;
 
   if (req.params.skip != null) {
       skip = parseInt(req.query.skip);

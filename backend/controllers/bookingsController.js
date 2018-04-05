@@ -116,6 +116,8 @@ exports.getUserBookingsByUID = function (req, res) {
       limit = parseInt(req.query.limit);
   }
 
+  limit = 100;
+
   if (req.query.skip != null) {
       skip = parseInt(req.query.skip);
   }

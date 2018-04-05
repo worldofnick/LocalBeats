@@ -17,7 +17,8 @@ export class RegisterComponent implements OnInit {
   @ViewChild(MatProgressBar) progressBar: MatProgressBar;
   @ViewChild(MatButton) submitButton: MatButton;
   @ViewChild("searchplaces") searchElementRef: ElementRef;
-
+  error: boolean = false;
+  errorMessage: string = '';
   // Google Places
   latitude: number;
   longitude: number;
@@ -129,14 +130,23 @@ export class RegisterComponent implements OnInit {
 
     this.submitButton.disabled = true;
     this.progressBar.mode = 'indeterminate';
-
-    this.userService.signupUser(this.user).then((data: any) => {
-      this.user = data.user;
-      this.userService.userLoaded(data.user, data.token, false, false);
-      this.userService.getNotificationsCountForUser(data.user._id);
-      this.userService.getNotificationsForUser(data.user._id);
-      this.router.navigate(['/']);
-    });
+    this.userService.signupUser(this.user).subscribe(
+      (data: any) => {
+        // Correctly authenticated, redirect
+        this.error = false;
+        this.userService.userLoaded(data.user, data.token, false, false);
+        this.userService.getNotificationsCountForUser(data.user._id);
+        this.userService.getNotificationsForUser(data.user._id);
+        this.router.navigate(['/']);
+      },
+      (error) => {
+        // Show user error message
+        this.errorMessage = error;
+        this.error = true;
+        this.submitButton.disabled = false;
+        this.progressBar.mode = 'determinate';
+      }
+    );
   }
 
 }
