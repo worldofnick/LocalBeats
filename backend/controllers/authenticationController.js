@@ -149,17 +149,45 @@ exports.sendMagicLink = function (req, res) {
       console.log('Failure: ', error);
       res.status(520).send('Unable to send the email... Try again later');
     });
+  });
+}
+
+exports.verifyLocalJwtAndReturnUser = function (req, res) {
+  console.log('>> Body received: ', req.body);
+
+  // Verify received JWT against the secret
+  jwt.verify(req.body.jwt, config.secret, function (err, decodedToken) {
+    if (err) {
+      console.log('>> Invalid token');
+      res.status(520).send( { auth: false, message: 'Token expired or is invalid. Request another magic link.' });
+    }
     
-
-
-    // JWT verification mechanism
-    // jwt.verify(localAccessToken, config.secret, function(err, decodedToken) {
-    //   if (err) {
-    //     console.log('>> Invalid token');
-    //   }
-    //   console.log('>> Decoded Token: ', decodedToken);
-    // });
-
+    // Find the user from the decoded token's id claim and return it with a new JWT session token
+    User.findById(decodedToken.id, { hashPassword: 0 }, function (err, foundUser) {
+      if (err) {
+        return res.status(500).send('There was a problem finding the user.');
+      }
+      if (!foundUser) {
+        return res.status(404).send('User is not registered.');
+      }
+  
+      // Generate a new JWT session token
+      var token = jwt.sign({ id: foundUser._id }, config.secret, {
+        expiresIn: 86400 // expires in 24 hours
+      });
+  
+      // Update the isOnline status
+      User.findByIdAndUpdate(foundUser._id, { isOnline: true }, { new: true }, function (err, authUser) {
+        if (err) {
+          console.log('Cant chnage online status (auth controller)...');
+        }
+        authUser.hashPassword = undefined;
+        console.log('Authenticated user: ', authUser);
+      });
+      
+      foundUser.hashPassword = undefined;
+      res.status(200).send({ auth: true, token: token, user: foundUser });
+    });
   });
 }
 
