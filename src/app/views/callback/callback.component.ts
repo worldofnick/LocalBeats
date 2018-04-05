@@ -155,6 +155,13 @@ export class CallbackComponent implements OnInit {
   }
 
   extractAuthCode(): string {
+    const callbackUrl = window.location.href;
+    if ( callbackUrl.indexOf('?auth=') >= 0 ) {
+      const codeStartIndex = callbackUrl.indexOf('?auth=');
+      const code = callbackUrl.substr(codeStartIndex + 6);
+      console.log("Code: ", code);
+      return code;
+    }
     return '';
   }
 }
