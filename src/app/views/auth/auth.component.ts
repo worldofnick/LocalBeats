@@ -133,6 +133,7 @@ export class AuthComponent implements OnInit {
         // Magic link successfully sent!
         this.error = false;
         this.magicLinkButtonClicked = true;
+        this.progressBar.mode = 'determinate';
         // this.userService.userLoaded(data.user, data.token, false, false);
         // this.userService.getNotificationsCountForUser(data.user._id);
         // this.userService.getNotificationsForUser(data.user._id);
