@@ -168,7 +168,15 @@ export class CallbackComponent implements OnInit {
     return '';
   }
 
+  // TODO: complete it
   verifyLocalAccessJwtAndRedirect() {
     // TODO: contact server and log in and redirect
+    this.userService.verifyLocalAccessToken(this.localAuthToken).subscribe(
+      (data: any) => {
+        console.log('>> Data received: ', data);
+      },
+      (error: any) => {
+        console.log('>> Error: ', error);
+      });
   }
 }
