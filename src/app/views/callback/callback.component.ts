@@ -20,13 +20,15 @@ export class CallbackComponent implements OnInit {
               private _spotifyClientService: SpotifyClientService) { }
 
   ngOnInit() {
-    console.log('>> URL: ' + window.location.href);
-    this.spotifyCode = this.extractSpotifyCode();
-    if (this.spotifyCode !== '') {
+    const callbackUrl = window.location.href;
+    console.log('>> URL: ' + callbackUrl);
+
+    if (callbackUrl.indexOf('spotify') >= 0) {
+      this.spotifyCode = this.extractSpotifyCode();
       this.getTokensProfileAndAlbums();
-    } else {
+    } else if (callbackUrl.indexOf('?localAccessAuth=') >= 0) {
       this.extractAuthCode();
-      console.log('>> URL: ' + window.location.href);
+      // console.log('>> URL: ' + window.location.href);
     }
   }
 
@@ -156,10 +158,10 @@ export class CallbackComponent implements OnInit {
 
   extractAuthCode(): string {
     const callbackUrl = window.location.href;
-    if ( callbackUrl.indexOf('?auth=') >= 0 ) {
-      const codeStartIndex = callbackUrl.indexOf('?auth=');
-      const code = callbackUrl.substr(codeStartIndex + 6);
-      console.log("Code: ", code);
+    if ( callbackUrl.indexOf('?localAccessAuth=') >= 0 ) {
+      const codeStartIndex = callbackUrl.indexOf('?localAccessAuth=');
+      const code = callbackUrl.substr(codeStartIndex + 17);
+      console.log('Code: ', code);
       return code;
     }
     return '';
