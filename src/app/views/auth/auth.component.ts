@@ -101,23 +101,26 @@ export class AuthComponent implements OnInit {
 
     this.submitButton.disabled = true;
     this.progressBar.mode = 'indeterminate';
-    this.userService.signinUser(this.user).subscribe(
-      (data: any) => {
-        // Correctly authenticated, redirect
-        this.error = false;
-        this.userService.userLoaded(data.user, data.token, false, false);
-        this.userService.getNotificationsCountForUser(data.user._id);
-        this.userService.getNotificationsForUser(data.user._id);
-        this.router.navigate(['/']);
 
-      },
-      (error) => {
-        // Show user error message
-        this.errorMessage = error;
-        this.error = true;
-        this.submitButton.disabled = false;
-        this.progressBar.mode = 'determinate';
-      });
+    console.log('Magic link clicked by Username: ' + this.user.email);
+
+    // this.userService.signinUser(this.user).subscribe(
+    //   (data: any) => {
+    //     // Correctly authenticated, redirect
+    //     this.error = false;
+    //     this.userService.userLoaded(data.user, data.token, false, false);
+    //     this.userService.getNotificationsCountForUser(data.user._id);
+    //     this.userService.getNotificationsForUser(data.user._id);
+    //     this.router.navigate(['/']);
+
+    //   },
+    //   (error) => {
+    //     // Show user error message
+    //     this.errorMessage = error;
+    //     this.error = true;
+    //     this.submitButton.disabled = false;
+    //     this.progressBar.mode = 'determinate';
+    //   });
     }
 
 }
