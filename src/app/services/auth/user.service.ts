@@ -160,18 +160,19 @@ export class UserService {
         const requestUrl = this.connection + '/verifyLocalJwt';
         return this.http.post(requestUrl, { jwt: urlJwt}, { headers: this.headers })
             .map((response: Response) => {
-                console.log('>> In verify local access JWT...');
+                console.log('>> In verify local access JWT: ', response.json());
                 const data = response.json();
 
-                // TODO: anything else?
-
-                // this.accessToken = data.token;
-                // sessionStorage.setItem('token', JSON.stringify({ accessToken: this.accessToken }))
-                // this.user = data.user as User;
-                console.log('>> Verify local access JWT response: ', data);
+                this.accessToken = data.token;
+                sessionStorage.setItem('token', JSON.stringify({ accessToken: this.accessToken }));
+                this.user = data.user as User;
+                // Notify server that a new user user logged in
+                this._socketService.send(Action.NEW_LOG_IN, {
+                    from: this.user,
+                    action: Action.NEW_LOG_IN
+                });
                 return data;
             }).catch((error: Response) => {
-                // TODO: add more speicifc errors
                 if (error.status === 520) {
                     return Observable.throw('Token is expired or invalid. Please re-login.');
                 } else if (error.status === 404 ) {
