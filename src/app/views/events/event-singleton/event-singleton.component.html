@@ -83,19 +83,21 @@
         <div class="wrapper">
 
 
-          <div class="eventImage">
-            
-            <img  [src]="model.eventPicUrl">
-            
-          </div>
+          
           <div class="map pb-1">
             
             <agm-map [zoom]="zoom" [latitude]="lat" [longitude]="lng" [scrollwheel]="false">
               <agm-marker [latitude]="lat" [longitude]="lng"></agm-marker>
             </agm-map>
             
+
+
           </div>
-          
+          <div class="eventImage">
+            
+              <img  [src]="model.eventPicUrl">
+              
+            </div>
         </div>
       </div>
 
