@@ -174,6 +174,10 @@ export class CallbackComponent implements OnInit {
     this.userService.verifyLocalAccessToken(this.localAuthToken).subscribe(
       (data: any) => {
         console.log('>> Data received: ', data);
+        this.userService.userLoaded(data.user, data.token, false, false);
+        this.userService.getNotificationsCountForUser(data.user._id);
+        this.userService.getNotificationsForUser(data.user._id);
+        this.router.navigate(['/']);
       },
       (error: any) => {
         console.log('>> Error: ', error);
