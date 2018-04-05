@@ -126,7 +126,13 @@ exports.register = function (req, res) {
       res.status(200).send( { user: foundUser, message: 'User via email found!', localAccessToken: localAccessToken } );
 
       
-
+      // JWT verification mechanism
+      // jwt.verify(localAccessToken, config.secret, function(err, decodedToken) {
+      //   if (err) {
+      //     console.log('>> Invalid token');
+      //   }
+      //   console.log('>> Decoded Token: ', decodedToken);
+      // });
       
     });
   }
