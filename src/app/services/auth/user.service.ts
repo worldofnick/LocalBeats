@@ -141,9 +141,9 @@ export class UserService {
                 return data;
             }).catch((error: Response) => {
                 if (error.status === 404) {
-                    return Observable.throw('Wrong email.  Please try again.');
+                    return Observable.throw('Email cannot be found. Check if it correct and try again.');
                 } else {
-                    return Observable.throw('Error Unknown');
+                    return Observable.throw('An unknown error has occured... Please try again later.');
                 }
             });
     }
