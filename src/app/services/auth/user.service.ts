@@ -178,7 +178,7 @@ export class UserService {
                 } else if (error.status === 404 ) {
                     return Observable.throw('User not found. Please register before continuing.');
                 } else {
-                    return Observable.throw('An unknown error has occured... Please try again later.');
+                    return Observable.throw('A server error has occured... Please try again later.');
                 }
             });
     }
