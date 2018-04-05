@@ -155,6 +155,33 @@ export class UserService {
             });
     }
 
+    // TODO: complete it
+    public verifyLocalAccessToken(urlJwt: string): Observable<Object> {
+        const requestUrl = this.connection + '/verifyLocalJwt';
+        return this.http.post(requestUrl, { jwt: urlJwt}, { headers: this.headers })
+            .map((response: Response) => {
+                console.log('>> In veirfy local access JWT...');
+                const data = response.json();
+
+                // TODO: anything else?
+
+                // this.accessToken = data.token;
+                // sessionStorage.setItem('token', JSON.stringify({ accessToken: this.accessToken }))
+                // this.user = data.user as User;
+                console.log('>> Verify local access JWT response: ', data);
+                return data;
+            }).catch((error: Response) => {
+                // TODO: add more speicifc errors
+                if (error.status === 404) {
+                    return Observable.throw('\'User cannot be found. Check if it correct and try again.');
+                } else if (error.status === 520 ) {
+                    return Observable.throw('Unable to verify the token. Please re-login');
+                } else {
+                    return Observable.throw('An unknown error has occured... Please try again later.');
+                }
+            });
+    }
+
     /**
      * 
      * @param user 
