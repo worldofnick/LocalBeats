@@ -19,6 +19,10 @@ module.exports = {
     soundcloud: {
       clientID: '4e3fe497717451e398ca2719842a7e20'
     },
+    local: {
+      authCallbackUri : 'http://localhost:4200/callback/auth/',
+      // callbackUri : 'https://www.localbeats.live/callback/auth/',
+    },
     // Configuration for Stripe.
     stripe: {
       secretKey: 'sk_test_XnYNA52kavV92IkcJyh1dQBw',
