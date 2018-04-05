@@ -39,7 +39,7 @@
 <section id="portfolio-section" class="portfolio home-section" [ngClass]="{'light-gray': backgroundGray}" *ngIf="searchType != null">
   <div class="container">
     <div class="section-header">
-      <h2>Reccomended Events:</h2>
+      <h2>Recommended Events:</h2>
       <!-- <p *ngIf="results.length == 0">We're sorry.  There are no results that fit the parameters of your search.</p> -->
     </div>
     <div *ngIf="results.length > 0" fxLayout="row" fxLayoutWrap="wrap">
@@ -94,7 +94,7 @@
       (page)="pageEvent($event)">
     </mat-paginator>
     <div class="section-header">
-      <h2>Reccomended Artists:</h2>
+      <h2>Recommended Artists:</h2>
       <!-- <p *ngIf="results.length == 0">We're sorry.  There are no results that fit the parameters of your search.</p> -->
     </div>
     <div *ngIf="resultsArtists.length > 0" fxLayout="row" fxLayoutWrap="wrap">
