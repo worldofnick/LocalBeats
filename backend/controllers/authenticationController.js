@@ -129,6 +129,7 @@ exports.sendMagicLink = function (req, res) {
     foundUser.hashPassword = undefined;
 
     // Send email with JWT link
+    const callbackUrl = config.local.authCallbackUri + localAccessToken;
     let message = {
       from: 'auth@localBeats.com',
       to: foundUser.email,
@@ -136,7 +137,7 @@ exports.sendMagicLink = function (req, res) {
       text: 'Hello, ' + foundUser.firstName,
       html: '<p><b>Hello, ' + foundUser.firstName +'<br>' +
       '<br>Click this link to verify your identity and get logged into your account: <br><br>' +
-      'http://localhost:4200/callback/auth/' + localAccessToken +
+      callbackUrl + 
       '<br><br> Thanks<br>'
     };
 
