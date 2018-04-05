@@ -106,7 +106,18 @@ exports.register = function (req, res) {
   };
 
   exports.sendMagicLink = function (req, res) {
-    res.status(200).send( { email: req.body.email, message: 'Not Implemented' } );
+    const receivedEmail = req.body.email;
+    
+    User.findOne({ email: req.body.email }, function (err, foundUser) {
+      if (err) { 
+        return res.status(500).send('Error on the sign-in server.');
+      }
+      if (!foundUser) { 
+        return res.status(404).send('No such user (' + req.body.email + ') in the database...');
+      }
+
+      res.status(200).send( { user: foundUser, message: 'User via email found!' } );
+    });
   }
   
   /**
