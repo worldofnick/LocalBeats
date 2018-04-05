@@ -8,6 +8,9 @@ module.exports = function(app) {
     var tokenVerificationHandler = require('../controllers/tokenVerificationController.js');
 	var autheticationHandler = require('../controllers/authenticationController.js');
 
+	app.route('/api/auth/magicLink')
+		.post(autheticationHandler.sendMagicLink);
+
 	app.route('/api/auth/register')
 		.post(autheticationHandler.register);
 
