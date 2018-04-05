@@ -1,28 +1,23 @@
 <div class="page-wrap height-100">
-    <div class="session-form-hold">
-      <mat-progress-bar mode="determinate" class="session-progress"></mat-progress-bar>
-      <mat-card>
-        <mat-card-content>
-          <div class="text-center pb-1">
-            <h1 class="mb-05">LocalBeats</h1>
-            <p class="text-muted m-0">Password-less Sign In</p>
+  <div class="session-form-hold">
+    <mat-progress-bar mode="determinate" class="session-progress"></mat-progress-bar>
+    <mat-card>
+      <mat-card-content>
+        <div class="text-center pb-1">
+          <h1 class="mb-05">LocalBeats</h1>
+          <p class="text-muted m-0">Password-less Sign In</p>
+        </div>
+        <div *ngIf="!this.magicLinkButtonClicked">
+        <form [formGroup]="signinForm" (ngSubmit)="signin()">
+          <div class="">
+            <mat-form-field class="full-width">
+              <input matInput name="username" email="true" [formControl]="signinForm.controls['username']" placeholder="Email">
+            </mat-form-field>
+            <small *ngIf="signinForm.controls['username'].hasError('required') && signinForm.controls['username'].touched" class="form-error-msg">
+            Email is required </small>
           </div>
-          <form [formGroup]="signinForm" (ngSubmit)="signin()">
-            <div class="">
-              <mat-form-field class="full-width">
-                <input
-                  matInput
-                  name="username" email="true"
-                  [formControl]="signinForm.controls['username']"
-                  placeholder="Email"
-                  >
-              </mat-form-field>
-              <small 
-                *ngIf="signinForm.controls['username'].hasError('required') && signinForm.controls['username'].touched" 
-                class="form-error-msg"> Email is required </small>
-            </div>
-  
-            <!-- <div class="">
+
+          <!-- <div class="">
               <mat-form-field class="full-width">
                 <input 
                   type="password"
@@ -36,14 +31,15 @@
                 *ngIf="signinForm.controls['password'].hasError('required') && signinForm.controls['password'].touched" 
                 class="form-error-msg"> Password is required </small>
             </div> -->
-            
-            <!-- <div class="pb-1">
+
+          <!-- <div class="pb-1">
               <mat-checkbox
                 name="rememberMe"
                 [formControl]="signinForm.controls['rememberMe']"
                 class="pb-1">Remember this computer</mat-checkbox>
             </div> -->
-            
+
+          
             <button mat-raised-button class="mat-primary full-width mb-1" [disabled]="signinForm.invalid">Send me a magic link!</button>
             <small *ngIf="error" class="form-error-msg">{{errorMessage}}</small>
             <div class="text-center">
@@ -51,10 +47,16 @@
               <span fxFlex></span>
               <a routerLink="/auth/register" class="mat-primary text-center full-width">Create a new account</a>
             </div>
-          </form>
-        </mat-card-content>
-      </mat-card>
-    </div>
+          
+        </form>
+      </div>
+      <div *ngIf="this.magicLinkButtonClicked">
+        <hr><br>
+        <p class="text-center text-muted m-0">A magic link has been sent to: <br>{{this.user.email}} <br><br>
+          Please check your email and click the link to get logged in to localBeats!
+        </p>
+      </div>
+      </mat-card-content>
+    </mat-card>
   </div>
-  
-  
+</div>
