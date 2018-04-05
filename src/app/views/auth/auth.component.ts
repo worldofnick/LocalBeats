@@ -21,7 +21,7 @@ export class AuthComponent implements OnInit {
   signinForm: FormGroup;
   user: User;
   notificationsList:Notification[] = [];
-  rememberMe: boolean = false;
+  // rememberMe: boolean = false;
   error: boolean = false;
   errorMessage: string = '';
 
@@ -31,7 +31,7 @@ export class AuthComponent implements OnInit {
 
   ngOnInit() {
     this.error = false;
-    this.rememberMe = false;
+    // this.rememberMe = false;
 
     this.user = {
       _id: null,
@@ -55,27 +55,27 @@ export class AuthComponent implements OnInit {
     };
     // Checks to see if the user credentials have been stored locally via 'remember me'
     // Populates them in the form if they exist
-    const data = JSON.parse(localStorage.getItem('rememberMe'));
-    if (data) {
-      this.user.email = data.email;
-      // this.user.password = data.password;
-      this.rememberMe = true;
-    } else {
-      this.rememberMe = false;
-    }
-    if (this.rememberMe) {
-      this.signinForm = new FormGroup({
-        username: new FormControl(this.user.email.valueOf(), Validators.required),
-        // password: new FormControl(this.user.password.valueOf(), Validators.required),
-        rememberMe: new FormControl(this.rememberMe)
-      });
-    } else {
+    // const data = JSON.parse(localStorage.getItem('rememberMe'));
+    // if (data) {
+    //   this.user.email = data.email;
+    //   // this.user.password = data.password;
+    //   this.rememberMe = true;
+    // } else {
+    //   this.rememberMe = false;
+    // }
+    // if (this.rememberMe) {
+    //   this.signinForm = new FormGroup({
+    //     username: new FormControl(this.user.email.valueOf(), Validators.required),
+    //     // password: new FormControl(this.user.password.valueOf(), Validators.required),
+    //     rememberMe: new FormControl(this.rememberMe)
+    //   });
+    // } else {
       this.signinForm = new FormGroup({
         username: new FormControl('', Validators.required),
         // password: new FormControl('', Validators.required),
-        rememberMe: new FormControl(this.rememberMe)
+      //   rememberMe: new FormControl(this.rememberMe)
       });
-    }
+    // }
   }
 
   /**
@@ -89,15 +89,15 @@ export class AuthComponent implements OnInit {
     const signinData = this.signinForm.value;
     this.user.email = this.signinForm.controls['username'].value;
     // this.user.password = this.signinForm.controls['password'].value;
-    this.rememberMe = this.signinForm.controls['rememberMe'].value;
+    // this.rememberMe = this.signinForm.controls['rememberMe'].value;
 
-    if(this.rememberMe) {
-      localStorage.setItem('rememberMe',
-        // JSON.stringify({ email: this.user.email, password: this.user.password }));
-        JSON.stringify({ email: this.user.email }));
-    } else {
-      localStorage.removeItem('rememberMe');
-    }
+    // if(this.rememberMe) {
+    //   localStorage.setItem('rememberMe',
+    //     // JSON.stringify({ email: this.user.email, password: this.user.password }));
+    //     JSON.stringify({ email: this.user.email }));
+    // } else {
+    //   localStorage.removeItem('rememberMe');
+    // }
 
     this.submitButton.disabled = true;
     this.progressBar.mode = 'indeterminate';
