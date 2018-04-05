@@ -20,8 +20,14 @@ export class CallbackComponent implements OnInit {
               private _spotifyClientService: SpotifyClientService) { }
 
   ngOnInit() {
+    console.log('>> URL: ' + window.location.href);
     this.spotifyCode = this.extractSpotifyCode();
-    this.getTokensProfileAndAlbums();
+    if (this.spotifyCode !== '') {
+      this.getTokensProfileAndAlbums();
+    } else {
+      this.extractAuthCode();
+      console.log('>> URL: ' + window.location.href);
+    }
   }
 
   /**
@@ -146,5 +152,9 @@ export class CallbackComponent implements OnInit {
         return '';
       }
     }
+  }
+
+  extractAuthCode(): string {
+    return '';
   }
 }
