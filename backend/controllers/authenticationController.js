@@ -104,6 +104,10 @@ exports.register = function (req, res) {
       res.status(200).send({ auth: true, token: token, user: user });
     });
   };
+
+  exports.sendMagicLink = function (req, res) {
+    res.status(200).send( { email: req.body.user.email, message: 'Not Implemented' } );
+  }
   
   /**
    * This handler checks if the user is signed in. If it is, 
