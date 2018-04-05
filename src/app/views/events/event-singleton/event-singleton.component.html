@@ -65,38 +65,26 @@
 
       </div>
 
-      <!-- <div fxFlex="35"> -->
-
-      <div fxLayout="column" fxFlex="45" style="background-color:rebeccapurple">
+      <div fxFlex="25" style="background-color: red">
 
 
-        <img mat-card-image [src]="model.eventPicUrl" style="
-                        width: 350px;
-                        max-width: 100%; 
-                        max-height: 350px; ">
+        <div class="eventImage">
+
+          <img mat-card-image [src]="model.eventPicUrl">
+
+        </div>
 
 
       </div>
-      <div fxLayout="column" fxFlex="45" style="background-color:red">
+      <div fxFlex="25" style="background-color: purple">
 
-        <agm-map [ngStyle]="{width: '350px', height: '350px'}" [zoom]="zoom" [latitude]="lat" [longitude]="lng" [scrollwheel]="false">
-          <agm-marker [latitude]="lat" [longitude]="lng"></agm-marker>
-        </agm-map>
+        <div class="map">
 
+          <agm-map [zoom]="zoom" [latitude]="lat" [longitude]="lng" [scrollwheel]="false">
+            <agm-marker [latitude]="lat" [longitude]="lng"></agm-marker>
+          </agm-map>
 
-        <!-- <mat-card class="plan-pricing no-shadow  p-0">
-                <img mat-card-image [src]="model.eventPicUrl" style="
-                width: 350px;
-                max-width: 100%; 
-                max-height: 450px;">
-        
-                <mat-card-content class="p-0">
-                  <agm-map [ngStyle]="{width: '350px', height: '350px'}" [zoom]="zoom" [latitude]="lat" [longitude]="lng" [scrollwheel]="false">
-                    <agm-marker [latitude]="lat" [longitude]="lng"></agm-marker>
-                  </agm-map>
-                </mat-card-content>
-              </mat-card> -->
-
+        </div>
 
       </div>
 
