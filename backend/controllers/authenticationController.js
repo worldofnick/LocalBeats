@@ -106,7 +106,7 @@ exports.register = function (req, res) {
   };
 
   exports.sendMagicLink = function (req, res) {
-    res.status(200).send( { email: req.body.user.email, message: 'Not Implemented' } );
+    res.status(200).send( { email: req.body.email, message: 'Not Implemented' } );
   }
   
   /**
