@@ -20,8 +20,8 @@ module.exports = {
       clientID: '4e3fe497717451e398ca2719842a7e20'
     },
     local: {
-      authCallbackUri : 'http://localhost:4200/callback?auth=',
-      // callbackUri : 'https://www.localbeats.live/callback/auth/',
+      authCallbackUri : 'http://localhost:4200/callback?localAccessAuth=',
+      // callbackUri : 'https://www.localbeats.live/callback?localAccessAuth=',
     },
     // Configuration for Stripe.
     stripe: {
