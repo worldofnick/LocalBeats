@@ -39,7 +39,7 @@ export class HomeComponent implements OnInit {
   genresList: string[] = ['rock', 'country', 'jazz', 'blues', 'rap'];
   eventsList: string[] = ['wedding', 'birthday', 'business'];
   currentSearch: SearchTerms;
-  suggestedTitle:String;
+  suggestedTitle: String;
 
   results: any[] = [];
   allResults: any[] = [];
@@ -87,19 +87,27 @@ export class HomeComponent implements OnInit {
 
     if (this._userService.isAuthenticated()) {
       this.setupSuggestions();
-    }else {
+    } else {
       this.setCurrentPosition();
       this.setupDefaultSuggestions();
     }
     // listening for real time notification
     this.loginSub = this._socketService.onEvent(SocketEvent.NEW_LOG_IN)
       .subscribe((message: Message) => {
-      this.setupSuggestions();
-    });
+        this.setupSuggestions();
+      });
 
   }
 
   setupDefaultSuggestions() {
+
+   this.defaultArtistSearch();
+   this.defaultEventSearch();
+
+  }
+
+
+  defaultArtistSearch() {
     this.currentSearch = new SearchTerms('', '', null, null, null, null, null, null);
 
     this.currentSearch.searchType = 'Event';
@@ -109,20 +117,8 @@ export class HomeComponent implements OnInit {
       longitude: -111.891047,
       latitude: 40.760779
     };
-
-
-
     this.currentSearch.genres = ['all genres'];
     this.currentSearch.event_types = ['all events'];
-    // this.suggestedTitle = 'Events In Salt Lake City';
-
-    this.searchService.eventSearch(this.currentSearch).then((events: Event[]) => {
-      this.allResults = events;
-      this.updateResults();
-    }).then(() => {
-
-    });
-
     this.currentSearch.searchType = 'Artist';
     this.searchType = 'Artist';
     this.searchService.userSearch(this.currentSearch).then((users: User[]) => {
@@ -130,19 +126,39 @@ export class HomeComponent implements OnInit {
       this.updateResults2();
     });
 
-
   }
 
-    // Helper method for Google Places
-    private setCurrentPosition() {
-      if ("geolocation" in navigator) {
-        navigator.geolocation.getCurrentPosition((position) => {
-          this.latitude = position.coords.latitude;
-          this.longitude = position.coords.longitude;
-        });
-      }
-      // console.log(this.latitude, this.longitude);
+  defaultEventSearch() {
+
+    this.currentSearch = new SearchTerms('', '', null, null, null, null, null, null);
+
+    this.currentSearch.searchType = 'Event';
+    this.searchType = 'Event';
+
+    this.currentSearch.location = {
+      longitude: -111.891047,
+      latitude: 40.760779
+    };
+    this.currentSearch.genres = ['all genres'];
+    this.currentSearch.event_types = ['all events'];
+    // this.suggestedTitle = 'Events In Salt Lake City';
+
+    this.searchService.eventSearch(this.currentSearch).then((events: Event[]) => {
+      this.allResults = events;
+      this.updateResults();
+    });
+  }
+
+  // Helper method for Google Places
+  private setCurrentPosition() {
+    if ("geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        this.latitude = position.coords.latitude;
+        this.longitude = position.coords.longitude;
+      });
     }
+    // console.log(this.latitude, this.longitude);
+  }
 
   setupSuggestions() {
     // set suggestions type
@@ -183,21 +199,27 @@ export class HomeComponent implements OnInit {
     // configure uid
     this.currentSearch.uid = this._userService.user._id;
 
-   
-      // user is an artist so search for event
-      this.currentSearch.searchType = 'Event';
-      this.searchService.eventSearch(this.currentSearch).then((events: Event[]) => {
-        this.allResults = events;
-        this.updateResults();
-      });
 
-      // its an event host. so search for artists.
-      this.currentSearch.searchType = 'Artist';
-      this.searchService.userSearch(this.currentSearch).then((users: User[]) => {
-        this.allResultsArtists = users;
-        this.updateResults2();
-      });
-    
+    // user is an artist so search for event
+    this.currentSearch.searchType = 'Event';
+    this.searchService.eventSearch(this.currentSearch).then((events: Event[]) => {
+      this.allResults = events;
+      if(this.allResults.length == 0){
+        this.defaultEventSearch();
+      }
+      this.updateResults();
+    });
+
+    // its an event host. so search for artists.
+    this.currentSearch.searchType = 'Artist';
+    this.searchService.userSearch(this.currentSearch).then((users: User[]) => {
+      this.allResultsArtists = users;
+      if(this.allResultsArtists.length == 0){
+        this.defaultArtistSearch();
+      }
+      this.updateResults2();
+    });
+
   }
 
   ngOnDestroy() {
@@ -296,7 +318,7 @@ export class HomeComponent implements OnInit {
         this.openNotificationSnackBar(temp);
       });
 
-      this._socketService.onEvent(SocketEvent.YOU_LOGGED_OUT)
+    this._socketService.onEvent(SocketEvent.YOU_LOGGED_OUT)
       .subscribe((message: Message) => {
         this.setupDefaultSuggestions();
       });
