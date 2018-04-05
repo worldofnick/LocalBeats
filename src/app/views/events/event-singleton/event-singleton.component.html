@@ -1,18 +1,20 @@
 <mat-card>
   <mat-card-title>{{model.eventName}}</mat-card-title>
-  <!-- <mat-card-subtitle>Please fill out all fields about your event</mat-card-subtitle> -->
+  <mat-card-subtitle (click)="onSelectHost()"> Host: {{model.hostUser?.firstName}} {{model.hostUser?.lastName}}</mat-card-subtitle>
   <mat-card-content>
 
     <div fxLayout="row" fxLayout.xs="column" fxLayout.sm="column" fxFlex>
       <div fxFlex="50">
-
+        <!-- <mat-icon (click)="onSelectHost()" mat-list-icon>
+              <img [src]="model.hostUser?.profilePicUrl">
+            </mat-icon> -->
+        <p mat-line></p>
         <div class="pb-1">
           <mat-list class="mr-1">
             <mat-list-item>
-              <mat-icon (click)="onSelectHost()" mat-list-icon>
-                <img [src]="model.hostUser?.profilePicUrl">
-              </mat-icon>
-              <p mat-line> Host: {{model.hostUser?.firstName}} {{model.hostUser?.lastName}}</p>
+              <mat-icon mat-list-icon>info</mat-icon>
+
+              <p mat-line>{{model.eventType | capitalize}}</p>
             </mat-list-item>
             <mat-list-item>
               <mat-icon mat-list-icon>monetization_on</mat-icon>
@@ -20,7 +22,9 @@
             </mat-list-item>
             <mat-list-item>
               <mat-icon mat-list-icon>date_range</mat-icon>
-              <p mat-line> {{model.fromDate | date:'MMM d, y, h:mm a'}} - {{model.toDate | date:'MMM d, y, h:mm a'}} </p>
+              <p *ngIf="sameDay" mat-line> {{model.fromDate | date:'MMM d, y: h:mm a'}} - {{model.toDate | date:'h:mm a'}}</p>
+              <p *ngIf="!sameDay" mat-line> {{model.fromDate | date:'MMM d, h:mm a'}} - {{model.toDate | date:'MMM d, y, h:mm a'}}</p>
+
             </mat-list-item>
             <mat-list-item *ngIf="this.model.negotiable">
               <mat-icon mat-list-icon>import_export</mat-icon>
@@ -65,18 +69,20 @@
 
       </div>
 
-      <div fxFlex="25" style="background-color: red">
+      <div fxFlex="25">
 
+        <div class="pb-1">
 
-        <div class="eventImage">
+          <div class="eventImage">
 
-          <img mat-card-image [src]="model.eventPicUrl">
+            <img mat-card-image [src]="model.eventPicUrl">
+
+          </div>
+
 
         </div>
-
-
       </div>
-      <div fxFlex="25" style="background-color: purple">
+      <div fxFlex="25">
 
         <div class="map">
 

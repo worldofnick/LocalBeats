@@ -3,7 +3,6 @@ import { ISubscription } from "rxjs/Subscription";
 import { ActivatedRoute } from "@angular/router";
 import { DatePipe } from '@angular/common'
 import { Router } from "@angular/router";
-
 import { UserService } from '../../../services/auth/user.service';
 import { BookingService } from '../../../services/booking/booking.service';
 import { EventService } from '../../../services/event/event.service';
@@ -18,7 +17,20 @@ import { Message } from '../../../services/chats/model/message';
 import { MessageTypes } from '../../../services/chats/model/messageTypes';
 import { AgmCoreModule, MapsAPILoader } from '@agm/core';
 import { SharedDataService } from '../../../services/shared/shared-data.service';
-
+import {
+  startOfDay,
+  endOfDay,
+  subDays,
+  addDays,
+  endOfMonth,
+  isSameDay,
+  isSameMonth,
+  addHours,
+  getDate,
+  getDay,
+  getMonth,
+  getYear
+} from 'date-fns';
 @Component({
   selector: 'app-event-singleton',
   templateUrl: './event-singleton.component.html',
@@ -35,6 +47,7 @@ export class EventSingletonComponent implements OnInit {
   public zoom: number;
   public lat: number;
   public lng: number;
+  sameDay:Boolean;
   private subscription: ISubscription;
   EID: any;
   buttonText: string = "Apply";
@@ -62,7 +75,11 @@ export class EventSingletonComponent implements OnInit {
       this.lat = this.model.location[1]
       this.lng = this.model.location[0]
       this.zoom = 12;
-     
+      if (isSameDay(subDays(this.model.fromDate, 0), subDays(this.model.toDate,0))){
+          this.sameDay = true;
+      }else {
+        this.sameDay = false;
+      }
       this.user = event.hostUser;
       if (this.userService.user != null && this.user._id === this.userService.user._id) {
         this.isCurrentUser = true;
