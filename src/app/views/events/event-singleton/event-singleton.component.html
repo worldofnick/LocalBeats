@@ -1,10 +1,10 @@
 <mat-card>
-  <mat-card-title>Event Creation</mat-card-title>
+  <mat-card-title>{{model.eventName}}</mat-card-title>
   <!-- <mat-card-subtitle>Please fill out all fields about your event</mat-card-subtitle> -->
   <mat-card-content>
 
     <div fxLayout="row" fxLayout.xs="column" fxLayout.sm="column" fxFlex>
-      <div fxFlex="45">
+      <div fxFlex="50">
 
         <div class="pb-1">
           <mat-list class="mr-1">
@@ -42,15 +42,25 @@
 
           <mat-divider class="mt-1">
 
-            </mat-divider>
-  
-            <p class="fz-1">
-              About Event:
-            </p>
-            <p>
-              {{ this.model.description }}
-            </p>
+          </mat-divider>
 
+          <p class="fz-1">
+            About Event:
+          </p>
+          <p>
+            {{ this.model.description }}
+          </p>
+
+                 <!-- <mat-divider *ngIf="userService.isAuthenticated()"></mat-divider> -->
+        <button *ngIf="isCurrentUser && userService.isAuthenticated()" (click)="onEditEvent()" mat-raised-button color="primary">Edit Event</button>
+        <button *ngIf="isCurrentUser && userService.isAuthenticated()" (click)="onDeleteEvent()" mat-raised-button color="accent">Delete Event</button>
+        <button *ngIf="!isCurrentUser && userService.isAuthenticated()" (click)="messageHost()" mat-raised-button color="primary">Message Host</button>
+        <button *ngIf="!isCurrentUser && userService.isAuthenticated() && !hasApplied && userService.user.isArtist" (click)="newApplication()"
+          mat-raised-button color="accent">{{buttonText}}</button>
+        <button *ngIf="!isCurrentUser && userService.isAuthenticated() && hasApplied && userService.user.isArtist && userBooking != null && !userBooking.approved"
+          (click)="onManageBooking()" mat-raised-button color="accent">Manage Application</button>
+        <button *ngIf="!isCurrentUser && userService.isAuthenticated() && hasApplied && userService.user.isArtist && userBooking != null && userBooking.approved"
+          (click)="onManageBooking()" mat-raised-button color="accent">Manage Booking</button>
         </div>
 
       </div>
@@ -58,39 +68,47 @@
 
 
 
-      <div fxFlex="10">
+       <div fxFlex="5">
 
 
-        <!-- spacing -->
-      </div>
-
-
+      </div> -
 
 
 
-      <div fxFlex="45">
-       
-          <img mat-card-image [src]="model.eventPicUrl" style="
-          max-width:800;
-          max-height:640px;
-          width:auto;
-          height:auto;
-          display: block;
-          padding-top: 15px;">
 
 
-          <agm-map [ngStyle]="{height: '512px'}" [zoom]="zoom" [latitude]="lat" [longitude]="lng" [scrollwheel]="false">
-              <agm-marker [latitude]="lat" [longitude]="lng"></agm-marker>
-            </agm-map>
+      <!-- <div fxFlex="35"> -->
+
+      <div fxLayout="column" fxFlex="45" style="">
 
 
-          <mat-divider *ngIf="userService.isAuthenticated()"></mat-divider>
-          <button *ngIf="isCurrentUser && userService.isAuthenticated()" (click)="onEditEvent()" mat-raised-button color="primary">Edit Event</button>
-          <button *ngIf="isCurrentUser && userService.isAuthenticated()" (click)="onDeleteEvent()" mat-raised-button color="accent">Delete Event</button>
-          <button *ngIf="!isCurrentUser && userService.isAuthenticated()" (click)="messageHost()" mat-raised-button color="primary">Message Host</button>
-          <button *ngIf="!isCurrentUser && userService.isAuthenticated() && !hasApplied && userService.user.isArtist" (click)="newApplication()" mat-raised-button color="accent">{{buttonText}}</button>
-          <button *ngIf="!isCurrentUser && userService.isAuthenticated() && hasApplied && userService.user.isArtist && userBooking != null && !userBooking.approved" (click)="onManageBooking()" mat-raised-button color="accent">Manage Application</button>
-          <button *ngIf="!isCurrentUser && userService.isAuthenticated() && hasApplied && userService.user.isArtist && userBooking != null && userBooking.approved" (click)="onManageBooking()" mat-raised-button color="accent">Manage Booking</button>
+        <img mat-card-image [src]="model.eventPicUrl" style="
+                        width: 350px;
+                        max-width: 100%; 
+                        max-height: 350px; 
+                        margin-left: auto;
+                        margin-right: auto;
+                        display: flex;">
+
+
+
+        <agm-map [ngStyle]="{width: '350px', height: '350px'}" [zoom]="zoom" [latitude]="lat" [longitude]="lng" [scrollwheel]="false">
+          <agm-marker [latitude]="lat" [longitude]="lng"></agm-marker>
+        </agm-map>
+
+
+        <!-- <mat-card class="plan-pricing no-shadow  p-0">
+                <img mat-card-image [src]="model.eventPicUrl" style="
+                width: 350px;
+                max-width: 100%; 
+                max-height: 450px;">
+        
+                <mat-card-content class="p-0">
+                  <agm-map [ngStyle]="{width: '350px', height: '350px'}" [zoom]="zoom" [latitude]="lat" [longitude]="lng" [scrollwheel]="false">
+                    <agm-marker [latitude]="lat" [longitude]="lng"></agm-marker>
+                  </agm-map>
+                </mat-card-content>
+              </mat-card> -->
 
 
       </div>

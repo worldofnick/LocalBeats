@@ -47,7 +47,9 @@ export class EventSingletonComponent implements OnInit {
     private router: Router,
     private _socketService: SocketService,
     private _sharedDataService: SharedDataService,
-    public datepipe: DatePipe
+    public datepipe: DatePipe,
+    private mapsAPILoader: MapsAPILoader,
+    private AgmCoreModule: AgmCoreModule
   ) { }
 
   ngOnInit() {
