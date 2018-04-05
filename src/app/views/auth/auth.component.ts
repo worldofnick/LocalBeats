@@ -24,6 +24,7 @@ export class AuthComponent implements OnInit {
   // rememberMe: boolean = false;
   error: boolean = false;
   errorMessage: string = '';
+  magicLinkButtonClicked: boolean = false;
 
   constructor(private userService: UserService, 
     private router: Router,
@@ -103,6 +104,9 @@ export class AuthComponent implements OnInit {
     this.progressBar.mode = 'indeterminate';
 
     console.log('Magic link clicked by Username: ' + this.user.email);
+
+    // TODO: set it true on 200 email sent confirmation, else, show error message
+    this.magicLinkButtonClicked = true;
 
     // this.userService.signinUser(this.user).subscribe(
     //   (data: any) => {
