@@ -36,16 +36,16 @@
 
 
 <!-- suggestions -->
-<section id="portfolio-section" class="portfolio home-section" [ngClass]="{'light-gray': backgroundGray}" *ngIf="searchType != null && allResults.length > 0">
+<section id="portfolio-section" class="portfolio home-section" [ngClass]="{'light-gray': backgroundGray}" *ngIf="searchType != null">
   <div class="container">
     <div class="section-header">
-      <h2>{{suggestedTitle}}</h2>
+      <h2>Reccomended Events:</h2>
       <!-- <p *ngIf="results.length == 0">We're sorry.  There are no results that fit the parameters of your search.</p> -->
     </div>
     <div *ngIf="results.length > 0" fxLayout="row" fxLayoutWrap="wrap">
       <div fxFlex="100" fxFlex.gt-xs="25" *ngFor="let result of results">
 
-        <mat-card class="p-0" *ngIf="searchType == 'Event'" [routerLink]="['/events', result._id]">
+        <mat-card class="p-0" [routerLink]="['/events', result._id]">
           <mat-card-title class="mat-bg-primary m-0">
             <div class="card-title-text">
               <span>{{result.eventName}}</span>
@@ -88,9 +88,21 @@
             </div>
           </mat-card-content>
         </mat-card>
+      </div>
+    </div>
+    <mat-paginator *ngIf="allResults && allResults.length > 0" [length]="allResults.length" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions"
+      (page)="pageEvent($event)">
+    </mat-paginator>
+    <div class="section-header">
+      <h2>Reccomended Artists:</h2>
+      <!-- <p *ngIf="results.length == 0">We're sorry.  There are no results that fit the parameters of your search.</p> -->
+    </div>
+    <div *ngIf="resultsArtists.length > 0" fxLayout="row" fxLayoutWrap="wrap">
 
+      <div fxFlex="100" fxFlex.gt-xs="25" *ngFor="let result of resultsArtists">
         <!-- events -->
-        <mat-card class="p-0" *ngIf="searchType == 'Artist'" [routerLink]="['/profile', result._id]">
+
+        <mat-card class="p-0" [routerLink]="['/profile', result._id]">
           <mat-card-title class="mat-bg-primary m-0">
             <div class="card-title-text">
               <span>{{result.firstName}} {{result.lastName}}</span>
@@ -128,8 +140,8 @@
     </div>
   </div>
   <br>
-  <mat-paginator *ngIf="allResults && allResults.length > 0" [length]="allResults.length" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions"
-    (page)="pageEvent($event)">
+  <mat-paginator *ngIf="allResultsArtists && allResultsArtists.length > 0" [length]="allResultsArtists.length" [pageSize]="pageSize"
+    [pageSizeOptions]="pageSizeOptions" (page)="pageEvent2($event)">
   </mat-paginator>
 </section>
 

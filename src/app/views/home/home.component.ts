@@ -40,8 +40,13 @@ export class HomeComponent implements OnInit {
   eventsList: string[] = ['wedding', 'birthday', 'business'];
   currentSearch: SearchTerms;
   suggestedTitle:String;
+
   results: any[] = [];
   allResults: any[] = [];
+
+
+  resultsArtists: any[] = [];
+  allResultsArtists: any[] = [];
   searchType: string;
 
   // Google Places
@@ -49,6 +54,7 @@ export class HomeComponent implements OnInit {
   longitude: number;
 
   pageIndex: number = 0;
+  pageIndex2: number = 0; //for artists
   pageSize = 4; // default page size is 15
   pageSizeOptions = [4];
 
@@ -108,12 +114,21 @@ export class HomeComponent implements OnInit {
 
     this.currentSearch.genres = ['all genres'];
     this.currentSearch.event_types = ['all events'];
-    this.suggestedTitle = 'Events In Salt Lake City';
+    // this.suggestedTitle = 'Events In Salt Lake City';
 
     this.searchService.eventSearch(this.currentSearch).then((events: Event[]) => {
       this.allResults = events;
       this.updateResults();
     });
+
+    this.currentSearch.searchType = 'Artist';
+    this.searchType = 'Artist';
+    this.searchService.userSearch(this.currentSearch).then((users: User[]) => {
+      this.allResultsArtists = users;
+      this.updateResults2();
+    });
+
+
   }
 
     // Helper method for Google Places
@@ -202,10 +217,34 @@ export class HomeComponent implements OnInit {
     }
 
   }
+
+
+  private updateResults2() {
+    let startingIndex = (this.pageIndex2 + 1) * this.pageSize - this.pageSize;
+    let endIndex = startingIndex + this.pageSize;
+    var i: number;
+
+    this.resultsArtists = Array<any>();
+    // Slice the results array
+    for (i = startingIndex; i < endIndex && i < this.allResultsArtists.length; i++) {
+      this.resultsArtists.push(this.allResultsArtists[i]);
+    }
+
+  }
+
+
   private pageEvent(pageEvent: PageEvent) {
     this.pageIndex = pageEvent.pageIndex;
     this.pageSize = pageEvent.pageSize;
     this.updateResults();
+    // Scroll to top of page
+    window.scrollTo(0, 0);
+  }
+
+  private pageEvent2(pageEvent: PageEvent) {
+    this.pageIndex2 = pageEvent.pageIndex;
+    this.pageSize = pageEvent.pageSize;
+    this.updateResults2();
     // Scroll to top of page
     window.scrollTo(0, 0);
   }
