@@ -160,7 +160,7 @@ export class UserService {
         const requestUrl = this.connection + '/verifyLocalJwt';
         return this.http.post(requestUrl, { jwt: urlJwt}, { headers: this.headers })
             .map((response: Response) => {
-                console.log('>> In veirfy local access JWT...');
+                console.log('>> In verify local access JWT...');
                 const data = response.json();
 
                 // TODO: anything else?
@@ -172,10 +172,10 @@ export class UserService {
                 return data;
             }).catch((error: Response) => {
                 // TODO: add more speicifc errors
-                if (error.status === 404) {
-                    return Observable.throw('\'User cannot be found. Check if it correct and try again.');
-                } else if (error.status === 520 ) {
-                    return Observable.throw('Unable to verify the token. Please re-login');
+                if (error.status === 520) {
+                    return Observable.throw('Token is expired or invalid. Please re-login.');
+                } else if (error.status === 404 ) {
+                    return Observable.throw('User not found. Please register before continuing.');
                 } else {
                     return Observable.throw('An unknown error has occured... Please try again later.');
                 }
