@@ -113,7 +113,7 @@
               </div>
 
               <div>
-                <button mat-button-raised [disabled]="preferencesFormGroup.invalid" (click)="signup()">Sign up...</button>
+                <button mat-button matStepperNext [disabled]="preferencesFormGroup.invalid" (click)="signup()">Next</button>
               </div>
             </form>
           </mat-step>
@@ -127,6 +127,12 @@
               <br>
               <button mat-raised-button (click)="signup()">Confirm Sign up...</button>
           </mat-step> -->
+
+          <mat-step>
+              <ng-template matStepLabel>All done! 🎉</ng-template>
+              <p class="text-center text-muted m-0">All done! <br><br>A confirmation magic link has been sent to your email. Use it to log in.<br><br>
+                <br><br>(<strong>Note:</strong> It may take a couple of minutes to receive the email)
+          </mat-step>
 
         </mat-vertical-stepper>
 
