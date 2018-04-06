@@ -44,9 +44,6 @@ export class RegisterComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    const password = new FormControl('', Validators.required);
-    const confirmPassword = new FormControl('', CustomValidators.equalTo(password));
-
     this.searchService.eventTypes().then((types: string[]) => {
       this.eventsList = types;
     }).then(() => this.searchService.genres().then((types: string[]) => {
@@ -57,8 +54,6 @@ export class RegisterComponent implements OnInit {
       firstName: new FormControl('', Validators.required),
       lastName: new FormControl('', Validators.required),
       email: new FormControl('', [Validators.required, Validators.email]),
-      password: password,
-      confirmPassword: confirmPassword,
       genres: new FormControl(),
       events: new FormControl(),
       isArtist: new FormControl(false),
@@ -110,7 +105,7 @@ export class RegisterComponent implements OnInit {
       lastName: signupData.lastName,
       fullName: signupData.firstName + " " + signupData.lastName,
       email: signupData.email,
-      password: signupData.password,
+      password: null,
       spotify: null,
       soundcloud: null,
       genres: signupData.genres,
