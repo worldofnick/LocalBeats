@@ -81,9 +81,6 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterViewChecked {
 
   ngOnInit() {
 
-    
-
-
     this.userSubscription = this.userService.userResult.subscribe(user => this.user = user);
     this.activeView = this.route.snapshot.params['view'];
 
@@ -96,13 +93,14 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterViewChecked {
       this.onOwnProfile = true;
       // this.user = this.userService.user;
       // Retreive and store the latest spotify albums of this user
+      console.log('ON YOUR PROFILE')
       this.getSpotifyAlbumsAndSave();
       this.setReviews();
     } else {
       // on another perons profile.
       this.onOwnProfile = false;
       let ID: String = this.userID["id"];
-
+      console.log('ON ANOTHER PROFILE')
       this.userService.getUserByID(ID).then((gottenUser: User) => {
         this.user = gottenUser;
         // console.log('Profile got user: ', gottenUser);
@@ -136,9 +134,9 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterViewChecked {
       this.averageRating = this.averageRating.toFixed(1);
 
       this.user.averageRating = this.averageRating;
-      this.userService.onEditProfile(this.user).then( (user:User) => {
-        this.userService.user = user;
-      });
+      // this.userService.onEditProfile(this.user).then( (user:User) => {
+      //   this.userService.user = user;
+      // });
     });
   }
 

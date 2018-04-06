@@ -155,6 +155,6 @@
     <router-outlet></router-outlet>
     <app-profile-request *ngIf="clickedRequestArtist" [user]="userService.user" [artist]="user"></app-profile-request>
     <app-profile-overview *ngIf="clickedOverview" [user]="user"></app-profile-overview>
-    <app-profile-settings *ngIf="clickedSettings" [user]="userService.user"></app-profile-settings>
+    <app-profile-settings *ngIf="clickedSettings" [user]="user"></app-profile-settings>
   </div>
 </div>
