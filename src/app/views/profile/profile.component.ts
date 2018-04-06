@@ -15,11 +15,14 @@ import { Booking } from '../../models/booking';
 import { Event } from '../../models/event';
 import { Notification } from '../../models/notification';
 import { Router } from '@angular/router';
+import { ReviewService } from '../../services/reviews/review.service';
 import { SpotifyClientService } from '../../services/music/spotify-client.service';
 import { DomSanitizer, SafeResourceUrl, SafeUrl } from '@angular/platform-browser';
 import {MatListModule} from '@angular/material/list';
 import { MatSnackBar } from '@angular/material';
-
+import { PageEvent } from '@angular/material';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { Review } from '../../models/review';
 
 @Component({
   selector: 'app-profile',
@@ -33,8 +36,9 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterViewChecked {
   onOwnProfile: boolean = null;
   userID: any = null;
   requested: boolean = null;
-  clickedRequestArtist:boolean = null;
+  clickedRequestArtist:boolean = false;
   clickedOverview = false;
+  clickedSettings = false;
 
   events:any[];
   requestedArtistEvents: any[] = [];
@@ -43,6 +47,17 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterViewChecked {
   appliedBookings: any[] = [];
   deleteStatus:Number;
   hasApplied:Boolean = true;
+
+  averageRating: any;
+  numberCompletedReviews: any = 0;
+  pageIndex: number = 0;
+  pageSize = 3; // default page size is 15
+  pageSizeOptions = [3];
+  results: any[] = [];
+  allResults: any[] = [];
+
+  // userID: any = null;
+  // reviews: Review[] = [];
 
   // Spotify and Soundcloud
   onSpotifyWidget = false;
@@ -55,15 +70,58 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterViewChecked {
     public userService: UserService,
     private bookingService: BookingService,
     private eventService: EventService, public snackBar: MatSnackBar,
+    private reviewService: ReviewService,
     private notificationService: NotificationService, private cdRef:ChangeDetectorRef,
     private sanitizer: DomSanitizer, private _sharedDataService: SharedDataService,
     private _socketService: SocketService, private _spotifyClientService: SpotifyClientService) {
 
-     router.events.subscribe((url: any) => this.clickedOverview = router.url == "/profile/overview");
+    //  router.events.subscribe((url: any) => this.clickedOverview = router.url == "/profile/overview");
 
   }
 
-  
+  ngOnInit() {
+
+
+    this.userSubscription = this.userService.userResult.subscribe(user => this.user = user);
+    this.activeView = this.route.snapshot.params['view'];
+
+    // snapshot params returns a javascript object. index into it with the property field to get a property.
+    this.userID = {
+      id: this.route.snapshot.params['id']
+    };
+
+    if (this.userID["id"] == null) {
+      this.onOwnProfile = true;
+      this.userService.getUserByID(this.userService.user._id).then( (updated: User) => {
+        this.userService.user = updated;
+        this.user = this.userService.user;
+        this.clickedOver();
+        // Retreive and store the latest spotify albums of this user
+        this.getSpotifyAlbumsAndSave();
+      });
+    } else {
+      // on another perons profile.
+      this.onOwnProfile = false;
+      let ID: String = this.userID["id"];
+      this.userService.getUserByID(ID).then((gottenUser: User) => {
+        this.user = gottenUser;
+        // console.log('Profile got user: ', gottenUser);
+        // Retreive and store the latest spotify albums of this user
+        this.clickedOver();
+        this.getSpotifyAlbumsAndSave();
+      }).then(() => this.hasRequested());
+    }
+
+    // received socket emition from server about updating profile
+    this._socketService.onEvent(SocketEvent.UPDATE_PROFILE).subscribe((user: User)=>{
+      this.user = user;
+    });
+
+    // console.log('User object: ', this.user);
+  }
+
+ 
+
 
   hasRequested() {
     if(!this.userService.isAuthenticated()){
@@ -89,44 +147,25 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.userSubscription.unsubscribe();
   }
 
-  ngOnInit() {
-    this.userSubscription = this.userService.userResult.subscribe(user => this.user = user);
-    this.activeView = this.route.snapshot.params['view'];
-    
-
-    //snapshot params returns a javascript object. index into it with the property field to get a property.
-    this.userID = {
-      id: this.route.snapshot.params['id']
-    }
-
-    if (this.userID["id"] == null) {
-      this.onOwnProfile = true;
-      //this.user = this.userService.user;
-      // Retreive and store the latest spotify albums of this user
-      this.getSpotifyAlbumsAndSave();
-    } else {
-      //on another perons profile.
-      this.onOwnProfile = false;
-      let ID: String = this.userID["id"];
-
-      this.userService.getUserByID(ID).then((gottenUser: User) => {
-        this.user = gottenUser;
-        // console.log('Profile got user: ', gottenUser);
-        // Retreive and store the latest spotify albums of this user
-        this.getSpotifyAlbumsAndSave();
-      }).then(() => this.hasRequested());
-    }
-
-    //received socket emition from server about updating profile 
-    this._socketService.onEvent(SocketEvent.UPDATE_PROFILE).subscribe((user: User)=>{
-      this.user = user;
-    });
-
-    // console.log('User object: ', this.user);
-  }
+  
 
   clickedOver() {
     this.clickedOverview = true;
+    this.clickedRequestArtist = false;
+    this.clickedSettings = false;
+    
+  }
+
+  onRequestArtist(){
+    this.clickedRequestArtist = true;
+    this.clickedOverview = false;
+    this.clickedSettings = false;
+  }
+
+  onClickedSettings() {
+    this.clickedRequestArtist = false;
+    this.clickedOverview = false;
+    this.clickedSettings = true;
   }
 
   /**
@@ -292,4 +331,6 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterViewChecked {
       });
     });
   }
+
+ 
 }

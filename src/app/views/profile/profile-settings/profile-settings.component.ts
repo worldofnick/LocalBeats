@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
+import { Component, OnInit, Input,ViewChild, OnDestroy } from '@angular/core';
 import { ISubscription } from "rxjs/Subscription";
 import { MatProgressBar, MatButton } from '@angular/material';
 import { FileUploader } from 'ng2-file-upload';
@@ -25,8 +25,8 @@ import { SearchService } from '../../../services/search/search.service';
 })
 export class ProfileSettingsComponent implements OnInit {
   @ViewChild(MatProgressBar) progressBar: MatProgressBar;
-
-  user: User = null;
+  @Input() user: User;
+  // user: User = null;
   private userSubscription: ISubscription;
   genresList: string[] = ['rock', 'country', 'jazz', 'blues', 'rap'];
   eventsList: string[] = ['wedding', 'birthday', 'business'];

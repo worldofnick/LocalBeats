@@ -86,76 +86,17 @@ export class ProfileOverviewComponent implements OnInit {
 
   ngOnInit() {
 
-    if (this.user) {
-      this.setReviews();
-    }
+   this.setReviews();
+
   }
 
   setReviews() {
     this.reviewService.getReviewsTo(this.user).then((reviewList: Review[]) => {
       this.allResults = reviewList;
-      let sum = 0;
-      for (let review of this.allResults){
-        if(review.booking.bothReviewed){
-          sum += review.rating;
-          this.numberCompletedReviews++;
-        }
-      }
       
       this.updateResults();
-      this.averageRating = sum / this.numberCompletedReviews;
-      this.averageRating = this.averageRating.toFixed(1);
-
-      this.user.averageRating = this.averageRating;
-      this.userService.onEditProfile(this.user).then( (user:User) => {
-        this.userService.user = user;
-      });
     });
   }
-
-  private pageEvent(pageEvent: PageEvent) {
-    this.pageIndex = pageEvent.pageIndex;
-    this.pageSize = pageEvent.pageSize;
-    this.updateResults();
-    // Scroll to top of page
-    window.scrollTo(0, 0);
-  }
-
-
-  private updateResults() {
-    let startingIndex = (this.pageIndex + 1) * this.pageSize - this.pageSize;
-    let endIndex = startingIndex + this.pageSize;
-    var i: number;
-
-    this.results = Array<any>();
-    // Slice the results array
-    for (i = startingIndex; i < endIndex && i < this.allResults.length; i++) {
-      this.results.push(this.allResults[i]);
-    }
-
-    console.log(this.results.length);
-
-  }
-
-  ngOnDestroy() {
-  }
-
-  openDialog(): void {
-
-    let review: Review = new Review;
-    review.toUser = this.user;
-    review.fromUser = this.userService.user;
-    this.reviewService.review(review, false).subscribe((result) => {
-      if(result.rating == -1) {
-        return;
-      }
-      this.reviewService.createReview(result).then( (newReview: Review) => {
-          this.setReviews();
-      });
-    });
-
-  }
-
   clickedReviewer(user: User) {
     if(this.userService.isAuthenticated()) {
       if(user._id == this.userService.user._id) {
@@ -177,26 +118,28 @@ export class ProfileOverviewComponent implements OnInit {
 
   }
 
-  editReview(review: Review) {
-    this.reviewService.review(review, true).subscribe((result) => {
-      if (result.rating == -1) {
-        // user has clicked no in the edit menu
-        return;
-      }else if (result.rating == -2) {
-        // user is deleting the event
-        // this.bookingService.getBooking()
-        this.reviewService.deleteReviewByRID(result).then( () => {
-
-          this.setReviews();
-        });
-      }else {
-        // user has updated the review
-        this.reviewService.updateReview(review).then( () => {
-          this.setReviews();
-        });
-      }
-    });
+  private pageEvent(pageEvent: PageEvent) {
+    this.pageIndex = pageEvent.pageIndex;
+    this.pageSize = pageEvent.pageSize;
+    this.updateResults();
+    // Scroll to top of page
+    window.scrollTo(0, 0);
   }
+
+
+  private updateResults() {
+    let startingIndex = (this.pageIndex + 1) * this.pageSize - this.pageSize;
+    let endIndex = startingIndex + this.pageSize;
+    var i: number;
+
+    this.results = Array<any>();
+    // Slice the results array
+    for (i = startingIndex; i < endIndex && i < this.allResults.length; i++) {
+      this.results.push(this.allResults[i]);
+    }
+  }
+
+  
 
 
 
