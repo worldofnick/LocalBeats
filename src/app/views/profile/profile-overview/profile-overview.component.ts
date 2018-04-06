@@ -105,6 +105,11 @@ export class ProfileOverviewComponent implements OnInit {
       this.updateResults();
       this.averageRating = sum / this.numberCompletedReviews;
       this.averageRating = this.averageRating.toFixed(1);
+
+      this.user.averageRating = this.averageRating;
+      this.userService.onEditProfile(this.user).then( (user:User) => {
+        this.userService.user = user;
+      });
     });
   }
 
