@@ -85,11 +85,7 @@ export class ProfileOverviewComponent implements OnInit {
     private bookingService: BookingService) { }
 
   ngOnInit() {
-       // listening for real time notification
-       this.loginSub = this._socketService.onEvent(SocketEvent.NEW_LOG_IN)
-       .subscribe(() => {
-         this.setReviews();
-       });
+
     if (this.user) {
       this.setReviews();
     }
@@ -137,7 +133,6 @@ export class ProfileOverviewComponent implements OnInit {
   }
 
   ngOnDestroy() {
-    this.loginSub.unsubscribe();
   }
 
   openDialog(): void {
