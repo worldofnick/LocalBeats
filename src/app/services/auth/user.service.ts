@@ -101,7 +101,7 @@ export class UserService {
             .toPromise()
             .then((response: Response) => {
                 const data = response.json();
-                return data.user as User;
+                // return data.user as User;
             })
             .catch(this.handleError);
     }

@@ -16,6 +16,9 @@ import { environment } from '../../../environments/environment';
 import { SocketService } from 'app/services/chats/socket.service';
 import { SocketEvent } from 'app/services/chats/model/event';
 import { EventService } from 'app/services/event/event.service';
+import { UserService } from '../../services/auth/user.service';
+import { ReviewService } from 'app/services/reviews/review.service';
+
 import {
     startOfDay,
     endOfDay,
@@ -40,7 +43,7 @@ export class BookingService {
 
     private headers: Headers = new Headers({ 'Content-Type': 'application/json' });
 
-    constructor(private http: Http, private dialog: MatDialog, private socketService: SocketService, private eventService: EventService) { }
+    constructor(private http: Http, private dialog: MatDialog, private socketService: SocketService, private eventService: EventService, private reviewService: ReviewService, private userService: UserService) { }
 
     public negotiate(booking: Booking, initial: boolean, view: string, artistAvail: string): Observable<{response: NegotiationResponses, price: number, comment: string}> {
         if ((view == "artist" && !booking.performerUser.stripeAccountId || view == "host" && !booking.hostUser.stripeAccountId)) {
@@ -83,15 +86,42 @@ export class BookingService {
 
             const notificationToArtist = new Notification(null, review.fromUser, review.toUser,
                 review.booking.eventEID._id, review.booking, NegotiationResponses.review,
-                'You have been reviewed by ' + review.fromUser.firstName + ' and now your review is published', 'rate_review', new Date(), profile);
+                'You have been reviewed by ' + review.fromUser.firstName + ' and now your review is published',
+                'rate_review', new Date(), profile);
 
             const notificationToHost = new Notification(null, review.toUser, review.fromUser,
                 review.booking.eventEID._id, review.booking, NegotiationResponses.review,
-                'You have been reviewed by ' + review.toUser.firstName + ' and now your review is published', 'rate_review', new Date(), profile);
+                'You have been reviewed by ' + review.toUser.firstName + ' and now your review is published',
+                'rate_review', new Date(), profile);
+
+
+            this.setAverage(review.fromUser);
+            this.setAverage(review.toUser);
+
 
             this.socketService.sendNotification(SocketEvent.SEND_NOTIFICATION, notificationToArtist);
             this.socketService.sendNotification(SocketEvent.SEND_NOTIFICATION, notificationToHost);
         }
+    }
+
+    public setAverage(user: User) {
+        this.reviewService.getReviewsTo(user).then((reviewList: Review[]) => {
+                let averageRating: any = 0.0;
+                let allResults = reviewList;
+                let sum = 0;
+                for (let review of allResults){
+                    if(review.booking.bothReviewed){
+                    sum += review.rating;
+                    }
+                }
+                averageRating = sum / allResults.length;
+                averageRating = averageRating.toFixed(1);
+
+                user.averageRating = averageRating;
+
+                this.userService.updateStar(user).then( () => {
+                });
+        });
     }
 
     public sendNotificationsToArtist(review: Review) {

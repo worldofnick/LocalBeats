@@ -93,25 +93,8 @@ export class ProfileOverviewComponent implements OnInit {
   setReviews() {
     this.reviewService.getReviewsTo(this.user).then((reviewList: Review[]) => {
       this.allResults = reviewList;
-      console.log(this.allResults);
-      let sum = 0;
-      for (let review of this.allResults){
-        if(review.booking.bothReviewed){
-          sum += review.rating;
-          this.numberCompletedReviews++;
-        }
-      }
-
+      
       this.updateResults();
-      this.averageRating = sum / this.numberCompletedReviews;
-      this.averageRating = this.averageRating.toFixed(1);
-
-      this.user.averageRating = this.averageRating;
-
-      this.userService.updateStar(this.user).then( () => {
-      });
-
-
     });
   }
   clickedReviewer(user: User) {
