@@ -5,7 +5,7 @@
       <p *ngIf="events.length == 0">You have not hosted any events</p>
     </div>
     <div *ngIf="events.length > 0" fxLayout="row" fxLayoutWrap="wrap" >
-      <div fxFlex="100" fxFlex.gt-xs="33" *ngFor="let item of this.events; let j = index">
+      <div fxFlex="100" fxFlex.gt-xs="33" *ngFor="let item of this.pagedEvents; let j = index">
         <mat-card class="p-0">
           <img mat-card-image [src]="item.event.eventPicUrl" class="cover-image">
           <mat-card-content>
@@ -182,5 +182,13 @@
         </mat-card>
       </div>
     </div>
+  </div>
+  <br>
+  <div *ngIf="events.length > 0">
+    <mat-paginator [length]="eventsLength"
+      [pageSize]="pageSize"
+      [hidePageSize]=true
+      (page)="pageEvent($event)">
+    </mat-paginator>
   </div>
 </section>

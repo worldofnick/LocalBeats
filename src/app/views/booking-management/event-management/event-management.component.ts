@@ -5,7 +5,7 @@ import { ActivatedRoute } from "@angular/router";
 import { NgForm } from '@angular/forms/src/directives/ng_form';
 import { Router } from "@angular/router";
 import { MatTabChangeEvent } from '@angular/material';
-import {MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatSnackBar} from '@angular/material';
+import {MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatSnackBar, PageEvent} from '@angular/material';
 
 // Services
 import { UserService } from '../../../services/auth/user.service';
@@ -74,6 +74,25 @@ export class EventManagementComponent implements OnInit {
     cancellationNotifications: number,
     paymentStatues: PaymentStatus[],
     cancelledPaymentStatues: PaymentStatus[]}[];
+  // Paged Events
+  pagedEvents: {
+    event: Event,
+    applications: Booking[],
+    applicationNotifications: number,
+    requests: Booking[],
+    requestNotifications: number,
+    confirmations: Booking[],
+    confirmationNotifications: number,
+    completions: Booking[],
+    completionNotifications: number,
+    cancellations: Booking[],
+    cancellationNotifications: number,
+    paymentStatues: PaymentStatus[],
+    cancelledPaymentStatues: PaymentStatus[]}[] = [];
+  // MatPaginator Inputs
+  eventsLength = 0;
+  pageSize = 15;
+  pageIndex: number = 0;
 
   constructor(private eventService: EventService,
     private userService: UserService,
@@ -241,6 +260,7 @@ export class EventManagementComponent implements OnInit {
     // Get all events associated with the user
     this.events = [];
     this.eventService.getEventsByUID(this.user._id).then((events: Event[]) => {
+      let count: number = 0;
       for(let e of events) {
         // Get the bookings associated with each event
         // Get the confirmed bookings, which could be cancelled, verified, or not
@@ -323,6 +343,11 @@ export class EventManagementComponent implements OnInit {
             paymentStatues: paymentStatues,
             cancelledPaymentStatues: cancelledPaymentStatues
           });
+          if(count < this.pageSize) {
+            this.pagedEvents.push(this.events[count]);
+          }
+          this.eventsLength++;
+          count++;
         })
       }
     })
@@ -852,7 +877,22 @@ export class EventManagementComponent implements OnInit {
       });
 
     });
+  }
 
+  pageEvent($event) {
+    console.log("page event");
+  }
+
+  updateEventsPage() {
+    let startingIndex = (this.pageIndex + 1) * this.pageSize - this.pageSize;
+    let endIndex = startingIndex + this.pageSize;
+    var i: number;
+
+    this.pagedEvents = [];
+    // Slice the results array
+    for (i = startingIndex; i < endIndex && i < this.events.length; i++) {
+      this.pagedEvents.push(this.events[i]);
+    }
   }
 
 }
