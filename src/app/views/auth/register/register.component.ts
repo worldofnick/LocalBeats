@@ -50,6 +50,7 @@ export class RegisterComponent implements OnInit {
       this.genresList = types;
     }));
 
+    // TODO: remove second group's properties
     this.signupForm = new FormGroup({
       firstName: new FormControl('', Validators.required),
       lastName: new FormControl('', Validators.required),
@@ -58,6 +59,12 @@ export class RegisterComponent implements OnInit {
       events: new FormControl(),
       isArtist: new FormControl(false),
       location: new FormControl()
+    });
+
+    this.preferencesFormGroup = new FormGroup({
+      genres: new FormControl(),
+      events: new FormControl(),
+      isArtist: new FormControl(false),
     });
 
     // Set Current Location if desired in future
