@@ -177,9 +177,12 @@ module.exports = function (io) {
             let toSocketsArray = socketsHash[payload.to._id];
             let allSocketsOfFromAndTo = fromSocketsArray.concat(toSocketsArray);
             // console.log('>> All sockets: ', allSocketsOfFromAndTo);
-            for (let i = 0; i < allSocketsOfFromAndTo.length; i++) {
-                // console.log('> Sending message to', allSocketsOfFromAndTo[i]);
-                io.to(allSocketsOfFromAndTo[i]).emit('sendPrivateMessage', payload);
+
+            if (allSocketsOfFromAndTo !== undefined && allSocketsOfFromAndTo !== null) {
+                for (let i = 0; i < allSocketsOfFromAndTo.length; i++) {
+                    // console.log('> Sending message to', allSocketsOfFromAndTo[i]);
+                    io.to(allSocketsOfFromAndTo[i]).emit('sendPrivateMessage', payload);
+                }
             }
         });
 
@@ -204,8 +207,10 @@ module.exports = function (io) {
 
             let socketArray = socketsHash[userID];
 
-            for (let i = 0; i < socketArray.length; i++) {
-                io.to(socketArray[i]).emit('notificationCount', number);
+            if (socketArray !== undefined && socketArray !== null) {
+                for (let i = 0; i < socketArray.length; i++) {
+                    io.to(socketArray[i]).emit('notificationCount', number);
+                }
             }
             // TODO: remove later after testing. Non-iterable hash array
             // for(senderSocket of socketArray) {
@@ -228,8 +233,10 @@ module.exports = function (io) {
             }
             // console.log('TELL TOP BAR: ', sendArray);
 
-            for (let i = 0; i < sendArray.length; i++) {
-                io.to(sendArray[i]).emit('notificationCount', numberOfNotifications);
+            if (sendArray !== undefined && sendArray !== null) {
+                for (let i = 0; i < sendArray.length; i++) {
+                    io.to(sendArray[i]).emit('notificationCount', numberOfNotifications);
+                }
             }
             // TODO: remove later after testing. Non-iterable hash array
             // for(let senderSocket of sendArray) {
@@ -252,8 +259,10 @@ module.exports = function (io) {
 
             console.log('TELL NOTIFICATION PANEL: ', sendArray);
 
-            for (let i = 0; i < sendArray.length; i++) {
-                io.to(sendArray[i]).emit('notifications', notifications)
+            if (sendArray !== undefined && sendArray !== null) {
+                for (let i = 0; i < sendArray.length; i++) {
+                    io.to(sendArray[i]).emit('notifications', notifications)
+                }
             }
             // TODO: remove later after testing. Non-iterable hash array
             // for(let senderSocket of sendArray) {
@@ -267,8 +276,10 @@ module.exports = function (io) {
             
             let socketArray = socketsHash[userID];
 
-            for (let i = 0; i < socketArray.length; i++) {
-                io.to(socketArray[i]).emit('notifications', 'test,test,test,test');
+            if (socketArray !== undefined && socketArray !== null) {
+                for (let i = 0; i < socketArray.length; i++) {
+                    io.to(socketArray[i]).emit('notifications', 'test,test,test,test');
+                }
             }
             // TODO: remove later after testing. Non-iterable hash array
             // for(senderSocket of socketArray) {
@@ -300,8 +311,11 @@ module.exports = function (io) {
                 // console.log('right here', notification);
                 payload._id = notification._id;
 
-                for (let i = 0; i < recipientSocketArray.length; i++) {
-                    io.to(recipientSocketArray[i]).emit('sendNotification', payload);
+
+                if (recipientSocketArray !== undefined && recipientSocketArray !== null) {
+                    for (let i = 0; i < recipientSocketArray.length; i++) {
+                        io.to(recipientSocketArray[i]).emit('sendNotification', payload);
+                    }
                 }
                 // TODO: remove later after testing. Non-iterable hash array
                 // for(let recipientSocket of recipientSocketArray) {
@@ -327,8 +341,10 @@ module.exports = function (io) {
                 }
             }
 
-            for (let i = 0; i < sendArray.length; i++) {
-                io.to(sendArray[i]).emit('updateProfile', payload);
+            if (sendArray !== undefined && sendArray !== null) {
+                for (let i = 0; i < sendArray.length; i++) {
+                    io.to(sendArray[i]).emit('updateProfile', payload);
+                }
             }
             // TODO: remove later after testing. Non-iterable hash array
             // for(let senderSocket of sendArray) {
