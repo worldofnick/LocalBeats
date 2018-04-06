@@ -108,7 +108,7 @@ export class HomeComponent implements OnInit {
 
 
   defaultArtistSearch() {
-    this.currentSearch = new SearchTerms('', '', null, null, null, null, null, null);
+    this.currentSearch = new SearchTerms('', '', null, null, null, null, null, null, null);
 
     this.currentSearch.searchType = 'Rec';
     this.searchType = 'Rec';
@@ -130,7 +130,7 @@ export class HomeComponent implements OnInit {
 
   defaultEventSearch() {
 
-    this.currentSearch = new SearchTerms('', '', null, null, null, null, null, null);
+    this.currentSearch = new SearchTerms('', '', null, null, null, null, null, null, null);
 
     this.currentSearch.searchType = 'ERec';
     this.searchType = 'Rec';
@@ -174,7 +174,7 @@ export class HomeComponent implements OnInit {
 
 
     // set current search. then configure it.
-    this.currentSearch = new SearchTerms('', '', null, null, null, null, null, null);
+    this.currentSearch = new SearchTerms('', '', null, null, null, null, null, null,null);
 
     // configure genres.
     if (this._userService.user.genres == null || this._userService.user.genres.length == 0) {
