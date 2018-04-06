@@ -69,16 +69,16 @@
               </div>
 
               <div>
-                  <button mat-button matStepperNext>Next</button>
-                  <!-- <button mat-button (click)="stepper.reset()">Reset</button> -->
+                <button mat-button matStepperNext>Next</button>
+                <!-- <button mat-button (click)="stepper.reset()">Reset</button> -->
               </div>
 
-              </form>
-            </mat-step>
+            </form>
+          </mat-step>
 
-            <mat-step [stepControl]="preferencesFormGroup">
-              <form [formGroup]="preferencesFormGroup">
-                  <ng-template matStepLabel>Preferences</ng-template>
+          <mat-step [stepControl]="preferencesFormGroup">
+            <form [formGroup]="preferencesFormGroup">
+              <ng-template matStepLabel>Preferences</ng-template>
 
               <div class="pb-1">
                 <mat-form-field>
@@ -112,20 +112,30 @@
                 <mat-checkbox name="isArtist" [formControl]="preferencesFormGroup.controls['isArtist']" class="pb-1">I am an Artist</mat-checkbox>
               </div>
 
-              <button mat-raised-button class="mat-primary full-width mb-1" [disabled]="preferencesFormGroup.invalid">Sign up</button>
-              <small *ngIf="error" class="form-error-msg">{{errorMessage}}</small>
-              <div class="text-center">
-                <a routerLink="/auth" class="mat-primary text-center full-width">Sign in to existing account</a>
-              </div>
-
               <div>
-                  <button mat-button matStepperNext>Next</button>
-                  <!-- <button mat-button (click)="stepper.reset()">Reset</button> -->
+                <button mat-button matStepperNext>Next</button>
+                <!-- <button mat-button (click)="stepper.reset()">Reset</button> -->
               </div>
             </form>
-
           </mat-step>
+
+          <mat-step>
+              <ng-template matStepLabel>Link Accounts (optional)</ng-template>
+              <button mat-raised-button class="mat-primary full-width mb-1">Spotify</button>
+              <button mat-raised-button class="mat-primary full-width mb-1">SoundCloud</button>
+              <button mat-raised-button class="mat-primary full-width mb-1">Google</button>
+              <button mat-raised-button class="mat-primary full-width mb-1">Stripe Payments</button>
+              <br>
+              <button mat-raised-button (click)="signup()">Confirm Sign up...</button>
+          </mat-step>
+
         </mat-vertical-stepper>
+
+        <small *ngIf="error" class="form-error-msg">{{errorMessage}}</small>
+        <hr><br>
+        <div class="text-center">
+          <a routerLink="/auth" class="mat-primary text-center full-width">Sign in to existing account</a>
+        </div>
 
       </mat-card-content>
     </mat-card>
