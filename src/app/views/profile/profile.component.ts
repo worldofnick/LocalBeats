@@ -15,11 +15,14 @@ import { Booking } from '../../models/booking';
 import { Event } from '../../models/event';
 import { Notification } from '../../models/notification';
 import { Router } from '@angular/router';
+import { ReviewService } from '../../services/reviews/review.service';
 import { SpotifyClientService } from '../../services/music/spotify-client.service';
 import { DomSanitizer, SafeResourceUrl, SafeUrl } from '@angular/platform-browser';
 import {MatListModule} from '@angular/material/list';
 import { MatSnackBar } from '@angular/material';
-
+import { PageEvent } from '@angular/material';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { Review } from '../../models/review';
 
 @Component({
   selector: 'app-profile',
@@ -44,6 +47,17 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterViewChecked {
   deleteStatus:Number;
   hasApplied:Boolean = true;
 
+  averageRating: any;
+  numberCompletedReviews: any = 0;
+  pageIndex: number = 0;
+  pageSize = 3; // default page size is 15
+  pageSizeOptions = [3];
+  results: any[] = [];
+  allResults: any[] = [];
+
+  // userID: any = null;
+  // reviews: Review[] = [];
+
   // Spotify and Soundcloud
   onSpotifyWidget = false;
   trustedAlbumUrl: SafeResourceUrl;
@@ -55,6 +69,7 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterViewChecked {
     public userService: UserService,
     private bookingService: BookingService,
     private eventService: EventService, public snackBar: MatSnackBar,
+    private reviewService: ReviewService,
     private notificationService: NotificationService, private cdRef:ChangeDetectorRef,
     private sanitizer: DomSanitizer, private _sharedDataService: SharedDataService,
     private _socketService: SocketService, private _spotifyClientService: SpotifyClientService) {
@@ -63,7 +78,89 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterViewChecked {
 
   }
 
-  
+  ngOnInit() {
+
+    
+
+
+    this.userSubscription = this.userService.userResult.subscribe(user => this.user = user);
+    this.activeView = this.route.snapshot.params['view'];
+
+    // snapshot params returns a javascript object. index into it with the property field to get a property.
+    this.userID = {
+      id: this.route.snapshot.params['id']
+    };
+
+    if (this.userID["id"] == null) {
+      this.onOwnProfile = true;
+      // this.user = this.userService.user;
+      // Retreive and store the latest spotify albums of this user
+      this.getSpotifyAlbumsAndSave();
+      this.setReviews();
+    } else {
+      // on another perons profile.
+      this.onOwnProfile = false;
+      let ID: String = this.userID["id"];
+
+      this.userService.getUserByID(ID).then((gottenUser: User) => {
+        this.user = gottenUser;
+        // console.log('Profile got user: ', gottenUser);
+        // Retreive and store the latest spotify albums of this user
+        this.getSpotifyAlbumsAndSave();
+        this.setReviews();
+      }).then(() => this.hasRequested());
+    }
+
+    // received socket emition from server about updating profile
+    this._socketService.onEvent(SocketEvent.UPDATE_PROFILE).subscribe((user: User)=>{
+      this.user = user;
+    });
+
+    // console.log('User object: ', this.user);
+  }
+
+  setReviews() {
+    this.reviewService.getReviewsTo(this.user).then((reviewList: Review[]) => {
+      this.allResults = reviewList;
+      let sum = 0;
+      for (let review of this.allResults){
+        if(review.booking.bothReviewed){
+          sum += review.rating;
+          this.numberCompletedReviews++;
+        }
+      }
+ 
+      this.updateResults();
+      this.averageRating = sum / this.numberCompletedReviews;
+      this.averageRating = this.averageRating.toFixed(1);
+
+      this.user.averageRating = this.averageRating;
+      this.userService.onEditProfile(this.user).then( (user:User) => {
+        this.userService.user = user;
+      });
+    });
+  }
+
+  private pageEvent(pageEvent: PageEvent) {
+    this.pageIndex = pageEvent.pageIndex;
+    this.pageSize = pageEvent.pageSize;
+    this.updateResults();
+    // Scroll to top of page
+    window.scrollTo(0, 0);
+  }
+
+
+  private updateResults() {
+    let startingIndex = (this.pageIndex + 1) * this.pageSize - this.pageSize;
+    let endIndex = startingIndex + this.pageSize;
+    var i: number;
+
+    this.results = Array<any>();
+    // Slice the results array
+    for (i = startingIndex; i < endIndex && i < this.allResults.length; i++) {
+      this.results.push(this.allResults[i]);
+    }
+  }
 
   hasRequested() {
     if(!this.userService.isAuthenticated()){
@@ -89,41 +186,7 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.userSubscription.unsubscribe();
   }
 
-  ngOnInit() {
-    this.userSubscription = this.userService.userResult.subscribe(user => this.user = user);
-    this.activeView = this.route.snapshot.params['view'];
-    
-
-    //snapshot params returns a javascript object. index into it with the property field to get a property.
-    this.userID = {
-      id: this.route.snapshot.params['id']
-    }
-
-    if (this.userID["id"] == null) {
-      this.onOwnProfile = true;
-      //this.user = this.userService.user;
-      // Retreive and store the latest spotify albums of this user
-      this.getSpotifyAlbumsAndSave();
-    } else {
-      //on another perons profile.
-      this.onOwnProfile = false;
-      let ID: String = this.userID["id"];
-
-      this.userService.getUserByID(ID).then((gottenUser: User) => {
-        this.user = gottenUser;
-        // console.log('Profile got user: ', gottenUser);
-        // Retreive and store the latest spotify albums of this user
-        this.getSpotifyAlbumsAndSave();
-      }).then(() => this.hasRequested());
-    }
-
-    //received socket emition from server about updating profile 
-    this._socketService.onEvent(SocketEvent.UPDATE_PROFILE).subscribe((user: User)=>{
-      this.user = user;
-    });
-
-    // console.log('User object: ', this.user);
-  }
+  
 
   clickedOver() {
     this.clickedOverview = true;
@@ -292,4 +355,6 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterViewChecked {
       });
     });
   }
+
+ 
 }

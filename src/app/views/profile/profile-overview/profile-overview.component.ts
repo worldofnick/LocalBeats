@@ -132,71 +132,9 @@ export class ProfileOverviewComponent implements OnInit {
     for (i = startingIndex; i < endIndex && i < this.allResults.length; i++) {
       this.results.push(this.allResults[i]);
     }
-
-    console.log(this.results.length);
-
   }
 
-  ngOnDestroy() {
-  }
-
-  openDialog(): void {
-
-    let review: Review = new Review;
-    review.toUser = this.user;
-    review.fromUser = this.userService.user;
-    this.reviewService.review(review, false).subscribe((result) => {
-      if(result.rating == -1) {
-        return;
-      }
-      this.reviewService.createReview(result).then( (newReview: Review) => {
-          this.setReviews();
-      });
-    });
-
-  }
-
-  clickedReviewer(user: User) {
-    if(this.userService.isAuthenticated()) {
-      if(user._id == this.userService.user._id) {
-        this.router.navigate(['/profile']);
-      }else {
-        this.userService.getUserByID(user._id).then( (user: User) => {
-          this.user = user;
-          this._socketService.sendToProfile('updateProfile', this.user);
-        });
-        this.router.navigate(['/profile', user._id]);
-      }
-    }else {
-      this.userService.getUserByID(user._id).then( (user: User) => {
-      this.user = user;
-      this._socketService.sendToProfile('updateProfile', this.user);
-    });
-      this.router.navigate(['/profile', user._id]);
-    }
-
-  }
-
-  editReview(review: Review) {
-    this.reviewService.review(review, true).subscribe((result) => {
-      if (result.rating == -1) {
-        // user has clicked no in the edit menu
-        return;
-      }else if (result.rating == -2) {
-        // user is deleting the event
-        // this.bookingService.getBooking()
-        this.reviewService.deleteReviewByRID(result).then( () => {
-
-          this.setReviews();
-        });
-      }else {
-        // user has updated the review
-        this.reviewService.updateReview(review).then( () => {
-          this.setReviews();
-        });
-      }
-    });
-  }
+  
 
 
 
