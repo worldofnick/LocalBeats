@@ -7,3 +7,25 @@
   /* agm-map {
     height: 300px;
   } */
+
+  agm-map {
+    height: 300px;
+  }
+
+  .eventImage{
+    max-width: 300px;
+    /* height: auto; */
+    /* float: left; */
+    /* margin: auto; */
+    /* background-color: red; */
+  }
+
+  .map{
+    max-width: 300px;
+    /* background-color: green; */
+    /* height: auto; */
+  }
+
+  .space{
+    padding-bottom:200px;
+  }
