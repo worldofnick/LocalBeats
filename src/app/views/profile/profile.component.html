@@ -13,12 +13,12 @@
       <div class="profile-actions text-center mb-1">
         <button *ngIf="!this.onOwnProfile && this.userService.isAuthenticated()" mat-raised-button color="primary" (click)="onStartNewConversationFromProfileButtonClick()">Message</button>
         <button *ngIf="!this.onOwnProfile && this.userService.isAuthenticated() && this.user.isArtist" mat-raised-button color="accent"
-          (click)="clickedRequestArtist = true">Request Artist</button>
+          (click)="onRequestArtist()">Request Artist</button>
       </div>
       <div class="profile-nav">
         <mat-nav-list>
           <!-- check here if to see if on another profile and go to profile/id/overview -->
-          <mat-list-item (click)="clickedOver()" routerLinkActive="list-item-active">
+          <mat-list-item *ngIf="!clickedOverview"(click)="clickedOver()" routerLinkActive="list-item-active">
             <mat-icon>home</mat-icon>
             Overview
           </mat-list-item>
@@ -38,7 +38,7 @@
 
           <ng-template [ngIf]="this.onOwnProfile">
             <mat-divider></mat-divider>
-            <mat-list-item [routerLink]="['/profile','settings']" routerLinkActive="list-item-active">
+            <mat-list-item (click)="onClickedSettings()">
               <mat-icon>settings</mat-icon>
               Edit Profile
             </mat-list-item>
@@ -154,6 +154,7 @@
   <div fxFlex="100" fxFlex.gt-sm="50" fxFlex.gt-md="calc(100% - 300px)">
     <router-outlet></router-outlet>
     <app-profile-request *ngIf="clickedRequestArtist" [user]="userService.user" [artist]="user"></app-profile-request>
-    <app-profile-overview *ngIf="clickedOverview" [user]="this.user"></app-profile-overview>
+    <app-profile-overview *ngIf="clickedOverview" [user]="user" [onOwnProfile]="onOwnProfile"></app-profile-overview>
+    <app-profile-settings *ngIf="clickedSettings" [user]="user"></app-profile-settings>
   </div>
 </div>

@@ -95,6 +95,17 @@ export class UserService {
             .catch(this.handleError);
     }
 
+    public updateStar(newUser: User): Promise<User> {
+        const current = this.userConnection + '/' + newUser._id;
+        return this.http.put(current, { user: newUser }, { headers: this.headers })
+            .toPromise()
+            .then((response: Response) => {
+                const data = response.json();
+                // return data.user as User;
+            })
+            .catch(this.handleError);
+    }
+
     private notifyServerToAddGreetBot(to: User) {
         this._socketService.send(Action.GREET_WITH_BEATBOT, {
             to: this.user,
