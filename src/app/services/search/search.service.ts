@@ -100,6 +100,12 @@ export class SearchService {
         } else {
             params.set('artist', 'false');
         }
+
+        if(searchTerms.searchType === 'ARec') {
+            params.set('artist', 'true')
+        } else if(searchTerms.searchType === 'ERec'){
+            params.set('artist', 'false');
+        }
         for(let type of searchTerms.event_types) {
             params.append('event_types', type.toLowerCase());
         }
@@ -111,7 +117,13 @@ export class SearchService {
             params.set('lat', String(searchTerms.location.latitude));
             params.set('lon', String(searchTerms.location.longitude));
         }
-        params.set('limit', '15');
+        
+        if(searchTerms.searchType == 'ERec' || searchTerms.searchType == 'ARec'){
+            params.set('limit', '9');
+
+        }else{
+            params.set('limit', '15');
+        }
         if (searchTerms.text != null && searchTerms.text.length != 0) {
             params.set('name', searchTerms.text)
         }

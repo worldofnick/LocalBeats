@@ -55,8 +55,8 @@ export class HomeComponent implements OnInit {
 
   pageIndex: number = 0;
   pageIndex2: number = 0; //for artists
-  pageSize = 4; // default page size is 15
-  pageSizeOptions = [4];
+  pageSize = 3; // default page size is 15
+  pageSizeOptions = [3];
 
   constructor(
     private snackBar: MatSnackBar,
@@ -110,8 +110,8 @@ export class HomeComponent implements OnInit {
   defaultArtistSearch() {
     this.currentSearch = new SearchTerms('', '', null, null, null, null, null, null);
 
-    this.currentSearch.searchType = 'Event';
-    this.searchType = 'Event';
+    this.currentSearch.searchType = 'Rec';
+    this.searchType = 'Rec';
 
     this.currentSearch.location = {
       longitude: -111.891047,
@@ -119,7 +119,7 @@ export class HomeComponent implements OnInit {
     };
     this.currentSearch.genres = ['all genres'];
     this.currentSearch.event_types = ['all events'];
-    this.currentSearch.searchType = 'Artist';
+    this.currentSearch.searchType = 'ARec';
     this.searchType = 'Artist';
     this.searchService.userSearch(this.currentSearch).then((users: User[]) => {
       this.allResultsArtists = users;
@@ -132,8 +132,8 @@ export class HomeComponent implements OnInit {
 
     this.currentSearch = new SearchTerms('', '', null, null, null, null, null, null);
 
-    this.currentSearch.searchType = 'Event';
-    this.searchType = 'Event';
+    this.currentSearch.searchType = 'ERec';
+    this.searchType = 'Rec';
 
     this.currentSearch.location = {
       longitude: -111.891047,
@@ -164,7 +164,7 @@ export class HomeComponent implements OnInit {
     // set suggestions type
     if (this._userService.user.isArtist) {
       // user is an artist
-      this.searchType = 'Event';
+      this.searchType = 'Rec';
       this.suggestedTitle = 'Suggested Events:';
     } else {
       // user is event host.
@@ -201,7 +201,7 @@ export class HomeComponent implements OnInit {
 
 
     // user is an artist so search for event
-    this.currentSearch.searchType = 'Event';
+    this.currentSearch.searchType = 'ARec';
     this.searchService.eventSearch(this.currentSearch).then((events: Event[]) => {
       this.allResults = events;
       if(this.allResults.length == 0){
@@ -211,7 +211,7 @@ export class HomeComponent implements OnInit {
     });
 
     // its an event host. so search for artists.
-    this.currentSearch.searchType = 'Artist';
+    this.currentSearch.searchType = 'ERec';
     this.searchService.userSearch(this.currentSearch).then((users: User[]) => {
       this.allResultsArtists = users;
       if(this.allResultsArtists.length == 0){

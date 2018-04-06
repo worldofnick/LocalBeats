@@ -43,7 +43,7 @@
       <!-- <p *ngIf="results.length == 0">We're sorry.  There are no results that fit the parameters of your search.</p> -->
     </div>
     <div *ngIf="results.length > 0" fxLayout="row" fxLayoutWrap="wrap">
-      <div fxFlex="100" fxFlex.gt-xs="25" *ngFor="let result of results">
+      <div fxFlex="100" fxFlex.gt-xs="33" *ngFor="let result of results">
 
         <mat-card class="p-0" [routerLink]="['/events', result._id]">
           <mat-card-title class="mat-bg-primary m-0">
@@ -90,7 +90,10 @@
         </mat-card>
       </div>
     </div>
-    <mat-paginator *ngIf="allResults && allResults.length > 0" [length]="allResults.length" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions"
+    <mat-paginator *ngIf="allResults && allResults.length > 0"  
+      [length]="allResults.length" 
+      [pageSize]="pageSize"  
+      [pageSizeOptions]="pageSizeOptions"
       (page)="pageEvent($event)">
     </mat-paginator>
     <div class="section-header">
@@ -99,7 +102,7 @@
     </div>
     <div *ngIf="resultsArtists.length > 0" fxLayout="row" fxLayoutWrap="wrap">
 
-      <div fxFlex="100" fxFlex.gt-xs="25" *ngFor="let result of resultsArtists">
+      <div fxFlex="100" fxFlex.gt-xs="33" *ngFor="let result of resultsArtists">
         <!-- events -->
 
         <mat-card class="p-0" [routerLink]="['/profile', result._id]">
