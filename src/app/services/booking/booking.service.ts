@@ -145,6 +145,7 @@ export class BookingService {
             review.booking.eventEID._id, review.booking, NegotiationResponses.review,
             'You have been reviewed by ' + review.fromUser.firstName + ' click here to leave your review', 'hearing', new Date(), profile);
 
+        console.log('sending', notificationToHost);
         this.socketService.sendNotification(SocketEvent.SEND_NOTIFICATION, notificationToHost);
 
     }

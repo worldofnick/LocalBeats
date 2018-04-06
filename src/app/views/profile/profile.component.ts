@@ -92,10 +92,13 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterViewChecked {
 
     if (this.userID["id"] == null) {
       this.onOwnProfile = true;
-      this.user = this.userService.user;
-      this.clickedOver();
-      // Retreive and store the latest spotify albums of this user
-      this.getSpotifyAlbumsAndSave();
+      this.userService.getUserByID(this.userService.user._id).then( (updated: User) => {
+        this.userService.user = updated;
+        this.user = this.userService.user;
+        this.clickedOver();
+        // Retreive and store the latest spotify albums of this user
+        this.getSpotifyAlbumsAndSave();
+      });
     } else {
       // on another perons profile.
       this.onOwnProfile = false;
