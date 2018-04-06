@@ -55,9 +55,6 @@ export class RegisterComponent implements OnInit {
       firstName: new FormControl('', Validators.required),
       lastName: new FormControl('', Validators.required),
       email: new FormControl('', [Validators.required, Validators.email]),
-      genres: new FormControl(),
-      events: new FormControl(),
-      isArtist: new FormControl(false),
       location: new FormControl()
     });
 
@@ -106,19 +103,20 @@ export class RegisterComponent implements OnInit {
   signup() {
 
     const signupData = this.signupForm.value;
+    const preferencesData = this.preferencesFormGroup.value;
     this.user = {
       _id: null,
       firstName: signupData.firstName,
       lastName: signupData.lastName,
-      fullName: signupData.firstName + " " + signupData.lastName,
+      fullName: signupData.firstName + ' ' + signupData.lastName,
       email: signupData.email,
       password: null,
       spotify: null,
       soundcloud: null,
-      genres: signupData.genres,
-      isArtist: signupData.isArtist,
+      genres: preferencesData.genres,
+      isArtist: preferencesData.isArtist,
       profilePicUrl: "https://www.vccircle.com/wp-content/uploads/2017/03/default-profile.png",
-      eventTypes: signupData.events,
+      eventTypes: preferencesData.events,
       socket: null,
       city: '',
       averageRating: 0,
