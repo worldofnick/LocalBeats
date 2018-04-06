@@ -104,6 +104,7 @@ export class RegisterComponent implements OnInit {
 
     const signupData = this.signupForm.value;
     const preferencesData = this.preferencesFormGroup.value;
+
     this.user = {
       _id: null,
       firstName: signupData.firstName,
@@ -115,7 +116,7 @@ export class RegisterComponent implements OnInit {
       soundcloud: null,
       genres: preferencesData.genres,
       isArtist: preferencesData.isArtist,
-      profilePicUrl: "https://www.vccircle.com/wp-content/uploads/2017/03/default-profile.png",
+      profilePicUrl: 'https://www.vccircle.com/wp-content/uploads/2017/03/default-profile.png',
       eventTypes: preferencesData.events,
       socket: null,
       city: '',
@@ -134,23 +135,25 @@ export class RegisterComponent implements OnInit {
 
     this.submitButton.disabled = true;
     this.progressBar.mode = 'indeterminate';
-    this.userService.signupUser(this.user).subscribe(
-      (data: any) => {
-        // Correctly authenticated, redirect
-        this.error = false;
-        this.userService.userLoaded(data.user, data.token, false, false);
-        this.userService.getNotificationsCountForUser(data.user._id);
-        this.userService.getNotificationsForUser(data.user._id);
-        this.router.navigate(['/']);
-      },
-      (error) => {
-        // Show user error message
-        this.errorMessage = error;
-        this.error = true;
-        this.submitButton.disabled = false;
-        this.progressBar.mode = 'determinate';
-      }
-    );
+
+    console.log('>> User object: ', this.user);
+    // this.userService.signupUser(this.user).subscribe(
+    //   (data: any) => {
+    //     // Correctly authenticated, redirect
+    //     this.error = false;
+    //     this.userService.userLoaded(data.user, data.token, false, false);
+    //     this.userService.getNotificationsCountForUser(data.user._id);
+    //     this.userService.getNotificationsForUser(data.user._id);
+    //     this.router.navigate(['/']);
+    //   },
+    //   (error) => {
+    //     // Show user error message
+    //     this.errorMessage = error;
+    //     this.error = true;
+    //     this.submitButton.disabled = false;
+    //     this.progressBar.mode = 'determinate';
+    //   }
+    // );
   }
 
 }
