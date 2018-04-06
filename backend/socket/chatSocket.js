@@ -300,8 +300,11 @@ module.exports = function (io) {
                 // console.log('right here', notification);
                 payload._id = notification._id;
 
-                for (let i = 0; i < recipientSocketArray.length; i++) {
-                    io.to(recipientSocketArray[i]).emit('sendNotification', payload);
+
+                if (recipientSocketArray !== undefined) {
+                    for (let i = 0; i < recipientSocketArray.length; i++) {
+                        io.to(recipientSocketArray[i]).emit('sendNotification', payload);
+                    }
                 }
                 // TODO: remove later after testing. Non-iterable hash array
                 // for(let recipientSocket of recipientSocketArray) {
