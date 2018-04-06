@@ -36,7 +36,7 @@ import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { ChartsModule } from 'ng2-charts/ng2-charts';
 import { FileUploadModule } from 'ng2-file-upload/ng2-file-upload';
 import { CommonPipesModule } from "../../pipes/common/common-pipes.module";
-
+import { MatPaginatorModule } from '@angular/material/paginator';
 import { ProfileComponent } from "./profile.component";
 import { ProfileOverviewComponent } from './profile-overview/profile-overview.component';
 import { ProfileSettingsComponent } from './profile-settings/profile-settings.component';
@@ -90,6 +90,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     ChartsModule,
     FileUploadModule,
     CommonPipesModule,
+    MatPaginatorModule,
     ImageCropperModule,
     RouterModule.forChild(ProfileRoutes)
   ],

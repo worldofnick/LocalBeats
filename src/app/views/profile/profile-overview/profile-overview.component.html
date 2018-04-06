@@ -12,7 +12,8 @@
   
         <mat-card-content>
           <div class="timeline">
-            <div class="timeline-item" *ngFor="let review of reviews">
+
+            <div class="timeline-item" *ngFor="let review of results">
   
               <div *ngIf="review.booking.bothReviewed" class="timeline-body">
                 <div class="timeline-body-top" fxLayout="row">
@@ -48,18 +49,19 @@
                   resize: none;">{{review.text}}</textarea>
   
                 </div>
-  
-                <!-- <div *ngIf="userService.isAuthenticated() && review.fromUser._id == userService.user._id" class="timeline-body-top" fxLayout="row">
-                    <button mat-raised-button color="accent" (click)="editReview(review)" mat-button
-                    class="half-width">Edit Review</button>
-                    
-                </div> -->
-  
               </div>
             </div>
+            <mat-paginator 
+                [length]="allResults.length" 
+                [pageSize]="pageSize"  
+                [pageSizeOptions]="pageSizeOptions"
+                (page)="pageEvent($event)">
+              </mat-paginator>
           </div>
         </mat-card-content>
       </mat-card>
+
+
       <!-- End Time line -->
   
       <mat-card class="default">
@@ -93,30 +95,7 @@
       </mat-card>
     </div>
   
-    <div fxLayout="column" fxFlex="100" fxFlex.gt-md="50">
-      <!-- <mat-card class="default">
-        <mat-card-title>Reviews</mat-card-title>
-        <mat-card-content class="p-0">
-          <mat-list class="compact-list mb-1">
-            <mat-list-item class="" *ngFor="let review of reviews">
-              <img mat-list-avatar class="mr-1" [src]="r.img" alt="">
-              <div fxLayout="row" fxFlex="100">
-                <h6 class="m-0 mr-1">{{review.fromUser.firstName}}</h6>
-                <span fxFlex></span>
-                <div fxFlex="40">{{review.text | excerpt:20 }}</div>
-                <span fxFlex></span>
-                <small class="text-muted mr-1">{{ review.date | relativeTime}}</small>
-              </div>
-            </mat-list-item>
-          </mat-list>
-          <div class="text-center">
-            <button *ngIf="!userService.isAuthenticated()" mat-button class="full-width">View all</button>
-            <button *ngIf="userService.isAuthenticated()" mat-button class="half-width">View all</button>
-            <button *ngIf="!onOwnProfile && userService.isAuthenticated()" (click)="openDialog()" mat-button class="half-width">Review User</button>
-          </div>
-        </mat-card-content>
-      </mat-card> -->
-  
+    <div fxLayout="column" fxFlex="100" fxFlex.gt-md="50">  
       <mat-card class="default">
         <mat-card-title>Events Activity</mat-card-title>
         <mat-card-content class="p-0" fxLayout="column">
