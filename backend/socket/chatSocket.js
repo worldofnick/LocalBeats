@@ -78,6 +78,12 @@ module.exports = function (io) {
             // Delete user socket from hash table
             if (socketsHash[payload.from._id] !== undefined) {
                 let socketArrayOfUser = socketsHash[payload.from._id];
+
+                // adams code to fix home page bug with suggestions when logging out.
+                for(let i = 0; i < socketArrayOfUser.length; i++){
+                    io.to(socketArrayOfUser[i]).emit('youLoggedOut', payload);
+                }
+
                 for (let i = 0; i < socketArrayOfUser.length; i++) {
                     if (socketArrayOfUser[i] === socket.id) {
                         socketArrayOfUser.splice(i, 1);
@@ -93,7 +99,7 @@ module.exports = function (io) {
                 console.log('=======================');
                 // Notify all clients that a client logged out
                 io.emit('someUserLoggedOut', { serverMessage: payload.from.firstName + ' logged out', serverPayload: payload.from });
-            }
+                }
         });
 
         socket.on('addBeatBotToUserMessage', (payload) => {
