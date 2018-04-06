@@ -27,6 +27,9 @@ export class RegisterComponent implements OnInit {
   zoom: number;
 
   signupForm: FormGroup;
+  preferencesFormGroup: FormGroup;
+  thirdPartyAccountFormGroup: FormGroup;
+
   user: User;
   genresList: string[] = ['rock', 'country', 'jazz', 'blues', 'rap'];
   eventsList: string[] = ['wedding', 'birthday', 'business'];
@@ -57,10 +60,10 @@ export class RegisterComponent implements OnInit {
       password: password,
       confirmPassword: confirmPassword,
       genres: new FormControl(),
-      events: new FormControl(), 
+      events: new FormControl(),
       isArtist: new FormControl(false),
       location: new FormControl()
-    })
+    });
 
     // Set Current Location if desired in future
     this.setCurrentPosition();
@@ -73,7 +76,7 @@ export class RegisterComponent implements OnInit {
       autocomplete.addListener("place_changed", () => {
         this.ngZone.run(() => {
           let place: google.maps.places.PlaceResult = autocomplete.getPlace();
-          this.signupForm.setControl('location', new FormControl(place.formatted_address))
+          this.signupForm.setControl('location', new FormControl(place.formatted_address));
           if (place.geometry === undefined || place.geometry === null) {
             return;
           }
@@ -127,7 +130,7 @@ export class RegisterComponent implements OnInit {
       this.user.location = [this.longitude, this.latitude];
       this.user.city = this.city;
       this.user.state = this.state;
-    } 
+    }
 
     this.submitButton.disabled = true;
     this.progressBar.mode = 'indeterminate';
