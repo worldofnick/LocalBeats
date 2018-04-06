@@ -11,7 +11,7 @@
 
         <mat-vertical-stepper linear=true #stepper="matVerticalStepper">
 
-          <mat-step [stepControl]="signupForm">
+          <mat-step [stepControl]="signupForm" editable="false">
 
             <form [formGroup]="signupForm">
               <ng-template matStepLabel>Identification</ng-template>
@@ -76,7 +76,7 @@
             </form>
           </mat-step>
 
-          <mat-step [stepControl]="preferencesFormGroup">
+          <mat-step [stepControl]="preferencesFormGroup" editable="false">
             <form [formGroup]="preferencesFormGroup">
               <ng-template matStepLabel>Preferences</ng-template>
 
