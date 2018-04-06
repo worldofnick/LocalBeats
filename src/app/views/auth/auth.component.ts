@@ -46,6 +46,7 @@ export class AuthComponent implements OnInit {
       eventTypes: [],
       socket: null,
       city: '',
+      averageRating: 0,
       state: '',
       location: null,
       isOnline: true,

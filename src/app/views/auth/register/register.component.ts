@@ -116,6 +116,7 @@ export class RegisterComponent implements OnInit {
       eventTypes: signupData.events,
       socket: null,
       city: '',
+      averageRating: 0,
       state: '',
       location: null,
       isOnline: true,
