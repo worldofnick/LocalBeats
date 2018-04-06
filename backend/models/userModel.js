@@ -22,6 +22,7 @@ var UserSchema = new Schema({
     isArtist      : {type: Boolean, default: false},
     isOnline      : {type: Boolean, default: false},
     city          : {type: String, default: ''},
+    averageRating : {type: Number, default: 0},
     state         : {type: String, default: ''},
     location: {
         type: [Number],  // [<longitude>, <latitude>]

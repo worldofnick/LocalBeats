@@ -3,6 +3,7 @@ export enum Action {
     LEFT = 'userLeftPrivateChat',
     NEW_LOG_IN = 'newUserLoggedIn',
     SMN_LOGGED_OUT = 'someUserLoggedOut',
+    YOU_LOGGED_OUT = 'youLoggedOut',
     SEND_PRIVATE_MSG = 'sendPrivateMessage',
     SEND_MSG = 'sendMessage',
     PERSISTED_LOGIN = 'persistedLogin',

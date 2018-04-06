@@ -15,6 +15,7 @@ export class User {
     public eventTypes: string[];
     public socket: io.socket;
     public city: string;
+    public averageRating: number;
     public state: string;
     public location: number[];
     public stripeAccountId: string;
