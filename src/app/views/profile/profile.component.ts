@@ -37,7 +37,8 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterViewChecked {
   userID: any = null;
   requested: boolean = null;
   clickedRequestArtist:boolean = null;
-  clickedOverview = false;
+  clickedOverview = true;
+  clickedSettings = false;
 
   events:any[];
   requestedArtistEvents: any[] = [];
@@ -74,7 +75,7 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterViewChecked {
     private sanitizer: DomSanitizer, private _sharedDataService: SharedDataService,
     private _socketService: SocketService, private _spotifyClientService: SpotifyClientService) {
 
-     router.events.subscribe((url: any) => this.clickedOverview = router.url == "/profile/overview");
+    //  router.events.subscribe((url: any) => this.clickedOverview = router.url == "/profile/overview");
 
   }
 
@@ -190,6 +191,20 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterViewChecked {
 
   clickedOver() {
     this.clickedOverview = true;
+    this.clickedRequestArtist = false;
+    this.clickedSettings = false;
+  }
+
+  onRequestArtist(){
+    this.clickedRequestArtist = true;
+    this.clickedOverview = false;
+    this.clickedSettings = false;
+  }
+
+  onClickedSettings() {
+    this.clickedRequestArtist = false;
+    this.clickedOverview = false;
+    this.clickedSettings = true;
   }
 
   /**
