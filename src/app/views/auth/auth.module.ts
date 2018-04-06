@@ -10,7 +10,8 @@ import {
   MatCardModule,
   MatCheckboxModule,
   MatSelectModule,
-  MatIconModule
+  MatIconModule,
+  MatStepperModule
  } from '@angular/material';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
@@ -27,6 +28,7 @@ import { AuthRoutes } from "./auth.routing";
     MatProgressBarModule,
     MatSelectModule,
     MatButtonModule,
+    MatStepperModule,
     MatInputModule,
     MatCardModule,
     MatCheckboxModule,

@@ -108,6 +108,7 @@ export class AuthComponent implements OnInit {
 
     // ***********************************************************
     // PROPER LOG IN MECHANISM
+    // TODO: remove it. Moved to callback component
 
     // this.userService.signinUser(this.user).subscribe(
     //   (data: any) => {
@@ -135,6 +136,8 @@ export class AuthComponent implements OnInit {
         this.error = false;
         this.magicLinkButtonClicked = true;
         this.progressBar.mode = 'determinate';
+
+        // TODO: remove it. Moved to callback component
         // this.userService.userLoaded(data.user, data.token, false, false);
         // this.userService.getNotificationsCountForUser(data.user._id);
         // this.userService.getNotificationsForUser(data.user._id);
