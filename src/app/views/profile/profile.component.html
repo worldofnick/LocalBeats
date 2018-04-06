@@ -18,7 +18,7 @@
       <div class="profile-nav">
         <mat-nav-list>
           <!-- check here if to see if on another profile and go to profile/id/overview -->
-          <mat-list-item (click)="clickedOver()" routerLinkActive="list-item-active">
+          <mat-list-item *ngIf="!clickedOverview"(click)="clickedOver()" routerLinkActive="list-item-active">
             <mat-icon>home</mat-icon>
             Overview
           </mat-list-item>
@@ -154,7 +154,7 @@
   <div fxFlex="100" fxFlex.gt-sm="50" fxFlex.gt-md="calc(100% - 300px)">
     <router-outlet></router-outlet>
     <app-profile-request *ngIf="clickedRequestArtist" [user]="userService.user" [artist]="user"></app-profile-request>
-    <app-profile-overview *ngIf="clickedOverview" [user]="user"></app-profile-overview>
+    <app-profile-overview *ngIf="clickedOverview" [user]="user" [onOwnProfile]="onOwnProfile"></app-profile-overview>
     <app-profile-settings *ngIf="clickedSettings" [user]="user"></app-profile-settings>
   </div>
 </div>

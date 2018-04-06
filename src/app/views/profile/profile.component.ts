@@ -36,8 +36,8 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterViewChecked {
   onOwnProfile: boolean = null;
   userID: any = null;
   requested: boolean = null;
-  clickedRequestArtist:boolean = null;
-  clickedOverview = true;
+  clickedRequestArtist:boolean = false;
+  clickedOverview = false;
   clickedSettings = false;
 
   events:any[];
@@ -81,6 +81,7 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterViewChecked {
 
   ngOnInit() {
 
+
     this.userSubscription = this.userService.userResult.subscribe(user => this.user = user);
     this.activeView = this.route.snapshot.params['view'];
 
@@ -91,22 +92,20 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterViewChecked {
 
     if (this.userID["id"] == null) {
       this.onOwnProfile = true;
-      // this.user = this.userService.user;
+      this.user = this.userService.user;
+      this.clickedOver();
       // Retreive and store the latest spotify albums of this user
-      console.log('ON YOUR PROFILE')
       this.getSpotifyAlbumsAndSave();
-      this.setReviews();
     } else {
       // on another perons profile.
       this.onOwnProfile = false;
       let ID: String = this.userID["id"];
-      console.log('ON ANOTHER PROFILE')
       this.userService.getUserByID(ID).then((gottenUser: User) => {
         this.user = gottenUser;
         // console.log('Profile got user: ', gottenUser);
         // Retreive and store the latest spotify albums of this user
+        this.clickedOver();
         this.getSpotifyAlbumsAndSave();
-        this.setReviews();
       }).then(() => this.hasRequested());
     }
 
@@ -118,48 +117,8 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterViewChecked {
     // console.log('User object: ', this.user);
   }
 
-  setReviews() {
-    this.reviewService.getReviewsTo(this.user).then((reviewList: Review[]) => {
-      this.allResults = reviewList;
-      let sum = 0;
-      for (let review of this.allResults){
-        if(review.booking.bothReviewed){
-          sum += review.rating;
-          this.numberCompletedReviews++;
-        }
-      }
  
-      this.updateResults();
-      this.averageRating = sum / this.numberCompletedReviews;
-      this.averageRating = this.averageRating.toFixed(1);
 
-      this.user.averageRating = this.averageRating;
-      // this.userService.onEditProfile(this.user).then( (user:User) => {
-      //   this.userService.user = user;
-      // });
-    });
-  }
-
-  private pageEvent(pageEvent: PageEvent) {
-    this.pageIndex = pageEvent.pageIndex;
-    this.pageSize = pageEvent.pageSize;
-    this.updateResults();
-    // Scroll to top of page
-    window.scrollTo(0, 0);
-  }
-
-
-  private updateResults() {
-    let startingIndex = (this.pageIndex + 1) * this.pageSize - this.pageSize;
-    let endIndex = startingIndex + this.pageSize;
-    var i: number;
-
-    this.results = Array<any>();
-    // Slice the results array
-    for (i = startingIndex; i < endIndex && i < this.allResults.length; i++) {
-      this.results.push(this.allResults[i]);
-    }
-  }
 
   hasRequested() {
     if(!this.userService.isAuthenticated()){
@@ -191,6 +150,7 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.clickedOverview = true;
     this.clickedRequestArtist = false;
     this.clickedSettings = false;
+    
   }
 
   onRequestArtist(){

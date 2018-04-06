@@ -86,14 +86,14 @@ export class ProfileOverviewComponent implements OnInit {
 
   ngOnInit() {
 
-    if (this.user) {
-      this.setReviews();
-    }
+   this.setReviews();
+
   }
 
   setReviews() {
     this.reviewService.getReviewsTo(this.user).then((reviewList: Review[]) => {
       this.allResults = reviewList;
+      console.log(this.allResults);
       let sum = 0;
       for (let review of this.allResults){
         if(review.booking.bothReviewed){
@@ -101,16 +101,35 @@ export class ProfileOverviewComponent implements OnInit {
           this.numberCompletedReviews++;
         }
       }
-      
+
       this.updateResults();
       this.averageRating = sum / this.numberCompletedReviews;
       this.averageRating = this.averageRating.toFixed(1);
 
       this.user.averageRating = this.averageRating;
       // this.userService.onEditProfile(this.user).then( (user:User) => {
-      //   this.userService.user = user;
       // });
     });
+  }
+  clickedReviewer(user: User) {
+    if(this.userService.isAuthenticated()) {
+      if(user._id == this.userService.user._id) {
+        this.router.navigate(['/profile']);
+      }else {
+        this.userService.getUserByID(user._id).then( (user: User) => {
+          this.user = user;
+          this._socketService.sendToProfile('updateProfile', this.user);
+        });
+        this.router.navigate(['/profile', user._id]);
+      }
+    }else {
+      this.userService.getUserByID(user._id).then( (user: User) => {
+      this.user = user;
+      this._socketService.sendToProfile('updateProfile', this.user);
+    });
+      this.router.navigate(['/profile', user._id]);
+    }
+
   }
 
   private pageEvent(pageEvent: PageEvent) {
