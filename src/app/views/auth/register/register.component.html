@@ -68,13 +68,25 @@
                 </mat-form-field>
               </div>
 
+              <div>
+                  <button mat-button matStepperNext>Next</button>
+                  <!-- <button mat-button (click)="stepper.reset()">Reset</button> -->
+              </div>
+
+              </form>
+            </mat-step>
+
+            <mat-step [stepControl]="preferencesFormGroup">
+              <form [formGroup]="preferencesFormGroup" (ngSubmit)="signup()">
+                  <ng-template matStepLabel>Preferences</ng-template>
+
               <div class="pb-1">
                 <mat-form-field>
-                  <mat-select placeholder="Preferred Music" [formControl]="signupForm.controls['genres']" multiple>
+                  <mat-select placeholder="Preferred Music" [formControl]="preferencesFormGroup.controls['genres']" multiple>
                     <mat-select-trigger class="additional-selection">
-                      {{(signupForm.controls['genres'].value ? signupForm.controls['genres'].value[0] : '') | capitalize}}
-                      <span *ngIf="signupForm.controls['genres'].value?.length > 1">
-                        (+{{signupForm.controls['genres'].value.length - 1}} others)
+                      {{(preferencesFormGroup.controls['genres'].value ? preferencesFormGroup.controls['genres'].value[0] : '') | capitalize}}
+                      <span *ngIf="preferencesFormGroup.controls['genres'].value?.length > 1">
+                        (+{{preferencesFormGroup.controls['genres'].value.length - 1}} others)
                       </span>
                     </mat-select-trigger>
                     <mat-option *ngFor="let genre of genresList" [value]="genre">{{genre | capitalize}}</mat-option>
@@ -84,11 +96,11 @@
 
               <div class="pb-1">
                 <mat-form-field>
-                  <mat-select placeholder="Preferred Events" [formControl]="signupForm.controls['events']" multiple>
+                  <mat-select placeholder="Preferred Events" [formControl]="preferencesFormGroup.controls['events']" multiple>
                     <mat-select-trigger class="additional-selection">
-                      {{(signupForm.controls['events'].value ? signupForm.controls['events'].value[0] : '') | capitalize}}
-                      <span *ngIf="signupForm.controls['events'].value?.length > 1">
-                        (+{{signupForm.controls['events'].value.length - 1}} others)
+                      {{(preferencesFormGroup.controls['events'].value ? preferencesFormGroup.controls['events'].value[0] : '') | capitalize}}
+                      <span *ngIf="preferencesFormGroup.controls['events'].value?.length > 1">
+                        (+{{preferencesFormGroup.controls['events'].value.length - 1}} others)
                       </span>
                     </mat-select-trigger>
                     <mat-option *ngFor="let event of eventsList" [value]="event">{{event | capitalize}}</mat-option>
@@ -97,17 +109,18 @@
               </div>
 
               <div class="pb-1">
-                <mat-checkbox name="isArtist" [formControl]="signupForm.controls['isArtist']" class="pb-1">I am an Artist</mat-checkbox>
+                <mat-checkbox name="isArtist" [formControl]="preferencesFormGroup.controls['isArtist']" class="pb-1">I am an Artist</mat-checkbox>
               </div>
 
-              <button mat-raised-button class="mat-primary full-width mb-1" [disabled]="signupForm.invalid">Sign up</button>
+              <button mat-raised-button class="mat-primary full-width mb-1" [disabled]="preferencesFormGroup.invalid">Sign up</button>
               <small *ngIf="error" class="form-error-msg">{{errorMessage}}</small>
               <div class="text-center">
                 <a routerLink="/auth" class="mat-primary text-center full-width">Sign in to existing account</a>
               </div>
 
               <div>
-                <button mat-button matStepperNext>Next</button>
+                  <button mat-button matStepperNext>Next</button>
+                  <!-- <button mat-button (click)="stepper.reset()">Reset</button> -->
               </div>
             </form>
 
