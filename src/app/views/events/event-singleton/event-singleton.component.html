@@ -1,28 +1,22 @@
-<mat-card class="p-0">
-  <mat-card-title class="">
-    <!-- <div class="card-title-text">{{model.eventName}}</div> -->
-    <!-- <div class="card-title-text text-center fz-2">{{model.eventName}}</div> -->
-    <mat-divider></mat-divider>
-  </mat-card-title>
-  <mat-card-content>
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>{{model.eventName}}</mat-card-title>
+    <mat-card-subtitle (click)="onSelectHost()"> Host: {{model.hostUser?.firstName}} {{model.hostUser?.lastName}}</mat-card-subtitle>
+  </mat-card-header>
+    <mat-card-content>
 
-    <div fxLayout="column" fxFlex="40" fxFlex.gt-md="50">
-
-      <mat-card class="plan-pricing p-0 no-shadow" style="padding:0">
-        <mat-card-title class="">
-          <div class="card-title-text">
-            <div class="fz-1">{{model.eventType | capitalize}} </div>
-            <div class="fz-2">
-              <strong>{{model.eventName}}</strong>
-            </div>
-          </div>
-        </mat-card-title>
-        <mat-card-content style="padding:0">
+    <div fxLayout="row" fxLayout.xs="column" fxLayout.sm="column" fxFlex>
+      <div fxFlex="50">
+        <!-- <mat-icon (click)="onSelectHost()" mat-list-icon>
+              <img [src]="model.hostUser?.profilePicUrl">
+            </mat-icon> -->
+        <p mat-line></p>
+        <div class="pb-1">
           <mat-list class="mr-1">
             <mat-list-item>
-          <mat-icon (click)="onSelectHost()"mat-list-icon><img [src]="model.hostUser?.profilePicUrl"> 
-          </mat-icon>
-              <p mat-line> Host: {{model.hostUser?.firstName}} {{model.hostUser?.lastName}}</p>
+              <mat-icon mat-list-icon>info</mat-icon>
+
+              <p mat-line>{{model.eventType | capitalize}}</p>
             </mat-list-item>
             <mat-list-item>
               <mat-icon mat-list-icon>monetization_on</mat-icon>
@@ -30,7 +24,9 @@
             </mat-list-item>
             <mat-list-item>
               <mat-icon mat-list-icon>date_range</mat-icon>
-              <p mat-line> {{model.fromDate | date:'MMM d, y, h:mm a'}} - {{model.toDate | date:'MMM d, y, h:mm a'}} </p>
+              <p *ngIf="sameDay" mat-line> {{model.fromDate | date:'MMM d, y: h:mm a'}} - {{model.toDate | date:'h:mm a'}}</p>
+              <p *ngIf="!sameDay" mat-line> {{model.fromDate | date:'MMM d, h:mm a'}} - {{model.toDate | date:'MMM d, y, h:mm a'}}</p>
+
             </mat-list-item>
             <mat-list-item *ngIf="this.model.negotiable">
               <mat-icon mat-list-icon>import_export</mat-icon>
@@ -61,40 +57,50 @@
             {{ this.model.description }}
           </p>
 
+          <!-- <mat-divider *ngIf="userService.isAuthenticated()"></mat-divider> -->
+          <button *ngIf="isCurrentUser && userService.isAuthenticated()" (click)="onEditEvent()" mat-raised-button color="primary">Edit Event</button>
+          <button *ngIf="isCurrentUser && userService.isAuthenticated()" (click)="onDeleteEvent()" mat-raised-button color="accent">Delete Event</button>
+          <button *ngIf="!isCurrentUser && userService.isAuthenticated()" (click)="messageHost()" mat-raised-button color="primary">Message Host</button>
+          <button *ngIf="!isCurrentUser && userService.isAuthenticated() && !hasApplied && userService.user.isArtist" (click)="newApplication()"
+            mat-raised-button color="accent">{{buttonText}}</button>
+          <button *ngIf="!isCurrentUser && userService.isAuthenticated() && hasApplied && userService.user.isArtist && userBooking != null && !userBooking.approved"
+            (click)="onManageBooking()" mat-raised-button color="accent">Manage Application</button>
+          <button *ngIf="!isCurrentUser && userService.isAuthenticated() && hasApplied && userService.user.isArtist && userBooking != null && userBooking.approved"
+            (click)="onManageBooking()" mat-raised-button color="accent">Manage Booking</button>
+        </div>
 
-        </mat-card-content>
+      </div>
 
-        <mat-divider *ngIf="userService.isAuthenticated()"></mat-divider>
-        <button *ngIf="isCurrentUser && userService.isAuthenticated()" (click)="onEditEvent()" mat-raised-button color="primary">Edit Event</button>
-        <button *ngIf="isCurrentUser && userService.isAuthenticated()" (click)="onDeleteEvent()" mat-raised-button color="accent">Delete Event</button>
-        <button *ngIf="!isCurrentUser && userService.isAuthenticated()" (click)="messageHost()" mat-raised-button color="primary">Message Host</button>
-        <button *ngIf="!isCurrentUser && userService.isAuthenticated() && !hasApplied && userService.user.isArtist" (click)="newApplication()" mat-raised-button color="accent">{{buttonText}}</button>
-        <button *ngIf="!isCurrentUser && userService.isAuthenticated() && hasApplied && userService.user.isArtist && userBooking != null && !userBooking.approved" (click)="onManageBooking()" mat-raised-button color="accent">Manage Application</button>
-        <button *ngIf="!isCurrentUser && userService.isAuthenticated() && hasApplied && userService.user.isArtist && userBooking != null && userBooking.approved" (click)="onManageBooking()" mat-raised-button color="accent">Manage Booking</button>
-      </mat-card>
-      <!-- </div> -->
-
-    </div>
+      <div fxFlex="5">
 
 
-    <div fxLayout="column" fxFlex="100" fxFlex.gt-md="50">
 
-      <!-- <div fxFlex="100" fxFlex.gt-sm="50" fxFlex.sm="50"> -->
-      <mat-card class="plan-pricing no-shadow  p-0">
-        <img mat-card-image [src]="model.eventPicUrl" style="
-          max-width:800;
-          max-height:640px;
-          width:auto;
-          height:auto;
-          display: block;
-          padding-top: 15px;">
 
-        <mat-card-content class="p-0">
-          <agm-map [ngStyle]="{height: '512px'}" [zoom]="zoom" [latitude]="lat" [longitude]="lng" [scrollwheel]="false">
-            <agm-marker [latitude]="lat" [longitude]="lng"></agm-marker>
-          </agm-map>
-        </mat-card-content>
-      </mat-card>
+
+      </div>
+      <div fxFlex="40">
+
+        
+
+
+          
+          <div class="map pb-1">
+            
+            <agm-map [zoom]="zoom" [latitude]="lat" [longitude]="lng" [scrollwheel]="false">
+              <agm-marker [latitude]="lat" [longitude]="lng"></agm-marker>
+            </agm-map>
+            
+
+
+          </div>
+          <div class="eventImage">
+            
+              <img  [src]="model.eventPicUrl">
+              
+            </div>
+
+            <div class = "space"></div>
+      </div>
 
 
     </div>

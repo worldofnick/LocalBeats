@@ -78,6 +78,12 @@ module.exports = function (io) {
             // Delete user socket from hash table
             if (socketsHash[payload.from._id] !== undefined) {
                 let socketArrayOfUser = socketsHash[payload.from._id];
+
+                // adams code to fix home page bug with suggestions when logging out.
+                for(let i = 0; i < socketArrayOfUser.length; i++){
+                    io.to(socketArrayOfUser[i]).emit('youLoggedOut', payload);
+                }
+
                 for (let i = 0; i < socketArrayOfUser.length; i++) {
                     if (socketArrayOfUser[i] === socket.id) {
                         socketArrayOfUser.splice(i, 1);
@@ -93,7 +99,7 @@ module.exports = function (io) {
                 console.log('=======================');
                 // Notify all clients that a client logged out
                 io.emit('someUserLoggedOut', { serverMessage: payload.from.firstName + ' logged out', serverPayload: payload.from });
-            }
+                }
         });
 
         socket.on('addBeatBotToUserMessage', (payload) => {
@@ -171,9 +177,12 @@ module.exports = function (io) {
             let toSocketsArray = socketsHash[payload.to._id];
             let allSocketsOfFromAndTo = fromSocketsArray.concat(toSocketsArray);
             // console.log('>> All sockets: ', allSocketsOfFromAndTo);
-            for (let i = 0; i < allSocketsOfFromAndTo.length; i++) {
-                // console.log('> Sending message to', allSocketsOfFromAndTo[i]);
-                io.to(allSocketsOfFromAndTo[i]).emit('sendPrivateMessage', payload);
+
+            if (allSocketsOfFromAndTo !== undefined && allSocketsOfFromAndTo !== null) {
+                for (let i = 0; i < allSocketsOfFromAndTo.length; i++) {
+                    // console.log('> Sending message to', allSocketsOfFromAndTo[i]);
+                    io.to(allSocketsOfFromAndTo[i]).emit('sendPrivateMessage', payload);
+                }
             }
         });
 
@@ -197,9 +206,16 @@ module.exports = function (io) {
             let number = notificationController.getNotificationsCount();
 
             let socketArray = socketsHash[userID];
-            for(senderSocket of socketArray) {
-                io.to(senderSocket).emit('notificationCount', number);
+
+            if (socketArray !== undefined && socketArray !== null) {
+                for (let i = 0; i < socketArray.length; i++) {
+                    io.to(socketArray[i]).emit('notificationCount', number);
+                }
             }
+            // TODO: remove later after testing. Non-iterable hash array
+            // for(senderSocket of socketArray) {
+            //     io.to(senderSocket).emit('notificationCount', number);
+            // }
         });
 
         // TODO add parans for function
@@ -217,9 +233,15 @@ module.exports = function (io) {
             }
             // console.log('TELL TOP BAR: ', sendArray);
 
-            for(let senderSocket of sendArray) {
-                io.to(senderSocket).emit('notificationCount', numberOfNotifications);
+            if (sendArray !== undefined && sendArray !== null) {
+                for (let i = 0; i < sendArray.length; i++) {
+                    io.to(sendArray[i]).emit('notificationCount', numberOfNotifications);
+                }
             }
+            // TODO: remove later after testing. Non-iterable hash array
+            // for(let senderSocket of sendArray) {
+            //     io.to(senderSocket).emit('notificationCount', numberOfNotifications);
+            // }
         })
 
         socket.on('tellNotificationPanel', notifications => {
@@ -237,19 +259,32 @@ module.exports = function (io) {
 
             console.log('TELL NOTIFICATION PANEL: ', sendArray);
 
-            for(let senderSocket of sendArray) {
-                // console.log(notifications);
-                io.to(senderSocket).emit('notifications', notifications)
+            if (sendArray !== undefined && sendArray !== null) {
+                for (let i = 0; i < sendArray.length; i++) {
+                    io.to(sendArray[i]).emit('notifications', notifications)
+                }
             }
+            // TODO: remove later after testing. Non-iterable hash array
+            // for(let senderSocket of sendArray) {
+            //     // console.log(notifications);
+            //     io.to(senderSocket).emit('notifications', notifications)
+            // }
         })
 
         socket.on('notificationsForUser', userID => {
             // var notifications = notificationController.getNotificationsForUser(userID)
             
             let socketArray = socketsHash[userID];
-            for(senderSocket of socketArray) {
-                io.to(senderSocket).emit('notifications', 'test,test,test,test');
+
+            if (socketArray !== undefined && socketArray !== null) {
+                for (let i = 0; i < socketArray.length; i++) {
+                    io.to(socketArray[i]).emit('notifications', 'test,test,test,test');
+                }
             }
+            // TODO: remove later after testing. Non-iterable hash array
+            // for(senderSocket of socketArray) {
+            //     io.to(senderSocket).emit('notifications', 'test,test,test,test');
+            // }
         });
 
         socket.on('sendNotification', (payload) => {
@@ -276,9 +311,16 @@ module.exports = function (io) {
                 // console.log('right here', notification);
                 payload._id = notification._id;
 
-                for(let recipientSocket of recipientSocketArray) {
-                    io.to(recipientSocket).emit('sendNotification', payload);
+
+                if (recipientSocketArray !== undefined && recipientSocketArray !== null) {
+                    for (let i = 0; i < recipientSocketArray.length; i++) {
+                        io.to(recipientSocketArray[i]).emit('sendNotification', payload);
+                    }
                 }
+                // TODO: remove later after testing. Non-iterable hash array
+                // for(let recipientSocket of recipientSocketArray) {
+                //     io.to(recipientSocket).emit('sendNotification', payload);
+                // }
             });
 
         });
@@ -298,10 +340,17 @@ module.exports = function (io) {
                     }
                 }
             }
-            for(let senderSocket of sendArray) {
-                // console.log(notifications);
-                io.to(senderSocket).emit('updateProfile', payload);
+
+            if (sendArray !== undefined && sendArray !== null) {
+                for (let i = 0; i < sendArray.length; i++) {
+                    io.to(sendArray[i]).emit('updateProfile', payload);
+                }
             }
+            // TODO: remove later after testing. Non-iterable hash array
+            // for(let senderSocket of sendArray) {
+            //     // console.log(notifications);
+            //     io.to(senderSocket).emit('updateProfile', payload);
+            // }
         })
     });
 }
