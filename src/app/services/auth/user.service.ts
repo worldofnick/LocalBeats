@@ -44,11 +44,11 @@ export class UserService {
     }
 
     private initIoConnection(persisted: boolean): void {
-            this.ioConnection = this._socketService.onEvent(SocketEvent.NEW_LOG_IN)
-                .subscribe((message: Message) => {
-                    // this.messages.push(message);
-                    // console.log('Server Msg to user service', message);
-                });
+        this.ioConnection = this._socketService.onEvent(SocketEvent.NEW_LOG_IN)
+            .subscribe((message: Message) => {
+                // this.messages.push(message);
+                // console.log('Server Msg to user service', message);
+            });
         if (persisted) {
             let message: Message = {
                 from: this.user,
@@ -58,7 +58,6 @@ export class UserService {
         }
     }
 
-    // post("api/auth/passwordChange/:uid')
     // public signupUser(newUser: User): Observable<Object> {
     //     const current = this.connection + '/register';
     //     return this.http.post(current, newUser, { headers: this.headers })
@@ -171,7 +170,7 @@ export class UserService {
                 // TODO: add more speicifc errors
                 if (error.status === 404) {
                     return Observable.throw('\'' + returningUser.email + '\' cannot be found. Check if it correct and try again.');
-                } else if (error.status === 520 ) {
+                } else if (error.status === 520) {
                     return Observable.throw('Unable to send the email. Please try again later...');
                 } else {
                     return Observable.throw('An unknown error has occured... Please try again later.');
@@ -182,7 +181,7 @@ export class UserService {
     // TODO: complete it
     public verifyLocalAccessToken(urlJwt: string): Observable<Object> {
         const requestUrl = this.connection + '/verifyLocalJwt';
-        return this.http.post(requestUrl, { jwt: urlJwt}, { headers: this.headers })
+        return this.http.post(requestUrl, { jwt: urlJwt }, { headers: this.headers })
             .map((response: Response) => {
                 console.log('>> In verify local access JWT: ', response.json());
                 const data = response.json();
@@ -199,7 +198,7 @@ export class UserService {
             }).catch((error: Response) => {
                 if (error.status === 520) {
                     return Observable.throw('Token is expired or invalid. Please re-login.');
-                } else if (error.status === 404 ) {
+                } else if (error.status === 404) {
                     return Observable.throw('User not found. Please register before continuing.');
                 } else {
                     return Observable.throw('A server error has occured... Please try again later.');
@@ -265,7 +264,7 @@ export class UserService {
                     action: Action.YOU_LOGGED_OUT
                 });
 
-                
+
 
                 // Notify server that a new user user logged in
                 this._socketService.send(Action.SMN_LOGGED_OUT, {
