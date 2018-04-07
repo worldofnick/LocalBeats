@@ -91,7 +91,7 @@ export class UserService {
                 if (error.status === 400) {
                     return Observable.throw('Email is already in use.  Please try a different email.');
                 } else {
-                    return Observable.throw('Error Unknown');
+                    return Observable.throw('Something went wrong on our end. Please try again later...');
                 }
             });
     }
