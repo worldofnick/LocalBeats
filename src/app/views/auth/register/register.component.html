@@ -130,8 +130,19 @@
 
           <mat-step>
               <ng-template matStepLabel>All done! 🎉</ng-template>
+
+              <div *ngIf="this.isMagicLinkBeingSent">
+                  <p class="text-center text-muted m-0">Sending you a confirmation link... <br><br>This will only take a couple of moments...
+              </div>
+
+              <div *ngIf="this.wasMagicLinkSuccessfullySent && !this.isMagicLinkBeingSent">
               <p class="text-center text-muted m-0">All done! <br><br>A confirmation magic link has been sent to your email. Use it to log in.<br><br>
                 <br><br>(<strong>Note:</strong> It may take a couple of minutes to receive the email)
+              </div>
+
+              <div *ngIf="error">
+                  <p class="text-center text-muted m-0">Oops! <br><br>{{errorMessage}}
+              </div>
           </mat-step>
 
         </mat-vertical-stepper>
