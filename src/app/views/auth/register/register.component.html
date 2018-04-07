@@ -137,11 +137,11 @@
 
               <div *ngIf="this.wasMagicLinkSuccessfullySent && !this.isMagicLinkBeingSent">
               <p class="text-center text-muted m-0">All done! <br><br>A confirmation magic link has been sent to your email. Use it to log in.<br><br>
-                <br><br>(<strong>Note:</strong> It may take a couple of minutes to receive the email)
+                <br>(<strong>Note:</strong> It may take a couple of minutes to receive the email)
               </div>
 
               <div *ngIf="error">
-                  <p class="text-center text-muted m-0">Oops! <br><br>{{errorMessage}}
+                  <p class="text-center text-muted m-0">Oops! <br>{{errorMessage}}
               </div>
           </mat-step>
 
