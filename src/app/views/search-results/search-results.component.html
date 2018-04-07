@@ -20,7 +20,7 @@
                 <div fxFlex="100" fxFlex.gt-xs="50">
                   <p><em><b>Event Details:</b></em></p>
                   <p>{{result.city}}, {{result.state}}</p>
-                  <p>{{result.toDate | date:'MMM d, y'}}</p>
+                  <p>{{result.fromDate | date:'MMM d, y'}}</p>
                   <p *ngIf="result.negotiable">{{result.fixedPrice | currency}}</p>
                   <p *ngIf="!result.negotiable">{{result.fixedPrice | currency}}</p>
                 </div>
