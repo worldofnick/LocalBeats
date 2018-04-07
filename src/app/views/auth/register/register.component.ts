@@ -20,6 +20,7 @@ export class RegisterComponent implements OnInit {
   error: boolean = false;
   errorMessage: string = '';
   isMagicLinkBeingSent: boolean = true;
+  wasMagicLinkSuccessfullySent: boolean = false;
   // Google Places
   latitude: number;
   longitude: number;
@@ -139,39 +140,39 @@ export class RegisterComponent implements OnInit {
 
     console.log('>> User object: ', this.user);
 
-    this.userService.requestMagicLink(this.user).subscribe(
+    // Add the user to DB, and if successful, send a magic link to email
+    this.userService.signupUser(this.user).subscribe(
       (data: any) => {
-        // Magic link successfully sent!
+        // Correctly authenticated, redirect
         this.error = false;
-        this.isMagicLinkBeingSent = false;
-        this.progressBar.mode = 'determinate';
+        this.isMagicLinkBeingSent = true;
+        this.wasMagicLinkSuccessfullySent = false;
+
+        this.userService.requestMagicLink(this.user).subscribe(
+          (responseData: any) => {
+            // Magic link successfully sent!
+            this.error = false;
+            this.isMagicLinkBeingSent = false;
+            this.wasMagicLinkSuccessfullySent = true;
+            this.progressBar.mode = 'determinate';
+          },
+          (error) => {
+            this.errorHandler(error);
+          });
       },
       (error) => {
-        // Show user error message
-        this.isMagicLinkBeingSent = true;
-        this.errorMessage = error;
-        this.error = true;
-        this.progressBar.mode = 'determinate';
-      });
-
-    // this.userService.signupUser(this.user).subscribe(
-    //   (data: any) => {
-    //     // Correctly authenticated, redirect
-    //     this.error = false;
-    //     this.userService.userLoaded(data.user, data.token, false, false);
-    //     this.userService.getNotificationsCountForUser(data.user._id);
-    //     this.userService.getNotificationsForUser(data.user._id);
-    //     this.router.navigate(['/']);
-    //   },
-    //   (error) => {
-    //     // Show user error message
-    //     this.errorMessage = error;
-    //     this.error = true;
-    //     this.submitButton.disabled = false;
-    //     this.progressBar.mode = 'determinate';
-    //   }
-    // );
+        this.errorHandler(error);
+      }
+    );
   }
 
+  private errorHandler(error: any) {
+     // Show user error message
+     this.errorMessage = error;
+     this.error = true;
+     this.isMagicLinkBeingSent = false;
+     this.wasMagicLinkSuccessfullySent = false;
+     this.progressBar.mode = 'determinate';
+  }
 }
 
