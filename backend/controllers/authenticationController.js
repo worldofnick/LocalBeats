@@ -36,12 +36,12 @@ exports.register = function (req, res) {
         }
       );
 
-      User.findByIdAndUpdate(user._id, { isOnline: true }, { new: true }, function (err, authUser) {
-        if (err) {
-          console.log('Cant chnage online status (sign up)...');
-        }
-        authUser.hashPassword = undefined;
-      });
+      // User.findByIdAndUpdate(user._id, { isOnline: true }, { new: true }, function (err, authUser) {
+      //   if (err) {
+      //     console.log('Cant chnage online status (sign up)...');
+      //   }
+      //   authUser.hashPassword = undefined;
+      // });
 
       return res.status(200).send({ auth: true, token: token, user: user });
     }
