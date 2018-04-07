@@ -19,6 +19,7 @@ export class RegisterComponent implements OnInit {
   @ViewChild("searchplaces") searchElementRef: ElementRef;
   error: boolean = false;
   errorMessage: string = '';
+  isMagicLinkBeingSent: boolean = true;
   // Google Places
   latitude: number;
   longitude: number;
@@ -137,6 +138,22 @@ export class RegisterComponent implements OnInit {
     this.progressBar.mode = 'indeterminate';
 
     console.log('>> User object: ', this.user);
+
+    this.userService.requestMagicLink(this.user).subscribe(
+      (data: any) => {
+        // Magic link successfully sent!
+        this.error = false;
+        this.isMagicLinkBeingSent = false;
+        this.progressBar.mode = 'determinate';
+      },
+      (error) => {
+        // Show user error message
+        this.isMagicLinkBeingSent = true;
+        this.errorMessage = error;
+        this.error = true;
+        this.progressBar.mode = 'determinate';
+      });
+
     // this.userService.signupUser(this.user).subscribe(
     //   (data: any) => {
     //     // Correctly authenticated, redirect
