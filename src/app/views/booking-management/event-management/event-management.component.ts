@@ -4,6 +4,7 @@ import { ISubscription } from "rxjs/Subscription";
 import { ActivatedRoute } from "@angular/router";
 import { NgForm } from '@angular/forms/src/directives/ng_form';
 import { Router } from "@angular/router";
+import { Validators, FormGroup, FormControl, FormArray, FormBuilder } from '@angular/forms';
 import { MatTabChangeEvent } from '@angular/material';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatSnackBar, PageEvent} from '@angular/material';
 
@@ -18,8 +19,8 @@ import { ReviewService } from 'app/services/reviews/review.service';
 // Data Models
 import { User } from '../../../models/user';
 import { Review } from '../../../models/review';
-import { Event, CancellationPolicy } from '../../../models/event';
-import { Booking, StatusMessages, NegotiationResponses, VerificationResponse, BookingType } from '../../../models/booking';
+import { Event, CancellationPolicy, EventSortType } from '../../../models/event';
+import { Booking, StatusMessages, NegotiationResponses, VerificationResponse, BookingType, BookingSortType } from '../../../models/booking';
 import { Action } from '../../../services/chats/model/action';
 import { SocketEvent } from '../../../services/chats/model/event';
 import { Notification } from '../../../models/notification';
@@ -51,6 +52,15 @@ import {
   styleUrls: ['./event-management.component.css']
 })
 export class EventManagementComponent implements OnInit {
+  // Sorting Forms
+  eventForm = this.formBuilder.group({
+    sort: new FormControl()
+  });
+  eventSortTypes: EventSortType[] = [
+    EventSortType.fromDateAsc,
+    EventSortType.fromDateDes,
+    EventSortType.notificationCount
+  ];
   // User Model
   user: User;
   socketSubscription: ISubscription;
@@ -91,7 +101,7 @@ export class EventManagementComponent implements OnInit {
     cancelledPaymentStatues: PaymentStatus[]}[] = [];
   // MatPaginator Inputs
   eventsLength = 0;
-  pageSize = 15;
+  pageSize = 3;
   pageIndex: number = 0;
 
   constructor(private eventService: EventService,
@@ -103,7 +113,8 @@ export class EventManagementComponent implements OnInit {
     private _socketService: SocketService,
     private stripeService: StripeService,
     public dialog: MatDialog,
-    public snackBar: MatSnackBar
+    public snackBar: MatSnackBar,
+    private formBuilder: FormBuilder
   ) {
     // Set user model to the authenticated singleton user
     this.user = this.userService.user;
@@ -136,6 +147,11 @@ export class EventManagementComponent implements OnInit {
     if(this.paySubscription) {
       this.paySubscription.unsubscribe();
     }
+  }
+
+  eventSort() {
+    let sort: EventSortType = this.eventForm.get('sort').value;
+    this.sortEvents(sort);
   }
 
   /*
@@ -348,6 +364,7 @@ export class EventManagementComponent implements OnInit {
           }
           this.eventsLength++;
           count++;
+          this.sortEvents(EventSortType.notificationCount);
         })
       }
     })
@@ -425,9 +442,11 @@ export class EventManagementComponent implements OnInit {
       eventIndex = this.events.findIndex(e => e.event._id == newBooking.eventEID._id);
       if(newBooking.bookingType == BookingType.artistApply) {
         applicationIndex = this.events[eventIndex].applications.findIndex(a => a._id == newBooking._id);
+        if(!this.events[eventIndex].applications[applicationIndex].hostViewed) this.events[eventIndex].applicationNotifications--;
         this.events[eventIndex].applications.splice(applicationIndex, 1);
       } else {
         requestIndex = this.events[eventIndex].requests.findIndex(r => r._id == newBooking._id);
+        if(!this.events[eventIndex].requests[requestIndex].hostViewed) this.events[eventIndex].requestNotifications--;
         this.events[eventIndex].requests.splice(requestIndex, 1);
       }
     } else if(response == NegotiationResponses.cancel) {
@@ -502,7 +521,8 @@ export class EventManagementComponent implements OnInit {
   /*
   Resets all completion notifications to 0 when that expansion panel has been clicked
   */
-  resetCompletionNotifications(eventIndex: number) {
+  resetCompletionNotifications(pagedEventIndex: number) {
+    let eventIndex = this.events.findIndex(e => e.event._id == this.pagedEvents[pagedEventIndex].event._id);
     this.events[eventIndex].completionNotifications = 0;
     for(let booking of this.events[eventIndex].completions) {
       if(!booking.hostViewed) {
@@ -515,7 +535,8 @@ export class EventManagementComponent implements OnInit {
   /*
   Resets all cancellation notifications to 0 when that expansion panel has been clicked
   */
-  resetCancellationNotifications(eventIndex: number) {
+  resetCancellationNotifications(pagedEventIndex: number) {
+    let eventIndex = this.events.findIndex(e => e.event._id == this.pagedEvents[pagedEventIndex].event._id);
     this.events[eventIndex].cancellationNotifications = 0;
     for(let booking of this.events[eventIndex].cancellations) {
       if(!booking.hostViewed) {
@@ -528,7 +549,8 @@ export class EventManagementComponent implements OnInit {
   /*
   Resets all confirmation notifications to 0 when that expansion panel has been clicked
   */
-  resetConfirmationNotifications(eventIndex: number) {
+  resetConfirmationNotifications(pagedEventIndex: number) {
+    let eventIndex = this.events.findIndex(e => e.event._id == this.pagedEvents[pagedEventIndex].event._id);
     this.events[eventIndex].confirmationNotifications = 0;
     for(let booking of this.events[eventIndex].confirmations) {
       if(!booking.hostViewed) {
@@ -542,10 +564,11 @@ export class EventManagementComponent implements OnInit {
   Removes the event and all of its bookings from the model if the event is successfully
   deleted in the database
   */
-  onDeleteEvent(event: Event, index: number) {
+  onDeleteEvent(event: Event, pagedEventIndex: number) {
+    let eventIndex = this.events.findIndex(e => e.event._id == this.pagedEvents[pagedEventIndex].event._id);
     this.eventService.deleteEventByEID(event).then((status: Number) => {
       if (status == 200) {
-        this.events.splice(index, 1);
+        this.events.splice(eventIndex, 1);
       }
     });
   }
@@ -583,7 +606,8 @@ export class EventManagementComponent implements OnInit {
   1. Verified and the Artist has not verified - send a verification notification to artist
   2. Verified and the Artist has verified - complete the booking and send payment to artist
   */
-  hostVerify(booking: Booking, bookingIndex: number, eventIndex: number) {
+  hostVerify(booking: Booking, bookingIndex: number, pagedEventIndex: number) {
+    let eventIndex = this.events.findIndex(e => e.event._id == this.pagedEvents[pagedEventIndex].event._id);
     if(this.verificationSubscription) {
       this.verificationSubscription.unsubscribe();
     }
@@ -684,7 +708,8 @@ export class EventManagementComponent implements OnInit {
   /*
   Host responds to applications/bids through negotiation dialog
   */
-  openNegotiationDialog(booking: Booking, bookingIndex: number, eventIndex: number) {
+  openNegotiationDialog(booking: Booking, bookingIndex: number, pagedEventIndex: number) {
+    let eventIndex = this.events.findIndex(e => e.event._id == this.pagedEvents[pagedEventIndex].event._id);
     let view = "host";
     if(this.negotiationSubscription) {
       this.negotiationSubscription.unsubscribe();
@@ -879,20 +904,39 @@ export class EventManagementComponent implements OnInit {
     });
   }
 
-  pageEvent($event) {
-    console.log("page event");
+  pageEvent(event: PageEvent) {
+    this.pageIndex = event.pageIndex;
+    this.updateEventsPage();
   }
 
   updateEventsPage() {
     let startingIndex = (this.pageIndex + 1) * this.pageSize - this.pageSize;
     let endIndex = startingIndex + this.pageSize;
-    var i: number;
+    this.pagedEvents = this.events.slice(startingIndex, endIndex);
+  }
 
-    this.pagedEvents = [];
-    // Slice the results array
-    for (i = startingIndex; i < endIndex && i < this.events.length; i++) {
-      this.pagedEvents.push(this.events[i]);
-    }
+  sortEvents(sortType: EventSortType) {
+    this.events.sort((leftside, rightside): number => {
+      if(sortType == EventSortType.notificationCount) {
+        let leftSideCount: number = leftside.applicationNotifications +
+        leftside.cancellationNotifications + leftside.completionNotifications +
+        leftside.confirmationNotifications + leftside.requestNotifications;
+        let rightSideCount: number = rightside.applicationNotifications +
+        rightside.cancellationNotifications + rightside.completionNotifications +
+        rightside.confirmationNotifications + rightside.requestNotifications;
+
+        if(leftSideCount < rightSideCount) return 1;
+        if(leftSideCount > rightSideCount) return -1;
+      } else if(sortType == EventSortType.fromDateDes) {
+        if(leftside.event.fromDate < rightside.event.fromDate) return 1;
+        if(leftside.event.fromDate > rightside.event.fromDate) return -1;
+      } else {
+        if(leftside.event.fromDate < rightside.event.fromDate) return -1;
+        if(leftside.event.fromDate > rightside.event.fromDate) return 1;
+      }
+      return 0;
+    })
+    this.updateEventsPage();
   }
 
 }

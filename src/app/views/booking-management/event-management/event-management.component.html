@@ -3,6 +3,14 @@
     <div class="section-header">
       <h2>My Events</h2>
       <p *ngIf="events.length == 0">You have not hosted any events</p>
+      <mat-form-field *ngIf="events.length > 0">
+          <mat-select placeholder="Sort Type" [formControl]="eventForm.controls['sort']" (change)="eventSort()">
+            <mat-select-trigger class="additional-selection">
+              {{(eventForm.controls['sort'].value ? eventForm.controls['sort'].value : '') | capitalize}}
+            </mat-select-trigger>
+            <mat-option *ngFor="let type of eventSortTypes" [value]="type">{{type | capitalize}}</mat-option>
+          </mat-select>
+        </mat-form-field>
     </div>
     <div *ngIf="events.length > 0" fxLayout="row" fxLayoutWrap="wrap" >
       <div fxFlex="100" fxFlex.gt-xs="33" *ngFor="let item of this.pagedEvents; let j = index">
@@ -177,18 +185,17 @@
             </mat-accordion>
             <mat-divider class="mt-05 mb-1"></mat-divider>
             <button (click)="onEditEvent(item.event, j)" class="text-muted" mat-icon-button matTooltip="Edit Event"><mat-icon>mode_edit</mat-icon></button>
-            <button (click)="onDeleteEvent(item.event, j)" class="text-muted" mat-icon-button matTooltip="Delete Event"><mat-icon>delete</mat-icon></button>
+            <button *ngIf="item.confirmations.length == 0 && item.completions.length == 0" (click)="onDeleteEvent(item.event, j)" class="text-muted" mat-icon-button matTooltip="Delete Event"><mat-icon>delete</mat-icon></button>
           </mat-card-content>
         </mat-card>
       </div>
     </div>
   </div>
   <br>
-  <div *ngIf="events.length > 0">
-    <mat-paginator [length]="eventsLength"
-      [pageSize]="pageSize"
-      [hidePageSize]=true
-      (page)="pageEvent($event)">
-    </mat-paginator>
-  </div>
+  <mat-paginator *ngIf="events.length > 0"
+    [length]="eventsLength"
+    [pageSize]="pageSize"
+    [hidePageSize]=true
+    (page)="pageEvent($event)">
+  </mat-paginator>
 </section>
