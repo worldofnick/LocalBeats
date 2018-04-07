@@ -59,19 +59,33 @@ export class UserService {
     }
 
     // post("api/auth/passwordChange/:uid')
+    // public signupUser(newUser: User): Observable<Object> {
+    //     const current = this.connection + '/register';
+    //     return this.http.post(current, newUser, { headers: this.headers })
+    //         .map((response: Response) => {
+    //             const data = response.json();
+    //             this.accessToken = data.token;
+    //             sessionStorage.setItem('token', JSON.stringify({ accessToken: this.accessToken }))
+    //             this.user = data.user as User;
+    //             // Notify server that a new user user logged in
+    //             this._socketService.send(Action.NEW_LOG_IN, {
+    //                 from: this.user,
+    //                 action: Action.NEW_LOG_IN
+    //             });
+    //             return data;
+    //         }).catch((error: Response) => {
+    //             if (error.status === 400) {
+    //                 return Observable.throw('Email is already in use.  Please try a different email.');
+    //             } else {
+    //                 return Observable.throw('Error Unknown');
+    //             }
+    //         });
+    // }
     public signupUser(newUser: User): Observable<Object> {
         const current = this.connection + '/register';
         return this.http.post(current, newUser, { headers: this.headers })
             .map((response: Response) => {
                 const data = response.json();
-                this.accessToken = data.token;
-                sessionStorage.setItem('token', JSON.stringify({ accessToken: this.accessToken }))
-                this.user = data.user as User;
-                // Notify server that a new user user logged in
-                this._socketService.send(Action.NEW_LOG_IN, {
-                    from: this.user,
-                    action: Action.NEW_LOG_IN
-                });
                 return data;
             }).catch((error: Response) => {
                 if (error.status === 400) {
