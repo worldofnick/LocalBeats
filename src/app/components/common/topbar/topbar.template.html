@@ -200,7 +200,7 @@
 
   <div
   fxHide.lt-sm="true">
-  <button 
+  <button *ngIf="!userService.user"
   mat-icon-button
   [routerLink]="['/auth']" 
   [style.width]="'auto'"
