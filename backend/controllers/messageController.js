@@ -108,6 +108,22 @@ exports.getAllActiveConversationsFrom = function (req, res) {
     });
 };
 
+exports.getOverallUnreadCountForUser = function (req, res) {
+    let thisUserId = req.params.myUID;
+    Message.find({isRead: false}).where('to').in(thisUserId).distinct('from', function (error, fromIds) {
+        if (error) {
+            console.log('Error getting conversation buddies: ', error);
+            return res.status(400).send({
+                reason: "Unable to get conversation buddies...",
+                error: asyncError
+            });
+        }
+        
+        console.log('>> From IDS = ', fromIds);
+
+    });
+}
+
 exports.saveMessage = function (req, res) {
     let newMessage = new Message();
     newMessage.from = req.body.from._id;
