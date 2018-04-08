@@ -144,7 +144,6 @@ export class AppChatsComponent implements OnInit, AfterViewChecked, AfterViewIni
   }
 
   isUserObjInConnectedUsers(newUser: User): number {
-
     for (let i = 0; i < this.connectedUsers.length; i++) {
       let chatBuddy: User = this.connectedUsers[i];
         if (chatBuddy._id === newUser._id) {
@@ -204,6 +203,7 @@ export class AppChatsComponent implements OnInit, AfterViewChecked, AfterViewIni
     return false;
   }
 
+  // TODO: keep or remove?
   respondToIsItYouPMSocketRequest(message) {
     if ((message.serverPayload.from._id === this.loggedInUser._id) ||
       (message.serverPayload.to._id === this.loggedInUser._id)) {
@@ -362,16 +362,16 @@ export class AppChatsComponent implements OnInit, AfterViewChecked, AfterViewIni
 
       let privateMessage: Message;
       // CASE 1: Both users online. So do a socket event
-      if (this.activeChatUser.isOnline) {
+      // if (this.activeChatUser.isOnline) {
 
         // Save the message in the DB
-        privateMessage = this.createPMObject(false, MessageTypes.MSG);
-      }
+      //   privateMessage = this.createPMObject(false, MessageTypes.MSG);
+      // }
       // CASE 2: The recipient is offline. So an HTTP request instead of socket event
-      else {
+      // else {
         privateMessage = this.createPMObject(false, MessageTypes.MSG);
 
-      }
+      // }
       // console.log('Sending message: ', privateMessage);
       // this.awaitMessageSaveResponse(privateMessage);
       this._socketService.send(Action.SEND_PRIVATE_MSG, privateMessage);
