@@ -39,7 +39,7 @@
           <mat-icon>short_text</mat-icon>
         </button>
 
-        <div class="active-chat-user" fxLayout="row" fxLayoutAlign="start center">
+        <div class="active-chat-user" fxLayout="row" fxLayoutAlign="start center" *ngIf="this.activeChatUser !== undefined && this.activeChatUser !== null">
           <button class="topbarChatTransparentButton" (click)="topBarGoToProfileClicked()">
             <a [ngClass]="{online: activeChatUser.isOnline}" class="toolbar-avatar mr-1">
               <img [src]="activeChatUser.profilePicUrl" alt="">
