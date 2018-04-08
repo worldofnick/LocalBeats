@@ -12,6 +12,9 @@ export class SharedDataService {
   snackBarMessageRecipient: User = new User();
   isSnackBarMessageRequestPending = false;
 
+  // Unread chat messages counts
+  overallUnreadChatCountForThisUser = 0;
+
   constructor() { }
 
   // Profile button chat message
@@ -38,5 +41,10 @@ export class SharedDataService {
     console.log('>>> IN SHARED SERVICE RESET');
     this.snackBarMessageRecipient = new User();
     this.isSnackBarMessageRequestPending = false;
+  }
+
+  // TODO: keep or remove later
+  public resetUnreadChatCountForThisUser() {
+    this.overallUnreadChatCountForThisUser = 0;
   }
 }
