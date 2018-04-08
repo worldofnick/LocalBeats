@@ -20,16 +20,16 @@ export class AuthComponent implements OnInit {
 
   signinForm: FormGroup;
   user: User;
-  notificationsList:Notification[] = [];
+  notificationsList: Notification[] = [];
   // rememberMe: boolean = false;
   error: boolean = false;
   errorMessage: string = '';
   magicLinkButtonClicked: boolean = false;
   isDemoModeChecked = false;
 
-  constructor(private userService: UserService, 
+  constructor(private userService: UserService,
     private router: Router,
-  private notificationService: NotificationService) { }
+    private notificationService: NotificationService) { }
 
   ngOnInit() {
     this.error = false;
@@ -73,11 +73,11 @@ export class AuthComponent implements OnInit {
     //     rememberMe: new FormControl(this.rememberMe)
     //   });
     // } else {
-      this.signinForm = new FormGroup({
-        username: new FormControl('', Validators.required),
-        // password: new FormControl('', Validators.required),
+    this.signinForm = new FormGroup({
+      username: new FormControl('', Validators.required),
+      // password: new FormControl('', Validators.required),
       //   rememberMe: new FormControl(this.rememberMe)
-      });
+    });
     // }
   }
 
@@ -113,37 +113,26 @@ export class AuthComponent implements OnInit {
         });
     } else {
       // TODO: login by skipping the magic link step
-
+      this.userService.demoModeSignInUser(this.user).subscribe(
+        (data: any) => {
+          // Correctly authenticated, redirect
+          this.error = false;
+          this.userService.userLoaded(data.user, data.token, false, false);
+          this.userService.getNotificationsCountForUser(data.user._id);
+          this.userService.getNotificationsForUser(data.user._id);
+          this.router.navigate(['/']);
+        },
+        (error) => {
+          // Show user error message
+          this.errorMessage = error;
+          this.error = true;
+          this.submitButton.disabled = false;
+          this.progressBar.mode = 'determinate';
+        });
     }
+  }
 
-    // ***********************************************************
-    // PROPER LOG IN MECHANISM
-    // TODO: remove it. Moved to callback component
-
-    // this.userService.signinUser(this.user).subscribe(
-    //   (data: any) => {
-    //     // Correctly authenticated, redirect
-    //     this.error = false;
-    //     this.userService.userLoaded(data.user, data.token, false, false);
-    //     this.userService.getNotificationsCountForUser(data.user._id);
-    //     this.userService.getNotificationsForUser(data.user._id);
-    //     this.router.navigate(['/']);
-
-    //   },
-    //   (error) => {
-    //     // Show user error message
-    //     this.errorMessage = error;
-    //     this.error = true;
-    //     this.submitButton.disabled = false;
-    //     this.progressBar.mode = 'determinate';
-    //   });
-
-    // ***************************************************************
-
-    
-    }
-
-    toggleDemoMode() {
-      console.log('>> Toggle is at : ', this.isDemoModeChecked);
-    }
+  toggleDemoMode() {
+    console.log('>> Toggle is at : ', this.isDemoModeChecked);
+  }
 }
