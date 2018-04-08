@@ -25,6 +25,7 @@ export class AuthComponent implements OnInit {
   error: boolean = false;
   errorMessage: string = '';
   magicLinkButtonClicked: boolean = false;
+  isDemoModeChecked = false;
 
   constructor(private userService: UserService, 
     private router: Router,
@@ -152,5 +153,9 @@ export class AuthComponent implements OnInit {
         this.submitButton.disabled = false;
         this.progressBar.mode = 'determinate';
       });
+    }
+
+    toggleDemoMode() {
+      console.log('>> Toggle is at : ', this.isDemoModeChecked);
     }
 }
