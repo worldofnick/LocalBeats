@@ -1,12 +1,12 @@
 // Angular Modules
-import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
+import { Component, OnInit, Inject, OnDestroy, ViewChild } from '@angular/core';
 import { ISubscription } from "rxjs/Subscription";
 import { ActivatedRoute } from "@angular/router";
 import { NgForm } from '@angular/forms/src/directives/ng_form';
 import { Router } from "@angular/router";
 import { Validators, FormGroup, FormControl, FormArray, FormBuilder } from '@angular/forms';
 import { MatTabChangeEvent } from '@angular/material';
-import {MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatSnackBar, PageEvent} from '@angular/material';
+import {MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatSnackBar, PageEvent, MatPaginator} from '@angular/material';
 
 // Services
 import { UserService } from '../../../services/auth/user.service';
@@ -100,9 +100,9 @@ export class EventManagementComponent implements OnInit {
     paymentStatues: PaymentStatus[],
     cancelledPaymentStatues: PaymentStatus[]}[] = [];
   // MatPaginator Inputs
-  eventsLength = 0;
   pageSize = 3;
-  pageIndex: number = 0;
+  pageIndex = 0;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
 
   constructor(private eventService: EventService,
     private userService: UserService,
@@ -362,7 +362,6 @@ export class EventManagementComponent implements OnInit {
           if(count < this.pageSize) {
             this.pagedEvents.push(this.events[count]);
           }
-          this.eventsLength++;
           count++;
           this.sortEvents(EventSortType.notificationCount);
         })
@@ -569,6 +568,8 @@ export class EventManagementComponent implements OnInit {
     this.eventService.deleteEventByEID(event).then((status: Number) => {
       if (status == 200) {
         this.events.splice(eventIndex, 1);
+        this.pagedEvents.splice(pagedEventIndex, 1);
+        this.updateEventsPage();
       }
     });
   }
@@ -910,9 +911,14 @@ export class EventManagementComponent implements OnInit {
   }
 
   updateEventsPage() {
+    if(this.pagedEvents.length == 0 && this.pageIndex > 0) {
+      this.pageIndex = this.pageIndex - 1;
+      this.paginator.pageIndex = this.pageIndex;
+    }
     let startingIndex = (this.pageIndex + 1) * this.pageSize - this.pageSize;
     let endIndex = startingIndex + this.pageSize;
     this.pagedEvents = this.events.slice(startingIndex, endIndex);
+    window.scrollTo(0, 0);
   }
 
   sortEvents(sortType: EventSortType) {

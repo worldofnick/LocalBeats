@@ -193,7 +193,7 @@
   </div>
   <br>
   <mat-paginator *ngIf="events.length > 0"
-    [length]="eventsLength"
+    [length]="events.length"
     [pageSize]="pageSize"
     [hidePageSize]=true
     (page)="pageEvent($event)">
