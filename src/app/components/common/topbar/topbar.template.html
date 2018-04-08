@@ -165,7 +165,8 @@
      [style.overflow]="'visible'" 
      class="topbar-button-right">
        <mat-icon>message</mat-icon>
-       <!-- <span class="notification-number mat-bg-warn">{{numNotifications}}</span> -->
+       <span *ngIf="this._sharedDataService.overallUnreadChatCountForThisUser != 0" class="notification-number mat-bg-warn">{{this._sharedDataService.overallUnreadChatCountForThisUser}}</span>
+       <span *ngIf="this._sharedDataService.overallUnreadChatCountForThisUser == 0" class="notification-number"></span>
      </button>
     <!-- Notification toggle button -->
     <button 
