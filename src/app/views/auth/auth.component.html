@@ -56,6 +56,10 @@
           Please check your email and click the link to log in. <br><br>(It may take a couple of minutes to receive the email.)
         </p>
       </div>
+
+      <div>
+        <mat-slide-toggle color="accent" [(ngModel)]="isDemoModeChecked" (ngModelChange)="toggleDemoMode()">Demo Mode</mat-slide-toggle>
+      </div>
       </mat-card-content>
     </mat-card>
   </div>
