@@ -2,7 +2,7 @@
   <div class="session-form-hold">
     <mat-progress-bar mode="determinate" class="session-progress"></mat-progress-bar>
     <mat-card>
-      <mat-card-content>
+      <mat-card-content style="min-height: 50vh; display: flex; justify-content: center; flex-direction: column;">
           <div>
               <mat-slide-toggle class="text-muted" color="accent" [(ngModel)]="isDemoModeChecked" (ngModelChange)="toggleDemoMode()">Demo Mode</mat-slide-toggle>
             </div>
