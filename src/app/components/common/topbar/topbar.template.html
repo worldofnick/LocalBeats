@@ -109,7 +109,8 @@
     </form>
   </div>  
   <span fxFlex></span>
-  <div *ngIf="user; else login">
+  <div *ngIf="user; else login"
+  fxHide.lt-sm="true">
     <button 
     mat-icon-button
     matTooltip="Performances" 
