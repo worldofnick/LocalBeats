@@ -110,16 +110,29 @@ exports.getAllActiveConversationsFrom = function (req, res) {
 
 exports.getOverallUnreadCountForUser = function (req, res) {
     let thisUserId = req.params.myUID;
-    Message.find({isRead: false}).where('to').in(thisUserId).exec(function (error, fromIds) {
+
+    Message.find({isRead: false}).where('to').in(thisUserId).count({}, function (error, unreadCount) {
         if (error) {
-            console.log('Error getting conversation buddies: ', error);
+            console.log('Error getting overall unread count: ', error);
             return res.status(400).send({
-                reason: "Unable to get conversation buddies...",
-                error: asyncError
+                reason: "Unable to get overall unread count...",
+                error: error
             });
         }
-        return res.status(200).send({ messages: fromIds });
+        return res.status(200).send({ unreadMessagesCount: unreadCount });
     });
+
+    // To get all unread messages sent to this user
+    // Message.find({isRead: false}).where('to').in(thisUserId).exec(function (error, unreadMessages) {
+    //     if (error) {
+    //         console.log('Error getting conversation buddies: ', error);
+    //         return res.status(400).send({
+    //             reason: "Unable to get conversation buddies...",
+    //             error: error
+    //         });
+    //     }
+    //     return res.status(200).send({ messages: unreadMessages });
+    // });
 }
 
 exports.saveMessage = function (req, res) {
