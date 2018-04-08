@@ -128,7 +128,7 @@ export class AppChatsComponent implements OnInit, AfterViewChecked, AfterViewIni
   }
 
   ngAfterViewInit() {
-    this._socketService.send(SocketEvent.NOTIFY_SERVER_CHAT_LOADED, null);
+    // this._socketService.send(SocketEvent.NOTIFY_SERVER_CHAT_LOADED, null);
     this.vc.first.nativeElement.focus();
     this.cdr.detectChanges();
   }
