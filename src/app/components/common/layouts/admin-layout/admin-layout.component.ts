@@ -69,9 +69,11 @@ export class AdminLayoutComponent implements OnInit {
 
     // Disable collapsed menu in small screen
     if(isSm && domHelper.hasClass(document.body, 'collapsed-menu')) {
-      domHelper.removeClass(document.body, 'collapsed-menu')
+      return true
     }
-    return isSm;
+    domHelper.removeClass(document.body, 'collapsed-menu')
+    return true;
+    
   }
 
   logout() {
