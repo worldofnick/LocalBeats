@@ -121,18 +121,28 @@ exports.getOverallUnreadCountForUser = function (req, res) {
         }
         return res.status(200).send({ unreadMessagesCount: unreadCount });
     });
+}
 
-    // To get all unread messages sent to this user
-    // Message.find({isRead: false}).where('to').in(thisUserId).exec(function (error, unreadMessages) {
-    //     if (error) {
-    //         console.log('Error getting conversation buddies: ', error);
-    //         return res.status(400).send({
-    //             reason: "Unable to get conversation buddies...",
-    //             error: error
-    //         });
-    //     }
-    //     return res.status(200).send({ messages: unreadMessages });
-    // });
+/**
+ * To get all unread messages sent to this user by a particular sender
+ * @param {*} req Has loggedInUserID, and senderID
+ * @param {*} res array of unread message count sent by sender to loggedInUser
+ */
+exports.getUnreadCountBetweenTwoUsers = function (req, res) {
+    //TODO: correct it and test more. Then make it multiple senderIDs
+    let thisUserId = req.body.loggedInUserID;
+    let senderId = req.body.senderID;
+    // To get all unread messages sent to this user by a particular sender
+    Message.find({isRead: false}).where('to').in(thisUserId).where('from').in(senderId).exec(function (error, unreadMessages) {
+        if (error) {
+            console.log('Error getting total unread between 2 buddies: ', error);
+            return res.status(400).send({
+                reason: "Error getting total unread between 2 buddies...",
+                error: error
+            });
+        }
+        return res.status(200).send({ unreadMessagesCount: unreadMessages });
+    });
 }
 
 exports.saveMessage = function (req, res) {
