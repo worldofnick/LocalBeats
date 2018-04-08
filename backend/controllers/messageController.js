@@ -110,7 +110,7 @@ exports.getAllActiveConversationsFrom = function (req, res) {
 
 exports.getOverallUnreadCountForUser = function (req, res) {
     let thisUserId = req.params.myUID;
-    Message.find({isRead: false}).where('to').in(thisUserId).distinct('from', function (error, fromIds) {
+    Message.find({isRead: false}).where('to').in(thisUserId).exec(function (error, fromIds) {
         if (error) {
             console.log('Error getting conversation buddies: ', error);
             return res.status(400).send({
@@ -118,9 +118,7 @@ exports.getOverallUnreadCountForUser = function (req, res) {
                 error: asyncError
             });
         }
-        
-        console.log('>> From IDS = ', fromIds);
-
+        return res.status(200).send({ messages: fromIds });
     });
 }
 
