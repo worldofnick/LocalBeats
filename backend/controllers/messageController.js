@@ -1,15 +1,15 @@
 'use strict';
 
-var mongoose  = require('mongoose');
-const async   = require('async');
-var User      = mongoose.model('User');
-var Message   = mongoose.model('Message');
+var mongoose = require('mongoose');
+const async = require('async');
+var User = mongoose.model('User');
+var Message = mongoose.model('Message');
 
 // ====== MESSAGE ROUTES ======
 
 exports.getAllMessages = function (req, res) {
 
-    Message.find({}).populate('from to').exec(function(err, messages){
+    Message.find({}).populate('from to').exec(function (err, messages) {
         if (err) {
             console.log('Error getting all messages: ', err);
             return res.status(400).send({
@@ -17,36 +17,37 @@ exports.getAllMessages = function (req, res) {
                 error: err
             });
         }
+        // No need for this anymore. Otherwise, will give cant set undefined of null
         // for( let i = 0; i < messages.length; i++ ) {
         //     if(messages[i] != null || messages[i] != undefined) {
         //         messages[i].from.hashPassword = undefined;
         //         messages[i].to.hashPassword = undefined;
         //     }
         // }
-        return res.status(200).send({messages: messages});
+        return res.status(200).send({ messages: messages });
     });
 };
 
 exports.getAllFromToMessages = function (req, res) {
 
-  let ids = [req.params.fromUID, req.params.toUID];
-  Message.find({}).where('from').in(ids).where('to').in(ids)
-  .populate('from to').sort({sentAt: 1})
-  .exec(function(err, messages) {
-      if (err) {
-        console.log('Error getting messages (from , to): ', err);
-        return res.status(400).send({
-            reason: "Unable to get (from, to) messages...",
-            error: err
+    let ids = [req.params.fromUID, req.params.toUID];
+    Message.find({}).where('from').in(ids).where('to').in(ids)
+        .populate('from to').sort({ sentAt: 1 })
+        .exec(function (err, messages) {
+            if (err) {
+                console.log('Error getting messages (from , to): ', err);
+                return res.status(400).send({
+                    reason: "Unable to get (from, to) messages...",
+                    error: err
+                });
+            }
+            // No need for this anymore. Otherwise, will give cant set undefined of null
+            //   for( let i = 0; i < messages.length; i++ ) {
+            //     messages[i].from.hashPassword = undefined;
+            //     messages[i].to.hashPassword = undefined;
+            // }
+            return res.status(200).send({ messages: messages });
         });
-      } 
-      // hide hashPassword
-      for( let i = 0; i < messages.length; i++ ) {
-        messages[i].from.hashPassword = undefined;
-        messages[i].to.hashPassword = undefined;
-    }
-      return res.status(200).send({messages: messages});
-  });
 };
 
 /**
@@ -98,10 +99,10 @@ exports.getAllActiveConversationsFrom = function (req, res) {
                         error: err
                     });
                 }
-                // hide hashPassword
-                for (let i = 0; i < toUsers.length; i++) {
-                    toUsers[i].hashPassword = undefined;
-                }
+                // No need for this anymore. Otherwise, will give cant set undefined of null
+                // for (let i = 0; i < toUsers.length; i++) {
+                //     toUsers[i].hashPassword = undefined;
+                // }
                 return res.status(200).send({ users: toUsers });
             });
     });
@@ -116,20 +117,20 @@ exports.saveMessage = function (req, res) {
     newMessage.messageType = req.body.messageType;
     newMessage.attachmentURL = req.body.attachmentURL;
     newMessage.content = req.body.content;
-    
+
     newMessage.save(function (err, message) {
         if (err) {
             return res.status(400).send({
                 message: "Unable to save the message...",
                 error: err
             });
-        } 
-        return res.status(200).send({ response: "Save successful!", message: message});
+        }
+        return res.status(200).send({ response: "Save successful!", message: message });
     });
 };
 
 exports.clearMessagesDB = function (req, res) {
-    Message.remove({}).exec(function(err, messages){
+    Message.remove({}).exec(function (err, messages) {
         if (err) {
             console.log('Error deleting all messages: ', err);
             return res.status(400).send({
@@ -137,7 +138,7 @@ exports.clearMessagesDB = function (req, res) {
                 error: err
             });
         }
-        return res.status(200).send( {response: "All messages removed!"} );
+        return res.status(200).send({ response: "All messages removed!" });
     });
 };
 
