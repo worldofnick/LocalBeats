@@ -127,13 +127,13 @@ export class UserService {
     }
 
     // post("/api/authenticate")
-    public signinUser(returningUser: User): Observable<Object> {
-        const current = this.connection + '/authenticate';
+    public demoModeSignInUser(returningUser: User): Observable<Object> {
+        const current = this.connection + '/authenticate/demo';
         return this.http.post(current, returningUser, { headers: this.headers })
             .map((response: Response) => {
                 const data = response.json();
                 this.accessToken = data.token;
-                sessionStorage.setItem('token', JSON.stringify({ accessToken: this.accessToken }))
+                sessionStorage.setItem('token', JSON.stringify({ accessToken: this.accessToken }));
                 this.user = data.user as User;
                 // Notify server that a new user user logged in
                 this._socketService.send(Action.NEW_LOG_IN, {
@@ -143,11 +143,11 @@ export class UserService {
                 return data;
             }).catch((error: Response) => {
                 if (error.status === 404) {
-                    return Observable.throw('Wrong email.  Please try again.');
-                } else if (error.status === 401) {
-                    return Observable.throw('Wrong password.  Please try again.');
+                    return Observable.throw('You are not registered with this email. Please register before continuing...');
+                // } else if (error.status === 401) {
+                //     return Observable.throw('Wrong password.  Please try again.');
                 } else {
-                    return Observable.throw('Error Unknown');
+                    return Observable.throw('Something went wrong on our end. Please try again later...');
                 }
             });
     }
