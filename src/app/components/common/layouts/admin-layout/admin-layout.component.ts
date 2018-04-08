@@ -66,12 +66,10 @@ export class AdminLayoutComponent implements OnInit {
   }
   isNavOver() {
     let isSm = window.matchMedia(`(max-width: 960px)`).matches;
-
     // Disable collapsed menu in small screen
     if(isSm && domHelper.hasClass(document.body, 'collapsed-menu')) {
-      return true
+      domHelper.removeClass(document.body, 'collapsed-menu')
     }
-    domHelper.removeClass(document.body, 'collapsed-menu')
     return true;
     
   }
