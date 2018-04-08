@@ -91,21 +91,37 @@ export class AuthComponent implements OnInit {
   signin() {
     const signinData = this.signinForm.value;
     this.user.email = this.signinForm.controls['username'].value;
-    // this.user.password = this.signinForm.controls['password'].value;
-    // this.rememberMe = this.signinForm.controls['rememberMe'].value;
-
-    // if(this.rememberMe) {
-    //   localStorage.setItem('rememberMe',
-    //     // JSON.stringify({ email: this.user.email, password: this.user.password }));
-    //     JSON.stringify({ email: this.user.email }));
-    // } else {
-    //   localStorage.removeItem('rememberMe');
-    // }
-
     this.submitButton.disabled = true;
     this.progressBar.mode = 'indeterminate';
 
-    console.log('Magic link clicked by Username: ' + this.user.email);
+    console.log('Magic link clicked by Username: ' + this.user.email + 'with demo: ', this.isDemoModeChecked);
+    if (!this.isDemoModeChecked) {
+      this.userService.requestMagicLink(this.user).subscribe(
+        (data: any) => {
+          // Magic link successfully sent!
+          this.error = false;
+          this.magicLinkButtonClicked = true;
+          this.progressBar.mode = 'determinate';
+
+          // TODO: remove it. Moved to callback component
+          // this.userService.userLoaded(data.user, data.token, false, false);
+          // this.userService.getNotificationsCountForUser(data.user._id);
+          // this.userService.getNotificationsForUser(data.user._id);
+          // this.router.navigate(['/']);
+
+        },
+        (error) => {
+          // Show user error message
+          this.magicLinkButtonClicked = false;
+          this.errorMessage = error;
+          this.error = true;
+          this.submitButton.disabled = false;
+          this.progressBar.mode = 'determinate';
+        });
+    } else {
+      // TODO: login by skipping the magic link step
+      
+    }
 
     // ***********************************************************
     // PROPER LOG IN MECHANISM
@@ -131,28 +147,7 @@ export class AuthComponent implements OnInit {
 
     // ***************************************************************
 
-    this.userService.requestMagicLink(this.user).subscribe(
-      (data: any) => {
-        // Magic link successfully sent!
-        this.error = false;
-        this.magicLinkButtonClicked = true;
-        this.progressBar.mode = 'determinate';
-
-        // TODO: remove it. Moved to callback component
-        // this.userService.userLoaded(data.user, data.token, false, false);
-        // this.userService.getNotificationsCountForUser(data.user._id);
-        // this.userService.getNotificationsForUser(data.user._id);
-        // this.router.navigate(['/']);
-
-      },
-      (error) => {
-        // Show user error message
-        this.magicLinkButtonClicked = false;
-        this.errorMessage = error;
-        this.error = true;
-        this.submitButton.disabled = false;
-        this.progressBar.mode = 'determinate';
-      });
+    
     }
 
     toggleDemoMode() {
