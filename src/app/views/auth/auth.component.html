@@ -57,9 +57,9 @@
         </p>
       </div>
 
-      <div>
+      <div><br><br>
         <mat-slide-toggle color="accent" [(ngModel)]="isDemoModeChecked" (ngModelChange)="toggleDemoMode()">Demo Mode</mat-slide-toggle>
-        <div *ngIf="isDemoModeChecked">
+        <div *ngIf="isDemoModeChecked"><br><br>
             <p class="text-center text-warn m-0"><strong>Disclaimer:</strong> The passwordless process will be skipped in demo mode and the user will be instantly logged in. </p>
         </div>
       </div>
