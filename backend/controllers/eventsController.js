@@ -157,6 +157,8 @@ function buildSort(req) {
         sort = { fixedPrice: 1 }
     } else if (req.query.sort == 'Distance' || req.query.sort == 'Best Match') {
         sort = {}
+    } else if (req.query.sort == 'Rating') {
+        sort = { "hostUser.averageRating": -1 };
     }
 
     return sort;

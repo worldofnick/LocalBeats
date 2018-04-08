@@ -1,6 +1,6 @@
 <mat-sidenav-container class="app-side-nav-container mat-drawer-transition">
   <!-- Main side navigation -->
-  <mat-sidenav #sidenav [opened]="!isNavOver()" [mode]="isNavOver() ? 'over' : 'side'" class="sidebar-panel">
+  <mat-sidenav fxHide.t-sm="true" #sidenav [opened]="!isNavOver()" [mode]="isNavOver() ? 'over' : 'side'" class="sidebar-panel">
     <div id="scroll-area" class="navigation-hold" fxLayout="column">
       <!-- App Logo -->
       <div class="branding default-bg">
