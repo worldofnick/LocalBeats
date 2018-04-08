@@ -24,6 +24,13 @@ export class NavigationComponent {
         state: 'home'
       },
       {
+        name: 'Log in',
+        type: 'link',
+        tooltip: 'Log in',
+        icon: 'exit_to_app',
+        state: 'auth'
+      },
+      {
         name: 'Profile',
         type: 'dropDown',
         tooltip: 'Profile',

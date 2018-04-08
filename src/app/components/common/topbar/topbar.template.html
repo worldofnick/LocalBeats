@@ -21,7 +21,7 @@
   <!-- Search form -->
   <div 
   fxFlex
-  fxHide.lt-sm="true" 
+  fxHide.lt-sm="false" 
   class="search-bar" (offClick)="offClick()">
     <form [formGroup]="searchForm" class="top-search-form" (ngSubmit)="submit(false)">
       <mat-expansion-panel [expanded]="expand" [disabled]="true">
@@ -197,16 +197,19 @@
       </button>
     </mat-menu>
   </div>
-  <ng-template #login>
-    <button 
-    mat-icon-button
-    [routerLink]="['/auth']" 
-    [style.width]="'auto'"
-    [style.overflow]="'visible'"
-    matTooltip="Login or Register"
-    class="topbar-button-right">
-      <span>Login</span>
-      <mat-icon>exit_to_app</mat-icon>
-    </button>
-  </ng-template>
+
+  <div
+  fxHide.lt-sm="true">
+  <button 
+  mat-icon-button
+  [routerLink]="['/auth']" 
+  [style.width]="'auto'"
+  [style.overflow]="'visible'"
+  matTooltip="Login or Register"
+  class="topbar-button-right">
+    <span>Login</span>
+    <mat-icon>exit_to_app</mat-icon>
+  </button>
+  </div>
+
 </mat-toolbar>
