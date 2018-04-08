@@ -17,8 +17,8 @@ module.exports = function(app) {
 	app.route('/api/auth/register')
 		.post(autheticationHandler.register);
 
-	app.route('/api/auth/authenticate')
-		.post(autheticationHandler.signIn);
+	app.route('/api/auth/authenticate/demo')
+		.post(autheticationHandler.signInDemoMode);
 
 	app.route('/api/auth/passwordChange/:uid')
 		.put(autheticationHandler.changePassword);
