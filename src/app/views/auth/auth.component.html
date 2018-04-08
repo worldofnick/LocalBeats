@@ -3,6 +3,9 @@
     <mat-progress-bar mode="determinate" class="session-progress"></mat-progress-bar>
     <mat-card>
       <mat-card-content>
+          <div>
+              <mat-slide-toggle class="text-muted" color="accent" [(ngModel)]="isDemoModeChecked" (ngModelChange)="toggleDemoMode()">Demo Mode</mat-slide-toggle>
+            </div>
         <div class="text-center pb-1">
           <h1 class="mb-05">LocalBeats</h1>
           <p class="text-muted m-0">Password-less Sign In</p>
@@ -57,11 +60,8 @@
         </p>
       </div>
 
-      <div><br><br>
-        <mat-slide-toggle color="accent" [(ngModel)]="isDemoModeChecked" (ngModelChange)="toggleDemoMode()">Demo Mode</mat-slide-toggle>
-        <div *ngIf="isDemoModeChecked"><br><br>
-            <p class="text-center text-warn m-0"><strong>Disclaimer:</strong> The passwordless process will be skipped in demo mode and the user will be instantly logged in. </p>
-        </div>
+      <div *ngIf="isDemoModeChecked"><br>
+        <p class="text-center text-muted m-0"><strong>Disclaimer:</strong> The passwordless process will be skipped in demo mode and the user will be instantly logged in. </p>
       </div>
       </mat-card-content>
     </mat-card>
