@@ -102,13 +102,6 @@ export class AuthComponent implements OnInit {
           this.error = false;
           this.magicLinkButtonClicked = true;
           this.progressBar.mode = 'determinate';
-
-          // TODO: remove it. Moved to callback component
-          // this.userService.userLoaded(data.user, data.token, false, false);
-          // this.userService.getNotificationsCountForUser(data.user._id);
-          // this.userService.getNotificationsForUser(data.user._id);
-          // this.router.navigate(['/']);
-
         },
         (error) => {
           // Show user error message
@@ -120,7 +113,7 @@ export class AuthComponent implements OnInit {
         });
     } else {
       // TODO: login by skipping the magic link step
-      
+
     }
 
     // ***********************************************************
