@@ -1,5 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RecaptchaModule } from 'ng-recaptcha';
+import { RecaptchaFormsModule } from 'ng-recaptcha/forms';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from "@angular/router";
 import { CommonPipesModule } from "../../pipes/common/common-pipes.module";
@@ -36,6 +38,8 @@ import { AuthRoutes } from "./auth.routing";
     MatCheckboxModule,
     MatIconModule,
     FlexLayoutModule,
+    RecaptchaFormsModule,
+    RecaptchaModule.forRoot(),
     RouterModule.forChild(AuthRoutes)
   ],
   declarations: [AuthComponent, RegisterComponent]
