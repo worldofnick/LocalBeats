@@ -164,7 +164,7 @@ exports.getUnreadCountBetweenThisUserAndPassedArrayOfBuddies = function (req, re
                 error: error
             });
         }
-        return res.status(200).send({ Buddies: result });
+        return res.status(200).send({ buddies: result });
     });
 }
 
