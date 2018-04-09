@@ -24,6 +24,7 @@ export class ChatsService {
 
   // private socket;
   private loggedInUser: User = new User();
+  private unreadCounts = new Array();
 
   constructor(private _userService: UserService, private _socketService: SocketService, private http: HttpClient) { }
 
@@ -39,6 +40,23 @@ export class ChatsService {
   // Returns { users: [User] } JSON
   getAllConversationBuddiesOfThisUser() {
     return this.http.get(SERVER_URL + 'api/messages/' + this.loggedInUser._id);
+  }
+
+  getAllUnreadCountsForAllChatBuddies(connectedUsers: User[]) {
+    const url = SERVER_URL + 'api/messages/counts';
+    let bodyObject = {
+      loggedInUser: this.loggedInUser,
+      senders: connectedUsers
+    };
+    this.http.post(url, JSON.stringify(bodyObject), httpOptions).subscribe(
+      (data: any) => {
+        console.log('>> GOT unread counts every: ', data);
+        
+      },
+      (error: any) => {
+        console.error(error);
+      }
+    );
   }
 
   getCurrentLoggedInUser() {
