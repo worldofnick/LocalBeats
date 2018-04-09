@@ -111,7 +111,7 @@ exports.getAllActiveConversationsFrom = function (req, res) {
 exports.getOverallUnreadCountForUser = function (req, res) {
     let thisUserId = req.params.myUID;
 
-    Message.find({isRead: false}).where('to').in(thisUserId).count({}, function (error, unreadCount) {
+    Message.find({ isRead: false }).where('to').in(thisUserId).count({}, function (error, unreadCount) {
         if (error) {
             console.log('Error getting overall unread count: ', error);
             return res.status(400).send({
@@ -131,17 +131,37 @@ exports.getOverallUnreadCountForUser = function (req, res) {
 exports.getUnreadCountBetweenTwoUsers = function (req, res) {
     //TODO: correct it and test more. Then make it multiple senderIDs
     let thisUserId = req.body.loggedInUserID;
+    
     let senderId = req.body.senderID;
+    let senderArray = new Array();
+    senderArray.push(mongoose.Types.ObjectId(senderId));
+    
     // To get all unread messages sent to this user by a particular sender
-    Message.find({isRead: false}).where('to').in(thisUserId).where('from').in(senderId).exec(function (error, unreadMessages) {
+    Message.aggregate([
+        {
+            $match:
+                {
+                    isRead: false,
+                    from: { $in: senderArray },
+                    to: mongoose.Types.ObjectId(thisUserId)
+                }
+        },
+        {
+            $group:
+                {
+                    _id: "$from",
+                    unreadCount: { $sum: 1 }
+                }
+        }
+    ], function (error, result) {
         if (error) {
             console.log('Error getting total unread between 2 buddies: ', error);
             return res.status(400).send({
-                reason: "Error getting total unread between 2 buddies...",
+                reason: "Error getting total unread between you and list of senders...",
                 error: error
             });
         }
-        return res.status(200).send({ unreadMessagesCount: unreadMessages });
+        return res.status(200).send({ Buddies: result });
     });
 }
 
