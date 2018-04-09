@@ -55,4 +55,10 @@ export class ChatsService {
     return this.http.post(SERVER_URL + 'api/messages/', body, httpOptions);
   }
 
+  getOverallUnreadCountForThisUser(loggedInUser: User) {
+    const url = SERVER_URL + 'api/messages/counts/' + loggedInUser._id;
+    console.log('> Overall count URL: ', url);
+    return this.http.get(url);
+  }
+
 }
