@@ -47,10 +47,8 @@ export class SharedDataService {
     this.isSnackBarMessageRequestPending = false;
   }
 
-  public setOverallUnreadCountForThisUser(loggedInUser: User) {
-    const url = this.SERVER_URL + 'api/messages/counts/' + loggedInUser._id;
-    console.log('> Overall count URL: ', url);
-    return this.http.get(url);
+  public setOverallChatUnreadCount(count) {
+    this.overallUnreadChatCountForThisUser = count;
   }
 
   // TODO: keep or remove later
