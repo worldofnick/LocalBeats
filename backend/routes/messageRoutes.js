@@ -13,6 +13,10 @@ module.exports = function(app) {
 	
 	app.route('/api/messages/counts/')        	
 		.post(messageHandlers.getUnreadCountBetweenThisUserAndPassedArrayOfBuddies);
+	
+	app.route('/api/messages/update/read/:fromUID/:toUID')        	
+		.put(messageHandlers.markAllMessagesReadBetweenTwoUsers);
+	
 
 	app.route('/api/messages/:fromUID/:toUID')        	// SAME AS (to, from) == (from, to)
 		.get(messageHandlers.getAllFromToMessages);     // Get all messages from a user to a user
