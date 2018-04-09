@@ -4,6 +4,7 @@ import { ISubscription } from "rxjs/Subscription";
 import { ActivatedRoute } from "@angular/router";
 import { NgForm } from '@angular/forms/src/directives/ng_form';
 import { Router } from "@angular/router";
+import { Validators, FormGroup, FormControl, FormArray, FormBuilder } from '@angular/forms';
 import { MatTabChangeEvent, MatSnackBar, MatDialog, MatDialogRef, MAT_DIALOG_DATA, PageEvent, MatPaginator } from '@angular/material';
 
 // Services
@@ -18,7 +19,7 @@ import { ReviewService } from 'app/services/reviews/review.service';
 import { User } from 'app/models/user';
 import { Review } from 'app/models/review';
 import { Event, CancellationPolicy } from 'app/models/event';
-import { Booking, StatusMessages, NegotiationResponses, VerificationResponse, BookingType } from 'app/models/booking';
+import { Booking, StatusMessages, NegotiationResponses, VerificationResponse, BookingType, BookingSortType } from 'app/models/booking';
 import { Action } from 'app/services/chats/model/action'
 import { SocketEvent } from 'app/services/chats/model/event'
 import { Notification } from 'app/models/notification'
@@ -50,6 +51,27 @@ import {
   styleUrls: ['./performance-management.component.css']
 })
 export class PerformanceManagementComponent implements OnInit {
+  // Sorting Forms
+  applicationForm = this.formBuilder.group({
+    sort: new FormControl()
+  });
+  requestForm = this.formBuilder.group({
+    sort: new FormControl()
+  });
+  confirmationForm = this.formBuilder.group({
+    sort: new FormControl()
+  });
+  completionForm = this.formBuilder.group({
+    sort: new FormControl()
+  });
+  cancellationForm = this.formBuilder.group({
+    sort: new FormControl()
+  });
+  bookingSortTypes: BookingSortType[] = [
+    BookingSortType.bidAsc,
+    BookingSortType.bidDes,
+    BookingSortType.needsResponse
+  ];
   // User Model
   user: User;
   socketSubscription: ISubscription;
@@ -101,7 +123,8 @@ export class PerformanceManagementComponent implements OnInit {
     private _socketService: SocketService,
     private stripeService: StripeService,
     public dialog: MatDialog,
-    public snackBar: MatSnackBar
+    public snackBar: MatSnackBar,
+    private formBuilder: FormBuilder
     ) {
       // Set user model to the authenticated singleton user
       this.user = this.userService.user;
@@ -992,28 +1015,58 @@ export class PerformanceManagementComponent implements OnInit {
     this.performances.pagedCancellations = this.performances.cancellations.slice(startingIndex, endIndex);
   }
 
-  // sort(sortType: EventSortType) {
-  //   this.events.sort((leftside, rightside): number => {
-  //     if(sortType == EventSortType.notificationCount) {
-  //       let leftSideCount: number = leftside.applicationNotifications +
-  //       leftside.cancellationNotifications + leftside.completionNotifications +
-  //       leftside.confirmationNotifications + leftside.requestNotifications;
-  //       let rightSideCount: number = rightside.applicationNotifications +
-  //       rightside.cancellationNotifications + rightside.completionNotifications +
-  //       rightside.confirmationNotifications + rightside.requestNotifications;
+  applicationSort() {
+    let sort: BookingSortType = this.applicationForm.get('sort').value;
+    this.performances.applications.sort((leftside, rightside): number => {
+      return this.sortBookings(leftside, rightside, sort);
+    });
+    this.updateApplicationPage();
+  }
 
-  //       if(leftSideCount < rightSideCount) return 1;
-  //       if(leftSideCount > rightSideCount) return -1;
-  //     } else if(sortType == EventSortType.fromDateDes) {
-  //       if(leftside.event.fromDate < rightside.event.fromDate) return 1;
-  //       if(leftside.event.fromDate > rightside.event.fromDate) return -1;
-  //     } else {
-  //       if(leftside.event.fromDate < rightside.event.fromDate) return -1;
-  //       if(leftside.event.fromDate > rightside.event.fromDate) return 1;
-  //     }
-  //     return 0;
-  //   })
-  //   this.updateEventsPage();
-  // }
+  requestSort() {
+    let sort: BookingSortType = this.requestForm.get('sort').value;
+    this.performances.requests.sort((leftside, rightside): number => {
+      return this.sortBookings(leftside, rightside, sort);
+    });
+    this.updateRequestPage();
+  }
+
+  confirmationSort() {
+    let sort: BookingSortType = this.confirmationForm.get('sort').value;
+    this.performances.confirmations.sort((leftside, rightside): number => {
+      return this.sortBookings(leftside, rightside, sort);
+    });
+    this.updateConfirmationPage();
+  }
+
+  completionSort() {
+    let sort: BookingSortType = this.completionForm.get('sort').value;
+    this.performances.completions.sort((leftside, rightside): number => {
+      return this.sortBookings(leftside, rightside, sort);
+    });
+    this.updateCompletionPage();
+  }
+
+  cancellationSort() {
+    let sort: BookingSortType = this.cancellationForm.get('sort').value;
+    this.performances.cancellations.sort((leftside, rightside): number => {
+      return this.sortBookings(leftside, rightside, sort);
+    });
+    this.updateCancellationPage();
+  }
+
+  sortBookings(leftside: Booking, rightside: Booking, sortType: BookingSortType): number {
+    if(sortType == BookingSortType.needsResponse) {
+      if(!leftside.artViewed && rightside.artViewed) return -1;
+      if(leftside.artViewed && !rightside.artViewed) return 1;
+    } else if(sortType == BookingSortType.bidDes) {
+      if(leftside.currentPrice < rightside.currentPrice) return -1;
+      if(leftside.currentPrice > rightside.currentPrice) return 1;
+    } else {
+      if(leftside.currentPrice < rightside.currentPrice) return 1;
+      if(leftside.currentPrice > rightside.currentPrice) return -1;
+    }
+    return 0;
+  }
 
 }

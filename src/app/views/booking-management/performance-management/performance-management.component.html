@@ -11,6 +11,14 @@
         </ng-template>
         <br>
         <p *ngIf="performances.applications.length == 0">You don't have any applications.</p>
+        <mat-form-field *ngIf="performances.applications.length > 0">
+          <mat-select placeholder="Sort Type" [formControl]="applicationForm.controls['sort']" (change)="applicationSort()">
+            <mat-select-trigger class="additional-selection">
+              {{(applicationForm.controls['sort'].value ? applicationForm.controls['sort'].value : '') | capitalize}}
+            </mat-select-trigger>
+            <mat-option *ngFor="let type of bookingSortTypes" [value]="type">{{type | capitalize}}</mat-option>
+          </mat-select>
+        </mat-form-field>
         <div fxLayout="row" fxLayoutWrap="wrap">
           <div *ngFor="let application of performances.pagedApplications; let i = index" fxFlex="33.33">
             <mat-card class="p-0">
@@ -42,6 +50,14 @@
         </ng-template>
         <br>
         <p *ngIf="performances.requests.length == 0">You don't have any requests.</p>
+        <mat-form-field *ngIf="performances.requests.length > 0">
+          <mat-select placeholder="Sort Type" [formControl]="requestForm.controls['sort']" (change)="requestSort()">
+            <mat-select-trigger class="additional-selection">
+              {{(requestForm.controls['sort'].value ? requestForm.controls['sort'].value : '') | capitalize}}
+            </mat-select-trigger>
+            <mat-option *ngFor="let type of bookingSortTypes" [value]="type">{{type | capitalize}}</mat-option>
+          </mat-select>
+        </mat-form-field>
         <div fxLayout="row" fxLayoutWrap="wrap">
           <div *ngFor="let request of performances.pagedRequests; let i = index" fxFlex="100" fxFlex.gt-xs="33">
             <mat-card class="p-0">
@@ -73,6 +89,14 @@
         </ng-template>
         <br>
         <p *ngIf="performances.confirmations.length == 0">You don't have any confirmed bookings.</p>
+        <mat-form-field *ngIf="performances.confirmations.length > 0">
+          <mat-select placeholder="Sort Type" [formControl]="confirmationForm.controls['sort']" (change)="confirmationSort()">
+            <mat-select-trigger class="additional-selection">
+              {{(confirmationForm.controls['sort'].value ? confirmationForm.controls['sort'].value : '') | capitalize}}
+            </mat-select-trigger>
+            <mat-option *ngFor="let type of bookingSortTypes" [value]="type">{{type | capitalize}}</mat-option>
+          </mat-select>
+        </mat-form-field>
         <div fxLayout="row" fxLayoutWrap="wrap">
           <div *ngFor="let confirmation of performances.pagedConfirmations; let i = index" fxFlex="100" fxFlex.gt-xs="33">
             <mat-card class="p-0">
@@ -105,6 +129,14 @@
         </ng-template>
         <br>
         <p *ngIf="performances.completions.length == 0">You don't have any completed bookings.</p>
+        <mat-form-field *ngIf="performances.completions.length > 0">
+          <mat-select placeholder="Sort Type" [formControl]="completionForm.controls['sort']" (change)="completionSort()">
+            <mat-select-trigger class="additional-selection">
+              {{(completionForm.controls['sort'].value ? completionForm.controls['sort'].value : '') | capitalize}}
+            </mat-select-trigger>
+            <mat-option *ngFor="let type of bookingSortTypes" [value]="type">{{type | capitalize}}</mat-option>
+          </mat-select>
+        </mat-form-field>
         <div fxLayout="row" fxLayoutWrap="wrap">
           <div *ngFor="let completion of performances.pagedCompletions; let i = index" fxFlex="100" fxFlex.gt-xs="33">
             <mat-card class="p-0">
@@ -139,6 +171,14 @@
         </ng-template>
         <br>
         <p *ngIf="performances.cancellations.length == 0">You don't have any cancelled bookings.</p>
+        <mat-form-field *ngIf="performances.cancellations.length > 0">
+          <mat-select placeholder="Sort Type" [formControl]="cancellationForm.controls['sort']" (change)="cancellationSort()">
+            <mat-select-trigger class="additional-selection">
+              {{(cancellationForm.controls['sort'].value ? cancellationForm.controls['sort'].value : '') | capitalize}}
+            </mat-select-trigger>
+            <mat-option *ngFor="let type of bookingSortTypes" [value]="type">{{type | capitalize}}</mat-option>
+          </mat-select>
+        </mat-form-field>
         <div fxLayout="row" fxLayoutWrap="wrap">
           <div *ngFor="let cancellation of performances.pagedCancellations; let i = index" fxFlex="100" fxFlex.gt-xs="33">
             <mat-card class="p-0">
