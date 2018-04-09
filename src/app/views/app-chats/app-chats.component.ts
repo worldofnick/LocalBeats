@@ -178,19 +178,23 @@ export class AppChatsComponent implements OnInit, AfterViewChecked, AfterViewIni
         const temp: Message = message as Message;
 
         // If you are the receiver and the sender is not already in the connectedUsers list,
-        // add the user to list. Else, if the chat is ongoing with this sender, reload the messages.
+        // add the user to list. 
         if (!this.isUserInConnectedUsers(temp)) {
           if (this.loggedInUser._id !== temp.from._id) {
             this.connectedUsers.unshift(temp.from);
           }
         }
+        // Else, if the chat is ongoing with this sender, reload the messages.
         if (this.activeChatUser._id === temp.from._id ||
           this.loggedInUser._id === temp.from._id) {
           this.activeChatMessages.push(temp);
-        } else {
-          // TODO: push notification, notification dot if not active user
+          // TODO: Mark the message as read
         }
-        // TODO: refresh UI?
+
+        // Update buddy list unread counts and the top bar overall unread count
+        // TODO: make this run after the message has been marked as read
+        this._chatsService.getAllUnreadCountsForAllChatBuddies(this.connectedUsers);
+        this._sharedDataService.setOverallChatUnreadCount(this.loggedInUser);
       });
   }
 
