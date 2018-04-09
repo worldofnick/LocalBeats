@@ -6,7 +6,7 @@ import { NgForm } from '@angular/forms/src/directives/ng_form';
 import { Router } from "@angular/router";
 import { Validators, FormGroup, FormControl, FormArray, FormBuilder } from '@angular/forms';
 import { MatTabChangeEvent } from '@angular/material';
-import {MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatSnackBar, PageEvent, MatPaginator} from '@angular/material';
+import {MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatSnackBar, PageEvent, MatPaginator, MatSelectChange} from '@angular/material';
 
 // Services
 import { UserService } from '../../../services/auth/user.service';
@@ -60,6 +60,11 @@ export class EventManagementComponent implements OnInit {
     EventSortType.fromDateAsc,
     EventSortType.fromDateDes,
     EventSortType.notificationCount
+  ];
+  bookingSortTypes: BookingSortType[] = [
+    BookingSortType.bidAsc,
+    BookingSortType.bidDes,
+    BookingSortType.needsResponse
   ];
   // User Model
   user: User;
@@ -919,6 +924,70 @@ export class EventManagementComponent implements OnInit {
     let endIndex = startingIndex + this.pageSize;
     this.pagedEvents = this.events.slice(startingIndex, endIndex);
     window.scrollTo(0, 0);
+  }
+
+  applicationSort(event: MatSelectChange, pagedEventIndex: number) {
+    let eventIndex = this.events.findIndex(e => e.event._id == this.pagedEvents[pagedEventIndex].event._id);
+    this.events[eventIndex].applications.sort((leftside, rightside): number => {
+      return this.sortBookings(leftside, rightside, event.value);
+    });
+    this.pagedEvents[pagedEventIndex].applications.sort((leftside, rightside): number => {
+      return this.sortBookings(leftside, rightside, event.value);
+    });
+  }
+
+  requestSort(event: MatSelectChange, pagedEventIndex: number) {
+    let eventIndex = this.events.findIndex(e => e.event._id == this.pagedEvents[pagedEventIndex].event._id);
+    this.events[eventIndex].requests.sort((leftside, rightside): number => {
+      return this.sortBookings(leftside, rightside, event.value);
+    });
+    this.pagedEvents[pagedEventIndex].requests.sort((leftside, rightside): number => {
+      return this.sortBookings(leftside, rightside, event.value);
+    });
+  }
+
+  confirmationSort(event: MatSelectChange, pagedEventIndex: number) {
+    let eventIndex = this.events.findIndex(e => e.event._id == this.pagedEvents[pagedEventIndex].event._id);
+    this.events[eventIndex].confirmations.sort((leftside, rightside): number => {
+      return this.sortBookings(leftside, rightside, event.value);
+    });
+    this.pagedEvents[pagedEventIndex].confirmations.sort((leftside, rightside): number => {
+      return this.sortBookings(leftside, rightside, event.value);
+    });
+  }
+
+  completionSort(event: MatSelectChange, pagedEventIndex: number) {
+    let eventIndex = this.events.findIndex(e => e.event._id == this.pagedEvents[pagedEventIndex].event._id);
+    this.events[eventIndex].completions.sort((leftside, rightside): number => {
+      return this.sortBookings(leftside, rightside, event.value);
+    });
+    this.pagedEvents[pagedEventIndex].completions.sort((leftside, rightside): number => {
+      return this.sortBookings(leftside, rightside, event.value);
+    });
+  }
+
+  cancellationSort(event: MatSelectChange, pagedEventIndex: number) {
+    let eventIndex = this.events.findIndex(e => e.event._id == this.pagedEvents[pagedEventIndex].event._id);
+    this.events[eventIndex].cancellations.sort((leftside, rightside): number => {
+      return this.sortBookings(leftside, rightside, event.value);
+    });
+    this.pagedEvents[pagedEventIndex].cancellations.sort((leftside, rightside): number => {
+      return this.sortBookings(leftside, rightside, event.value);
+    });
+  }
+
+  sortBookings(leftside: Booking, rightside: Booking, sortType: BookingSortType): number {
+    if(sortType == BookingSortType.needsResponse) {
+      if(!leftside.artViewed && rightside.artViewed) return -1;
+      if(leftside.artViewed && !rightside.artViewed) return 1;
+    } else if(sortType == BookingSortType.bidDes) {
+      if(leftside.currentPrice < rightside.currentPrice) return -1;
+      if(leftside.currentPrice > rightside.currentPrice) return 1;
+    } else {
+      if(leftside.currentPrice < rightside.currentPrice) return 1;
+      if(leftside.currentPrice > rightside.currentPrice) return -1;
+    }
+    return 0;
   }
 
   sortEvents(sortType: EventSortType) {
