@@ -47,8 +47,21 @@ export class SharedDataService {
     this.isSnackBarMessageRequestPending = false;
   }
 
-  public setOverallChatUnreadCount(count) {
-    this.overallUnreadChatCountForThisUser = count;
+  public setOverallChatUnreadCount(loggedInUser: User) {
+    const url = this.SERVER_URL + 'api/messages/counts/' + loggedInUser._id;
+    console.log('> Overall count URL: ', url);
+    this.http.get(url).subscribe(
+      (payload: any) => {
+        if (payload !== undefined && payload !== null) {
+          console.log('>> Unread COUNT = ', payload);
+          console.log('>> Only count: ', payload.unreadMessagesCount);
+          this.overallUnreadChatCountForThisUser = payload.unreadMessagesCount as number;
+          console.log('>> COUNT IN data service: ', this.overallUnreadChatCountForThisUser);
+        }
+      },
+      err => {
+        console.error(err);
+      });
   }
 
   // TODO: keep or remove later
