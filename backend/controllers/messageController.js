@@ -191,6 +191,24 @@ exports.markAllMessagesReadBetweenTwoUsers = function (req, res) {
         });
 }
 
+exports.markThisMessageAsRead = function (req, res) {
+    Message.update(
+        {
+            _id: req.params.messageID
+        },
+        {
+            $set: { isRead: true }
+        }, function (error, result) {
+            if (error) {
+                return res.status(400).send({
+                    reason: "Unable to set the isUnread for this message",
+                    error: error
+                });
+            }
+            return res.status(200).send({ result: result });
+        });
+}
+
 exports.saveMessage = function (req, res) {
     let newMessage = new Message();
     newMessage.from = req.body.from._id;
