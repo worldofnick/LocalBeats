@@ -138,4 +138,8 @@ export class AuthComponent implements OnInit {
   toggleDemoMode() {
     console.log('>> Toggle is at : ', this.isDemoModeChecked);
   }
+
+  cpatchaResolved(captchaResponse: string) {
+    console.log(`Resolved captcha with response ${captchaResponse}:`);
+  }
 }

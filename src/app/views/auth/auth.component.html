@@ -63,6 +63,8 @@
       <div *ngIf="isDemoModeChecked"><br>
         <p class="text-center text-muted m-0"><strong>Disclaimer:</strong> The passwordless process will be skipped in demo mode and the user will be instantly logged in. </p>
       </div>
+
+      <re-captcha (resolved)="cpatchaResolved($event)" siteKey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"></re-captcha>
       </mat-card-content>
     </mat-card>
   </div>
