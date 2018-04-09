@@ -58,6 +58,26 @@ export class ChatsService {
       });
   }
 
+  markChatsAsReadBetweenTwoUser(fromUID: string, toUID: string) {
+    const url = SERVER_URL + 'api/messages/update/read/' + fromUID + '/' + toUID;
+    this.http.put(url, {}, httpOptions).subscribe(
+      (data: any) => {
+        console.log('All Chats read = true result: ', data);
+
+        // Make the unread count for that user to zero in unreadCounts[]
+        const senderIndex = this.unreadCounts.findIndex(x => x._id === fromUID);
+        // console.log('>> Sender index: ', senderIndex);
+        // console.log('>> Unread count array: ', this.unreadCounts);
+        if (senderIndex !== -1) {
+          this.unreadCounts[senderIndex].unreadCount = 0;
+        }
+      },
+      (error: any) => {
+        console.error(error);
+      }
+    );
+  }
+
   getCurrentLoggedInUser() {
     this.loggedInUser = this._userService.user;
     return this.loggedInUser;
