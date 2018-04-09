@@ -24,7 +24,7 @@ export class ChatsService {
 
   // private socket;
   private loggedInUser: User = new User();
-  private unreadCounts = new Array();
+  public unreadCounts = new Array();
 
   constructor(private _userService: UserService, private _socketService: SocketService, private http: HttpClient) { }
 
