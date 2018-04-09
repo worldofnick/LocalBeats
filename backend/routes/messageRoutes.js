@@ -16,6 +16,9 @@ module.exports = function(app) {
 	
 	app.route('/api/messages/update/read/:fromUID/:toUID')        	
 		.put(messageHandlers.markAllMessagesReadBetweenTwoUsers);
+
+	app.route('/api/messages/update/read/:messageID')
+		.put(messageHandlers.markThisMessageAsRead);
 	
 
 	app.route('/api/messages/:fromUID/:toUID')        	// SAME AS (to, from) == (from, to)
