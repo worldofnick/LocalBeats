@@ -125,16 +125,19 @@ exports.getOverallUnreadCountForUser = function (req, res) {
 
 /**
  * To get all unread messages sent to this user by a particular sender
- * @param {*} req Has loggedInUserID, and senderID
- * @param {*} res array of unread message count sent by sender to loggedInUser
+ * @param {*} req Has loggedInUserID, and array of senderIDs
+ * @param {*} res table of unread message count sent by sender to loggedInUser
  */
-exports.getUnreadCountBetweenTwoUsers = function (req, res) {
+exports.getUnreadCountBetweenThisUserAndPassedArrayOfBuddies = function (req, res) {
     //TODO: correct it and test more. Then make it multiple senderIDs
     let thisUserId = req.body.loggedInUserID;
     
-    let senderId = req.body.senderID;
     let senderArray = new Array();
-    senderArray.push(mongoose.Types.ObjectId(senderId));
+    if (req.body.senderID !== undefined && req.body.senderID !== null) {
+        for (let i = 0; i < req.body.senderID.length; i++) {
+            senderArray.push(mongoose.Types.ObjectId(req.body.senderID[i]));
+        }
+    }
     
     // To get all unread messages sent to this user by a particular sender
     Message.aggregate([
