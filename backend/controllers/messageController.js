@@ -130,12 +130,12 @@ exports.getOverallUnreadCountForUser = function (req, res) {
  */
 exports.getUnreadCountBetweenThisUserAndPassedArrayOfBuddies = function (req, res) {
     //TODO: correct it and test more. Then make it multiple senderIDs
-    let thisUserId = req.body.loggedInUserID;
+    let thisUserId = req.body.loggedInUser._id;
 
     let senderArray = new Array();
-    if (req.body.senderID !== undefined && req.body.senderID !== null) {
-        for (let i = 0; i < req.body.senderID.length; i++) {
-            senderArray.push(mongoose.Types.ObjectId(req.body.senderID[i]));
+    if (req.body.senders !== undefined && req.body.senders !== null) {
+        for (let i = 0; i < req.body.senders.length; i++) {
+            senderArray.push(mongoose.Types.ObjectId(req.body.senders[i]._id));
         }
     }
 
