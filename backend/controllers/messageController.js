@@ -168,6 +168,39 @@ exports.getUnreadCountBetweenThisUserAndPassedArrayOfBuddies = function (req, re
     });
 }
 
+exports.markAllMessagesReadBetweenTwoUsers = function (req, res) {
+    let thisUserId = req.params.toUID;
+    let senderId = req.params.fromUID;
+    let updatedMessage = new Array();
+
+    Message.find({ isRead: false }).where('to').in(thisUserId).where('from').in(senderId)
+    .exec( function (error, foundMessages) {
+        if (error) {
+            console.log('Error getting overall unread count: ', error);
+            return res.status(400).send({
+                reason: "Unable to get overall unread count...",
+                error: error
+            });
+        }
+        console.log('>> Found Messages: ', foundMessages);
+        if (foundMessages !== undefined && foundMessages !== null) {
+            for (let i = 0; i < foundMessages.length; i++) {
+                Message.findByIdAndUpdate(foundMessages[i]._id, { isRead: true }, { new: true }, function (err, newMessage) {
+                    if (err) {
+                        console.log('Error getting overall unread count: ', err);
+                        return res.status(400).send({
+                            reason: "Unable to get overall unread count...",
+                            error: err
+                        });
+                    }
+                    updatedMessage.push(newMessage);
+                  });
+            }
+            return res.status(200).send({ messages: updatedMessage });
+        } 
+    });
+}
+
 exports.saveMessage = function (req, res) {
     let newMessage = new Message();
     newMessage.from = req.body.from._id;
