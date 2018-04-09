@@ -55,10 +55,23 @@ export class ChatsService {
     return this.http.post(SERVER_URL + 'api/messages/', body, httpOptions);
   }
 
-  getOverallUnreadCountForThisUser(loggedInUser: User) {
+  setOverallUnreadCountForthiUserInSharedData(loggedInUser: User) {
     const url = SERVER_URL + 'api/messages/counts/' + loggedInUser._id;
     console.log('> Overall count URL: ', url);
-    return this.http.get(url);
+    this.http.get(url).subscribe(
+      (payload: any) => {
+        if (payload !== undefined && payload !== null) {
+          console.log('>> Unread COUNT = ', payload);
+          console.log('>> Only count: ', payload.unreadMessagesCount);
+          return payload.unreadMessagesCount;
+        }
+      },
+      err => {
+        console.error(err);
+      },
+      () => {
+
+      });
   }
 
 }
