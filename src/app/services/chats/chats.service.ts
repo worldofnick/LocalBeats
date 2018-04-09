@@ -51,12 +51,11 @@ export class ChatsService {
     this.http.post(url, JSON.stringify(bodyObject), httpOptions).subscribe(
       (data: any) => {
         console.log('>> GOT unread counts every: ', data);
-        
+        this.unreadCounts = data.buddies as Array<any>;
       },
       (error: any) => {
         console.error(error);
-      }
-    );
+      });
   }
 
   getCurrentLoggedInUser() {
