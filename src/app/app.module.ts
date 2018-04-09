@@ -13,7 +13,7 @@ import { StripeModule } from './views/events/event-singleton/stripe.module';
 import { ReviewModule } from './views/review/review.module';
 import {MatDialogModule} from '@angular/material/dialog';
 import { AppComponent } from './app.component';
-
+import { RecaptchaModule } from 'ng-recaptcha';
 import { RoutePartsService } from './services/route-parts/route-parts.service';
 import { NavigationService } from "./services/navigation/navigation.service";
 import { SearchService } from './services/search/search.service';
@@ -51,6 +51,7 @@ export function createTranslateLoader(http: Http) {
     NegotiateModule,
     ReviewModule,
     StripeModule,
+    RecaptchaModule.forRoot(),
     TranslateModule.forRoot({
       provide: TranslateLoader,
       useFactory: (createTranslateLoader),
