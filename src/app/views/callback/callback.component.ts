@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from "@angular/router";
 import { SpotifyClientService } from '../../services/music/spotify-client.service';
 import { UserService } from '../../services/auth/user.service';
+import { SharedDataService } from '../../services/shared/shared-data.service';
 import { Router } from '@angular/router';
 import { MatSnackBar, MatSnackBarRef } from '@angular/material';
 import { User } from '../../models/user';
@@ -16,8 +17,9 @@ export class CallbackComponent implements OnInit {
   spotifyCode: string;
   localAuthToken: string;
 
-  constructor(private route: ActivatedRoute, private snackBar: MatSnackBar, 
-              private userService: UserService, private router : Router,
+  constructor(private route: ActivatedRoute, private snackBar: MatSnackBar,
+              private userService: UserService, private router: Router,
+              private sharedDataService: SharedDataService,
               private _spotifyClientService: SpotifyClientService) { }
 
   ngOnInit() {
@@ -177,6 +179,7 @@ export class CallbackComponent implements OnInit {
         this.userService.userLoaded(data.user, data.token, false, false);
         this.userService.getNotificationsCountForUser(data.user._id);
         this.userService.getNotificationsForUser(data.user._id);
+        this.sharedDataService.setOverallChatUnreadCount(data.user as User);
         this.router.navigate(['/']);
       },
       (error: any) => {
