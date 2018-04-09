@@ -75,7 +75,7 @@ export class AppChatsComponent implements OnInit, AfterViewChecked, AfterViewIni
   // ==============================================
 
   constructor(private media: ObservableMedia, public _snackBar: MatSnackBar, private cdr: ChangeDetectorRef,
-    private _socketService: SocketService, private _chatsService: ChatsService, private router: Router,
+    private _socketService: SocketService, public _chatsService: ChatsService, private router: Router,
     private _sharedDataService: SharedDataService, public dialog: MatDialog) {
       // console.log('>>> IN CONSTRUCTOR');
     this.loggedInUser = this._chatsService.getCurrentLoggedInUser();
