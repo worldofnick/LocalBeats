@@ -131,14 +131,14 @@ exports.getOverallUnreadCountForUser = function (req, res) {
 exports.getUnreadCountBetweenThisUserAndPassedArrayOfBuddies = function (req, res) {
     //TODO: correct it and test more. Then make it multiple senderIDs
     let thisUserId = req.body.loggedInUserID;
-    
+
     let senderArray = new Array();
     if (req.body.senderID !== undefined && req.body.senderID !== null) {
         for (let i = 0; i < req.body.senderID.length; i++) {
             senderArray.push(mongoose.Types.ObjectId(req.body.senderID[i]));
         }
     }
-    
+
     // To get all unread messages sent to this user by a particular sender
     Message.aggregate([
         {
@@ -171,34 +171,24 @@ exports.getUnreadCountBetweenThisUserAndPassedArrayOfBuddies = function (req, re
 exports.markAllMessagesReadBetweenTwoUsers = function (req, res) {
     let thisUserId = req.params.toUID;
     let senderId = req.params.fromUID;
-    let updatedMessage = new Array();
 
-    Message.find({ isRead: false }).where('to').in(thisUserId).where('from').in(senderId)
-    .exec( function (error, foundMessages) {
-        if (error) {
-            console.log('Error getting overall unread count: ', error);
-            return res.status(400).send({
-                reason: "Unable to get overall unread count...",
-                error: error
-            });
-        }
-        console.log('>> Found Messages: ', foundMessages);
-        if (foundMessages !== undefined && foundMessages !== null) {
-            for (let i = 0; i < foundMessages.length; i++) {
-                Message.findByIdAndUpdate(foundMessages[i]._id, { isRead: true }, { new: true }, function (err, newMessage) {
-                    if (err) {
-                        console.log('Error getting overall unread count: ', err);
-                        return res.status(400).send({
-                            reason: "Unable to get overall unread count...",
-                            error: err
-                        });
-                    }
-                    updatedMessage.push(newMessage);
-                  });
+    Message.updateMany(
+        {
+            isRead: false,
+            to: mongoose.Types.ObjectId(thisUserId),
+            from: mongoose.Types.ObjectId(senderId)
+        },
+        {
+            $set: { isRead: true }
+        }, function (error, result) {
+            if (error) {
+                return res.status(400).send({
+                    reason: "Unable to update the isUnread to true",
+                    error: error
+                });
             }
-            return res.status(200).send({ messages: updatedMessage });
-        } 
-    });
+            return res.status(200).send({ result: result });
+        });
 }
 
 exports.saveMessage = function (req, res) {
