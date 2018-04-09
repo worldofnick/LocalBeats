@@ -7,6 +7,7 @@ import { RoutePartsService } from "./services/route-parts/route-parts.service";
 import { SocketService } from 'app/services/chats/socket.service';
 import { MatSnackBar } from '@angular/material';
 import { UserService } from './services/auth/user.service';
+import { SharedDataService } from './services/shared/shared-data.service';
 import { JwtHelper } from 'angular2-jwt';
 import { User } from './models/user';
 
@@ -19,10 +20,11 @@ export class AppComponent implements OnInit {
   appTitle = 'localBeats';
   pageTitle = '';
 
-  constructor(public title: Title, 
-    private router: Router, 
+  constructor(public title: Title,
+    private router: Router,
     private activeRoute: ActivatedRoute,
     public snackBar: MatSnackBar,
+    private sharedDataService: SharedDataService,
     private routePartsService: RoutePartsService,
     private userService: UserService,
     private _socketService: SocketService) { }
@@ -38,6 +40,7 @@ export class AppComponent implements OnInit {
         this.userService.userLoaded(user, token, true, false);
         this.userService.getNotificationsCountForUser(user._id);
         this.userService.getNotificationsForUser(user._id);
+        this.sharedDataService.setOverallChatUnreadCount(user);
       });
     }
     this.changePageTitle();
