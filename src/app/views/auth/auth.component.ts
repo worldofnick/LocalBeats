@@ -27,7 +27,7 @@ export class AuthComponent implements OnInit {
   error: boolean = false;
   errorMessage: string = '';
   magicLinkButtonClicked: boolean = false;
-  isDemoModeChecked = false;
+  isDemoModeChecked = true;
 
   constructor(private userService: UserService, private sharedDataService: SharedDataService,
     private router: Router, private chatsService: ChatsService,
