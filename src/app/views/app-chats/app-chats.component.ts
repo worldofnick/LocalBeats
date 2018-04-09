@@ -264,7 +264,6 @@ export class AppChatsComponent implements OnInit, AfterViewChecked, AfterViewIni
       () => {
 
         // Get the unread labels for all users in the connectedUsers list (the side bar)
-        console.log('>> Connected Users: ', this.connectedUsers);
         this._chatsService.getAllUnreadCountsForAllChatBuddies(this.connectedUsers);
 
         // See if profile message clicked. If so, add it as first user or switch to exisitng one
@@ -311,25 +310,23 @@ export class AppChatsComponent implements OnInit, AfterViewChecked, AfterViewIni
   changeActiveUser(user) {
     // Check if a blank new conversation was halfway started while switched to an existing user. If so, remove it.
     if (this.connectedUsers.length > 0) {
+      this.activeChatUser = user;
 
-      let connection;
-        this.activeChatUser = user;
+      // Mark all PMs (from:activeChatUser, to: me) as read, then fetch the PMs between them
+      this._chatsService.markChatsAsReadBetweenTwoUser(user._id, this.loggedInUser._id);
 
       this._chatsService.getPMsBetweenActiveAndLoggedInUser(this.loggedInUser, this.activeChatUser).subscribe(
         data => {
           // console.log('\n====\nUser PMs from Server DB: ', JSON.stringify(data));
           // console.log('\n====\nUser PMs from Server DB: ', data as {messages: Message[]} );
           this.activeChatMessages = new Array();
-          let temp = data as { messages: Message[] };
+          const temp = data as { messages: Message[] };
           this.activeChatMessages = temp.messages;
         },
         err => console.error('Error fetching PMs between 2 users: ', err),
         () => {
-          // console.log('Done fetching PMs from the server DB');
-          // this.profileRecipient = new User();
-          // this.snackBarRecipient = new User();
-          // this.isProfileUserRequestPending = false;
-          // this.isSnackBarRequestPending = false;
+          // Update the unread count on the topbar icon
+          this._sharedDataService.setOverallChatUnreadCount(this.loggedInUser);
         }
       );
       this.vc.first.nativeElement.focus();
