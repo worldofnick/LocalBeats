@@ -188,7 +188,8 @@ export class AppChatsComponent implements OnInit, AfterViewChecked, AfterViewIni
         if (this.activeChatUser._id === temp.from._id ||
           this.loggedInUser._id === temp.from._id) {
           this.activeChatMessages.push(temp);
-          // TODO: Mark the message as read
+          // Mark the message as read
+          this._chatsService.markChatsAsReadBetweenTwoUser(this.activeChatUser._id, this.loggedInUser._id);
         }
 
         // Update buddy list unread counts and the top bar overall unread count
