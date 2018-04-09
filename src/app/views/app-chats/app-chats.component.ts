@@ -262,6 +262,11 @@ export class AppChatsComponent implements OnInit, AfterViewChecked, AfterViewIni
       },
       err => console.error(err),
       () => {
+
+        // Get the unread labels for all users in the connectedUsers list (the side bar)
+        console.log('>> Connected Users: ', this.connectedUsers);
+        this._chatsService.getAllUnreadCountsForAllChatBuddies(this.connectedUsers);
+
         // See if profile message clicked. If so, add it as first user or switch to exisitng one
         if (this._sharedDataService.isProfileUserRequestPending) {
           let indexInConnectedUsers = this.isUserObjInConnectedUsers(this._sharedDataService.profileButtonChatRecipient);
