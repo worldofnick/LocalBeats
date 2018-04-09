@@ -1,10 +1,10 @@
 // Angular Modules
-import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
+import { Component, OnInit, Inject, OnDestroy, ViewChild } from '@angular/core';
 import { ISubscription } from "rxjs/Subscription";
 import { ActivatedRoute } from "@angular/router";
 import { NgForm } from '@angular/forms/src/directives/ng_form';
 import { Router } from "@angular/router";
-import { MatTabChangeEvent, MatSnackBar, MatDialog, MatDialogRef, MAT_DIALOG_DATA, PageEvent } from '@angular/material';
+import { MatTabChangeEvent, MatSnackBar, MatDialog, MatDialogRef, MAT_DIALOG_DATA, PageEvent, MatPaginator } from '@angular/material';
 
 // Services
 import { UserService } from 'app/services/auth/user.service';
@@ -85,6 +85,12 @@ export class PerformanceManagementComponent implements OnInit {
   confirmationPageIndex = 0;
   completionPageIndex = 0;
   cancellationPageIndex = 0;
+
+  @ViewChild('applicationpaginator') applicationPaginator: MatPaginator;
+  @ViewChild('requestpaginator') requestPaginator: MatPaginator;
+  @ViewChild('confirmationpaginator') confirmationPaginator: MatPaginator;
+  @ViewChild('completionpaginator') completionPaginator: MatPaginator;
+  @ViewChild('cancellationpaginator') cancellationPaginator: MatPaginator;
 
   constructor(private eventService: EventService, 
     private userService: UserService,
@@ -357,19 +363,30 @@ export class PerformanceManagementComponent implements OnInit {
   */
   private updateModel(newBooking: Booking, response: NegotiationResponses) {
     let applicationIndex: number = -1;
+    let pagedApplicationIndex: number = -1;
     let requestIndex: number = -1;
+    let pagedRequestIndex: number = -1;
     let confirmationIndex: number = -1;
+    let pagedConfirmationIndex: number = -1;
     let completionIndex: number = -1;
     // Check if the booking has been approved
     if(newBooking.approved && response == NegotiationResponses.accept) {
       requestIndex = this.performances.requests.findIndex(r => r._id == newBooking._id)
+      pagedRequestIndex = this.performances.pagedRequests.findIndex(r => r._id == newBooking._id)
       applicationIndex = this.performances.applications.findIndex(a => a._id == newBooking._id);
+      pagedApplicationIndex = this.performances.pagedApplications.findIndex(a => a._id == newBooking._id);
       // Remove from applications/requests and put on confirmations
       if(newBooking.bookingType == BookingType.artistApply) {
         this.performances.applications.splice(applicationIndex, 1);
+        if(pagedApplicationIndex > -1) {
+          this.performances.pagedApplications.splice(pagedApplicationIndex, 1);
+        }
         this.updateApplicationPage();
       } else {
         this.performances.requests.splice(requestIndex, 1);
+        if(pagedRequestIndex > -1) {
+          this.performances.pagedRequests.splice(pagedRequestIndex, 1);
+        }
         this.updateRequestPage();
       }
       this.performances.confirmations.push(newBooking);
@@ -418,20 +435,32 @@ export class PerformanceManagementComponent implements OnInit {
       // Find it in applications and remove it
       if(newBooking.bookingType == BookingType.artistApply) {
         applicationIndex = this.performances.applications.findIndex(a => a._id == newBooking._id);
+        pagedApplicationIndex = this.performances.pagedApplications.findIndex(a => a._id == newBooking._id);
         if(!this.performances.applications[applicationIndex].artViewed) this.performances.applicationNotifications--;
         this.performances.applications.splice(applicationIndex, 1);
+        if(pagedApplicationIndex > -1) {
+          this.performances.pagedApplications.splice(pagedApplicationIndex, 1);
+        }
         this.updateApplicationPage();
       } else {
         // Otherwise, it was a request, remove it
         requestIndex = this.performances.requests.findIndex(r => r._id == newBooking._id);
+        pagedRequestIndex = this.performances.pagedRequests.findIndex(r => r._id == newBooking._id)
         if(!this.performances.requests[requestIndex].artViewed) this.performances.requestNotifications--;
         this.performances.requests.splice(requestIndex, 1);
+        if(pagedRequestIndex > -1) {
+          this.performances.pagedRequests.splice(pagedRequestIndex, 1);
+        }
         this.updateRequestPage();
       }
     } else if(response == NegotiationResponses.cancel) {
       confirmationIndex = this.performances.confirmations.findIndex(a => a._id == newBooking._id);
+      pagedConfirmationIndex = this.performances.pagedConfirmations.findIndex(a => a._id == newBooking._id);
       // The host has cancelled
       this.performances.confirmations.splice(confirmationIndex, 1);
+      if(pagedConfirmationIndex > -1) {
+        this.performances.pagedConfirmations.splice(confirmationIndex, 1);
+      }
       this.updateConfirmationPage();
       this.performances.cancellationNotifications++;
       this.performances.cancellations.push(newBooking);
@@ -443,8 +472,12 @@ export class PerformanceManagementComponent implements OnInit {
     } else if(response == NegotiationResponses.complete) {
       // Find it in confirmations
       confirmationIndex = this.performances.confirmations.findIndex(a => a._id == newBooking._id);
+      pagedConfirmationIndex = this.performances.pagedConfirmations.findIndex(a => a._id == newBooking._id);
       // The artist has verified and the booking is complete
       this.performances.confirmations.splice(confirmationIndex,1);
+      if(pagedConfirmationIndex > -1) {
+        this.performances.pagedConfirmations.splice(confirmationIndex, 1);
+      }
       this.updateConfirmationPage();
       this.performances.completionNotifications++;
       this.performances.completions.push(newBooking);
@@ -540,7 +573,7 @@ export class PerformanceManagementComponent implements OnInit {
   1. Verified and the Host has not verified - send a verification notification to host
   2. Verified and the Host has verified - complete the booking and send payment to host
   */
-  artistVerify(booking: Booking, bookingIndex: number) {
+  artistVerify(booking: Booking, pagedBookingIndex: number) {
     if(this.verificationSubscription) {
       this.verificationSubscription.unsubscribe();
     }
@@ -593,7 +626,9 @@ export class PerformanceManagementComponent implements OnInit {
                 // If payment was successful, push a new status
                 this.performances.paymentStatues.push(status);
                 // Move the booking from confirmations to completions
+                let bookingIndex = this.performances.confirmations.findIndex(e => e._id == booking._id);
                 this.performances.confirmations.splice(bookingIndex, 1);
+                this.performances.pagedConfirmations.splice(pagedBookingIndex, 1);
                 this.updateConfirmationPage();
                 this.performances.completions.push(booking);
                 this.updateCompletionPage();
@@ -612,7 +647,9 @@ export class PerformanceManagementComponent implements OnInit {
               booking.completed = false;
               booking.hostStatusMessage = StatusMessages.unpaid;
               booking.artistStatusMessage = StatusMessages.unpaid;
+              let bookingIndex = this.performances.confirmations.findIndex(e => e._id == booking._id);
               this.performances.confirmations[bookingIndex] = booking;
+              this.performances.pagedConfirmations[pagedBookingIndex] = booking;
               this.updateConfirmationPage();
               // Don't push a payment status, because the payment failed
               notificationMessage = "Your booking is incomplete, please try to pay " + booking.performerUser.firstName + " for the event " + booking.eventEID.eventName + " again";
@@ -629,7 +666,9 @@ export class PerformanceManagementComponent implements OnInit {
           });
         } else {
           // Otherwise, the booking is not complete, so just a normal verification happened
+          let bookingIndex = this.performances.confirmations.findIndex(e => e._id == booking._id);
           this.performances.confirmations[bookingIndex] = booking;
+          this.performances.pagedConfirmations[pagedBookingIndex] = booking;
           this.updateConfirmationPage();
           // Update the model and send a notification if the model updates correctly
           this.bookingService.updateBooking(booking).then(() => {
@@ -676,13 +715,13 @@ export class PerformanceManagementComponent implements OnInit {
             if(booking.bookingType == BookingType.artistApply) {
               let bookingIndex = this.performances.applications.findIndex(e => e._id == booking._id);
               this.performances.applications[bookingIndex] = booking;
-              this.performances.pagedApplications[pagedBookingIndex] = booking;
               this.performances.applicationNotifications--;
+              this.updateApplicationPage();
             } else {
               let bookingIndex = this.performances.requests.findIndex(e => e._id == booking._id);
               this.performances.requests[bookingIndex] = booking;
-              this.performances.pagedRequests[pagedBookingIndex] = booking;
               this.performances.requestNotifications--;
+              this.updateRequestPage();
             }
             this.createNotificationForHost(booking, result.response, ['/bookingmanagement', 'myevents'],
             'import_export', booking.performerUser.firstName + " has made a new bid on " + booking.eventEID.eventName);
@@ -884,6 +923,10 @@ export class PerformanceManagementComponent implements OnInit {
   }
 
   updateApplicationPage() {
+    if(this.performances.pagedApplications.length == 0 && this.applicationPageIndex > 0) {
+      this.applicationPageIndex = this.applicationPageIndex - 1;
+      this.applicationPaginator.pageIndex = this.applicationPageIndex;
+    }
     let startingIndex = (this.applicationPageIndex + 1) * this.pageSize - this.pageSize;
     let endIndex = startingIndex + this.pageSize;
     this.performances.pagedApplications = this.performances.applications.slice(startingIndex, endIndex);
@@ -895,6 +938,10 @@ export class PerformanceManagementComponent implements OnInit {
   }
 
   updateRequestPage() {
+    if(this.performances.pagedRequests.length == 0 && this.requestPageIndex > 0) {
+      this.requestPageIndex = this.requestPageIndex - 1;
+      this.requestPaginator.pageIndex = this.requestPageIndex;
+    }
     let startingIndex = (this.requestPageIndex + 1) * this.pageSize - this.pageSize;
     let endIndex = startingIndex + this.pageSize;
     this.performances.pagedRequests = this.performances.requests.slice(startingIndex, endIndex);
@@ -906,6 +953,10 @@ export class PerformanceManagementComponent implements OnInit {
   }
 
   updateConfirmationPage() {
+    if(this.performances.pagedConfirmations.length == 0 && this.confirmationPageIndex > 0) {
+      this.confirmationPageIndex = this.confirmationPageIndex - 1;
+      this.confirmationPaginator.pageIndex = this.confirmationPageIndex;
+    }
     let startingIndex = (this.confirmationPageIndex + 1) * this.pageSize - this.pageSize;
     let endIndex = startingIndex + this.pageSize;
     this.performances.pagedConfirmations = this.performances.confirmations.slice(startingIndex, endIndex);
@@ -917,6 +968,10 @@ export class PerformanceManagementComponent implements OnInit {
   }
 
   updateCompletionPage() {
+    if(this.performances.pagedCompletions.length == 0 && this.completionPageIndex > 0) {
+      this.completionPageIndex = this.completionPageIndex - 1;
+      this.completionPaginator.pageIndex = this.completionPageIndex;
+    }
     let startingIndex = (this.completionPageIndex + 1) * this.pageSize - this.pageSize;
     let endIndex = startingIndex + this.pageSize;
     this.performances.pagedCompletions = this.performances.completions.slice(startingIndex, endIndex);
@@ -928,6 +983,10 @@ export class PerformanceManagementComponent implements OnInit {
   }
 
   updateCancellationPage() {
+    if(this.performances.pagedCancellations.length == 0 && this.cancellationPageIndex > 0) {
+      this.cancellationPageIndex = this.cancellationPageIndex - 1;
+      this.cancellationPaginator.pageIndex = this.cancellationPageIndex;
+    }
     let startingIndex = (this.cancellationPageIndex + 1) * this.pageSize - this.pageSize;
     let endIndex = startingIndex + this.pageSize;
     this.performances.pagedCancellations = this.performances.cancellations.slice(startingIndex, endIndex);

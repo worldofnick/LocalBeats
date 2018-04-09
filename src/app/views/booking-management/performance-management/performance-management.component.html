@@ -29,7 +29,7 @@
             </mat-card>
           </div>
         </div>
-        <mat-paginator *ngIf="performances.applications.length > 0"
+        <mat-paginator #applicationpaginator *ngIf="performances.applications.length > 0"
           [length]="performances.applications.length"
           [pageSize]="pageSize"
           [hidePageSize]=true
@@ -60,7 +60,7 @@
             </mat-card>
           </div>
         </div>
-        <mat-paginator *ngIf="performances.requests.length > 0"
+        <mat-paginator #requestpaginator *ngIf="performances.requests.length > 0"
           [length]="performances.requests.length"
           [pageSize]="pageSize"
           [hidePageSize]=true
@@ -92,7 +92,7 @@
             </mat-card>
           </div>
         </div>
-        <mat-paginator *ngIf="performances.confirmations.length > 0"
+        <mat-paginator #confirmationpaginator *ngIf="performances.confirmations.length > 0"
           [length]="performances.confirmations.length"
           [pageSize]="pageSize"
           [hidePageSize]=true
@@ -126,7 +126,7 @@
             </mat-card>
           </div>
         </div>
-        <mat-paginator *ngIf="performances.completions.length > 0"
+        <mat-paginator #completionpaginator *ngIf="performances.completions.length > 0"
           [length]="performances.completions.length"
           [pageSize]="pageSize"
           [hidePageSize]=true
@@ -157,7 +157,7 @@
             </mat-card>
           </div>
         </div>
-        <mat-paginator *ngIf="performances.cancellations.length > 0"
+        <mat-paginator #cancellationpaginator *ngIf="performances.cancellations.length > 0"
           [length]="performances.cancellations.length"
           [pageSize]="pageSize"
           [hidePageSize]=true
