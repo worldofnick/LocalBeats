@@ -3,6 +3,8 @@ import { MatProgressBar, MatButton } from '@angular/material';
 import { Validators, FormGroup, FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { UserService } from '../../services/auth/user.service';
+import { ChatsService } from '../../services/chats/chats.service';
+import { SharedDataService } from '../../services/shared/shared-data.service';
 import { User } from '../../models/user';
 import { NotificationService } from '../../services/notification/notification.service';
 
@@ -27,8 +29,8 @@ export class AuthComponent implements OnInit {
   magicLinkButtonClicked: boolean = false;
   isDemoModeChecked = false;
 
-  constructor(private userService: UserService,
-    private router: Router,
+  constructor(private userService: UserService, private sharedDataService: SharedDataService,
+    private router: Router, private chatsService: ChatsService,
     private notificationService: NotificationService) { }
 
   ngOnInit() {
@@ -120,6 +122,7 @@ export class AuthComponent implements OnInit {
           this.userService.userLoaded(data.user, data.token, false, false);
           this.userService.getNotificationsCountForUser(data.user._id);
           this.userService.getNotificationsForUser(data.user._id);
+          this.sharedDataService.setOverallChatUnreadCount(data.user as User);
           this.router.navigate(['/']);
         },
         (error) => {
