@@ -19,6 +19,9 @@ module.exports = {
     soundcloud: {
       clientID: '4e3fe497717451e398ca2719842a7e20'
     },
+    reCaptcha: {
+      secret: '6LeFK1IUAAAAAAbGQ5CBAtmycaq2_N5GJvtwLL2z'
+    },
     local: {
       authCallbackUri : 'http://localhost:4200/callback?localAccessAuth=',
       // callbackUri : 'https://www.localbeats.live/callback?localAccessAuth=',
