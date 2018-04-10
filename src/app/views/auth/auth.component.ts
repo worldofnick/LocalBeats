@@ -148,6 +148,7 @@ export class AuthComponent implements OnInit {
   }
 
   handleErrors(error) {
+    this.captcha.reset();
     this.errorMessage = error;
     this.error = true;
     this.submitButton.disabled = false;
