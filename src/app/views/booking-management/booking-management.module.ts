@@ -27,7 +27,9 @@ import {
   MatAutocompleteModule,
   MatProgressSpinnerModule,
   MatTabsModule,
-  MatProgressBarModule
+  MatProgressBarModule,
+  MatPaginatorModule,
+  MatTableModule
  } from '@angular/material';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
@@ -82,6 +84,8 @@ import { BookingManagementRoutes } from './booking-management.routing';
     MatProgressSpinnerModule,
     MatTabsModule,
     MatProgressBarModule,
+    MatPaginatorModule,
+    MatTableModule,
     FlexLayoutModule,
     NgxDatatableModule,
     ChartsModule,

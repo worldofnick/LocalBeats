@@ -76,3 +76,9 @@ export enum VerificationResponse {
     reject = 0,
     verify = 1
 }
+
+export enum BookingSortType {
+    bidAsc = "Highest Price",
+    bidDes = "Lowest Price",
+    needsResponse = "Needs Response"
+}

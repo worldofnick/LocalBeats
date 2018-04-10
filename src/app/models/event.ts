@@ -30,3 +30,11 @@ export enum CancellationPolicy {
     flexible = "flexible", // 15% charged to either host or artist if cancelled within 7 days of event
     strict = "strict", // 15% charged to either host or artist if cancelled within 30 days of event
 }
+
+export enum EventSortType {
+    fromDateAsc = "Ascending Date",
+    fromDateDes = "Descending Date",
+    priceAsc = "Ascending Price",
+    priceDes = "Descending Price",
+    notificationCount = "Most Notifications"
+}

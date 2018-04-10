@@ -36,19 +36,13 @@ export class ProfileRequestComponent implements OnInit {
   @Input() artist: User;
 
   // Hosted Events of the User Model
-  hostedEvents: {
-    availableEvents: Event[]
-  };
+  private availableEvents: Event[] = [];
 
   constructor(private eventService: EventService,
     private userService: UserService,
     private bookingService: BookingService,
     private _socketService: SocketService
-  ) {
-    this.hostedEvents = { 
-      availableEvents: []
-    }
-  }
+  ) {}
 
   ngOnInit() {
     this.getAvailableEvents();
@@ -92,7 +86,7 @@ export class ProfileRequestComponent implements OnInit {
           tempEvents.push(event);
         }
       }
-    this.hostedEvents.availableEvents = tempEvents;
+    this.availableEvents = tempEvents;
     }));
   }
 
@@ -100,11 +94,11 @@ export class ProfileRequestComponent implements OnInit {
     let eventIndex: number = -1;
     if(response == NegotiationResponses.new) {
       // Remove from available events
-      eventIndex = this.hostedEvents.availableEvents.findIndex(e => e._id == newBooking.eventEID._id);
-      this.hostedEvents.availableEvents.splice(eventIndex, 1);
+      eventIndex = this.availableEvents.findIndex(e => e._id == newBooking.eventEID._id);
+      this.availableEvents.splice(eventIndex, 1);
     } else if (response == NegotiationResponses.cancel || response == NegotiationResponses.decline) {
       // Add event to available events 
-      this.hostedEvents.availableEvents.push(newBooking.eventEID);
+      this.availableEvents.push(newBooking.eventEID);
     }
   }
 
@@ -121,7 +115,7 @@ export class ProfileRequestComponent implements OnInit {
             tempBooking.currentPrice = result.price;
             this.bookingService.createBooking(tempBooking).then((booking: Booking) => {
               // Remove from available events
-              this.hostedEvents.availableEvents.splice(eventIndex, 1);
+              this.availableEvents.splice(eventIndex, 1);
               // Send notification to artist
               this.createNotificationForArtist(booking, result.response, ['/events', booking.eventEID._id], 
             'queue_music', booking.hostUser.firstName + " has requested you for an event called: " + booking.eventEID.eventName);

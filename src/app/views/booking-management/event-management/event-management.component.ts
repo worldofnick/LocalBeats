@@ -1,11 +1,12 @@
 // Angular Modules
-import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
+import { Component, OnInit, Inject, OnDestroy, ViewChild } from '@angular/core';
 import { ISubscription } from "rxjs/Subscription";
 import { ActivatedRoute } from "@angular/router";
 import { NgForm } from '@angular/forms/src/directives/ng_form';
 import { Router } from "@angular/router";
+import { Validators, FormGroup, FormControl, FormArray, FormBuilder } from '@angular/forms';
 import { MatTabChangeEvent } from '@angular/material';
-import {MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatSnackBar} from '@angular/material';
+import {MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatSnackBar, PageEvent, MatPaginator, MatSelectChange} from '@angular/material';
 
 // Services
 import { UserService } from '../../../services/auth/user.service';
@@ -18,8 +19,8 @@ import { ReviewService } from 'app/services/reviews/review.service';
 // Data Models
 import { User } from '../../../models/user';
 import { Review } from '../../../models/review';
-import { Event, CancellationPolicy } from '../../../models/event';
-import { Booking, StatusMessages, NegotiationResponses, VerificationResponse, BookingType } from '../../../models/booking';
+import { Event, CancellationPolicy, EventSortType } from '../../../models/event';
+import { Booking, StatusMessages, NegotiationResponses, VerificationResponse, BookingType, BookingSortType } from '../../../models/booking';
 import { Action } from '../../../services/chats/model/action';
 import { SocketEvent } from '../../../services/chats/model/event';
 import { Notification } from '../../../models/notification';
@@ -51,6 +52,20 @@ import {
   styleUrls: ['./event-management.component.css']
 })
 export class EventManagementComponent implements OnInit {
+  // Sorting Forms
+  eventForm = this.formBuilder.group({
+    sort: new FormControl()
+  });
+  eventSortTypes: EventSortType[] = [
+    EventSortType.fromDateAsc,
+    EventSortType.fromDateDes,
+    EventSortType.notificationCount
+  ];
+  bookingSortTypes: BookingSortType[] = [
+    BookingSortType.bidAsc,
+    BookingSortType.bidDes,
+    BookingSortType.needsResponse
+  ];
   // User Model
   user: User;
   socketSubscription: ISubscription;
@@ -74,6 +89,25 @@ export class EventManagementComponent implements OnInit {
     cancellationNotifications: number,
     paymentStatues: PaymentStatus[],
     cancelledPaymentStatues: PaymentStatus[]}[];
+  // Paged Events
+  pagedEvents: {
+    event: Event,
+    applications: Booking[],
+    applicationNotifications: number,
+    requests: Booking[],
+    requestNotifications: number,
+    confirmations: Booking[],
+    confirmationNotifications: number,
+    completions: Booking[],
+    completionNotifications: number,
+    cancellations: Booking[],
+    cancellationNotifications: number,
+    paymentStatues: PaymentStatus[],
+    cancelledPaymentStatues: PaymentStatus[]}[] = [];
+  // MatPaginator Inputs
+  pageSize = 3;
+  pageIndex = 0;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
 
   constructor(private eventService: EventService,
     private userService: UserService,
@@ -84,7 +118,8 @@ export class EventManagementComponent implements OnInit {
     private _socketService: SocketService,
     private stripeService: StripeService,
     public dialog: MatDialog,
-    public snackBar: MatSnackBar
+    public snackBar: MatSnackBar,
+    private formBuilder: FormBuilder
   ) {
     // Set user model to the authenticated singleton user
     this.user = this.userService.user;
@@ -117,6 +152,11 @@ export class EventManagementComponent implements OnInit {
     if(this.paySubscription) {
       this.paySubscription.unsubscribe();
     }
+  }
+
+  eventSort() {
+    let sort: EventSortType = this.eventForm.get('sort').value;
+    this.sortEvents(sort);
   }
 
   /*
@@ -241,6 +281,7 @@ export class EventManagementComponent implements OnInit {
     // Get all events associated with the user
     this.events = [];
     this.eventService.getEventsByUID(this.user._id).then((events: Event[]) => {
+      let count: number = 0;
       for(let e of events) {
         // Get the bookings associated with each event
         // Get the confirmed bookings, which could be cancelled, verified, or not
@@ -323,6 +364,11 @@ export class EventManagementComponent implements OnInit {
             paymentStatues: paymentStatues,
             cancelledPaymentStatues: cancelledPaymentStatues
           });
+          if(count < this.pageSize) {
+            this.pagedEvents.push(this.events[count]);
+          }
+          count++;
+          this.sortEvents(EventSortType.notificationCount);
         })
       }
     })
@@ -400,9 +446,11 @@ export class EventManagementComponent implements OnInit {
       eventIndex = this.events.findIndex(e => e.event._id == newBooking.eventEID._id);
       if(newBooking.bookingType == BookingType.artistApply) {
         applicationIndex = this.events[eventIndex].applications.findIndex(a => a._id == newBooking._id);
+        if(!this.events[eventIndex].applications[applicationIndex].hostViewed) this.events[eventIndex].applicationNotifications--;
         this.events[eventIndex].applications.splice(applicationIndex, 1);
       } else {
         requestIndex = this.events[eventIndex].requests.findIndex(r => r._id == newBooking._id);
+        if(!this.events[eventIndex].requests[requestIndex].hostViewed) this.events[eventIndex].requestNotifications--;
         this.events[eventIndex].requests.splice(requestIndex, 1);
       }
     } else if(response == NegotiationResponses.cancel) {
@@ -477,7 +525,8 @@ export class EventManagementComponent implements OnInit {
   /*
   Resets all completion notifications to 0 when that expansion panel has been clicked
   */
-  resetCompletionNotifications(eventIndex: number) {
+  resetCompletionNotifications(pagedEventIndex: number) {
+    let eventIndex = this.events.findIndex(e => e.event._id == this.pagedEvents[pagedEventIndex].event._id);
     this.events[eventIndex].completionNotifications = 0;
     for(let booking of this.events[eventIndex].completions) {
       if(!booking.hostViewed) {
@@ -490,7 +539,8 @@ export class EventManagementComponent implements OnInit {
   /*
   Resets all cancellation notifications to 0 when that expansion panel has been clicked
   */
-  resetCancellationNotifications(eventIndex: number) {
+  resetCancellationNotifications(pagedEventIndex: number) {
+    let eventIndex = this.events.findIndex(e => e.event._id == this.pagedEvents[pagedEventIndex].event._id);
     this.events[eventIndex].cancellationNotifications = 0;
     for(let booking of this.events[eventIndex].cancellations) {
       if(!booking.hostViewed) {
@@ -503,7 +553,8 @@ export class EventManagementComponent implements OnInit {
   /*
   Resets all confirmation notifications to 0 when that expansion panel has been clicked
   */
-  resetConfirmationNotifications(eventIndex: number) {
+  resetConfirmationNotifications(pagedEventIndex: number) {
+    let eventIndex = this.events.findIndex(e => e.event._id == this.pagedEvents[pagedEventIndex].event._id);
     this.events[eventIndex].confirmationNotifications = 0;
     for(let booking of this.events[eventIndex].confirmations) {
       if(!booking.hostViewed) {
@@ -517,10 +568,13 @@ export class EventManagementComponent implements OnInit {
   Removes the event and all of its bookings from the model if the event is successfully
   deleted in the database
   */
-  onDeleteEvent(event: Event, index: number) {
+  onDeleteEvent(event: Event, pagedEventIndex: number) {
+    let eventIndex = this.events.findIndex(e => e.event._id == this.pagedEvents[pagedEventIndex].event._id);
     this.eventService.deleteEventByEID(event).then((status: Number) => {
       if (status == 200) {
-        this.events.splice(index, 1);
+        this.events.splice(eventIndex, 1);
+        this.pagedEvents.splice(pagedEventIndex, 1);
+        this.updateEventsPage();
       }
     });
   }
@@ -558,7 +612,8 @@ export class EventManagementComponent implements OnInit {
   1. Verified and the Artist has not verified - send a verification notification to artist
   2. Verified and the Artist has verified - complete the booking and send payment to artist
   */
-  hostVerify(booking: Booking, bookingIndex: number, eventIndex: number) {
+  hostVerify(booking: Booking, bookingIndex: number, pagedEventIndex: number) {
+    let eventIndex = this.events.findIndex(e => e.event._id == this.pagedEvents[pagedEventIndex].event._id);
     if(this.verificationSubscription) {
       this.verificationSubscription.unsubscribe();
     }
@@ -659,7 +714,8 @@ export class EventManagementComponent implements OnInit {
   /*
   Host responds to applications/bids through negotiation dialog
   */
-  openNegotiationDialog(booking: Booking, bookingIndex: number, eventIndex: number) {
+  openNegotiationDialog(booking: Booking, bookingIndex: number, pagedEventIndex: number) {
+    let eventIndex = this.events.findIndex(e => e.event._id == this.pagedEvents[pagedEventIndex].event._id);
     let view = "host";
     if(this.negotiationSubscription) {
       this.negotiationSubscription.unsubscribe();
@@ -852,7 +908,110 @@ export class EventManagementComponent implements OnInit {
       });
 
     });
+  }
 
+  pageEvent(event: PageEvent) {
+    this.pageIndex = event.pageIndex;
+    this.updateEventsPage();
+  }
+
+  updateEventsPage() {
+    if(this.pagedEvents.length == 0 && this.pageIndex > 0) {
+      this.pageIndex = this.pageIndex - 1;
+      this.paginator.pageIndex = this.pageIndex;
+    }
+    let startingIndex = (this.pageIndex + 1) * this.pageSize - this.pageSize;
+    let endIndex = startingIndex + this.pageSize;
+    this.pagedEvents = this.events.slice(startingIndex, endIndex);
+    window.scrollTo(0, 0);
+  }
+
+  applicationSort(event: MatSelectChange, pagedEventIndex: number) {
+    let eventIndex = this.events.findIndex(e => e.event._id == this.pagedEvents[pagedEventIndex].event._id);
+    this.events[eventIndex].applications.sort((leftside, rightside): number => {
+      return this.sortBookings(leftside, rightside, event.value);
+    });
+    this.pagedEvents[pagedEventIndex].applications.sort((leftside, rightside): number => {
+      return this.sortBookings(leftside, rightside, event.value);
+    });
+  }
+
+  requestSort(event: MatSelectChange, pagedEventIndex: number) {
+    let eventIndex = this.events.findIndex(e => e.event._id == this.pagedEvents[pagedEventIndex].event._id);
+    this.events[eventIndex].requests.sort((leftside, rightside): number => {
+      return this.sortBookings(leftside, rightside, event.value);
+    });
+    this.pagedEvents[pagedEventIndex].requests.sort((leftside, rightside): number => {
+      return this.sortBookings(leftside, rightside, event.value);
+    });
+  }
+
+  confirmationSort(event: MatSelectChange, pagedEventIndex: number) {
+    let eventIndex = this.events.findIndex(e => e.event._id == this.pagedEvents[pagedEventIndex].event._id);
+    this.events[eventIndex].confirmations.sort((leftside, rightside): number => {
+      return this.sortBookings(leftside, rightside, event.value);
+    });
+    this.pagedEvents[pagedEventIndex].confirmations.sort((leftside, rightside): number => {
+      return this.sortBookings(leftside, rightside, event.value);
+    });
+  }
+
+  completionSort(event: MatSelectChange, pagedEventIndex: number) {
+    let eventIndex = this.events.findIndex(e => e.event._id == this.pagedEvents[pagedEventIndex].event._id);
+    this.events[eventIndex].completions.sort((leftside, rightside): number => {
+      return this.sortBookings(leftside, rightside, event.value);
+    });
+    this.pagedEvents[pagedEventIndex].completions.sort((leftside, rightside): number => {
+      return this.sortBookings(leftside, rightside, event.value);
+    });
+  }
+
+  cancellationSort(event: MatSelectChange, pagedEventIndex: number) {
+    let eventIndex = this.events.findIndex(e => e.event._id == this.pagedEvents[pagedEventIndex].event._id);
+    this.events[eventIndex].cancellations.sort((leftside, rightside): number => {
+      return this.sortBookings(leftside, rightside, event.value);
+    });
+    this.pagedEvents[pagedEventIndex].cancellations.sort((leftside, rightside): number => {
+      return this.sortBookings(leftside, rightside, event.value);
+    });
+  }
+
+  sortBookings(leftside: Booking, rightside: Booking, sortType: BookingSortType): number {
+    if(sortType == BookingSortType.needsResponse) {
+      if(!leftside.artViewed && rightside.artViewed) return -1;
+      if(leftside.artViewed && !rightside.artViewed) return 1;
+    } else if(sortType == BookingSortType.bidDes) {
+      if(leftside.currentPrice < rightside.currentPrice) return -1;
+      if(leftside.currentPrice > rightside.currentPrice) return 1;
+    } else {
+      if(leftside.currentPrice < rightside.currentPrice) return 1;
+      if(leftside.currentPrice > rightside.currentPrice) return -1;
+    }
+    return 0;
+  }
+
+  sortEvents(sortType: EventSortType) {
+    this.events.sort((leftside, rightside): number => {
+      if(sortType == EventSortType.notificationCount) {
+        let leftSideCount: number = leftside.applicationNotifications +
+        leftside.cancellationNotifications + leftside.completionNotifications +
+        leftside.confirmationNotifications + leftside.requestNotifications;
+        let rightSideCount: number = rightside.applicationNotifications +
+        rightside.cancellationNotifications + rightside.completionNotifications +
+        rightside.confirmationNotifications + rightside.requestNotifications;
+
+        if(leftSideCount < rightSideCount) return 1;
+        if(leftSideCount > rightSideCount) return -1;
+      } else if(sortType == EventSortType.fromDateDes) {
+        if(leftside.event.fromDate < rightside.event.fromDate) return 1;
+        if(leftside.event.fromDate > rightside.event.fromDate) return -1;
+      } else {
+        if(leftside.event.fromDate < rightside.event.fromDate) return -1;
+        if(leftside.event.fromDate > rightside.event.fromDate) return 1;
+      }
+      return 0;
+    })
+    this.updateEventsPage();
   }
 
 }
