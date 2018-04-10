@@ -11,7 +11,7 @@
           <p class="text-muted m-0">Password-less Sign In</p>
         </div>
         <div *ngIf="!this.magicLinkButtonClicked">
-        <form [formGroup]="signinForm" (ngSubmit)="signin()">
+        <form [formGroup]="signinForm" (ngSubmit)="signin()" #captchaProtectedForm="ngForm">
           <div class="">
             <mat-form-field class="full-width">
               <input matInput name="username" email="true" [formControl]="signinForm.controls['username']" placeholder="Email">
@@ -19,29 +19,6 @@
             <small *ngIf="signinForm.controls['username'].hasError('required') && signinForm.controls['username'].touched" class="form-error-msg">
             Email is required </small>
           </div>
-
-          <!-- <div class="">
-              <mat-form-field class="full-width">
-                <input 
-                  type="password"
-                  name="password"
-                  matInput
-                  [formControl]="signinForm.controls['password']"
-                  placeholder="Password" 
-                  >
-              </mat-form-field>
-              <small 
-                *ngIf="signinForm.controls['password'].hasError('required') && signinForm.controls['password'].touched" 
-                class="form-error-msg"> Password is required </small>
-            </div> -->
-
-          <!-- <div class="pb-1">
-              <mat-checkbox
-                name="rememberMe"
-                [formControl]="signinForm.controls['rememberMe']"
-                class="pb-1">Remember this computer</mat-checkbox>
-            </div> -->
-
           
             <button mat-raised-button class="mat-primary full-width mb-1" [disabled]="signinForm.invalid">Send me a magic link!</button>
             <small *ngIf="error" class="form-error-msg">{{errorMessage}}</small>
@@ -64,7 +41,11 @@
         <p class="text-center text-muted m-0"><strong>Disclaimer:</strong> The passwordless process will be skipped in demo mode and the user will be instantly logged in. </p>
       </div>
 
-      <re-captcha (resolved)="cpatchaResolved($event)" siteKey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"></re-captcha>
+      <re-captcha [hidden]="signinForm.invalid" [(ngModel)]="captcha" name="captcha"
+      required (resolved)="cpatchaResolved($event)" 
+      #captchaControl="ngModel"
+      siteKey="6LcOuyYTAAAAAHTjFuqhA52fmfJ_j5iFk5PsfXaU"></re-captcha>
+    <button (click)="captcha = ''">Reset Captcha</button>
       </mat-card-content>
     </mat-card>
   </div>

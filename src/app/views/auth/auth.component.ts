@@ -21,6 +21,7 @@ export class AuthComponent implements OnInit {
   @ViewChild(MatButton) submitButton: MatButton;
 
   signinForm: FormGroup;
+  captcha?: string;
   user: User;
   notificationsList: Notification[] = [];
   // rememberMe: boolean = false;
@@ -140,6 +141,12 @@ export class AuthComponent implements OnInit {
   }
 
   cpatchaResolved(captchaResponse: string) {
+    // Contact server and verify the captchaResponse. If valid, proceed with
+    // sending a magic link and logging in. Else, reset the box with an error message
     console.log(`Resolved captcha with response ${captchaResponse}:`);
+
+    if (captchaResponse !== null) {
+      
+    }
   }
 }
