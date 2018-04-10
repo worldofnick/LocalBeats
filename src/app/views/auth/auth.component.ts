@@ -7,6 +7,7 @@ import { ChatsService } from '../../services/chats/chats.service';
 import { SharedDataService } from '../../services/shared/shared-data.service';
 import { User } from '../../models/user';
 import { NotificationService } from '../../services/notification/notification.service';
+import { RecaptchaComponent } from 'ng-recaptcha';
 
 import * as socketIO from 'socket.io-client';
 import { Notification } from 'app/models/notification';
@@ -19,9 +20,9 @@ import { Notification } from 'app/models/notification';
 export class AuthComponent implements OnInit {
   @ViewChild(MatProgressBar) progressBar: MatProgressBar;
   @ViewChild(MatButton) submitButton: MatButton;
+  @ViewChild(RecaptchaComponent) captcha: RecaptchaComponent;
 
   signinForm: FormGroup;
-  captcha?: string;
   user: User;
   notificationsList: Notification[] = [];
   // rememberMe: boolean = false;
@@ -98,42 +99,7 @@ export class AuthComponent implements OnInit {
     this.progressBar.mode = 'indeterminate';
 
     console.log('Magic link clicked by Username: ' + this.user.email + 'with demo: ', this.isDemoModeChecked);
-    if (!this.isDemoModeChecked) {
-      this.userService.requestMagicLink(this.user).subscribe(
-        (data: any) => {
-          // Magic link successfully sent!
-          this.error = false;
-          this.magicLinkButtonClicked = true;
-          this.progressBar.mode = 'determinate';
-        },
-        (error) => {
-          // Show user error message
-          this.magicLinkButtonClicked = false;
-          this.errorMessage = error;
-          this.error = true;
-          this.submitButton.disabled = false;
-          this.progressBar.mode = 'determinate';
-        });
-    } else {
-      // TODO: login by skipping the magic link step
-      this.userService.demoModeSignInUser(this.user).subscribe(
-        (data: any) => {
-          // Correctly authenticated, redirect
-          this.error = false;
-          this.userService.userLoaded(data.user, data.token, false, false);
-          this.userService.getNotificationsCountForUser(data.user._id);
-          this.userService.getNotificationsForUser(data.user._id);
-          this.sharedDataService.setOverallChatUnreadCount(data.user as User);
-          this.router.navigate(['/']);
-        },
-        (error) => {
-          // Show user error message
-          this.errorMessage = error;
-          this.error = true;
-          this.submitButton.disabled = false;
-          this.progressBar.mode = 'determinate';
-        });
-    }
+    // After this, the cpatchaResolved is automatically called
   }
 
   toggleDemoMode() {
@@ -146,7 +112,45 @@ export class AuthComponent implements OnInit {
     console.log(`Resolved captcha with response ${captchaResponse}:`);
 
     if (captchaResponse !== null) {
-      
+      this.magicLinkLogin();
     }
+  }
+
+  private magicLinkLogin() {
+    if (!this.isDemoModeChecked) {
+      this.userService.requestMagicLink(this.user).subscribe(
+        (data: any) => {
+          // Magic link successfully sent!
+          this.error = false;
+          this.magicLinkButtonClicked = true;
+          this.progressBar.mode = 'determinate';
+        },
+        (error) => {
+          // Show user error message
+          this.magicLinkButtonClicked = false;
+          this.handleErrors(error);
+        });
+    } else {
+      this.userService.demoModeSignInUser(this.user).subscribe(
+        (data: any) => {
+          // Correctly authenticated, redirect
+          this.error = false;
+          this.userService.userLoaded(data.user, data.token, false, false);
+          this.userService.getNotificationsCountForUser(data.user._id);
+          this.userService.getNotificationsForUser(data.user._id);
+          this.sharedDataService.setOverallChatUnreadCount(data.user as User);
+          this.router.navigate(['/']);
+        },
+        (error) => {
+          this.handleErrors(error);
+        });
+    }
+  }
+
+  handleErrors(error) {
+    this.errorMessage = error;
+    this.error = true;
+    this.submitButton.disabled = false;
+    this.progressBar.mode = 'determinate';
   }
 }
