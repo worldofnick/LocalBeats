@@ -5,6 +5,7 @@ var jwt = require('jsonwebtoken');
 var bcrypt = require('bcrypt');
 const nodemailer = require('nodemailer');
 const mailer = require('../misc/mailer');
+const request = require('request');
 
 var User = mongoose.model('User');
 var config = require('../../config.js');
@@ -135,20 +136,20 @@ exports.sendMagicLink = function (req, res) {
       to: foundUser.email,
       subject: 'localBeats passowrdless sign-on link',
       text: 'Hello, ' + foundUser.firstName,
-      html: '<p><b>Hello, ' + foundUser.firstName +'!<br>' + 
-      '<br>Click this link to verify your identity and get logged into your account: <br><br>' +
-      callbackUrl + 
-      '<br><br> Thanks<br>'
+      html: '<p><b>Hello, ' + foundUser.firstName + '!<br>' +
+        '<br>Click this link to verify your identity and get logged into your account: <br><br>' +
+        callbackUrl +
+        '<br><br> Thanks<br>'
     };
 
     mailer.sendEmail(message.from, message.to, message.subject, message.html)
-    .then(data => {
-      console.log('success: ', data);
-      res.status(200).send({ user: foundUser, message: 'Magic link sent!'});
-    }, error => {
-      console.log('Failure: ', error);
-      res.status(520).send('Unable to send the email... Try again later');
-    });
+      .then(data => {
+        console.log('success: ', data);
+        res.status(200).send({ user: foundUser, message: 'Magic link sent!' });
+      }, error => {
+        console.log('Failure: ', error);
+        res.status(520).send('Unable to send the email... Try again later');
+      });
   });
 }
 
@@ -159,9 +160,9 @@ exports.verifyLocalJwtAndReturnUser = function (req, res) {
   jwt.verify(req.body.jwt, config.secret, function (err, decodedToken) {
     if (err) {
       console.log('>> Invalid token');
-      res.status(520).send( { auth: false, message: 'Token expired or is invalid. Request another magic link.' });
+      res.status(520).send({ auth: false, message: 'Token expired or is invalid. Request another magic link.' });
     }
-    
+
     // Find the user from the decoded token's id claim and return it with a new JWT session token
     User.findById(decodedToken.id, { hashPassword: 0 }, function (err, foundUser) {
       if (err) {
@@ -170,12 +171,12 @@ exports.verifyLocalJwtAndReturnUser = function (req, res) {
       if (!foundUser) {
         return res.status(404).send('User is not registered.');
       }
-  
+
       // Generate a new JWT session token
       var token = jwt.sign({ id: foundUser._id }, config.secret, {
         expiresIn: 86400 // expires in 24 hours
       });
-  
+
       // Update the isOnline status
       User.findByIdAndUpdate(foundUser._id, { isOnline: true }, { new: true }, function (err, authUser) {
         if (err) {
@@ -184,10 +185,43 @@ exports.verifyLocalJwtAndReturnUser = function (req, res) {
         authUser.hashPassword = undefined;
         console.log('Authenticated user: ', authUser);
       });
-      
+
       foundUser.hashPassword = undefined;
       res.status(200).send({ auth: true, token: token, user: foundUser });
     });
+  });
+}
+
+exports.verifyReCaptcha = function (req, res) {
+  var authOptions = {
+    url: 'https://www.google.com/recaptcha/api/siteverify',
+    form: {
+      response: req.body.response,
+      secret: config.reCaptcha.secret
+    },
+    json: true
+  };
+  request.post(authOptions, function (err, response, body) {
+    if (err) {
+      return res.status(404).send({
+        success: false,
+        error: err,
+        message: 'Something went wrong on google server. Try again later...'
+      });
+    }
+
+    if (response.statusCode === 200 && response.success === true) {
+      res.status(200).send({
+        success: true,
+        response: response.body
+      });
+    } else {
+      res.status(404).send({
+        success: false,
+        response: response.body,
+        message: 'Captcha timed or duplicate. Please try again...'
+      });
+    }
   });
 }
 
