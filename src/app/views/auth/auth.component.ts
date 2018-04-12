@@ -14,7 +14,8 @@ import { Notification } from 'app/models/notification';
 
 @Component({
   selector: 'app-auth',
-  templateUrl: './auth.component.html'
+  templateUrl: './auth.component.html',
+  styleUrls: ['./auth.component.css']
 })
 export class AuthComponent implements OnInit {
   @ViewChild(MatProgressBar) progressBar: MatProgressBar;
