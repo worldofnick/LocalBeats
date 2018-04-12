@@ -192,30 +192,30 @@ exports.verifyLocalJwtAndReturnUser = function (req, res) {
   });
 }
 
-exports.verifyReCaptcha = function (req, res) {
+exports.verifyReCaptchaWithGet = function (req, res) {
+  console.log('CPATCHA BODY: ', req.body);
+
   var authOptions = {
-    url: 'https://www.google.com/recaptcha/api/siteverify',
-    form: {
-      response: req.body.response,
-      secret: config.reCaptcha.secret
-    },
-    json: true
-  };
-  request.post(authOptions, function (err, response, body) {
+    url : 'https://www.google.com/recaptcha/api/siteverify?secret=' + config.reCaptcha.secret
+              + '&response=' + req.body.response
+  }
+  request.get(authOptions, function(err, response, body) {
     if (err) {
+      console.log('>> CAPTCHA: ', err);
       return res.status(404).send({
         success: false,
         error: err,
         message: 'Something went wrong on google server. Try again later...'
       });
     }
-
-    if (response.statusCode === 200 && response.success === true) {
+    if (response.statusCode === 200 && JSON.parse(response.body).success === true) {
+      console.log('>> CAPTCHA: ', response.body);
       res.status(200).send({
         success: true,
         response: response.body
       });
     } else {
+      console.log('>> CAPTCHA: ', response.body);
       res.status(404).send({
         success: false,
         response: response.body,
