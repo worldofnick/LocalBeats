@@ -236,6 +236,21 @@ export class UserService {
             });
     }
 
+    public signInWithGoogleAccount(idToken: string): Observable<Object> {
+        const requestUrl = this.connection + '/social/google/signin';
+        return this.http.post(requestUrl, { idToken: idToken }, { headers: this.headers })
+            .map((response: Response) => {
+                console.log('>> In verify google: ', response.json());
+                return response.json();
+            }).catch((error: Response) => {
+                if (error.status === 404) {
+                    return Observable.throw(error.json().message);
+                } else {
+                    return Observable.throw('Unknown error occured while verifying google token. Please try again later.');
+                }
+            });
+    }
+
     /**
      * 
      * @param user 
