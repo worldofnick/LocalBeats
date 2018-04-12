@@ -5,8 +5,11 @@ import * as hopscotch from 'hopscotch';
 import 'rxjs/add/operator/filter';
 import { RoutePartsService } from "./services/route-parts/route-parts.service";
 import { SocketService } from 'app/services/chats/socket.service';
-import { MatSnackBar } from '@angular/material';
 import { UserService } from './services/auth/user.service';
+import { SocketEvent } from 'app/services/chats/model/event';
+import { Message } from 'app/services/chats/model/message';
+import { Notification } from './models/notification';
+import { MatSnackBar, MatSnackBarRef } from '@angular/material';
 import { SharedDataService } from './services/shared/shared-data.service';
 import { JwtHelper } from 'angular2-jwt';
 import { User } from './models/user';
@@ -27,10 +30,12 @@ export class AppComponent implements OnInit {
     private sharedDataService: SharedDataService,
     private routePartsService: RoutePartsService,
     private userService: UserService,
+    private _sharedDataService: SharedDataService,
     private _socketService: SocketService) { }
 
   ngOnInit() {
     this._socketService.initSocket();
+    this.initIoConnection();
     let jwtHelper: JwtHelper = new JwtHelper();
     const token = sessionStorage.getItem('token');
     if(token) {
@@ -102,4 +107,54 @@ export class AppComponent implements OnInit {
     });
   }
   
+  initIoConnection() {
+    this._socketService.onEvent(SocketEvent.SEND_PRIVATE_MSG)
+      .subscribe((message: Message) => {
+        console.log('PM from server (main app module): ', message);
+        const temp: Message = message as Message;
+        this.openNewMessageSnackBar(temp);
+        if (temp.to._id === this.userService.user._id) {
+          this._sharedDataService.setOverallChatUnreadCount(this.userService.user);
+        }
+      });
+
+    this._socketService.onEvent(SocketEvent.SEND_NOTIFICATION)
+      .subscribe((message: Notification) => {
+        console.log('Notification from server (home app module): ', message);
+        const temp: Notification = message as Notification;
+        this.openNotificationSnackBar(temp);
+      });
+  }
+
+  /**
+   * Display a snack bar pop-up whenever this user gets a new PM
+   * @param message The original PM that is received
+   */
+  openNewMessageSnackBar(message: Message) {
+    // Only if on the recipient's profile:
+    if (this.userService.user._id !== message.from._id) {
+      let snackBarRef = this.snackBar.open('You have a new message from ' + message.from.firstName +
+        ' ' + message.from.lastName, 'Go to message...', { duration: 3500 });
+
+      snackBarRef.onAction().subscribe(() => {
+        console.log('Going to the message...');
+        this._sharedDataService.setProfileMessageSharedProperties(message.from);
+        this.router.navigate(['/chat']);
+        // this._socketService.send(Action.OPEN_SNACK_BAR_PM, message);
+      });
+    };
+  }
+
+  /**
+   * Display a snack bar pop-up whenever this user gets a new notification
+   * @param message The original notification that is received
+   */
+  openNotificationSnackBar(message: Notification) {
+    let snackBarRef = this.snackBar.open('You have a new notification from ' + message.senderID.firstName + ' ' + message.senderID.lastName,
+      'Go to...', { duration: 3500 });
+
+    snackBarRef.onAction().subscribe(() => {
+      this.router.navigate(message.route);
+    });
+  }
 }
