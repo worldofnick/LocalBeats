@@ -482,7 +482,7 @@ code {
 }
 
 .rightside-content-hold {
-    padding: .333333rem;
+    /* padding: .333333rem; */
     overflow-x: hidden;
     position: relative;
     min-height: 450px;
