@@ -87,7 +87,7 @@ exports.getMeAndSavetoDB = function(req, res) {
           console.log('Error saving the spotify profile data to user object');
         }
     
-        user.hashPassword = undefined;
+        // user.hashPassword = undefined;
         res.send( {
           user: user
         });
@@ -294,15 +294,15 @@ exports.getFirstPlaylistByUIDAfterProfileUpdate = function (req, res) {
         if (!isResultEmpty(data.body)) {
           for (var playlist of data.body.items) {
             if (playlist.owner.id == user.spotifyID) {
-              user.hashPassword = undefined;
+              // user.hashPassword = undefined;
               return res.status(200).send({ user: user, uri: playlist.uri });
             }
           }
-          user.hashPassword = undefined;
+          // user.hashPassword = undefined;
           return res.status(230).send({ user: user, uri: "", message: "None of the playlists belong to " + user.firstName });
 
         } else {
-          user.hashPassword = undefined;
+          // user.hashPassword = undefined;
           return res.status(230).send({ user: user, uri: "", message: user.firstName + " has no playlists!" });
         }
 

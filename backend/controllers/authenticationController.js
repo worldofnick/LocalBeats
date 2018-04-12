@@ -29,7 +29,7 @@ exports.register = function (req, res) {
         error: err
       });
     } else {
-      user.hashPassword = undefined;
+      // user.hashPassword = undefined;
       user.__v = undefined;
       // create a token
       var token = jwt.sign({ id: user._id },
@@ -50,23 +50,23 @@ exports.register = function (req, res) {
   });
 };
 
-/**
- * Function that handles password change.
- * @param {*} req : {user: {<user_object>}, newPassword: "<pass>"}
- * @param {*} res : The user object
- */
-exports.changePassword = function (req, res) {
-  var oldUser = new User(req.body.user);
+// /**
+//  * Function that handles password change.
+//  * @param {*} req : {user: {<user_object>}, newPassword: "<pass>"}
+//  * @param {*} res : The user object
+//  */
+// exports.changePassword = function (req, res) {
+//   var oldUser = new User(req.body.user);
 
-  // var newUser = new User(req.body.user);
-  var newHashPassword = bcrypt.hashSync(req.body.newPassword, 10);
+//   // var newUser = new User(req.body.user);
+//   var newHashPassword = bcrypt.hashSync(req.body.newPassword, 10);
 
-  User.findByIdAndUpdate(req.params.uid, { hashPassword: newHashPassword }, { new: true }, function (err, user) {
-    if (err) return res.status(500).send("There was a problem updating the password.");
-    user.hashPassword = undefined;
-    return res.status(200).send({ user: user });
-  });
-};
+//   User.findByIdAndUpdate(req.params.uid, { hashPassword: newHashPassword }, { new: true }, function (err, user) {
+//     if (err) return res.status(500).send("There was a problem updating the password.");
+//     user.hashPassword = undefined;
+//     return res.status(200).send({ user: user });
+//   });
+// };
 
 /**
  * Tells who the user is based on the token provided in the 
@@ -77,7 +77,7 @@ exports.changePassword = function (req, res) {
  * @param {*} res - Contains the result of the request
  */
 exports.whoAmI = function (req, res) {
-  User.findById(req.uid, { hashPassword: 0 }, function (err, user) {
+  User.findById(req.uid, function (err, user) {
     if (err) return res.status(500).send("There was a problem finding the user.");
     if (!user) return res.status(404).send("User not found (try logging in first).");
 
@@ -95,7 +95,7 @@ exports.signInDemoMode = function (req, res) {
     var token = jwt.sign({ id: user._id }, config.secret, {
       expiresIn: 86400 // expires in 24 hours
     });
-    user.hashPassword = undefined;
+    // user.hashPassword = undefined;
 
     User.findByIdAndUpdate(user._id, { isOnline: true }, { new: true }, function (err, authUser) {
       if (err) {
@@ -127,7 +127,7 @@ exports.sendMagicLink = function (req, res) {
     });
     console.log('>> Local access token: ', localAccessToken);
 
-    foundUser.hashPassword = undefined;
+    // foundUser.hashPassword = undefined;
 
     // Send email with JWT link
     const callbackUrl = config.local.authCallbackUri + localAccessToken;
@@ -164,7 +164,7 @@ exports.verifyLocalJwtAndReturnUser = function (req, res) {
     }
 
     // Find the user from the decoded token's id claim and return it with a new JWT session token
-    User.findById(decodedToken.id, { hashPassword: 0 }, function (err, foundUser) {
+    User.findById(decodedToken.id, function (err, foundUser) {
       if (err) {
         return res.status(500).send('There was a problem finding the user.');
       }
@@ -182,11 +182,11 @@ exports.verifyLocalJwtAndReturnUser = function (req, res) {
         if (err) {
           console.log('Cant chnage online status (auth controller)...');
         }
-        authUser.hashPassword = undefined;
+        // authUser.hashPassword = undefined;
         console.log('Authenticated user: ', authUser);
       });
 
-      foundUser.hashPassword = undefined;
+      // foundUser.hashPassword = undefined;
       res.status(200).send({ auth: true, token: token, user: foundUser });
     });
   });
@@ -266,7 +266,7 @@ exports.signInWithGoogle = function (req, res) {
           if (err) {
             console.log('Cant chnage online status (auth controller)...');
           }
-          authUser.hashPassword = undefined;
+          // authUser.hashPassword = undefined;
           console.log('Authenticated user: ', authUser);
         });
     
@@ -341,7 +341,7 @@ exports.logout = function (req, res) {
     if (err) {
       console.log('Cant chnage online status (logout controller)...');
     }
-    authUser.hashPassword = undefined;
+    // authUser.hashPassword = undefined;
     console.log('Logged out user: ', authUser);
   });
 
