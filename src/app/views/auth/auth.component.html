@@ -4,21 +4,25 @@
     <mat-card class="wrap-login100 p-l-30 p-r-30 p-t-30 p-b-30">
       <mat-card-content>
 
-        <!-- <div class="text-center pb-1">
-          <h1 class="mb-05">LocalBeats</h1>
-          <p class="text-muted m-0">Password-less Sign In</p>
-        </div> -->
+        
 
         <div *ngIf="!this.magicLinkButtonClicked">
             <div>
-                <mat-slide-toggle class="text-muted" color="accent" [(ngModel)]="isDemoModeChecked" (ngModelChange)="toggleDemoMode()">Demo Mode</mat-slide-toggle>
-              </div>
+                <mat-slide-toggle class="text-muted" color="accent" [(ngModel)]="isDemoModeChecked" (ngModelChange)="toggleDemoMode()">
+                  Demo Mode
+                </mat-slide-toggle>
+            </div>
           <form [formGroup]="signinForm" (ngSubmit)="signin()" #captchaProtectedForm="ngForm" class="login100-form">
             <div class="">
 
-              <div class="text-center p-t-57 p-b-20">
+                <!-- <div class="text-center login100-form-title p-t-27 p-b-10">
+                      localBeats
+                  </div> -->
+
+                  <div class="text-center p-t-57 p-b-20">
+              <!-- <div class="text-center p-b-20"> -->
                 <span class="txt1">
-                  Password-less Sign-in System
+                  Password-less Login System
                 </span>
               </div>
 
