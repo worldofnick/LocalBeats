@@ -7,11 +7,11 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TranslateModule, TranslateLoader, TranslateStaticLoader } from 'ng2-translate/ng2-translate';
 import { AgmCoreModule, MapsAPILoader } from '@agm/core';
 import { rootRouterConfig } from './app.routes';
-import { AppCommonModule } from "./components/common/app-common.module";
+import { AppCommonModule } from './components/common/app-common.module';
 import { NegotiateModule } from './views/negotiate/negotiate.module';
 import { StripeModule } from './views/events/event-singleton/stripe.module';
 import { ReviewModule } from './views/review/review.module';
-import {MatDialogModule} from '@angular/material/dialog';
+import { MatDialogModule } from '@angular/material/dialog';
 import { AppComponent } from './app.component';
 import { RecaptchaModule } from 'ng-recaptcha';
 import { RoutePartsService } from './services/route-parts/route-parts.service';
@@ -28,7 +28,7 @@ import { SocketService } from './services/chats/socket.service';
 import { DatePipe } from '@angular/common';
 import { StripeService } from './services/payments/stripe.service';
 import { ReviewService } from './services/reviews/review.service';
-
+import { SocialLoginModule, AuthServiceConfig, GoogleLoginProvider } from 'angular5-social-login';
 import { SpotifyClientService } from './services/music/spotify-client.service';
 import { SharedDataService } from './services/shared/shared-data.service';
 
@@ -36,11 +36,25 @@ export function createTranslateLoader(http: Http) {
   return new TranslateStaticLoader(http, './assets/i18n', '.json');
 }
 
+// Configs
+export function getAuthServiceConfigs() {
+  const config = new AuthServiceConfig(
+      [
+        {
+          id: GoogleLoginProvider.PROVIDER_ID,
+          provider: new GoogleLoginProvider('711608011009-vic9ni9atur8n35sppkl626jip0v9jjs.apps.googleusercontent.com')
+        },
+      ]
+  );
+  return config;
+}
+
 @NgModule({
   imports: [
     BrowserModule,
     MatDialogModule,
     BrowserAnimationsModule,
+    SocialLoginModule,
     AgmCoreModule.forRoot({
       apiKey: "AIzaSyBCko4eEq6azFCzCXVXAF4_jylVNw4ZM7Q",
       libraries: ["places"]
@@ -75,7 +89,11 @@ export function createTranslateLoader(http: Http) {
     UserGuard,
     DatePipe,
     ImgurService,
-    StripeService
+    StripeService,
+    {
+      provide: AuthServiceConfig,
+      useFactory: getAuthServiceConfigs
+    }
   ],
   bootstrap: [AppComponent]
 })
