@@ -12,7 +12,7 @@ module.exports = function(app) {
 		.post(autheticationHandler.sendMagicLink);
 
 	app.route('/api/auth/captcha/verify')
-		.post(autheticationHandler.verifyReCaptcha);
+		.post(autheticationHandler.verifyReCaptchaWithGet);
 
 	app.route('/api/auth/verifyLocalJwt')
 		.post(autheticationHandler.verifyLocalJwtAndReturnUser);
