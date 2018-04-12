@@ -1,4 +1,4 @@
-<mat-card class="p-0" style="background-color: rgb(255, 255, 255); height: 70vh; border-radius: 25px; margin: 10px 10px 15px; box-shadow: rgba(150, 150, 150, 0.2) 0px 10px 6px -6px; border-style: solid; border-color: rgba(245, 245, 245, 0.9); border-width: 1px; padding: 10px;">
+<mat-card *ngIf="this.loggedInUser !== null && this.loggedInUser !== undefined" class="p-0" style="background-color: rgb(255, 255, 255); height: 70vh; border-radius: 25px; margin: 10px 10px 15px; box-shadow: rgba(150, 150, 150, 0.2) 0px 10px 6px -6px; border-style: solid; border-color: rgba(245, 245, 245, 0.9); border-width: 1px; padding: 10px;">
   <mat-sidenav-container class="chat-container" style="background-color: rgba(245,245,245, 0.9);">
     <!-- Left sidebar -->
     <mat-sidenav class="chat-sidenav" #chatSidebar [opened]="isSidenavOpen" mode="side" style="height: 70vh;">

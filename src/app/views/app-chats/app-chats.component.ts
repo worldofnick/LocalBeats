@@ -1,7 +1,7 @@
-import { Component, Inject, OnInit, Input, Output, ViewChild, AfterContentInit, ContentChild, 
+import { Component, Inject, OnInit, OnDestroy, Input, Output, ViewChild, AfterContentInit, ContentChild, 
         AfterViewInit, ViewChildren, AfterViewChecked, ElementRef, ChangeDetectorRef } from '@angular/core';
 import { DatePipe } from '@angular/common';
-import { Subscription } from "rxjs/Subscription";
+import { Subscription, ISubscription } from "rxjs/Subscription";
 import { MediaChange, ObservableMedia } from "@angular/flex-layout";
 import { MatSidenav, MatChipInputEvent, MatSnackBar, MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { ENTER, COMMA, TAB } from '@angular/cdk/keycodes';
@@ -14,6 +14,7 @@ import { Router } from '@angular/router';
 
 import { SharedDataService } from 'app/services/shared/shared-data.service';
 import { ChatsService } from 'app/services/chats/chats.service';
+import { UserService } from 'app/services/auth/user.service';
 import { SocketService } from 'app/services/chats/socket.service';
 import { User } from '../../models/user';
 import { Message } from '../../services/chats/model/message';
@@ -44,10 +45,12 @@ import { MessageTypes } from '../../services/chats/model/messageTypes';
     ])
   ]
 })
-export class AppChatsComponent implements OnInit, AfterViewChecked, AfterViewInit {
+export class AppChatsComponent implements OnInit, OnDestroy, AfterViewChecked, AfterViewInit {
 
   @ViewChildren('messageInputBox') vc;
   @ViewChild('scrollMe') private myScrollContainer: ElementRef;
+
+  // private userSubscription: ISubscription;
 
   // ==============================================
   // Material Variables
@@ -76,10 +79,11 @@ export class AppChatsComponent implements OnInit, AfterViewChecked, AfterViewIni
 
   constructor(private media: ObservableMedia, public _snackBar: MatSnackBar, private cdr: ChangeDetectorRef,
     private _socketService: SocketService, public _chatsService: ChatsService, private router: Router,
-    private _sharedDataService: SharedDataService, public dialog: MatDialog) {
+    private _sharedDataService: SharedDataService, public dialog: MatDialog, private userService: UserService) {
       // console.log('>>> IN CONSTRUCTOR');
+    // this.userSubscription = this.userService.userResult.subscribe(user => this.loggedInUser = user);
     this.loggedInUser = this._chatsService.getCurrentLoggedInUser();
-
+    // this._chatsService.setLoggedInUser(this.loggedInUser);
     this.initChatSideBarWithWithNewUsers();
     // console.log('Back to constructor, active user:', this.activeChatUser);
     // console.log('Back to constructor, connectedUsers user:', this.connectedUsers);
@@ -137,6 +141,13 @@ export class AppChatsComponent implements OnInit, AfterViewChecked, AfterViewIni
     this.scrollToBottom();
   }
 
+  ngOnDestroy() {
+    console.log('CHAT DESTROY called...');
+    this.activeChatUser = new User();
+    this.cdr.detach();
+    // this.userSubscription.unsubscribe();
+  }
+
   scrollToBottom(): void {
     try {
       this.myScrollContainer.nativeElement.scrollTop = this.myScrollContainer.nativeElement.scrollHeight;
@@ -188,7 +199,12 @@ export class AppChatsComponent implements OnInit, AfterViewChecked, AfterViewIni
         if (this.activeChatUser._id === temp.from._id ||
           this.loggedInUser._id === temp.from._id) {
           this.activeChatMessages.push(temp);
-          // Mark the message as read
+          // // Mark the message as read
+          // this._chatsService.markChatsAsReadBetweenTwoUser(this.activeChatUser._id, this.loggedInUser._id);
+        }
+
+        if (this.activeChatUser._id === temp.from._id) {
+          console.log('<<< In chat, marking message read >>>');
           this._chatsService.markChatsAsReadBetweenTwoUser(this.activeChatUser._id, this.loggedInUser._id);
         }
 

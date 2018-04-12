@@ -78,9 +78,19 @@ export class ChatsService {
     );
   }
 
+  markThisMessageAsRead(messageID: string) {
+    const url = SERVER_URL + 'api/messages/update/read/' + messageID;
+    console.log('Mark message read URL: ', url);
+    return this.http.put(url, {}, httpOptions);
+  }
+
   getCurrentLoggedInUser() {
     this.loggedInUser = this._userService.user;
     return this.loggedInUser;
+  }
+
+  setLoggedInUser(user: User)  {
+    this.loggedInUser = user;
   }
 
   getPMsBetweenActiveAndLoggedInUser(from: User, to: User) {
