@@ -1,7 +1,7 @@
-<div class="page-wrap height-100">
+<div class="page-wrap height-100 container-login100" style="background-image: url('../../../assets/images/bg-01.jpg');">
   <div class="session-form-hold">
     <mat-progress-bar mode="determinate" class="session-progress"></mat-progress-bar>
-    <mat-card>
+    <mat-card class="sign-in-mat-card">
       <mat-card-content>
         <div>
           <mat-slide-toggle class="text-muted" color="accent" [(ngModel)]="isDemoModeChecked" (ngModelChange)="toggleDemoMode()">Demo Mode</mat-slide-toggle>
@@ -26,11 +26,11 @@
             <div class="text-center">
               <!-- <a routerLink="" class="mat-primary text-center full-width">Forgot password</a> -->
               <span fxFlex></span>
-              <button (click)="socialSignIn('google')">Signin in with Google</button>    
               <a routerLink="/auth/register" class="mat-primary text-center full-width">Create a new account</a>
             </div>
 
           </form>
+          <button (click)="socialSignIn('google')">Signin in with Google</button>    
         </div>
         <div *ngIf="this.magicLinkButtonClicked">
           <hr>

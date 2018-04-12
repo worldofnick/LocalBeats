@@ -125,6 +125,7 @@ export class AuthComponent implements OnInit {
             this.router.navigate(['/']);
           },
           (error) => {
+            console.log('Google Error: ', error);
             this.handleErrors(error);
           });
       }
