@@ -225,6 +225,53 @@ exports.verifyReCaptchaWithGet = function (req, res) {
   });
 }
 
+exports.signInWithGoogle = function (req, res) {
+  console.log('BODY GOOGLE SOCIAL: ', req.body);
+
+  var authOptions = {
+    url : 'https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=' + req.body.idToken
+  }
+  request.get(authOptions, function(err, response, body) {
+    if (err) {
+      console.log('>> SOCIAL GOOGLE: ', err);
+      return res.status(404).send({
+        success: false,
+        error: JSON.parse(err),
+        message: 'Something went wrong on google server. Try again later...'
+      });
+    }
+    const jsonResponse = JSON.parse(response.body);
+    if (response.statusCode === 200 && jsonResponse.aud === config.google.clientID) {
+      console.log('>> SOCIAL GOOGLE: ', jsonResponse);
+
+      User.findOne({ "google.id": jsonResponse.sub }, function (err, user) {
+        if (err) return res.status(500).send('Error on the sign-in server.');
+        if (!user) return res.status(404).send('You are not registered with a google account...');
+        var token = jwt.sign({ id: user._id }, config.secret, {
+          expiresIn: 86400 // expires in 24 hours
+        });
+    
+        User.findByIdAndUpdate(user._id, { isOnline: true }, { new: true }, function (err, authUser) {
+          if (err) {
+            console.log('Cant chnage online status (auth controller)...');
+          }
+          authUser.hashPassword = undefined;
+          console.log('Authenticated user: ', authUser);
+        });
+    
+        res.status(200).send({ auth: true, token: token, user: user });
+      });
+    } else {
+      console.log('>> SOCIAL GOOGLE: ', jsonResponse);
+      res.status(404).send({
+        success: false,
+        response: jsonResponse,
+        message: 'Unable to verify google token. Please try again...'
+      });
+    }
+  });
+}
+
 exports.verifyGoogleIdToken = function (req, res) {
   console.log('BODY GOOGLE SOCIAL: ', req.body);
 
