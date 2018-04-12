@@ -111,6 +111,7 @@ export class AuthComponent implements OnInit {
       socialPlatformProvider = GoogleLoginProvider.PROVIDER_ID;
     }
 
+    console.log('>> In social login mmethod...');
     this.socialAuthService.signIn(socialPlatformProvider).then(
       (userData) => {
         console.log(socialPlatform + 'sign in data : ', userData);
