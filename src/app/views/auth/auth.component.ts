@@ -8,10 +8,9 @@ import { SharedDataService } from '../../services/shared/shared-data.service';
 import { User } from '../../models/user';
 import { NotificationService } from '../../services/notification/notification.service';
 import { RecaptchaComponent } from 'ng-recaptcha';
-
+import { AuthService, GoogleLoginProvider } from 'angular5-social-login';
 import * as socketIO from 'socket.io-client';
 import { Notification } from 'app/models/notification';
-
 
 @Component({
   selector: 'app-auth',
@@ -33,6 +32,7 @@ export class AuthComponent implements OnInit {
 
   constructor(private userService: UserService, private sharedDataService: SharedDataService,
     private router: Router, private chatsService: ChatsService,
+    private socialAuthService: AuthService,
     private notificationService: NotificationService) { }
 
   ngOnInit() {
@@ -57,6 +57,7 @@ export class AuthComponent implements OnInit {
       location: null,
       isOnline: true,
       spotify: null,
+      google: null,
       soundcloud: null,
       stripeAccountId: null
     };
@@ -100,6 +101,33 @@ export class AuthComponent implements OnInit {
 
     console.log('Magic link clicked by Username: ' + this.user.email + 'with demo: ', this.isDemoModeChecked);
     // After this, the cpatchaResolved is automatically called
+  }
+
+  public socialSignIn(socialPlatform: string) {
+    let socialPlatformProvider;
+    if (socialPlatform === 'google') {
+      socialPlatformProvider = GoogleLoginProvider.PROVIDER_ID;
+    }
+
+    this.socialAuthService.signIn(socialPlatformProvider).then(
+      (userData) => {
+        console.log(socialPlatform + 'sign in data : ', userData);
+        // Now sign-in with userData
+        this.userService.signInWithGoogleAccount(userData.idToken).subscribe(
+          (data: any) => {
+            // Correctly authenticated, redirect
+            this.error = false;
+            this.userService.userLoaded(data.user, data.token, false, false);
+            this.userService.getNotificationsCountForUser(data.user._id);
+            this.userService.getNotificationsForUser(data.user._id);
+            this.sharedDataService.setOverallChatUnreadCount(data.user as User);
+            this.router.navigate(['/']);
+          },
+          (error) => {
+            this.handleErrors(error);
+          });
+      }
+    );
   }
 
   toggleDemoMode() {
