@@ -118,7 +118,7 @@ export class RegisterComponent implements OnInit {
         // Verify the token and get payload
         this.userService.verifyGoogleSocialIdToken(userData.idToken).subscribe(
           (payload: any) => {
-            this.socialGooglePayload = payload;
+            this.socialGooglePayload = payload.response;
             // If success, auto-fill details
             this.signupForm.setValue(
               {
@@ -148,6 +148,7 @@ export class RegisterComponent implements OnInit {
       email: signupData.email,
       password: null,
       spotify: null,
+      google: null,
       soundcloud: null,
       genres: preferencesData.genres,
       isArtist: preferencesData.isArtist,
@@ -161,6 +162,12 @@ export class RegisterComponent implements OnInit {
       isOnline: true,
       stripeAccountId: null
     };
+    if (this.socialGooglePayload !== undefined) {
+      this.user.profilePicUrl = this.socialGooglePayload.picture;
+      this.user.google = {
+        id: this.socialGooglePayload.sub
+      };
+    }
 
     if (this.longitude != null && this.signupForm.get('location').value != '') {
       this.user.location = [this.longitude, this.latitude];
