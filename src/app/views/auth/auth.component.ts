@@ -112,7 +112,17 @@ export class AuthComponent implements OnInit {
     console.log(`Resolved captcha with response ${captchaResponse}:`);
 
     if (captchaResponse !== null) {
-      this.magicLinkLogin();
+      this.userService.verifyCaptchaToken(captchaResponse).subscribe(
+        (data: any) => {
+          console.log('>> SUCCESS: ', data);
+          this.magicLinkLogin();
+        },
+        (error: any) => {
+          console.error(error);
+          this.magicLinkButtonClicked = false;
+          this.handleErrors(error);
+        }
+      );
     }
   }
 
