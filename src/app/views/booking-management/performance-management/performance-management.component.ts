@@ -1,10 +1,11 @@
 // Angular Modules
-import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
+import { Component, OnInit, Inject, OnDestroy, ViewChild } from '@angular/core';
 import { ISubscription } from "rxjs/Subscription";
 import { ActivatedRoute } from "@angular/router";
 import { NgForm } from '@angular/forms/src/directives/ng_form';
 import { Router } from "@angular/router";
-import { MatTabChangeEvent, MatSnackBar, MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { Validators, FormGroup, FormControl, FormArray, FormBuilder } from '@angular/forms';
+import { MatTabChangeEvent, MatSnackBar, MatDialog, MatDialogRef, MAT_DIALOG_DATA, PageEvent, MatPaginator } from '@angular/material';
 
 // Services
 import { UserService } from 'app/services/auth/user.service';
@@ -18,7 +19,7 @@ import { ReviewService } from 'app/services/reviews/review.service';
 import { User } from 'app/models/user';
 import { Review } from 'app/models/review';
 import { Event, CancellationPolicy } from 'app/models/event';
-import { Booking, StatusMessages, NegotiationResponses, VerificationResponse, BookingType } from 'app/models/booking';
+import { Booking, StatusMessages, NegotiationResponses, VerificationResponse, BookingType, BookingSortType } from 'app/models/booking';
 import { Action } from 'app/services/chats/model/action'
 import { SocketEvent } from 'app/services/chats/model/event'
 import { Notification } from 'app/models/notification'
@@ -50,6 +51,27 @@ import {
   styleUrls: ['./performance-management.component.css']
 })
 export class PerformanceManagementComponent implements OnInit {
+  // Sorting Forms
+  applicationForm = this.formBuilder.group({
+    sort: new FormControl()
+  });
+  requestForm = this.formBuilder.group({
+    sort: new FormControl()
+  });
+  confirmationForm = this.formBuilder.group({
+    sort: new FormControl()
+  });
+  completionForm = this.formBuilder.group({
+    sort: new FormControl()
+  });
+  cancellationForm = this.formBuilder.group({
+    sort: new FormControl()
+  });
+  bookingSortTypes: BookingSortType[] = [
+    BookingSortType.bidAsc,
+    BookingSortType.bidDes,
+    BookingSortType.needsResponse
+  ];
   // User Model
   user: User;
   socketSubscription: ISubscription;
@@ -61,17 +83,36 @@ export class PerformanceManagementComponent implements OnInit {
   // Performances of the User Model
   performances: {
     applications: Booking[],
+    pagedApplications: Booking[],
     applicationNotifications: number,
     requests: Booking[],
+    pagedRequests: Booking[],
     requestNotifications: number,
     confirmations: Booking[],
+    pagedConfirmations: Booking[],
     confirmationNotifications: number,
     completions: Booking[],
+    pagedCompletions: Booking[],
     completionNotifications: number,
     cancellations: Booking[],
+    pagedCancellations: Booking[],
     cancellationNotifications: number,
     paymentStatues: PaymentStatus[],
     cancelledPaymentStatues: PaymentStatus[]};
+
+  // MatPaginator Inputs
+  pageSize = 3;
+  applicationPageIndex = 0;
+  requestPageIndex = 0;
+  confirmationPageIndex = 0;
+  completionPageIndex = 0;
+  cancellationPageIndex = 0;
+
+  @ViewChild('applicationpaginator') applicationPaginator: MatPaginator;
+  @ViewChild('requestpaginator') requestPaginator: MatPaginator;
+  @ViewChild('confirmationpaginator') confirmationPaginator: MatPaginator;
+  @ViewChild('completionpaginator') completionPaginator: MatPaginator;
+  @ViewChild('cancellationpaginator') cancellationPaginator: MatPaginator;
 
   constructor(private eventService: EventService, 
     private userService: UserService,
@@ -82,21 +123,27 @@ export class PerformanceManagementComponent implements OnInit {
     private _socketService: SocketService,
     private stripeService: StripeService,
     public dialog: MatDialog,
-    public snackBar: MatSnackBar
+    public snackBar: MatSnackBar,
+    private formBuilder: FormBuilder
     ) {
       // Set user model to the authenticated singleton user
       this.user = this.userService.user;
       // Get the performances of the user
       this.performances = {
         applications: [],
+        pagedApplications: [],
         applicationNotifications: 0,
         requests: [],
+        pagedRequests: [],
         requestNotifications: 0,
         confirmations: [],
+        pagedConfirmations: [],
         confirmationNotifications: 0,
         completions: [],
+        pagedCompletions: [],
         completionNotifications: 0,
         cancellations: [],
+        pagedCancellations: [],
         cancellationNotifications: 0,
         paymentStatues: [],
         cancelledPaymentStatues: []};
@@ -250,84 +297,78 @@ export class PerformanceManagementComponent implements OnInit {
   private getPerformances() {
     // Get all performances associated with the user
     this.bookingService.getUserBookings(this.userService.user, 'artist').then((bookings: Booking[]) => {
-      // Get the confirmed bookings
-      let confirmedBookings: Booking[] = [];
-      // Get the application bookings
-      let applicationBookings: Booking[] = [];
-      // Get the request bookings
-      let requestBookings: Booking[] = [];
-      // Get the completed bookings
-      let completedBookings: Booking[] = [];
-      // Get the cancelled bookings
-      let cancelledBookings: Booking[] = [];
-      // Get the notification counts
-      let numNotif: number = 0;
-      let reqNotif: number = 0;
-      let numConf: number = 0;
-      let cancelNotif: number = 0;
-      let completeNotif: number = 0;
-      let paymentStatues: PaymentStatus[] = [];
-      let cancelledPaymentStatues: PaymentStatus[] = [];
+      let applicationCount: number = 0;
+      let requestCount: number = 0;
+      let confirmedCount: number = 0;
+      let completedCount: number = 0;
+      let cancelledCount: number = 0;
       for(let booking of bookings) {
         if(booking.approved) {
           if(booking.completed) {
-            completedBookings.push(booking);
+            this.performances.completions.push(booking);
+            if(completedCount < this.pageSize) {
+              this.performances.pagedCompletions.push(this.performances.completions[completedCount]);
+            }
+            completedCount++;
             // If the booking is completed and has not yet been viewed by the artist, a new notification exists
             if(!booking.artViewed) {
-              completeNotif++;
+              this.performances.completionNotifications++;
             }
             // If a booking is completed, it should have a payment status
             this.bookingService.bookingPaymentStatus(booking).then((status: PaymentStatus) => {
-              paymentStatues.push(status);
+              this.performances.paymentStatues.push(status);
             });
           } else if(!booking.cancelled) {
-            confirmedBookings.push(booking);
+            this.performances.confirmations.push(booking);
+            if(confirmedCount < this.pageSize) {
+              this.performances.pagedConfirmations.push(this.performances.confirmations[confirmedCount]);
+            }
+            confirmedCount++;
             // If the booking is confirmed and has not yet been viewed by the artist, a new notification exists
             if(!booking.artViewed) {
-              numConf++;
+              this.performances.confirmationNotifications++;
             }
           } else {
-            cancelledBookings.push(booking);
+            this.performances.cancellations.push(booking);
+            if(cancelledCount < this.pageSize) {
+              this.performances.pagedCancellations.push(this.performances.cancellations[cancelledCount]);
+            }
+            cancelledCount++;
             if(!booking.artViewed) {
-              cancelNotif++;
+              this.performances.cancellationNotifications++;
             }
             // If a booking is cancelled, get its payment status
             this.bookingService.bookingPaymentStatus(booking).then((status: PaymentStatus) => {
-              cancelledPaymentStatues.push(status);
+              this.performances.cancelledPaymentStatues.push(status);
             })
           }
           
         } else {
           // Check to see if the artist applied
           if(booking.bookingType == BookingType.artistApply) {
-            applicationBookings.push(booking);
+            this.performances.applications.push(booking);
+            if(applicationCount < this.pageSize) {
+              this.performances.pagedApplications.push(this.performances.applications[applicationCount]);
+            }
+            applicationCount++;
             // If the booking is not confirmed and the host has approved, a new notification exists
             if(booking.hostApproved) {
-              numNotif++;
+              this.performances.applicationNotifications++;
             }
           } else {
             // Otherwise, it was a host request
-            requestBookings.push(booking);
+            this.performances.requests.push(booking);
+            if(requestCount < this.pageSize) {
+              this.performances.pagedRequests.push(this.performances.requests[requestCount]);
+            }
+            requestCount++;
             // If the booking is not confirmed and the host has approved, a new notification exists
             if(booking.hostApproved) {
-              reqNotif++;
+              this.performances.requestNotifications++;
             }
           }
         }
       }
-      this.performances = {
-        applications: applicationBookings,
-        applicationNotifications: numNotif,
-        requests: requestBookings,
-        requestNotifications: reqNotif,
-        confirmations: confirmedBookings,
-        confirmationNotifications: numConf,
-        completions: completedBookings,
-        completionNotifications: completeNotif,
-        cancellations: cancelledBookings,
-        cancellationNotifications: cancelNotif,
-        paymentStatues: paymentStatues,
-        cancelledPaymentStatues: cancelledPaymentStatues};
     });
   }
 
@@ -345,20 +386,34 @@ export class PerformanceManagementComponent implements OnInit {
   */
   private updateModel(newBooking: Booking, response: NegotiationResponses) {
     let applicationIndex: number = -1;
+    let pagedApplicationIndex: number = -1;
     let requestIndex: number = -1;
+    let pagedRequestIndex: number = -1;
     let confirmationIndex: number = -1;
+    let pagedConfirmationIndex: number = -1;
     let completionIndex: number = -1;
     // Check if the booking has been approved
     if(newBooking.approved && response == NegotiationResponses.accept) {
       requestIndex = this.performances.requests.findIndex(r => r._id == newBooking._id)
+      pagedRequestIndex = this.performances.pagedRequests.findIndex(r => r._id == newBooking._id)
       applicationIndex = this.performances.applications.findIndex(a => a._id == newBooking._id);
+      pagedApplicationIndex = this.performances.pagedApplications.findIndex(a => a._id == newBooking._id);
       // Remove from applications/requests and put on confirmations
       if(newBooking.bookingType == BookingType.artistApply) {
         this.performances.applications.splice(applicationIndex, 1);
+        if(pagedApplicationIndex > -1) {
+          this.performances.pagedApplications.splice(pagedApplicationIndex, 1);
+        }
+        this.updateApplicationPage();
       } else {
         this.performances.requests.splice(requestIndex, 1);
+        if(pagedRequestIndex > -1) {
+          this.performances.pagedRequests.splice(pagedRequestIndex, 1);
+        }
+        this.updateRequestPage();
       }
       this.performances.confirmations.push(newBooking);
+      this.updateConfirmationPage();
       this.performances.confirmationNotifications++;
 
     } else if(response == NegotiationResponses.new) {
@@ -373,6 +428,7 @@ export class PerformanceManagementComponent implements OnInit {
           this.performances.applicationNotifications++;
         }
         this.performances.applications[applicationIndex] = newBooking;
+        this.updateApplicationPage();
       } else if(requestIndex >= 0){
         // Then it is an event with a current request
         // Update this event
@@ -381,15 +437,18 @@ export class PerformanceManagementComponent implements OnInit {
           this.performances.requestNotifications++;
         }
         this.performances.requests[requestIndex] = newBooking;
+        this.updateRequestPage();
       } else {
         // Otherwise, it is a brand new application/request
         // Push onto applications/requests
         if(newBooking.bookingType == BookingType.artistApply) {
           this.performances.applications.push(newBooking);
+          this.updateApplicationPage();
           // Increment the notifications
           this.performances.applicationNotifications++;
         } else {
           this.performances.requests.push(newBooking);
+          this.updateRequestPage();
           // Increment the notifications
           this.performances.requestNotifications++;
         }
@@ -399,18 +458,36 @@ export class PerformanceManagementComponent implements OnInit {
       // Find it in applications and remove it
       if(newBooking.bookingType == BookingType.artistApply) {
         applicationIndex = this.performances.applications.findIndex(a => a._id == newBooking._id);
+        pagedApplicationIndex = this.performances.pagedApplications.findIndex(a => a._id == newBooking._id);
+        if(!this.performances.applications[applicationIndex].artViewed) this.performances.applicationNotifications--;
         this.performances.applications.splice(applicationIndex, 1);
+        if(pagedApplicationIndex > -1) {
+          this.performances.pagedApplications.splice(pagedApplicationIndex, 1);
+        }
+        this.updateApplicationPage();
       } else {
         // Otherwise, it was a request, remove it
         requestIndex = this.performances.requests.findIndex(r => r._id == newBooking._id);
+        pagedRequestIndex = this.performances.pagedRequests.findIndex(r => r._id == newBooking._id)
+        if(!this.performances.requests[requestIndex].artViewed) this.performances.requestNotifications--;
         this.performances.requests.splice(requestIndex, 1);
+        if(pagedRequestIndex > -1) {
+          this.performances.pagedRequests.splice(pagedRequestIndex, 1);
+        }
+        this.updateRequestPage();
       }
     } else if(response == NegotiationResponses.cancel) {
       confirmationIndex = this.performances.confirmations.findIndex(a => a._id == newBooking._id);
+      pagedConfirmationIndex = this.performances.pagedConfirmations.findIndex(a => a._id == newBooking._id);
       // The host has cancelled
       this.performances.confirmations.splice(confirmationIndex, 1);
+      if(pagedConfirmationIndex > -1) {
+        this.performances.pagedConfirmations.splice(confirmationIndex, 1);
+      }
+      this.updateConfirmationPage();
       this.performances.cancellationNotifications++;
       this.performances.cancellations.push(newBooking);
+      this.updateCancellationPage();
       // If a booking is cancelled, check its payment status
       this.bookingService.bookingPaymentStatus(newBooking).then((status: PaymentStatus) => {
         this.performances.cancelledPaymentStatues.push(status);
@@ -418,10 +495,16 @@ export class PerformanceManagementComponent implements OnInit {
     } else if(response == NegotiationResponses.complete) {
       // Find it in confirmations
       confirmationIndex = this.performances.confirmations.findIndex(a => a._id == newBooking._id);
+      pagedConfirmationIndex = this.performances.pagedConfirmations.findIndex(a => a._id == newBooking._id);
       // The artist has verified and the booking is complete
       this.performances.confirmations.splice(confirmationIndex,1);
+      if(pagedConfirmationIndex > -1) {
+        this.performances.pagedConfirmations.splice(confirmationIndex, 1);
+      }
+      this.updateConfirmationPage();
       this.performances.completionNotifications++;
       this.performances.completions.push(newBooking);
+      this.updateCompletionPage();
       // Get the payment statuses
       // If a booking is complete, it should have a payment status
       this.bookingService.bookingPaymentStatus(newBooking).then((status: PaymentStatus) => {
@@ -434,6 +517,7 @@ export class PerformanceManagementComponent implements OnInit {
       // The host has either verified or not, update the booking so the artist is aware
       this.performances.confirmations[confirmationIndex] = newBooking;
       this.performances.confirmationNotifications++;
+      this.updateConfirmationPage();
     } else if(response == NegotiationResponses.payment) {
       // Update payment status of completed booking because a payment has happened
       if(!newBooking.cancelled) {
@@ -458,11 +542,13 @@ export class PerformanceManagementComponent implements OnInit {
           }
           this.bookingService.updateBooking(newBooking);
           this.performances.paymentStatues[completionIndex] = status;
+          this.updateCompletionPage();
         });
       }
     } else if (response == NegotiationResponses.review) {
       completionIndex = this.performances.completions.findIndex(a => a._id == newBooking._id);
       this.performances.completions[completionIndex] = newBooking;
+      this.updateCompletionPage();
       if(!newBooking.artViewed) {
         this.performances.completionNotifications++;
       }
@@ -510,7 +596,7 @@ export class PerformanceManagementComponent implements OnInit {
   1. Verified and the Host has not verified - send a verification notification to host
   2. Verified and the Host has verified - complete the booking and send payment to host
   */
-  artistVerify(booking: Booking, bookingIndex: number) {
+  artistVerify(booking: Booking, pagedBookingIndex: number) {
     if(this.verificationSubscription) {
       this.verificationSubscription.unsubscribe();
     }
@@ -563,8 +649,12 @@ export class PerformanceManagementComponent implements OnInit {
                 // If payment was successful, push a new status
                 this.performances.paymentStatues.push(status);
                 // Move the booking from confirmations to completions
+                let bookingIndex = this.performances.confirmations.findIndex(e => e._id == booking._id);
                 this.performances.confirmations.splice(bookingIndex, 1);
+                this.performances.pagedConfirmations.splice(pagedBookingIndex, 1);
+                this.updateConfirmationPage();
                 this.performances.completions.push(booking);
+                this.updateCompletionPage();
                 let snackBarRef = this.snackBar.open('Payment received!', "", {
                   duration: 1500,
                 });
@@ -580,7 +670,10 @@ export class PerformanceManagementComponent implements OnInit {
               booking.completed = false;
               booking.hostStatusMessage = StatusMessages.unpaid;
               booking.artistStatusMessage = StatusMessages.unpaid;
+              let bookingIndex = this.performances.confirmations.findIndex(e => e._id == booking._id);
               this.performances.confirmations[bookingIndex] = booking;
+              this.performances.pagedConfirmations[pagedBookingIndex] = booking;
+              this.updateConfirmationPage();
               // Don't push a payment status, because the payment failed
               notificationMessage = "Your booking is incomplete, please try to pay " + booking.performerUser.firstName + " for the event " + booking.eventEID.eventName + " again";
               let snackBarRef = this.snackBar.open('Payment failed, please ask host to try again.', "", {
@@ -596,7 +689,10 @@ export class PerformanceManagementComponent implements OnInit {
           });
         } else {
           // Otherwise, the booking is not complete, so just a normal verification happened
+          let bookingIndex = this.performances.confirmations.findIndex(e => e._id == booking._id);
           this.performances.confirmations[bookingIndex] = booking;
+          this.performances.pagedConfirmations[pagedBookingIndex] = booking;
+          this.updateConfirmationPage();
           // Update the model and send a notification if the model updates correctly
           this.bookingService.updateBooking(booking).then(() => {
             // Send notification to artist
@@ -611,7 +707,7 @@ export class PerformanceManagementComponent implements OnInit {
   /*
   Artist responds to applications/bids through negotiation dialog
   */
-  openNegotiationDialog(booking: Booking, bookingIndex: number) {
+  openNegotiationDialog(booking: Booking, pagedBookingIndex: number) {
     let view = "artist";
     if(this.negotiationSubscription) {
       this.negotiationSubscription.unsubscribe();
@@ -640,11 +736,15 @@ export class PerformanceManagementComponent implements OnInit {
           this.bookingService.updateBooking(booking).then(() => {
             // Update the model of the component
             if(booking.bookingType == BookingType.artistApply) {
+              let bookingIndex = this.performances.applications.findIndex(e => e._id == booking._id);
               this.performances.applications[bookingIndex] = booking;
               this.performances.applicationNotifications--;
+              this.updateApplicationPage();
             } else {
+              let bookingIndex = this.performances.requests.findIndex(e => e._id == booking._id);
               this.performances.requests[bookingIndex] = booking;
               this.performances.requestNotifications--;
+              this.updateRequestPage();
             }
             this.createNotificationForHost(booking, result.response, ['/bookingmanagement', 'myevents'],
             'import_export', booking.performerUser.firstName + " has made a new bid on " + booking.eventEID.eventName);
@@ -665,13 +765,20 @@ export class PerformanceManagementComponent implements OnInit {
             this.bookingService.acceptBooking(booking, view).then(() => {
               // Update the model of the component
               if(booking.bookingType == BookingType.artistApply) {
+                let bookingIndex = this.performances.applications.findIndex(e => e._id == booking._id);
                 this.performances.applications.splice(bookingIndex, 1);
+                this.performances.pagedApplications.splice(pagedBookingIndex, 1);
+                this.updateApplicationPage();
                 this.performances.applicationNotifications--;
               } else {
+                let bookingIndex = this.performances.requests.findIndex(e => e._id == booking._id);
                 this.performances.requests.splice(bookingIndex, 1);
+                this.performances.pagedRequests.splice(pagedBookingIndex, 1);
+                this.updateRequestPage();
                 this.performances.requestNotifications--;
               }
               this.performances.confirmations.push(booking);
+              this.updateConfirmationPage();
               this.performances.confirmationNotifications++;
               this.createNotificationForHost(booking, result.response, ['/bookingmanagement', 'myevents'],
               'event_available', booking.performerUser.firstName + " has confirmed the booking " + booking.eventEID.eventName);
@@ -687,10 +794,16 @@ export class PerformanceManagementComponent implements OnInit {
           this.bookingService.declineBooking(booking).then(() => {
             // Update the model of the component
             if(booking.bookingType == BookingType.artistApply) {
+              let bookingIndex = this.performances.applications.findIndex(e => e._id == booking._id);
               this.performances.applications.splice(bookingIndex, 1);
+              this.performances.pagedApplications.splice(pagedBookingIndex, 1);
+              this.updateApplicationPage();
               this.performances.applicationNotifications--;
             } else {
+              let bookingIndex = this.performances.requests.findIndex(e => e._id == booking._id);
               this.performances.requests.splice(bookingIndex, 1);
+              this.performances.pagedRequests.splice(pagedBookingIndex, 1);
+              this.updateRequestPage();
               this.performances.requestNotifications--;
             }
             this.createNotificationForHost(booking, result.response, ['/events', booking.eventEID._id],
@@ -716,8 +829,12 @@ export class PerformanceManagementComponent implements OnInit {
                   // If payment of fee was successful, push a new status
                   this.performances.cancelledPaymentStatues.push(status);
                   // Move the booking from confirmations to cancellations
+                  let bookingIndex = this.performances.confirmations.findIndex(e => e._id == booking._id);
                   this.performances.confirmations.splice(bookingIndex,1);
+                  this.performances.pagedConfirmations.splice(pagedBookingIndex, 1);
+                  this.updateConfirmationPage();
                   this.performances.cancellations.push(booking);
+                  this.updateCancellationPage();
                   this.performances.cancellationNotifications++;
                   let snackBarRef = this.snackBar.open('Cancellation fee charged!', "", {
                     duration: 1500,
@@ -744,8 +861,12 @@ export class PerformanceManagementComponent implements OnInit {
             this.bookingService.bookingPaymentStatus(booking).then((status: PaymentStatus) => {
               // If payment of fee was successful, push a new status
               this.performances.cancelledPaymentStatues.push(status);
+              let bookingIndex = this.performances.confirmations.findIndex(e => e._id == booking._id);
               this.performances.confirmations.splice(bookingIndex,1);
+              this.performances.pagedConfirmations.splice(pagedBookingIndex, 1);
+              this.updateConfirmationPage();
               this.performances.cancellations.push(booking);
+              this.updateCancellationPage();
               this.performances.cancellationNotifications++;
               this.createNotificationForHost(booking, result.response, ['/bookingmanagement', 'myevents'],
               'event_busy', booking.performerUser.firstName + " has cancelled the confirmed booking for " + booking.eventEID.eventName + " and no fee was charged.");
@@ -817,6 +938,135 @@ export class PerformanceManagementComponent implements OnInit {
 
     });
 
+  }
+
+  applicationPageEvent(event: PageEvent) {
+    this.applicationPageIndex = event.pageIndex;
+    this.updateApplicationPage();
+  }
+
+  updateApplicationPage() {
+    if(this.performances.pagedApplications.length == 0 && this.applicationPageIndex > 0) {
+      this.applicationPageIndex = this.applicationPageIndex - 1;
+      this.applicationPaginator.pageIndex = this.applicationPageIndex;
+    }
+    let startingIndex = (this.applicationPageIndex + 1) * this.pageSize - this.pageSize;
+    let endIndex = startingIndex + this.pageSize;
+    this.performances.pagedApplications = this.performances.applications.slice(startingIndex, endIndex);
+  }
+
+  requestPageEvent(event: PageEvent) {
+    this.requestPageIndex = event.pageIndex;
+    this.updateRequestPage();
+  }
+
+  updateRequestPage() {
+    if(this.performances.pagedRequests.length == 0 && this.requestPageIndex > 0) {
+      this.requestPageIndex = this.requestPageIndex - 1;
+      this.requestPaginator.pageIndex = this.requestPageIndex;
+    }
+    let startingIndex = (this.requestPageIndex + 1) * this.pageSize - this.pageSize;
+    let endIndex = startingIndex + this.pageSize;
+    this.performances.pagedRequests = this.performances.requests.slice(startingIndex, endIndex);
+  }
+
+  confirmationPageEvent(event: PageEvent) {
+    this.confirmationPageIndex = event.pageIndex;
+    this.updateConfirmationPage();
+  }
+
+  updateConfirmationPage() {
+    if(this.performances.pagedConfirmations.length == 0 && this.confirmationPageIndex > 0) {
+      this.confirmationPageIndex = this.confirmationPageIndex - 1;
+      this.confirmationPaginator.pageIndex = this.confirmationPageIndex;
+    }
+    let startingIndex = (this.confirmationPageIndex + 1) * this.pageSize - this.pageSize;
+    let endIndex = startingIndex + this.pageSize;
+    this.performances.pagedConfirmations = this.performances.confirmations.slice(startingIndex, endIndex);
+  }
+
+  completionPageEvent(event: PageEvent) {
+    this.completionPageIndex = event.pageIndex;
+    this.updateCompletionPage();
+  }
+
+  updateCompletionPage() {
+    if(this.performances.pagedCompletions.length == 0 && this.completionPageIndex > 0) {
+      this.completionPageIndex = this.completionPageIndex - 1;
+      this.completionPaginator.pageIndex = this.completionPageIndex;
+    }
+    let startingIndex = (this.completionPageIndex + 1) * this.pageSize - this.pageSize;
+    let endIndex = startingIndex + this.pageSize;
+    this.performances.pagedCompletions = this.performances.completions.slice(startingIndex, endIndex);
+  }
+
+  cancellationPageEvent(event: PageEvent) {
+    this.cancellationPageIndex = event.pageIndex;
+    this.updateCancellationPage();
+  }
+
+  updateCancellationPage() {
+    if(this.performances.pagedCancellations.length == 0 && this.cancellationPageIndex > 0) {
+      this.cancellationPageIndex = this.cancellationPageIndex - 1;
+      this.cancellationPaginator.pageIndex = this.cancellationPageIndex;
+    }
+    let startingIndex = (this.cancellationPageIndex + 1) * this.pageSize - this.pageSize;
+    let endIndex = startingIndex + this.pageSize;
+    this.performances.pagedCancellations = this.performances.cancellations.slice(startingIndex, endIndex);
+  }
+
+  applicationSort() {
+    let sort: BookingSortType = this.applicationForm.get('sort').value;
+    this.performances.applications.sort((leftside, rightside): number => {
+      return this.sortBookings(leftside, rightside, sort);
+    });
+    this.updateApplicationPage();
+  }
+
+  requestSort() {
+    let sort: BookingSortType = this.requestForm.get('sort').value;
+    this.performances.requests.sort((leftside, rightside): number => {
+      return this.sortBookings(leftside, rightside, sort);
+    });
+    this.updateRequestPage();
+  }
+
+  confirmationSort() {
+    let sort: BookingSortType = this.confirmationForm.get('sort').value;
+    this.performances.confirmations.sort((leftside, rightside): number => {
+      return this.sortBookings(leftside, rightside, sort);
+    });
+    this.updateConfirmationPage();
+  }
+
+  completionSort() {
+    let sort: BookingSortType = this.completionForm.get('sort').value;
+    this.performances.completions.sort((leftside, rightside): number => {
+      return this.sortBookings(leftside, rightside, sort);
+    });
+    this.updateCompletionPage();
+  }
+
+  cancellationSort() {
+    let sort: BookingSortType = this.cancellationForm.get('sort').value;
+    this.performances.cancellations.sort((leftside, rightside): number => {
+      return this.sortBookings(leftside, rightside, sort);
+    });
+    this.updateCancellationPage();
+  }
+
+  sortBookings(leftside: Booking, rightside: Booking, sortType: BookingSortType): number {
+    if(sortType == BookingSortType.needsResponse) {
+      if(!leftside.artViewed && rightside.artViewed) return -1;
+      if(leftside.artViewed && !rightside.artViewed) return 1;
+    } else if(sortType == BookingSortType.bidDes) {
+      if(leftside.currentPrice < rightside.currentPrice) return -1;
+      if(leftside.currentPrice > rightside.currentPrice) return 1;
+    } else {
+      if(leftside.currentPrice < rightside.currentPrice) return 1;
+      if(leftside.currentPrice > rightside.currentPrice) return -1;
+    }
+    return 0;
   }
 
 }

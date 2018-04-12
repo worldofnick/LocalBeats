@@ -113,6 +113,8 @@ exports.deleteEventByID = function (req, res) {
 exports.getUserEventsByUID = function (req, res) {
     var limit = 10;
     var skip = 0;
+    // Sort by soonest event
+    var sort = { fromDate: 1 };
 
     if (req.params.limit != null) {
         limit = parseInt(req.query.limit);
@@ -126,7 +128,7 @@ exports.getUserEventsByUID = function (req, res) {
     }
 
     
-    Events.find({hostUser: req.query.hostUID}).limit(limit).skip(skip).populate('hostUser').populate('performerUser').exec(function (err, doc) {
+    Events.find({hostUser: req.query.hostUID}).limit(limit).skip(skip).sort(sort).populate('hostUser').populate('performerUser').exec(function (err, doc) {
         if (err) {
             return res.status(500).send("Failed to get user events");
         } else {

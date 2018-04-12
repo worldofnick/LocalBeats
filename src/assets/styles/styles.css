@@ -1672,6 +1672,14 @@ div.hopscotch-bubble .hopscotch-nav-button.prev:hover {
 .social-icon.dribble {
     background: url('../images/social-dribble.png') no-repeat center center;
 }
+
+mat-divider {
+    position: relative !important;
+}
+
+mat-paginator {
+    background-color: #fafafa !important;
+}
 /*---- Media queries -----*/
 @media (max-width: 767px) {
     .mat-card-title .mat-divider {

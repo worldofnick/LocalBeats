@@ -3,9 +3,17 @@
     <div class="section-header">
       <h2>My Events</h2>
       <p *ngIf="events.length == 0">You have not hosted any events</p>
+      <mat-form-field *ngIf="events.length > 1">
+        <mat-select placeholder="Sort Type" [formControl]="eventForm.controls['sort']" (change)="eventSort()">
+          <mat-select-trigger class="additional-selection">
+            {{(eventForm.controls['sort'].value ? eventForm.controls['sort'].value : '') | capitalize}}
+          </mat-select-trigger>
+          <mat-option *ngFor="let type of eventSortTypes" [value]="type">{{type | capitalize}}</mat-option>
+        </mat-select>
+      </mat-form-field>
     </div>
     <div *ngIf="events.length > 0" fxLayout="row" fxLayoutWrap="wrap" >
-      <div fxFlex="100" fxFlex.gt-xs="33" *ngFor="let item of this.events; let j = index">
+      <div fxFlex="100" fxFlex.gt-xs="33" *ngFor="let item of this.pagedEvents; let j = index">
         <mat-card class="p-0">
           <img mat-card-image [src]="item.event.eventPicUrl" class="cover-image">
           <mat-card-content>
@@ -24,6 +32,11 @@
                     <span *ngIf="item.applicationNotifications > 0" class="notification-value mat-bg-warn">{{item.applicationNotifications}}</span>
                   </mat-panel-description>
                 </mat-expansion-panel-header>
+                <mat-form-field *ngIf="item.applications.length > 1">
+                  <mat-select placeholder="Sort Type" (change)="applicationSort($event, j)">
+                    <mat-option *ngFor="let type of bookingSortTypes" [value]="type">{{type | capitalize}}</mat-option>
+                  </mat-select>
+                </mat-form-field>
                 <div fxLayout="column" fxLayoutAlign="space-between center" fxLayoutGap="10px">
                   <mat-card *ngFor="let application of item.applications; let i = index" class="p-1 full-width">
                     <div fxLayout="column">
@@ -55,6 +68,11 @@
                     <span *ngIf="item.requestNotifications > 0" class="notification-value mat-bg-warn">{{item.requestNotifications}}</span>
                   </mat-panel-description>
                 </mat-expansion-panel-header>
+                <mat-form-field *ngIf="item.requests.length > 1">
+                  <mat-select placeholder="Sort Type" (change)="requestSort($event, j)">
+                    <mat-option *ngFor="let type of bookingSortTypes" [value]="type">{{type | capitalize}}</mat-option>
+                  </mat-select>
+                </mat-form-field>
                 <div fxLayout="column" fxLayoutAlign="space-between center" fxLayoutGap="10px">
                   <mat-card *ngFor="let request of item.requests; let i = index" class="p-1 full-width">
                     <div fxLayout="column">
@@ -86,6 +104,11 @@
                     <span *ngIf="item.confirmationNotifications > 0" class="notification-value mat-bg-warn">{{item.confirmationNotifications}}</span>
                   </mat-panel-description>
                 </mat-expansion-panel-header>
+                <mat-form-field *ngIf="item.confirmations.length > 1">
+                  <mat-select placeholder="Sort Type" (change)="confirmationSort($event, j)">
+                    <mat-option *ngFor="let type of bookingSortTypes" [value]="type">{{type | capitalize}}</mat-option>
+                  </mat-select>
+                </mat-form-field>
                 <div fxLayout="column" fxLayoutAlign="space-between center" fxLayoutGap="10px">
                   <mat-card *ngFor="let booking of item.confirmations; let i = index" class="p-1 full-width">
                     <div fxLayout="column">
@@ -118,6 +141,11 @@
                     <span *ngIf="item.completionNotifications > 0" class="notification-value mat-bg-warn">{{item.completionNotifications}}</span>
                   </mat-panel-description>
                 </mat-expansion-panel-header>
+                <mat-form-field *ngIf="item.completions.length > 1">
+                  <mat-select placeholder="Sort Type" (change)="completionSort($event, j)">
+                    <mat-option *ngFor="let type of bookingSortTypes" [value]="type">{{type | capitalize}}</mat-option>
+                  </mat-select>
+                </mat-form-field>
                 <div fxLayout="column" fxLayoutAlign="space-between center" fxLayoutGap="10px">
                   <mat-card *ngFor="let booking of item.completions; let i = index" class="p-1 full-width">
                     <div fxLayout="column">
@@ -152,6 +180,11 @@
                     <span *ngIf="item.cancellationNotifications > 0" class="notification-value mat-bg-warn">{{item.cancellationNotifications}}</span>
                   </mat-panel-description>
                 </mat-expansion-panel-header>
+                <mat-form-field *ngIf="item.cancellations.length > 1">
+                  <mat-select placeholder="Sort Type" (change)="cancellationSort($event, j)">
+                    <mat-option *ngFor="let type of bookingSortTypes" [value]="type">{{type | capitalize}}</mat-option>
+                  </mat-select>
+                </mat-form-field>
                 <div fxLayout="column" fxLayoutAlign="space-between center" fxLayoutGap="10px">
                   <mat-card *ngFor="let booking of item.cancellations; let i = index" class="p-1 full-width">
                     <div fxLayout="column">
@@ -177,10 +210,17 @@
             </mat-accordion>
             <mat-divider class="mt-05 mb-1"></mat-divider>
             <button (click)="onEditEvent(item.event, j)" class="text-muted" mat-icon-button matTooltip="Edit Event"><mat-icon>mode_edit</mat-icon></button>
-            <button (click)="onDeleteEvent(item.event, j)" class="text-muted" mat-icon-button matTooltip="Delete Event"><mat-icon>delete</mat-icon></button>
+            <button *ngIf="item.confirmations.length == 0 && item.completions.length == 0" (click)="onDeleteEvent(item.event, j)" class="text-muted" mat-icon-button matTooltip="Delete Event"><mat-icon>delete</mat-icon></button>
           </mat-card-content>
         </mat-card>
       </div>
     </div>
   </div>
+  <br>
+  <mat-paginator *ngIf="events.length > 0"
+    [length]="events.length"
+    [pageSize]="pageSize"
+    [hidePageSize]=true
+    (page)="pageEvent($event)">
+  </mat-paginator>
 </section>
