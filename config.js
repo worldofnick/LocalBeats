@@ -25,9 +25,14 @@ module.exports = {
     reCaptcha: {
       secret: '6LeFK1IUAAAAAAbGQ5CBAtmycaq2_N5GJvtwLL2z'
     },
+    sendGrid: {
+      service: 'SendGrid',
+      user: 'apikey',
+      apiKey: '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'
+    },
     local: {
-      authCallbackUri : 'http://localhost:4200/callback?localAccessAuth=',
-      // callbackUri : 'https://www.localbeats.live/callback?localAccessAuth=',
+      // authCallbackUri : 'http://localhost:4200/callback?localAccessAuth=',
+      authCallbackUri : 'https://www.localbeats.live/callback?localAccessAuth='
     },
     // Configuration for Stripe.
     stripe: {
