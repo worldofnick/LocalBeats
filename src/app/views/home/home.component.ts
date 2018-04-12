@@ -161,7 +161,8 @@ export class HomeComponent implements OnInit {
   }
 
   setupSuggestions() {
-    // set suggestions type
+    if (this._userService.user !== null && this._userService.user !== undefined) {
+      // set suggestions type
     if (this._userService.user.isArtist) {
       // user is an artist
       this.searchType = 'Rec';
@@ -220,6 +221,7 @@ export class HomeComponent implements OnInit {
       this.updateResults2();
     });
 
+    }
   }
 
   ngOnDestroy() {
