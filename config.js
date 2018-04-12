@@ -20,7 +20,7 @@ module.exports = {
       clientID: '4e3fe497717451e398ca2719842a7e20'
     },
     google: {
-      clientID: '711608011009-vic9ni9atur8n35sppkl626jip0v9jjs.apps.googleusercontent.com'
+      clientID: '373678164015-979i32np2i2mdqnml2e7g2tkavp5jnd1.apps.googleusercontent.com'
     },
     reCaptcha: {
       secret: '6LeFK1IUAAAAAAbGQ5CBAtmycaq2_N5GJvtwLL2z'
