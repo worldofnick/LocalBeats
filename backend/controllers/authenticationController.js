@@ -245,8 +245,19 @@ exports.signInWithGoogle = function (req, res) {
       console.log('>> SOCIAL GOOGLE: ', jsonResponse);
 
       User.findOne({ "google.id": jsonResponse.sub }, function (err, user) {
-        if (err) return res.status(500).send('Error on the sign-in server.');
-        if (!user) return res.status(404).send('You are not registered with a google account...');
+        if (err) {
+          console.error('GOOGLE', err);
+          return res.status(500).send({
+            error: err,
+            message: 'Error on the sign-in server.'
+          });
+        }
+        if (!user) {
+          console.error('GOOGLE: cannot find user');
+          return res.status(404).send({
+            message: 'You are not registered with a google account...'}
+          );
+        }
         var token = jwt.sign({ id: user._id }, config.secret, {
           expiresIn: 86400 // expires in 24 hours
         });
