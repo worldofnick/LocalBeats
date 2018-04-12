@@ -60,7 +60,7 @@ export class RegisterComponent implements OnInit {
       firstName: new FormControl('', Validators.required),
       lastName: new FormControl('', Validators.required),
       email: new FormControl('', [Validators.required, Validators.email]),
-      location: new FormControl()
+      location: new FormControl('', Validators.required)
     });
 
     this.preferencesFormGroup = new FormGroup({
@@ -118,9 +118,7 @@ export class RegisterComponent implements OnInit {
         // Verify the token and get payload
         this.userService.verifyGoogleSocialIdToken(userData.idToken).subscribe(
           (payload: any) => {
-            console.log('BEFORE SOCIAL: ', this.socialGooglePayload);
             this.socialGooglePayload = payload;
-            console.log('SOCIAL: ', this.socialGooglePayload);
             // If success, auto-fill details
             this.signupForm.setValue(
               {

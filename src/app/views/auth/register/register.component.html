@@ -68,6 +68,8 @@
                   <input matInput placeholder="City, State" autocorrect="off" autocapitalize="off" spellcheck="off" type="text" #searchplaces
                     [formControl]="signupForm.controls['location']">
                 </mat-form-field>
+                <small *ngIf="signupForm.controls['location'].hasError('required') && signupForm.controls['location'].touched" class="form-error-msg">
+                    Location is required </small>
               </div>
 
               <div>
