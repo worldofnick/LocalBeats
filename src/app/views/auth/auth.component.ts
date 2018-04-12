@@ -15,11 +15,12 @@ import { Notification } from 'app/models/notification';
 @Component({
   selector: 'app-auth',
   templateUrl: './auth.component.html',
-  styleUrls: ['./auth.component.css']
+  styleUrls: ['../../../assets/styles/main.css', '../../../assets/styles/util.css',
+  './auth.component.css']
 })
 export class AuthComponent implements OnInit {
   @ViewChild(MatProgressBar) progressBar: MatProgressBar;
-  @ViewChild(MatButton) submitButton: MatButton;
+  // @ViewChild(MatButton) submitButton: MatButton;
   @ViewChild(RecaptchaComponent) captcha: RecaptchaComponent;
 
   signinForm: FormGroup;
@@ -97,8 +98,8 @@ export class AuthComponent implements OnInit {
   signin() {
     const signinData = this.signinForm.value;
     this.user.email = this.signinForm.controls['username'].value;
-    this.submitButton.disabled = true;
-    this.progressBar.mode = 'indeterminate';
+    // this.submitButton.disabled = true;
+    // this.progressBar.mode = 'indeterminate';
 
     console.log('Magic link clicked by Username: ' + this.user.email + 'with demo: ', this.isDemoModeChecked);
     // After this, the cpatchaResolved is automatically called
@@ -163,7 +164,7 @@ export class AuthComponent implements OnInit {
           // Magic link successfully sent!
           this.error = false;
           this.magicLinkButtonClicked = true;
-          this.progressBar.mode = 'determinate';
+          // this.progressBar.mode = 'determinate';
         },
         (error) => {
           // Show user error message
@@ -191,7 +192,7 @@ export class AuthComponent implements OnInit {
     this.captcha.reset();
     this.errorMessage = error;
     this.error = true;
-    this.submitButton.disabled = false;
-    this.progressBar.mode = 'determinate';
+    // this.submitButton.disabled = false;
+    // this.progressBar.mode = 'determinate';
   }
 }
