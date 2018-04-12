@@ -144,8 +144,8 @@ export class UserService {
             }).catch((error: Response) => {
                 if (error.status === 404) {
                     return Observable.throw('You are not registered with this email. Please register before continuing...');
-                // } else if (error.status === 401) {
-                //     return Observable.throw('Wrong password.  Please try again.');
+                    // } else if (error.status === 401) {
+                    //     return Observable.throw('Wrong password.  Please try again.');
                 } else {
                     return Observable.throw('Something went wrong on our end. Please try again later...');
                 }
@@ -202,6 +202,21 @@ export class UserService {
                     return Observable.throw('User not found. Please register before continuing.');
                 } else {
                     return Observable.throw('A server error has occured... Please try again later.');
+                }
+            });
+    }
+
+    public verifyCaptchaToken(reponseToken: string): Observable<Object> {
+        const requestUrl = this.connection + '/captcha/verify';
+        return this.http.post(requestUrl, { response: reponseToken }, { headers: this.headers })
+            .map((response: Response) => {
+                console.log('>> In verify captcha: ', response.json());
+                return response.json();
+            }).catch((error: Response) => {
+                if (error.status === 404) {
+                    return Observable.throw(error.json().message);
+                } else {
+                    return Observable.throw('Unknown error occured while verifying reCaptcha. Please try again later.');
                 }
             });
     }
