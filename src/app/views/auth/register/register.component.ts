@@ -12,11 +12,12 @@ import { AuthService, GoogleLoginProvider } from 'angular5-social-login';
 
 @Component({
   selector: 'app-register',
-  templateUrl: './register.component.html'
+  templateUrl: './register.component.html',
+  styleUrls: ['../../../../assets/styles/main.css', '../../../../assets/styles/util.css']
 })
 export class RegisterComponent implements OnInit {
   @ViewChild(MatProgressBar) progressBar: MatProgressBar;
-  @ViewChild(MatButton) submitButton: MatButton;
+  // @ViewChild(MatButton) submitButton: MatButton;
   @ViewChild("searchplaces") searchElementRef: ElementRef;
   error: boolean = false;
   errorMessage: string = '';
@@ -175,8 +176,8 @@ export class RegisterComponent implements OnInit {
       this.user.state = this.state;
     }
 
-    this.submitButton.disabled = true;
-    this.progressBar.mode = 'indeterminate';
+    // this.submitButton.disabled = true;
+    // this.progressBar.mode = 'indeterminate';
 
     console.log('>> User object: ', this.user);
 
@@ -194,7 +195,7 @@ export class RegisterComponent implements OnInit {
             this.error = false;
             this.isMagicLinkBeingSent = false;
             this.wasMagicLinkSuccessfullySent = true;
-            this.progressBar.mode = 'determinate';
+            // this.progressBar.mode = 'determinate';
           },
           (error) => {
             this.errorHandler(error);
@@ -212,7 +213,7 @@ export class RegisterComponent implements OnInit {
     this.error = true;
     this.isMagicLinkBeingSent = false;
     this.wasMagicLinkSuccessfullySent = false;
-    this.progressBar.mode = 'determinate';
+    // this.progressBar.mode = 'determinate';
   }
 }
 
