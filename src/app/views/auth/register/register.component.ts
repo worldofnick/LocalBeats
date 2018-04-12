@@ -8,6 +8,7 @@ import { User } from '../../../models/user';
 import { } from 'googlemaps';
 import { MapsAPILoader } from '@agm/core';
 import { SearchService } from '../../../services/search/search.service';
+import { AuthService, GoogleLoginProvider } from 'angular5-social-login';
 
 @Component({
   selector: 'app-register',
@@ -21,6 +22,7 @@ export class RegisterComponent implements OnInit {
   errorMessage: string = '';
   isMagicLinkBeingSent: boolean = true;
   wasMagicLinkSuccessfullySent: boolean = false;
+
   // Google Places
   latitude: number;
   longitude: number;
@@ -33,6 +35,7 @@ export class RegisterComponent implements OnInit {
   thirdPartyAccountFormGroup: FormGroup;
 
   user: User;
+  socialGooglePayload: any;
   genresList: string[] = ['rock', 'country', 'jazz', 'blues', 'rap'];
   eventsList: string[] = ['wedding', 'birthday', 'business'];
 
@@ -41,9 +44,10 @@ export class RegisterComponent implements OnInit {
     private router: Router,
     private mapsAPILoader: MapsAPILoader,
     private ngZone: NgZone,
+    private socialAuthService: AuthService,
     private changeDetector: ChangeDetectorRef,
     private searchService: SearchService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.searchService.eventTypes().then((types: string[]) => {
@@ -51,7 +55,6 @@ export class RegisterComponent implements OnInit {
     }).then(() => this.searchService.genres().then((types: string[]) => {
       this.genresList = types;
     }));
-
     // TODO: remove second group's properties
     this.signupForm = new FormGroup({
       firstName: new FormControl('', Validators.required),
@@ -100,6 +103,38 @@ export class RegisterComponent implements OnInit {
         this.zoom = 12;
       });
     }
+  }
+
+  public socialSignUp(socialPlatform: string) {
+    let socialPlatformProvider;
+    if (socialPlatform === 'google') {
+      socialPlatformProvider = GoogleLoginProvider.PROVIDER_ID;
+    }
+
+    this.socialAuthService.signIn(socialPlatformProvider).then(
+      (userData) => {
+        console.log(socialPlatform + 'sign in data : ', userData);
+
+        // Verify the token and get payload
+        this.userService.verifyGoogleSocialIdToken(userData.idToken).subscribe(
+          (payload: any) => {
+            console.log('BEFORE SOCIAL: ', this.socialGooglePayload);
+            this.socialGooglePayload = payload;
+            console.log('SOCIAL: ', this.socialGooglePayload);
+            // If success, auto-fill details
+            this.signupForm.setValue(
+              {
+                firstName: payload.response.given_name,
+                lastName: payload.response.family_name,
+                email: payload.response.email,
+                location: null
+              });
+          },
+          (error: any) => {
+            console.error(error);
+            this.errorHandler(error);
+          });
+      });
   }
 
   signup() {
@@ -167,12 +202,12 @@ export class RegisterComponent implements OnInit {
   }
 
   private errorHandler(error: any) {
-     // Show user error message
-     this.errorMessage = error;
-     this.error = true;
-     this.isMagicLinkBeingSent = false;
-     this.wasMagicLinkSuccessfullySent = false;
-     this.progressBar.mode = 'determinate';
+    // Show user error message
+    this.errorMessage = error;
+    this.error = true;
+    this.isMagicLinkBeingSent = false;
+    this.wasMagicLinkSuccessfullySent = false;
+    this.progressBar.mode = 'determinate';
   }
 }
 
