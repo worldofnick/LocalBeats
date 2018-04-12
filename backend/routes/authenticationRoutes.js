@@ -16,6 +16,9 @@ module.exports = function(app) {
 	
 	app.route('/api/auth/social/google/verifyIdToken')
 		.post(autheticationHandler.verifyGoogleIdToken);
+	
+	app.route('/api/auth/social/google/signin')
+		.post(autheticationHandler.signInWithGoogle);
 
 	app.route('/api/auth/verifyLocalJwt')
 		.post(autheticationHandler.verifyLocalJwtAndReturnUser);
