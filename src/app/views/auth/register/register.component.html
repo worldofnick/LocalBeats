@@ -17,6 +17,8 @@
               <ng-template matStepLabel>Identification</ng-template>
 
               <div class="">
+                  <button *ngIf="socialGooglePayload === undefined" (click)="socialSignUp('google')">Signup with Google</button>    
+                  <p *ngIf="socialGooglePayload !== undefined" class="text-muted">Google account linked!</p>
                 <mat-form-field class="full-width">
                   <input type="input-text" name="firstName" matInput [formControl]="signupForm.controls['firstName']" placeholder="First Name"
                     value="">
