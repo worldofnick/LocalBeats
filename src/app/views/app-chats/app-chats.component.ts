@@ -185,7 +185,7 @@ export class AppChatsComponent implements OnInit, OnDestroy, AfterViewChecked, A
     this._socketService.onEvent(SocketEvent.SEND_PRIVATE_MSG)
       .subscribe((message: Message) => {
         // this.isBlankTemplate = false;
-        // console.log('Private Chat message from server (chat event): ', message);
+        console.log('Private Chat message from server (chat event): ', message);
         const temp: Message = message as Message;
 
         // If you are the receiver and the sender is not already in the connectedUsers list,
@@ -205,13 +205,35 @@ export class AppChatsComponent implements OnInit, OnDestroy, AfterViewChecked, A
 
         if (this.activeChatUser._id === temp.from._id) {
           console.log('<<< In chat, marking message read >>>');
-          this._chatsService.markChatsAsReadBetweenTwoUser(this.activeChatUser._id, this.loggedInUser._id);
+          this._chatsService.markChatsAsReadBetweenTwoUser(this.activeChatUser._id, this.loggedInUser._id)
+            .subscribe(
+              (data: any) => {
+                console.log('All Chats read = true result: ', data);
+                const fromUID = this.activeChatUser._id;
+                // Make the unread count for that user to zero in unreadCounts[]
+                const senderIndex = this._chatsService.unreadCounts.findIndex(x => x._id === fromUID);
+                // console.log('>> Sender index: ', senderIndex);
+                // console.log('>> Unread count array: ', this.unreadCounts);
+                if (senderIndex !== -1) {
+                  this._chatsService.unreadCounts[senderIndex].unreadCount = 0;
+                }
+              },
+              (error: any) => {
+                console.error(error);
+              },
+              () => {
+                this._sharedDataService.setOverallChatUnreadCount(this.loggedInUser);
+              }
+            );
         }
+        this._chatsService.getAllUnreadCountsForAllChatBuddies(this.connectedUsers);
 
         // Update buddy list unread counts and the top bar overall unread count
         // TODO: make this run after the message has been marked as read
-        this._chatsService.getAllUnreadCountsForAllChatBuddies(this.connectedUsers);
-        this._sharedDataService.setOverallChatUnreadCount(this.loggedInUser);
+        // this._chatsService.getAllUnreadCountsForAllChatBuddies(this.connectedUsers);
+        // if (this.activeChatUser._id !== temp.from._id) {
+          // this._sharedDataService.setOverallChatUnreadCount(this.loggedInUser);
+        // }
       });
   }
 
@@ -334,7 +356,7 @@ export class AppChatsComponent implements OnInit, OnDestroy, AfterViewChecked, A
       this.activeChatUser = user;
 
       // Mark all PMs (from:activeChatUser, to: me) as read, then fetch the PMs between them
-      this._chatsService.markChatsAsReadBetweenTwoUser(user._id, this.loggedInUser._id);
+      this._chatsService.markChatsAsReadBetweenTwoUsersAuto(user._id, this.loggedInUser._id);
 
       this._chatsService.getPMsBetweenActiveAndLoggedInUser(this.loggedInUser, this.activeChatUser).subscribe(
         data => {
