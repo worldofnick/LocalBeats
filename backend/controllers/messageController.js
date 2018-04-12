@@ -192,21 +192,13 @@ exports.markAllMessagesReadBetweenTwoUsers = function (req, res) {
 }
 
 exports.markThisMessageAsRead = function (req, res) {
-    Message.update(
-        {
-            _id: req.params.messageID
-        },
-        {
-            $set: { isRead: true }
-        }, function (error, result) {
-            if (error) {
-                return res.status(400).send({
-                    reason: "Unable to set the isUnread for this message",
-                    error: error
-                });
-            }
-            return res.status(200).send({ result: result });
-        });
+    Message.findByIdAndUpdate(req.params.messageID, { isRead: true }, { new: true }, function (err, newMsg) {
+        if (err) {
+          console.log('Cant update the message');
+          return res.status(400).send({ reason: 'Cant update the message', error: err });
+        }
+        return res.status(200).send({ message: newMsg });
+      });
 }
 
 exports.saveMessage = function (req, res) {
