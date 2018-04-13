@@ -32,7 +32,8 @@ module.exports = {
     },
     local: {
       // authCallbackUri : 'http://localhost:4200/callback?localAccessAuth=',
-      authCallbackUri : 'https://www.localbeats.live/callback?localAccessAuth='
+      authCallbackUri : 'https://www.localbeats.live/callback?localAccessAuth=',
+      authSameTabUri: 'https://www.localbeats.live/api/auth/verifyLocalJwt/'
     },
     // Configuration for Stripe.
     stripe: {

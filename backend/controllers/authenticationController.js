@@ -132,15 +132,19 @@ exports.sendMagicLink = function (req, res) {
 
     // Send email with JWT link
     const callbackUrl = config.local.authCallbackUri + localAccessToken;
+    const sameTabUrl = config.local.authSameTabUri + localAccessToken;
     let message = {
       from: 'auth@localBeats.com',
       to: foundUser.email,
       subject: 'localBeats Password-less Login Magic Link',
       text: 'Hello, ' + foundUser.firstName,
       html: '<p><b>Hello, ' + foundUser.firstName + '!<br>' +
-        '<br>Click this link to verify your identity and get logged into your account: <br><br>' +
-        callbackUrl +
-        '<br><br>Thanks<br>'
+        '<br>Click this link to get verified and continue your session: <br><br>' +
+        sameTabUrl +
+        '<br><br><br>But, if you accidently closed your localBeats window, ' +
+        '<a href="' + callbackUrl +
+        '">click here to start a new session</a>' +
+        '<br><br>Thanks'
     };
 
     mailer.sendEmail(message.from, message.to, message.subject, message.html)
