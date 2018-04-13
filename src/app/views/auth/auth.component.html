@@ -70,20 +70,28 @@
           </div>
 
         </div>
-        <div *ngIf="this.magicLinkButtonClicked">
-          <p class="text-center text-muted m-0">A magic link has been sent to:
-            <br>{{this.user.email}}
+        <div *ngIf="this.magicLinkButtonClicked && !error">
+          <p class="text-center text-muted m-0">
+            <strong>⚠️ Do NOT close this window</strong><br><br>
+            A magic link has been sent to:
+            <br><strong>{{this.user.email}}</strong>
             <br>
-            <br> Please check your email and click the link to log in.
+            <br> Please click the link in it to <strong>continue</strong> your session in <strong>this</strong> tab.
             <br>
-            <br>(It may take a couple of minutes to receive the email.)
+            <br>(Note: It may take a couple of minutes to receive the email.)
           </p>
         </div>
+
+        <div *ngIf="this.magicLinkButtonClicked && error">
+            <p class="text-center text-muted m-0" style="color: Tomato">
+                🛑 Something went wrong:<br><br>{{errorMessage}}
+            </p>
+          </div>
 
         <div *ngIf="isDemoModeChecked">
           <br>
           <p class="text-center text-muted m-0">
-            <strong>Disclaimer:</strong> The passwordless process will be skipped in demo mode and the user will be instantly logged
+            <strong>⚠️ Disclaimer:</strong> The passwordless process will be skipped in demo mode and the user will be instantly logged
             in. </p>
         </div>
       </mat-card-content>
