@@ -6,6 +6,7 @@ export enum SocketEvent {
     YOU_LOGGED_OUT = 'youLoggedOut',
     SEND_PRIVATE_MSG = 'sendPrivateMessage',
     SEND_MSG = 'sendMessage',
+    MAGIC_LOGIN_RESULT = 'magicLoginResult',
     PERSISTED_LOGIN = 'persistedLogin',
     REQUEST_PM_SOCKET_ID = 'requestSocketIdForPM',
     GREET_WITH_BEATBOT = 'addBeatBotToUserMessage',
