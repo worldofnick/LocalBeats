@@ -74,15 +74,15 @@
 
         </div>
         <div *ngIf="this.magicLinkButtonClicked && !error">
-          <p class="text-center text-muted m-0">
+          <!-- <p class="text-center text-muted m-0"> -->
             <strong>⚠️ Do NOT close this window</strong><br><br>
             A magic link has been sent to:
             <br><strong>{{this.user.email}}</strong>
             <br>
-            <br> Please click the link in it to <strong>continue</strong> your session in <strong>this</strong> tab.
+            <br> Please click the link in it to <strong>continue</strong> your session in <strong>this</strong> window.
             <br>
             <br>(Note: It may take a couple of minutes to receive the email.)
-          </p>
+          <!-- </p> -->
         </div>
 
         <div *ngIf="this.magicLinkButtonClicked && error">
