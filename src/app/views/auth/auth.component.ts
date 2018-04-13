@@ -3,9 +3,9 @@ import { MatProgressBar, MatButton } from '@angular/material';
 import { Validators, FormGroup, FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { UserService } from '../../services/auth/user.service';
-import { SocketService } from '../../services/chats/socket.service';
 import { ChatsService } from '../../services/chats/chats.service';
 import { SharedDataService } from '../../services/shared/shared-data.service';
+import { SocketService } from '../../services/chats/socket.service';
 import { SocketEvent } from '../../services/chats/model/event';
 import { Action } from '../../services/chats/model/action';
 import { Message } from '../../services/chats/model/message';
@@ -211,29 +211,28 @@ export class AuthComponent implements OnInit {
 
   handleSameTabMagicLogin(result) {
     console.log('>> Result payload: ', result);
-    console.log('>> Result payload: ', typeof result.statusCode);
-    console.log('>> Email: ', this.user);
-    if (result.statusCode === 200) {
-      if (result.user.email === this.user.email) {
-        console.log('>> In 200');
-        this.error = false;
-        this.userService.userLoaded(result.user, result.token, false, false);
-        this.userService.getNotificationsCountForUser(result.user._id);
-        this.userService.getNotificationsForUser(result.user._id);
-        this.sharedDataService.setOverallChatUnreadCount(result.user as User);
-        this.router.navigate(['/']);
+    if (this.user !== null && this.user !== undefined) {
+      console.log('>> This user: ', this.user);
+      if (result.statusCode === 200) {
+        if (result.user.email === this.user.email) {
+          console.log('>> In 200');
+          this.error = false;
+          this.userService.userLoaded(result.user, result.token, false, false);
+          this.userService.getNotificationsCountForUser(result.user._id);
+          this.userService.getNotificationsForUser(result.user._id);
+          this.sharedDataService.setOverallChatUnreadCount(result.user as User);
+          this.router.navigate(['/']);
+        } else {
+          console.log('Not for you');
+        }
+      } else if (result.statusCode === 404) {
+        this.magicLinkButtonClicked = false;
+        this.router.navigate(['/auth', 'register']);
       } else {
-        console.log('Not for you');
+        console.log('>> In error');
+        this.magicLinkButtonClicked = false;
+        this.handleErrors('Something went wrong on the server side... Please try again later');
       }
-    }
-    else if (result.statusCode === 404) {
-      this.magicLinkButtonClicked = false;
-      this.router.navigate(['/auth', 'register']);
-    }
-    else {
-      console.log('>> In error');
-      this.magicLinkButtonClicked = false;
-      this.handleErrors('Something went wrong on the server side... Please try again later');
     }
   }
 }
