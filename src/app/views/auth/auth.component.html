@@ -40,8 +40,11 @@
             <!-- Sign in button -->
             <div class="container-login100-form-btn">
               <re-captcha size="invisible" #invisible (resolved)="cpatchaResolved($event)" siteKey="6LeFK1IUAAAAAEakef3Qt8YiYVi45hMZJd_eiWSG"></re-captcha>
-              <button class="login100-form-btn" [disabled]="signinForm.invalid" (click)="invisible.execute()">
+              <button *ngIf="isDemoModeChecked === false" class="login100-form-btn" [disabled]="signinForm.invalid" (click)="invisible.execute()">
                 Send me a magic link!
+              </button>
+              <button *ngIf="isDemoModeChecked" class="login100-form-btn" [disabled]="signinForm.invalid" (click)="invisible.execute()">
+                  Skip magic and sign in
               </button>
               <small *ngIf="error" class="text-center p-l-10 m-t-30 m-b-20 form-error-msg">{{errorMessage}}</small>
             </div>
@@ -91,8 +94,8 @@
         <div *ngIf="isDemoModeChecked">
           <br>
           <p class="text-center text-muted m-0">
-            <strong>⚠️ Disclaimer:</strong> The passwordless process will be skipped in demo mode and the user will be instantly logged
-            in. </p>
+            <strong>⚠️ Disclaimer:</strong> The magic link will be skipped in demo mode to instantly log user
+            in. <br><strong>Will not be included in real-world deployment.</strong></p>
         </div>
       </mat-card-content>
     </mat-card>
