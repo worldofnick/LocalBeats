@@ -134,12 +134,12 @@ exports.sendMagicLink = function (req, res) {
     let message = {
       from: 'auth@localBeats.com',
       to: foundUser.email,
-      subject: 'localBeats passowrdless sign-on link',
+      subject: 'localBeats Password-less Login Magic Link',
       text: 'Hello, ' + foundUser.firstName,
       html: '<p><b>Hello, ' + foundUser.firstName + '!<br>' +
         '<br>Click this link to verify your identity and get logged into your account: <br><br>' +
         callbackUrl +
-        '<br><br> Thanks<br>'
+        '<br><br>Thanks<br>'
     };
 
     mailer.sendEmail(message.from, message.to, message.subject, message.html)
