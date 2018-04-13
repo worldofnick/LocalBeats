@@ -3,8 +3,12 @@ import { MatProgressBar, MatButton } from '@angular/material';
 import { Validators, FormGroup, FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { UserService } from '../../services/auth/user.service';
+import { SocketService } from '../../services/chats/socket.service';
 import { ChatsService } from '../../services/chats/chats.service';
 import { SharedDataService } from '../../services/shared/shared-data.service';
+import { SocketEvent } from '../../services/chats/model/event';
+import { Action } from '../../services/chats/model/action';
+import { Message } from '../../services/chats/model/message';
 import { User } from '../../models/user';
 import { NotificationService } from '../../services/notification/notification.service';
 import { RecaptchaComponent } from 'ng-recaptcha';
@@ -30,16 +34,22 @@ export class AuthComponent implements OnInit {
   error: boolean = false;
   errorMessage: string = '';
   magicLinkButtonClicked: boolean = false;
-  isDemoModeChecked = true;
+  isDemoModeChecked = false;
 
   constructor(private userService: UserService, private sharedDataService: SharedDataService,
     private router: Router, private chatsService: ChatsService,
-    private socialAuthService: AuthService,
+    private socialAuthService: AuthService, private _socketService: SocketService,
     private notificationService: NotificationService) { }
 
   ngOnInit() {
     this.error = false;
     // this.rememberMe = false;
+
+    this._socketService.onEvent(SocketEvent.MAGIC_LOGIN_RESULT)
+    .subscribe((message: Message) => {
+      console.log('Magic link result: ', message);
+      this.handleSameTabMagicLogin(message.serverPayload);
+    });
 
     this.user = {
       _id: null,
@@ -190,10 +200,40 @@ export class AuthComponent implements OnInit {
   }
 
   handleErrors(error) {
-    this.captcha.reset();
+    if (this.captcha !== null && this.captcha !== undefined) {
+      this.captcha.reset();
+    }
     this.errorMessage = error;
     this.error = true;
     // this.submitButton.disabled = false;
     // this.progressBar.mode = 'determinate';
+  }
+
+  handleSameTabMagicLogin(result) {
+    console.log('>> Result payload: ', result);
+    console.log('>> Result payload: ', typeof result.statusCode);
+    console.log('>> Email: ', this.user);
+    if (result.statusCode === 200) {
+      if (result.user.email === this.user.email) {
+        console.log('>> In 200');
+        this.error = false;
+        this.userService.userLoaded(result.user, result.token, false, false);
+        this.userService.getNotificationsCountForUser(result.user._id);
+        this.userService.getNotificationsForUser(result.user._id);
+        this.sharedDataService.setOverallChatUnreadCount(result.user as User);
+        this.router.navigate(['/']);
+      } else {
+        console.log('Not for you');
+      }
+    }
+    else if (result.statusCode === 404) {
+      this.magicLinkButtonClicked = false;
+      this.router.navigate(['/auth', 'register']);
+    }
+    else {
+      console.log('>> In error');
+      this.magicLinkButtonClicked = false;
+      this.handleErrors('Something went wrong on the server side... Please try again later');
+    }
   }
 }
