@@ -146,13 +146,13 @@
             </div>
 
             <div *ngIf="this.wasMagicLinkSuccessfullySent && !this.isMagicLinkBeingSent">
-              <p class="text-center text-muted m-0">All done!
+                <strong>⚠️ Do NOT close this window</strong><br><br>
+                A magic link has been sent to:
+                <br><strong>{{this.user.email}}</strong>
                 <br>
-                <br>A confirmation magic link has been sent to your email. Use it to log in.
+                <br> Please click the link in it to <strong>continue</strong> your session in <strong>this</strong> window.
                 <br>
-                <br>
-                <br>(
-                <strong>Note:</strong> It may take a couple of minutes to receive the email)
+                <br>(Note: It may take a couple of minutes to receive the email.)
             </div>
 
             <div *ngIf="error">

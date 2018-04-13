@@ -3,7 +3,12 @@ import { MatProgressBar, MatButton } from '@angular/material';
 import { Validators, FormGroup, FormControl } from '@angular/forms';
 import { CustomValidators } from 'ng2-validation';
 import { Router } from '@angular/router';
+import { SharedDataService } from '../../../services/shared/shared-data.service';
 import { UserService } from '../../../services/auth/user.service';
+import { SocketService } from '../../../services/chats/socket.service';
+import { SocketEvent } from '../../../services/chats/model/event';
+import { Action } from '../../../services/chats/model/action';
+import { Message } from '../../../services/chats/model/message';
 import { User } from '../../../models/user';
 import { } from 'googlemaps';
 import { MapsAPILoader } from '@agm/core';
@@ -42,15 +47,21 @@ export class RegisterComponent implements OnInit {
 
   constructor(
     private userService: UserService,
-    private router: Router,
+    private router: Router, private sharedDataService: SharedDataService,
     private mapsAPILoader: MapsAPILoader,
-    private ngZone: NgZone,
+    private ngZone: NgZone, private _socketService: SocketService,
     private socialAuthService: AuthService,
     private changeDetector: ChangeDetectorRef,
     private searchService: SearchService
   ) { }
 
   ngOnInit() {
+    this._socketService.onEvent(SocketEvent.MAGIC_LOGIN_RESULT)
+    .subscribe((message: Message) => {
+      console.log('Magic link result: ', message);
+      this.handleSameTabMagicLogin(message.serverPayload);
+    });
+
     this.searchService.eventTypes().then((types: string[]) => {
       this.eventsList = types;
     }).then(() => this.searchService.genres().then((types: string[]) => {
@@ -189,17 +200,27 @@ export class RegisterComponent implements OnInit {
         this.isMagicLinkBeingSent = true;
         this.wasMagicLinkSuccessfullySent = false;
 
-        this.userService.requestMagicLink(this.user).subscribe(
-          (responseData: any) => {
-            // Magic link successfully sent!
-            this.error = false;
-            this.isMagicLinkBeingSent = false;
-            this.wasMagicLinkSuccessfullySent = true;
-            // this.progressBar.mode = 'determinate';
-          },
-          (error) => {
-            this.errorHandler(error);
-          });
+        console.log('Sign in data: ', data);
+        if (data.user.google !== null && data.user.google !== undefined) {
+          this.error = false;
+          this.userService.userLoaded(data.user, data.token, false, false);
+          this.userService.getNotificationsCountForUser(data.user._id);
+          this.userService.getNotificationsForUser(data.user._id);
+          this.sharedDataService.setOverallChatUnreadCount(data.user as User);
+          this.router.navigate(['/profile']);
+        } else {
+          this.userService.requestMagicLink(this.user).subscribe(
+            (responseData: any) => {
+              // Magic link successfully sent!
+              this.error = false;
+              this.isMagicLinkBeingSent = false;
+              this.wasMagicLinkSuccessfullySent = true;
+              // this.progressBar.mode = 'determinate';
+            },
+            (error) => {
+              this.errorHandler(error);
+            });
+        }
       },
       (error) => {
         this.errorHandler(error);
@@ -214,6 +235,29 @@ export class RegisterComponent implements OnInit {
     this.isMagicLinkBeingSent = false;
     this.wasMagicLinkSuccessfullySent = false;
     // this.progressBar.mode = 'determinate';
+  }
+
+  handleSameTabMagicLogin(result) {
+    console.log('>> Result payload: ', result);
+    if (this.user !== null && this.user !== undefined) {
+      console.log('>> This user: ', this.user);
+      if (result.statusCode === 200) {
+        if (result.user.email === this.user.email) {
+          console.log('>> In 200');
+          this.error = false;
+          this.userService.userLoaded(result.user, result.token, false, false);
+          this.userService.getNotificationsCountForUser(result.user._id);
+          this.userService.getNotificationsForUser(result.user._id);
+          this.sharedDataService.setOverallChatUnreadCount(result.user as User);
+          this.router.navigate(['/profile']);
+        } else {
+          console.log('Not for you');
+        }
+      } else {
+        console.log('>> In error');
+        this.errorHandler(result.message);
+      }
+    }
   }
 }
 
