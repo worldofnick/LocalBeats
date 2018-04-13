@@ -121,9 +121,15 @@
                 <mat-checkbox name="isArtist" [formControl]="preferencesFormGroup.controls['isArtist']" class="pb-1">I am an Artist</mat-checkbox>
               </div>
 
-              <div>
+              <!-- <div>
                 <button mat-button matStepperNext [disabled]="preferencesFormGroup.invalid" (click)="signup()">Next</button>
-              </div>
+              </div> -->
+              <div class="flex-c p-b-5">
+                <button matStepperNext [disabled]="preferencesFormGroup.invalid" (click)="signup()" 
+                class="login100-social-item" style="color:darkslategray">
+                    <i class="fa fa-chevron-down"></i>
+                  </button>
+                </div>
             </form>
           </mat-step>
 
