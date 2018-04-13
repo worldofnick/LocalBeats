@@ -83,7 +83,7 @@ reviewsRoutes(app);
 stripeRoutes(app);
 
 var privateChatSocket     = require('./backend/socket/chatSocket.js');
-privateChatSocket(io);
+privateChatSocket.socketServer(io);
 
 // =================================================================
 // Basic route (http://localhost:8080)
