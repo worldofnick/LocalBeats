@@ -89,7 +89,7 @@
             <form [formGroup]="preferencesFormGroup">
               <ng-template matStepLabel>Preferences</ng-template>
 
-              <div class="pb-1">
+              <div class="pb-1 p-b-5 p-l-5 p-r-5 p-t-5">
                 <mat-form-field>
                   <mat-select placeholder="Preferred Music" [formControl]="preferencesFormGroup.controls['genres']" multiple>
                     <mat-select-trigger class="additional-selection">
@@ -103,7 +103,7 @@
                 </mat-form-field>
               </div>
 
-              <div class="pb-1">
+              <div class="pb-1 p-b-5 p-l-5 p-r-5 p-t-5">
                 <mat-form-field>
                   <mat-select placeholder="Preferred Events" [formControl]="preferencesFormGroup.controls['events']" multiple>
                     <mat-select-trigger class="additional-selection">
@@ -119,7 +119,7 @@
 
               <div class="pb-1">
                 <mat-checkbox name="isArtist" [formControl]="preferencesFormGroup.controls['isArtist']" class="pb-1">
-                  I would also like to play music for income
+                  I like to play music for income
                 </mat-checkbox>
               </div>
 
