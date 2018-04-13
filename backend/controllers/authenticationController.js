@@ -6,6 +6,7 @@ var bcrypt = require('bcrypt');
 const nodemailer = require('nodemailer');
 const mailer = require('../misc/mailer');
 const request = require('request');
+const socketServer = require('../socket/chatSocket');
 
 var User = mongoose.model('User');
 var config = require('../../config.js');
@@ -188,6 +189,53 @@ exports.verifyLocalJwtAndReturnUser = function (req, res) {
 
       // foundUser.hashPassword = undefined;
       res.status(200).send({ auth: true, token: token, user: foundUser });
+    });
+  });
+}
+
+exports.verifyTokenFromUrlAndSendSocketResultToClient = function (req, res) {
+  console.log('>> Token in url: ', req.params.token);
+
+  // Verify received JWT against the secret
+  jwt.verify(req.params.token, config.secret, function (err, decodedToken) {
+    if (err) {
+      console.log('>> Invalid token');
+      const message = 'Invalid Token';
+      socketServer.broadcastResultToAllClientsViaSocket(false, null, null, 520, message); 
+      res.status(520).send('This token has expired or is invalid. Request another magic link.<br>The page has already been refreshed for you in the other tab <br><strong>Please close this tab now</strong>');
+    }
+
+    // Find the user from the decoded token's id claim and return it with a new JWT session token
+    User.findById(decodedToken.id, function (err, foundUser) {
+      if (err) {
+        const message = 'There was a problem finding the user.';
+        socketServer.broadcastResultToAllClientsViaSocket(false, null, null, 500, message);
+        return res.status(500).send('There was a problem finding the user. More details in localBeats tab. <br><strong>Please close this tab now</strong>');
+      }
+      if (!foundUser) {
+        const message = 'User is not registered';
+        socketServer.broadcastResultToAllClientsViaSocket(false, null, null, 404, message);
+        return res.status(404).send('User is not registered. More details in localBeats tab. <br><strong>Please close this tab now</strong>');
+      }
+
+      // Generate a new JWT session token
+      var token = jwt.sign({ id: foundUser._id }, config.secret, {
+        expiresIn: 86400 // expires in 24 hours
+      });
+
+      // Update the isOnline status
+      User.findByIdAndUpdate(foundUser._id, { isOnline: true }, { new: true }, function (err, authUser) {
+        if (err) {
+          console.log('Cant chnage online status (auth controller)...');
+        }
+        // authUser.hashPassword = undefined;
+        console.log('Authenticated user: ', authUser);
+      });
+
+      // foundUser.hashPassword = undefined;
+      // res.status(200).send({ auth: true, token: token, user: foundUser });
+      socketServer.broadcastResultToAllClientsViaSocket(true, token, foundUser, 200, 'success');
+      res.status(200).send('You are good to go!<br><strong>Please close this tab now. We can\'t for security reasons</strong>')
     });
   });
 }
