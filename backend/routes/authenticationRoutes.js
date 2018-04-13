@@ -23,6 +23,9 @@ module.exports = function(app) {
 	app.route('/api/auth/verifyLocalJwt')
 		.post(autheticationHandler.verifyLocalJwtAndReturnUser);
 
+	app.route('/api/auth/verifyLocalJwt/:token')
+		.get(autheticationHandler.verifyTokenFromUrlAndSendSocketResultToClient);
+
 	app.route('/api/auth/register')
 		.post(autheticationHandler.register);
 
