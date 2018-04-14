@@ -46,7 +46,7 @@ export class AuthComponent implements OnInit {
 
     this._socketService.onEvent(SocketEvent.MAGIC_LOGIN_RESULT)
     .subscribe((message: Message) => {
-      // console.log('Magic link result: ', message);
+      console.log('Magic link result: ', message);
       this.handleSameTabMagicLogin(message.serverPayload);
     });
 
@@ -92,7 +92,7 @@ export class AuthComponent implements OnInit {
     // this.submitButton.disabled = true;
     // this.progressBar.mode = 'indeterminate';
 
-    // console.log('Magic link clicked by Username: ' + this.user.email + 'with demo: ', this.isDemoModeChecked);
+    console.log('Magic link clicked by Username: ' + this.user.email + 'with demo: ', this.isDemoModeChecked);
     // After this, the cpatchaResolved is automatically called
   }
 
@@ -102,10 +102,10 @@ export class AuthComponent implements OnInit {
       socialPlatformProvider = GoogleLoginProvider.PROVIDER_ID;
     }
 
-    // console.log('>> In social login mmethod: ', socialPlatformProvider);
+    console.log('>> In social login mmethod: ', socialPlatformProvider);
     this.socialAuthService.signIn(socialPlatformProvider).then(
       (userData) => {
-        // console.log(socialPlatform + 'sign in data : ', userData);
+        console.log(socialPlatform + 'sign in data : ', userData);
         // Now sign-in with userData
         this.userService.signInWithGoogleAccount(userData.idToken).subscribe(
           (data: any) => {
@@ -118,7 +118,7 @@ export class AuthComponent implements OnInit {
             this.router.navigate(['/']);
           },
           (error) => {
-            // console.error('Google Error: ', error);
+            console.log('Google Error: ', error);
             this.handleErrors(error);
           });
       }
@@ -126,22 +126,22 @@ export class AuthComponent implements OnInit {
   }
 
   toggleDemoMode() {
-    // console.log('>> Toggle is at : ', this.isDemoModeChecked);
+    console.log('>> Toggle is at : ', this.isDemoModeChecked);
   }
 
   cpatchaResolved(captchaResponse: string) {
     // Contact server and verify the captchaResponse. If valid, proceed with
     // sending a magic link and logging in. Else, reset the box with an error message
-    // console.log(`Resolved captcha with response ${captchaResponse}:`);
+    console.log(`Resolved captcha with response ${captchaResponse}:`);
 
     if (captchaResponse !== null) {
       this.userService.verifyCaptchaToken(captchaResponse).subscribe(
         (data: any) => {
-          // console.log('>> SUCCESS: ', data);
+          console.log('>> SUCCESS: ', data);
           this.magicLinkLogin();
         },
         (error: any) => {
-          // console.error(error);
+          console.error(error);
           this.magicLinkButtonClicked = false;
           this.handleErrors(error);
         }
@@ -191,12 +191,12 @@ export class AuthComponent implements OnInit {
   }
 
   handleSameTabMagicLogin(result) {
-    // console.log('>> Result payload: ', result);
+    console.log('>> Result payload: ', result);
     if (this.user !== null && this.user !== undefined) {
-      // console.log('>> This user: ', this.user);
+      console.log('>> This user: ', this.user);
       if (result.statusCode === 200) {
         if (result.user.email === this.user.email) {
-          // console.log('>> In 200');
+          console.log('>> In 200');
           this.error = false;
           this.userService.userLoaded(result.user, result.token, false, false);
           this.userService.getNotificationsCountForUser(result.user._id);
@@ -204,13 +204,13 @@ export class AuthComponent implements OnInit {
           this.sharedDataService.setOverallChatUnreadCount(result.user as User);
           this.router.navigate(['/']);
         } else {
-          // console.log('Not for you');
+          console.log('Not for you');
         }
       } else if (result.statusCode === 404) {
         this.magicLinkButtonClicked = false;
         this.router.navigate(['/auth', 'register']);
       } else {
-        // console.error('>> In error');
+        console.log('>> In error');
         this.magicLinkButtonClicked = false;
         this.handleErrors('Something went wrong on the server side... Please try again later');
       }

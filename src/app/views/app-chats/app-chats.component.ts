@@ -104,10 +104,10 @@ export class AppChatsComponent implements OnInit, OnDestroy, AfterViewChecked, A
     dialogRef.afterClosed().subscribe(result => {
       // console.log('The dialog was closed with result: ', result);
       if (result === undefined) {
-        // console.log('Undefined object. No action taken');
+        console.log('Undefined object. No action taken');
       }
       else if ( result.recipientUser._id === undefined ) {
-        // console.log('Not a user object. No action taken');
+        console.log('Not a user object. No action taken');
       }
       else {
         if ( this.isUserObjInConnectedUsers(result.recipientUser) !== -1 ) {
@@ -142,7 +142,7 @@ export class AppChatsComponent implements OnInit, OnDestroy, AfterViewChecked, A
   }
 
   ngOnDestroy() {
-    // console.log('CHAT DESTROY called...');
+    console.log('CHAT DESTROY called...');
     this.activeChatUser = new User();
     this.cdr.detach();
     // this.userSubscription.unsubscribe();
@@ -185,7 +185,7 @@ export class AppChatsComponent implements OnInit, OnDestroy, AfterViewChecked, A
     this._socketService.onEvent(SocketEvent.SEND_PRIVATE_MSG)
       .subscribe((message: Message) => {
         // this.isBlankTemplate = false;
-        // console.log('Private Chat message from server (chat event): ', message);
+        console.log('Private Chat message from server (chat event): ', message);
         const temp: Message = message as Message;
 
         // If you are the receiver and the sender is not already in the connectedUsers list,
@@ -204,11 +204,11 @@ export class AppChatsComponent implements OnInit, OnDestroy, AfterViewChecked, A
         }
 
         if (this.activeChatUser._id === temp.from._id) {
-          // console.log('<<< In chat, marking message read >>>');
+          console.log('<<< In chat, marking message read >>>');
           this._chatsService.markChatsAsReadBetweenTwoUser(this.activeChatUser._id, this.loggedInUser._id)
             .subscribe(
               (data: any) => {
-                // console.log('All Chats read = true result: ', data);
+                console.log('All Chats read = true result: ', data);
                 const fromUID = this.activeChatUser._id;
                 // Make the unread count for that user to zero in unreadCounts[]
                 const senderIndex = this._chatsService.unreadCounts.findIndex(x => x._id === fromUID);
@@ -227,6 +227,13 @@ export class AppChatsComponent implements OnInit, OnDestroy, AfterViewChecked, A
             );
         }
         this._chatsService.getAllUnreadCountsForAllChatBuddies(this.connectedUsers);
+
+        // Update buddy list unread counts and the top bar overall unread count
+        // TODO: make this run after the message has been marked as read
+        // this._chatsService.getAllUnreadCountsForAllChatBuddies(this.connectedUsers);
+        // if (this.activeChatUser._id !== temp.from._id) {
+          // this._sharedDataService.setOverallChatUnreadCount(this.loggedInUser);
+        // }
       });
   }
 

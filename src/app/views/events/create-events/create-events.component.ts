@@ -282,7 +282,7 @@ export class CreateEventsComponent implements OnInit {
           this.showCropper = false;
           this.croppedImage = null;
         }).catch(err => {
-          // console.log(err);
+          console.log(err);
           this.progressBar.mode = 'determinate';
           this.showCropper = false;
           this.croppedImage = null;

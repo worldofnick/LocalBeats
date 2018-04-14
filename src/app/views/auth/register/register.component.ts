@@ -61,7 +61,7 @@ export class RegisterComponent implements OnInit {
 
     this._socketService.onEvent(SocketEvent.MAGIC_LOGIN_RESULT)
     .subscribe((message: Message) => {
-      // console.log('Magic link result: ', message);
+      console.log('Magic link result: ', message);
       this.handleSameTabMagicLogin(message.serverPayload);
     });
 
@@ -130,7 +130,7 @@ export class RegisterComponent implements OnInit {
 
     this.socialAuthService.signIn(socialPlatformProvider).then(
       (userData) => {
-        // console.log(socialPlatform + 'sign in data : ', userData);
+        console.log(socialPlatform + 'sign in data : ', userData);
 
         // Verify the token and get payload
         this.userService.verifyGoogleSocialIdToken(userData.idToken).subscribe(
@@ -146,7 +146,7 @@ export class RegisterComponent implements OnInit {
               });
           },
           (error: any) => {
-            // console.error(error);
+            console.error(error);
             this.errorHandler(error);
           });
       });
@@ -195,7 +195,7 @@ export class RegisterComponent implements OnInit {
     // this.submitButton.disabled = true;
     // this.progressBar.mode = 'indeterminate';
 
-    // console.log('>> User object: ', this.user);
+    console.log('>> User object: ', this.user);
 
     // Add the user to DB, and if successful, send a magic link to email
     this.userService.signupUser(this.user).subscribe(
@@ -205,7 +205,7 @@ export class RegisterComponent implements OnInit {
         this.isMagicLinkBeingSent = true;
         this.wasMagicLinkSuccessfullySent = false;
 
-        // console.log('Sign in data: ', data);
+        console.log('Sign in data: ', data);
         if (data.user.google !== null && data.user.google !== undefined) {
           this.error = false;
           this.userService.userLoaded(data.user, data.token, false, false);
@@ -243,12 +243,12 @@ export class RegisterComponent implements OnInit {
   }
 
   handleSameTabMagicLogin(result) {
-    // console.log('>> Result payload: ', result);
+    console.log('>> Result payload: ', result);
     if (this.user !== null && this.user !== undefined) {
-      // console.log('>> This user: ', this.user);
+      console.log('>> This user: ', this.user);
       if (result.statusCode === 200) {
         if (result.user.email === this.user.email) {
-          // console.log('>> In 200');
+          console.log('>> In 200');
           this.error = false;
           this.userService.userLoaded(result.user, result.token, false, false);
           this.userService.getNotificationsCountForUser(result.user._id);
@@ -256,10 +256,10 @@ export class RegisterComponent implements OnInit {
           this.sharedDataService.setOverallChatUnreadCount(result.user as User);
           this.router.navigate(['/']);
         } else {
-          // console.log('Not for you');
+          console.log('Not for you');
         }
       } else {
-        // console.log('>> In error');
+        console.log('>> In error');
         this.errorHandler(result.message);
       }
     }
