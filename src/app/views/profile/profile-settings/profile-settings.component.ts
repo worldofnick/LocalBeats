@@ -152,7 +152,7 @@ export class ProfileSettingsComponent implements OnInit {
             this._socketService.sendToProfile('updateProfile', this.user);
           });
         }).catch(err => {
-          console.log(err);
+          // console.log(err);
           this.progressBar.mode = 'determinate';
           this.showCropper = false;
           this.croppedImage = null;

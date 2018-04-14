@@ -40,7 +40,7 @@ export class AppComponent implements OnInit {
     const token = sessionStorage.getItem('token');
     if(token) {
       let decodedToken = jwtHelper.decodeToken(token);
-      console.log(decodedToken);
+      // console.log(decodedToken);
       this.userService.getUserByID(decodedToken.id).then((user:User) => {
         this.userService.userLoaded(user, token, true, false);
         this.userService.getNotificationsCountForUser(user._id);
@@ -110,7 +110,7 @@ export class AppComponent implements OnInit {
   initIoConnection() {
     this._socketService.onEvent(SocketEvent.SEND_PRIVATE_MSG)
       .subscribe((message: Message) => {
-        console.log('PM from server (main app module): ', message);
+        // console.log('PM from server (main app module): ', message);
         const temp: Message = message as Message;
         this.openNewMessageSnackBar(temp);
         if (temp.to._id === this.userService.user._id) {
@@ -120,7 +120,7 @@ export class AppComponent implements OnInit {
 
     this._socketService.onEvent(SocketEvent.SEND_NOTIFICATION)
       .subscribe((message: Notification) => {
-        console.log('Notification from server (home app module): ', message);
+        // console.log('Notification from server (home app module): ', message);
         const temp: Notification = message as Notification;
         this.openNotificationSnackBar(temp);
       });
@@ -137,7 +137,7 @@ export class AppComponent implements OnInit {
         ' ' + message.from.lastName, 'Go to message...', { duration: 3500 });
 
       snackBarRef.onAction().subscribe(() => {
-        console.log('Going to the message...');
+        // console.log('Going to the message...');
         this._sharedDataService.setProfileMessageSharedProperties(message.from);
         this.router.navigate(['/chat']);
         // this._socketService.send(Action.OPEN_SNACK_BAR_PM, message);

@@ -24,7 +24,7 @@ export class CallbackComponent implements OnInit {
 
   ngOnInit() {
     const callbackUrl = window.location.href;
-    console.log('>> URL: ' + callbackUrl);
+    // console.log('>> URL: ' + callbackUrl);
 
     if (callbackUrl.indexOf('spotify') >= 0) {
       this.spotifyCode = this.extractSpotifyCode();
@@ -97,7 +97,7 @@ export class CallbackComponent implements OnInit {
         }
       })
       .catch( (error: any) => {
-        console.log(error);
+        // console.log(error);
       });
   }
 
@@ -164,7 +164,7 @@ export class CallbackComponent implements OnInit {
     if ( callbackUrl.indexOf('?localAccessAuth=') >= 0 ) {
       const codeStartIndex = callbackUrl.indexOf('?localAccessAuth=');
       const code = callbackUrl.substr(codeStartIndex + 17);
-      console.log('Code: ', code);
+      // console.log('Code: ', code);
       return code;
     }
     return '';
@@ -175,7 +175,7 @@ export class CallbackComponent implements OnInit {
     // TODO: contact server and log in and redirect
     this.userService.verifyLocalAccessToken(this.localAuthToken).subscribe(
       (data: any) => {
-        console.log('>> Data received: ', data);
+        // console.log('>> Data received: ', data);
         this.userService.userLoaded(data.user, data.token, false, false);
         this.userService.getNotificationsCountForUser(data.user._id);
         this.userService.getNotificationsForUser(data.user._id);
@@ -183,7 +183,7 @@ export class CallbackComponent implements OnInit {
         this.router.navigate(['/']);
       },
       (error: any) => {
-        console.log('>> Error: ', error);
+        // console.log('>> Error: ', error);
         this.router.navigate(['/auth']);
         this.snackBar.open(error, '', {
           duration: 7000,

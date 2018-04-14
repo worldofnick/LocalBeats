@@ -156,15 +156,8 @@ export class UserService {
         const requestUrl = this.connection + '/magicLink';
         return this.http.post(requestUrl, returningUser, { headers: this.headers })
             .map((response: Response) => {
-                console.log('>> In request magic link...');
+                // console.log('>> In request magic link...');
                 const data = response.json();
-
-                // TODO: anything else?
-
-                // this.accessToken = data.token;
-                // sessionStorage.setItem('token', JSON.stringify({ accessToken: this.accessToken }))
-                // this.user = data.user as User;
-                console.log('>> Magic link response: ', data);
                 return data;
             }).catch((error: Response) => {
                 // TODO: add more speicifc errors
@@ -185,7 +178,7 @@ export class UserService {
         const requestUrl = this.connection + '/verifyLocalJwt';
         return this.http.post(requestUrl, { jwt: urlJwt }, { headers: this.headers })
             .map((response: Response) => {
-                console.log('>> In verify local access JWT: ', response.json());
+                // console.log('>> In verify local access JWT: ', response.json());
                 const data = response.json();
 
                 this.accessToken = data.token;
@@ -212,7 +205,7 @@ export class UserService {
         const requestUrl = this.connection + '/captcha/verify';
         return this.http.post(requestUrl, { response: reponseToken }, { headers: this.headers })
             .map((response: Response) => {
-                console.log('>> In verify captcha: ', response.json());
+                // console.log('>> In verify captcha: ', response.json());
                 return response.json();
             }).catch((error: Response) => {
                 if (error.status === 404) {
@@ -227,7 +220,7 @@ export class UserService {
         const requestUrl = this.connection + '/social/google/verifyIdToken';
         return this.http.post(requestUrl, { idToken: idToken }, { headers: this.headers })
             .map((response: Response) => {
-                console.log('>> In verify google: ', response.json());
+                // console.log('>> In verify google: ', response.json());
                 return response.json();
             }).catch((error: Response) => {
                 if (error.status === 404) {
@@ -242,7 +235,7 @@ export class UserService {
         const requestUrl = this.connection + '/social/google/signin';
         return this.http.post(requestUrl, { idToken: idToken }, { headers: this.headers })
             .map((response: Response) => {
-                console.log('>> In verify google: ', response.json());
+                // console.log('>> In verify google: ', response.json());
                 return response.json();
             }).catch((error: Response) => {
                 if (error.status === 404) {

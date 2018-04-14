@@ -20,7 +20,7 @@ export class LockscreenComponent implements OnInit {
   }
 
   unlock() {
-    console.log(this.lockscreenData);
+    // console.log(this.lockscreenData);
 
     this.submitButton.disabled = true;
     this.progressBar.mode = 'indeterminate';
