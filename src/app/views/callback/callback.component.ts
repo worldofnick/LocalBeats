@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from "@angular/router";
 import { SpotifyClientService } from '../../services/music/spotify-client.service';
 import { UserService } from '../../services/auth/user.service';
+import { SharedDataService } from '../../services/shared/shared-data.service';
 import { Router } from '@angular/router';
 import { MatSnackBar, MatSnackBarRef } from '@angular/material';
 import { User } from '../../models/user';
@@ -14,14 +15,24 @@ import { User } from '../../models/user';
 export class CallbackComponent implements OnInit {
 
   spotifyCode: string;
+  localAuthToken: string;
 
-  constructor(private route: ActivatedRoute, private snackBar: MatSnackBar, 
-              private userService: UserService, private router : Router,
+  constructor(private route: ActivatedRoute, private snackBar: MatSnackBar,
+              private userService: UserService, private router: Router,
+              private sharedDataService: SharedDataService,
               private _spotifyClientService: SpotifyClientService) { }
 
   ngOnInit() {
-    this.spotifyCode = this.extractSpotifyCode();
-    this.getTokensProfileAndAlbums();
+    const callbackUrl = window.location.href;
+    console.log('>> URL: ' + callbackUrl);
+
+    if (callbackUrl.indexOf('spotify') >= 0) {
+      this.spotifyCode = this.extractSpotifyCode();
+      this.getTokensProfileAndAlbums();
+    } else if (callbackUrl.indexOf('?localAccessAuth=') >= 0) {
+      this.localAuthToken = this.extractAuthCode();
+      this.verifyLocalAccessJwtAndRedirect();
+    }
   }
 
   /**
@@ -146,5 +157,37 @@ export class CallbackComponent implements OnInit {
         return '';
       }
     }
+  }
+
+  extractAuthCode(): string {
+    const callbackUrl = window.location.href;
+    if ( callbackUrl.indexOf('?localAccessAuth=') >= 0 ) {
+      const codeStartIndex = callbackUrl.indexOf('?localAccessAuth=');
+      const code = callbackUrl.substr(codeStartIndex + 17);
+      console.log('Code: ', code);
+      return code;
+    }
+    return '';
+  }
+
+  // TODO: complete it
+  verifyLocalAccessJwtAndRedirect() {
+    // TODO: contact server and log in and redirect
+    this.userService.verifyLocalAccessToken(this.localAuthToken).subscribe(
+      (data: any) => {
+        console.log('>> Data received: ', data);
+        this.userService.userLoaded(data.user, data.token, false, false);
+        this.userService.getNotificationsCountForUser(data.user._id);
+        this.userService.getNotificationsForUser(data.user._id);
+        this.sharedDataService.setOverallChatUnreadCount(data.user as User);
+        this.router.navigate(['/']);
+      },
+      (error: any) => {
+        console.log('>> Error: ', error);
+        this.router.navigate(['/auth']);
+        this.snackBar.open(error, '', {
+          duration: 7000,
+        });
+      });
   }
 }

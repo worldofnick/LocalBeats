@@ -8,6 +8,19 @@ module.exports = function(app) {
 	app.route('/api/messages/:fromUID/')        	
 		.get(messageHandlers.getAllActiveConversationsFrom);     // Get all active conversation buddies of a user
 
+	app.route('/api/messages/counts/:myUID/')        	
+		.get(messageHandlers.getOverallUnreadCountForUser);     // Get all unread messages count of this user
+	
+	app.route('/api/messages/counts/')        	
+		.post(messageHandlers.getUnreadCountBetweenThisUserAndPassedArrayOfBuddies);
+	
+	app.route('/api/messages/update/read/:fromUID/:toUID')        	
+		.put(messageHandlers.markAllMessagesReadBetweenTwoUsers);
+
+	app.route('/api/messages/update/read/:messageID')
+		.put(messageHandlers.markThisMessageAsRead);
+	
+
 	app.route('/api/messages/:fromUID/:toUID')        	// SAME AS (to, from) == (from, to)
 		.get(messageHandlers.getAllFromToMessages);     // Get all messages from a user to a user
 

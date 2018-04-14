@@ -44,11 +44,11 @@ export class UserService {
     }
 
     private initIoConnection(persisted: boolean): void {
-            this.ioConnection = this._socketService.onEvent(SocketEvent.NEW_LOG_IN)
-                .subscribe((message: Message) => {
-                    // this.messages.push(message);
-                    // console.log('Server Msg to user service', message);
-                });
+        this.ioConnection = this._socketService.onEvent(SocketEvent.NEW_LOG_IN)
+            .subscribe((message: Message) => {
+                // this.messages.push(message);
+                // console.log('Server Msg to user service', message);
+            });
         if (persisted) {
             let message: Message = {
                 from: this.user,
@@ -58,26 +58,39 @@ export class UserService {
         }
     }
 
-    // post("api/auth/passwordChange/:uid')
+    // public signupUser(newUser: User): Observable<Object> {
+    //     const current = this.connection + '/register';
+    //     return this.http.post(current, newUser, { headers: this.headers })
+    //         .map((response: Response) => {
+    //             const data = response.json();
+    //             this.accessToken = data.token;
+    //             sessionStorage.setItem('token', JSON.stringify({ accessToken: this.accessToken }))
+    //             this.user = data.user as User;
+    //             // Notify server that a new user user logged in
+    //             this._socketService.send(Action.NEW_LOG_IN, {
+    //                 from: this.user,
+    //                 action: Action.NEW_LOG_IN
+    //             });
+    //             return data;
+    //         }).catch((error: Response) => {
+    //             if (error.status === 400) {
+    //                 return Observable.throw('Email is already in use.  Please try a different email.');
+    //             } else {
+    //                 return Observable.throw('Error Unknown');
+    //             }
+    //         });
+    // }
     public signupUser(newUser: User): Observable<Object> {
         const current = this.connection + '/register';
         return this.http.post(current, newUser, { headers: this.headers })
             .map((response: Response) => {
                 const data = response.json();
-                this.accessToken = data.token;
-                sessionStorage.setItem('token', JSON.stringify({ accessToken: this.accessToken }))
-                this.user = data.user as User;
-                // Notify server that a new user user logged in
-                this._socketService.send(Action.NEW_LOG_IN, {
-                    from: this.user,
-                    action: Action.NEW_LOG_IN
-                });
                 return data;
             }).catch((error: Response) => {
                 if (error.status === 400) {
                     return Observable.throw('Email is already in use.  Please try a different email.');
                 } else {
-                    return Observable.throw('Error Unknown');
+                    return Observable.throw('Something went wrong on our end. Please try again later...');
                 }
             });
     }
@@ -114,13 +127,13 @@ export class UserService {
     }
 
     // post("/api/authenticate")
-    public signinUser(returningUser: User): Observable<Object> {
-        const current = this.connection + '/authenticate';
+    public demoModeSignInUser(returningUser: User): Observable<Object> {
+        const current = this.connection + '/authenticate/demo';
         return this.http.post(current, returningUser, { headers: this.headers })
             .map((response: Response) => {
                 const data = response.json();
                 this.accessToken = data.token;
-                sessionStorage.setItem('token', JSON.stringify({ accessToken: this.accessToken }))
+                sessionStorage.setItem('token', JSON.stringify({ accessToken: this.accessToken }));
                 this.user = data.user as User;
                 // Notify server that a new user user logged in
                 this._socketService.send(Action.NEW_LOG_IN, {
@@ -130,11 +143,112 @@ export class UserService {
                 return data;
             }).catch((error: Response) => {
                 if (error.status === 404) {
-                    return Observable.throw('Wrong email.  Please try again.');
+                    return Observable.throw('You are not registered with this email. Please register before continuing...');
                 } else if (error.status === 401) {
-                    return Observable.throw('Wrong password.  Please try again.');
+                    return Observable.throw('Wrong password. Please try again.');
                 } else {
-                    return Observable.throw('Error Unknown');
+                    return Observable.throw('Something went wrong on our end. Please try again later...');
+                }
+            });
+    }
+
+    public requestMagicLink(returningUser: User): Observable<Object> {
+        const requestUrl = this.connection + '/magicLink';
+        return this.http.post(requestUrl, returningUser, { headers: this.headers })
+            .map((response: Response) => {
+                console.log('>> In request magic link...');
+                const data = response.json();
+
+                // TODO: anything else?
+
+                // this.accessToken = data.token;
+                // sessionStorage.setItem('token', JSON.stringify({ accessToken: this.accessToken }))
+                // this.user = data.user as User;
+                console.log('>> Magic link response: ', data);
+                return data;
+            }).catch((error: Response) => {
+                // TODO: add more speicifc errors
+                if (error.status === 404) {
+                    return Observable.throw('\'' + returningUser.email + '\' cannot be found. Check if it correct and try again.');
+                } else if (error.status === 401) {
+                    return Observable.throw('Incorrect password. Please try again');
+                } else if (error.status === 520) {
+                    return Observable.throw('Unable to send the email. Please try again later...');
+                } else {
+                    return Observable.throw('An unknown error has occured... Please try again later.');
+                }
+            });
+    }
+
+    // TODO: complete it
+    public verifyLocalAccessToken(urlJwt: string): Observable<Object> {
+        const requestUrl = this.connection + '/verifyLocalJwt';
+        return this.http.post(requestUrl, { jwt: urlJwt }, { headers: this.headers })
+            .map((response: Response) => {
+                console.log('>> In verify local access JWT: ', response.json());
+                const data = response.json();
+
+                this.accessToken = data.token;
+                sessionStorage.setItem('token', JSON.stringify({ accessToken: this.accessToken }));
+                this.user = data.user as User;
+                // Notify server that a new user user logged in
+                this._socketService.send(Action.NEW_LOG_IN, {
+                    from: this.user,
+                    action: Action.NEW_LOG_IN
+                });
+                return data;
+            }).catch((error: Response) => {
+                if (error.status === 520) {
+                    return Observable.throw('Token is expired or invalid. Please re-login.');
+                } else if (error.status === 404) {
+                    return Observable.throw('User not found. Please register before continuing.');
+                } else {
+                    return Observable.throw('A server error has occured... Please try again later.');
+                }
+            });
+    }
+
+    public verifyCaptchaToken(reponseToken: string): Observable<Object> {
+        const requestUrl = this.connection + '/captcha/verify';
+        return this.http.post(requestUrl, { response: reponseToken }, { headers: this.headers })
+            .map((response: Response) => {
+                console.log('>> In verify captcha: ', response.json());
+                return response.json();
+            }).catch((error: Response) => {
+                if (error.status === 404) {
+                    return Observable.throw(error.json().message);
+                } else {
+                    return Observable.throw('Unknown error occured while verifying reCaptcha. Please try again later.');
+                }
+            });
+    }
+
+    public verifyGoogleSocialIdToken(idToken: string): Observable<Object> {
+        const requestUrl = this.connection + '/social/google/verifyIdToken';
+        return this.http.post(requestUrl, { idToken: idToken }, { headers: this.headers })
+            .map((response: Response) => {
+                console.log('>> In verify google: ', response.json());
+                return response.json();
+            }).catch((error: Response) => {
+                if (error.status === 404) {
+                    return Observable.throw(error.json().message);
+                } else {
+                    return Observable.throw('Unknown error occured while verifying google token. Please try again later.');
+                }
+            });
+    }
+
+    public signInWithGoogleAccount(idToken: string): Observable<Object> {
+        const requestUrl = this.connection + '/social/google/signin';
+        return this.http.post(requestUrl, { idToken: idToken }, { headers: this.headers })
+            .map((response: Response) => {
+                console.log('>> In verify google: ', response.json());
+                return response.json();
+            }).catch((error: Response) => {
+                if (error.status === 404) {
+                    return Observable.throw(error.json().message);
+                } else {
+                    return Observable.throw('Unknown error occured while verifying google token. Please try again later.');
                 }
             });
     }
@@ -197,7 +311,7 @@ export class UserService {
                     action: Action.YOU_LOGGED_OUT
                 });
 
-                
+
 
                 // Notify server that a new user user logged in
                 this._socketService.send(Action.SMN_LOGGED_OUT, {

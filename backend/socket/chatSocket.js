@@ -9,9 +9,22 @@ var Message = mongoose.model('Message');
 let notificationController = require('../controllers/notificationController.js');
 var profileButtonMsgPayload = new Object();
 var pmSnackBarPayload = new Object();
+let thisIo;
 
+exports.broadcastResultToAllClientsViaSocket = function(auth, token, user, code, message) {
+    if (thisIo !== undefined || thisIo !== null) {
+        thisIo.emit('magicLoginResult', {serverPayload: {
+            token: token, 
+            user: user, 
+            auth: auth,
+            statusCode: code,
+            message: message
+        }});
+    }
+  }
 
-module.exports = function (io) {
+exports.socketServer = function (io) {
+    thisIo = io;
     // Default 'connection' event listerner
     io.on('connect', (socket) => {
         console.log("\n=======================\nConnection client with Socket ID:", socket.id);

@@ -1,15 +1,15 @@
 'use strict';
 
-var mongoose  = require('mongoose');
-const async   = require('async');
-var User      = mongoose.model('User');
-var Message   = mongoose.model('Message');
+var mongoose = require('mongoose');
+const async = require('async');
+var User = mongoose.model('User');
+var Message = mongoose.model('Message');
 
 // ====== MESSAGE ROUTES ======
 
 exports.getAllMessages = function (req, res) {
 
-    Message.find({}).populate('from to').exec(function(err, messages){
+    Message.find({}).populate('from to').exec(function (err, messages) {
         if (err) {
             console.log('Error getting all messages: ', err);
             return res.status(400).send({
@@ -17,36 +17,37 @@ exports.getAllMessages = function (req, res) {
                 error: err
             });
         }
-        for( let i = 0; i < messages.length; i++ ) {
-            if(messages[i] != null || messages[i] != undefined) {
-                messages[i].from.hashPassword = undefined;
-                messages[i].to.hashPassword = undefined;
-            }
-        }
-        return res.status(200).send({messages: messages});
+        // No need for this anymore. Otherwise, will give cant set undefined of null
+        // for( let i = 0; i < messages.length; i++ ) {
+        //     if(messages[i] != null || messages[i] != undefined) {
+        //         messages[i].from.hashPassword = undefined;
+        //         messages[i].to.hashPassword = undefined;
+        //     }
+        // }
+        return res.status(200).send({ messages: messages });
     });
 };
 
 exports.getAllFromToMessages = function (req, res) {
 
-  let ids = [req.params.fromUID, req.params.toUID];
-  Message.find({}).where('from').in(ids).where('to').in(ids)
-  .populate('from to').sort({sentAt: 1})
-  .exec(function(err, messages) {
-      if (err) {
-        console.log('Error getting messages (from , to): ', err);
-        return res.status(400).send({
-            reason: "Unable to get (from, to) messages...",
-            error: err
+    let ids = [req.params.fromUID, req.params.toUID];
+    Message.find({}).where('from').in(ids).where('to').in(ids)
+        .populate('from to').sort({ sentAt: 1 })
+        .exec(function (err, messages) {
+            if (err) {
+                console.log('Error getting messages (from , to): ', err);
+                return res.status(400).send({
+                    reason: "Unable to get (from, to) messages...",
+                    error: err
+                });
+            }
+            // No need for this anymore. Otherwise, will give cant set undefined of null
+            //   for( let i = 0; i < messages.length; i++ ) {
+            //     messages[i].from.hashPassword = undefined;
+            //     messages[i].to.hashPassword = undefined;
+            // }
+            return res.status(200).send({ messages: messages });
         });
-      } 
-      // hide hashPassword
-      for( let i = 0; i < messages.length; i++ ) {
-        messages[i].from.hashPassword = undefined;
-        messages[i].to.hashPassword = undefined;
-    }
-      return res.status(200).send({messages: messages});
-  });
 };
 
 /**
@@ -98,14 +99,107 @@ exports.getAllActiveConversationsFrom = function (req, res) {
                         error: err
                     });
                 }
-                // hide hashPassword
-                for (let i = 0; i < toUsers.length; i++) {
-                    toUsers[i].hashPassword = undefined;
-                }
+                // No need for this anymore. Otherwise, will give cant set undefined of null
+                // for (let i = 0; i < toUsers.length; i++) {
+                //     toUsers[i].hashPassword = undefined;
+                // }
                 return res.status(200).send({ users: toUsers });
             });
     });
 };
+
+exports.getOverallUnreadCountForUser = function (req, res) {
+    let thisUserId = req.params.myUID;
+
+    Message.find({ isRead: false }).where('to').in(thisUserId).count({}, function (error, unreadCount) {
+        if (error) {
+            console.log('Error getting overall unread count: ', error);
+            return res.status(400).send({
+                reason: "Unable to get overall unread count...",
+                error: error
+            });
+        }
+        return res.status(200).send({ unreadMessagesCount: unreadCount });
+    });
+}
+
+/**
+ * To get all unread messages sent to this user by a particular sender
+ * @param {*} req Has loggedInUserID, and array of senderIDs
+ * @param {*} res table of unread message count sent by sender to loggedInUser
+ */
+exports.getUnreadCountBetweenThisUserAndPassedArrayOfBuddies = function (req, res) {
+    //TODO: correct it and test more. Then make it multiple senderIDs
+    let thisUserId = req.body.loggedInUser._id;
+
+    let senderArray = new Array();
+    if (req.body.senders !== undefined && req.body.senders !== null) {
+        for (let i = 0; i < req.body.senders.length; i++) {
+            senderArray.push(mongoose.Types.ObjectId(req.body.senders[i]._id));
+        }
+    }
+
+    // To get all unread messages sent to this user by a particular sender
+    Message.aggregate([
+        {
+            $match:
+                {
+                    isRead: false,
+                    from: { $in: senderArray },
+                    to: mongoose.Types.ObjectId(thisUserId)
+                }
+        },
+        {
+            $group:
+                {
+                    _id: "$from",
+                    unreadCount: { $sum: 1 }
+                }
+        }
+    ], function (error, result) {
+        if (error) {
+            console.log('Error getting total unread between 2 buddies: ', error);
+            return res.status(400).send({
+                reason: "Error getting total unread between you and list of senders...",
+                error: error
+            });
+        }
+        return res.status(200).send({ buddies: result });
+    });
+}
+
+exports.markAllMessagesReadBetweenTwoUsers = function (req, res) {
+    let thisUserId = req.params.toUID;
+    let senderId = req.params.fromUID;
+
+    Message.updateMany(
+        {
+            isRead: false,
+            to: mongoose.Types.ObjectId(thisUserId),
+            from: mongoose.Types.ObjectId(senderId)
+        },
+        {
+            $set: { isRead: true }
+        }, function (error, result) {
+            if (error) {
+                return res.status(400).send({
+                    reason: "Unable to update the isUnread to true",
+                    error: error
+                });
+            }
+            return res.status(200).send({ result: result });
+        });
+}
+
+exports.markThisMessageAsRead = function (req, res) {
+    Message.findByIdAndUpdate(req.params.messageID, { isRead: true }, { new: true }, function (err, newMsg) {
+        if (err) {
+          console.log('Cant update the message');
+          return res.status(400).send({ reason: 'Cant update the message', error: err });
+        }
+        return res.status(200).send({ message: newMsg });
+      });
+}
 
 exports.saveMessage = function (req, res) {
     let newMessage = new Message();
@@ -116,20 +210,20 @@ exports.saveMessage = function (req, res) {
     newMessage.messageType = req.body.messageType;
     newMessage.attachmentURL = req.body.attachmentURL;
     newMessage.content = req.body.content;
-    
+
     newMessage.save(function (err, message) {
         if (err) {
             return res.status(400).send({
                 message: "Unable to save the message...",
                 error: err
             });
-        } 
-        return res.status(200).send({ response: "Save successful!", message: message});
+        }
+        return res.status(200).send({ response: "Save successful!", message: message });
     });
 };
 
 exports.clearMessagesDB = function (req, res) {
-    Message.remove({}).exec(function(err, messages){
+    Message.remove({}).exec(function (err, messages) {
         if (err) {
             console.log('Error deleting all messages: ', err);
             return res.status(400).send({
@@ -137,7 +231,7 @@ exports.clearMessagesDB = function (req, res) {
                 error: err
             });
         }
-        return res.status(200).send( {response: "All messages removed!"} );
+        return res.status(200).send({ response: "All messages removed!" });
     });
 };
 

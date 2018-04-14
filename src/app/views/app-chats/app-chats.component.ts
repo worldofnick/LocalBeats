@@ -1,7 +1,7 @@
-import { Component, Inject, OnInit, Input, Output, ViewChild, AfterContentInit, ContentChild, 
+import { Component, Inject, OnInit, OnDestroy, Input, Output, ViewChild, AfterContentInit, ContentChild, 
         AfterViewInit, ViewChildren, AfterViewChecked, ElementRef, ChangeDetectorRef } from '@angular/core';
 import { DatePipe } from '@angular/common';
-import { Subscription } from "rxjs/Subscription";
+import { Subscription, ISubscription } from "rxjs/Subscription";
 import { MediaChange, ObservableMedia } from "@angular/flex-layout";
 import { MatSidenav, MatChipInputEvent, MatSnackBar, MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { ENTER, COMMA, TAB } from '@angular/cdk/keycodes';
@@ -14,6 +14,7 @@ import { Router } from '@angular/router';
 
 import { SharedDataService } from 'app/services/shared/shared-data.service';
 import { ChatsService } from 'app/services/chats/chats.service';
+import { UserService } from 'app/services/auth/user.service';
 import { SocketService } from 'app/services/chats/socket.service';
 import { User } from '../../models/user';
 import { Message } from '../../services/chats/model/message';
@@ -44,10 +45,12 @@ import { MessageTypes } from '../../services/chats/model/messageTypes';
     ])
   ]
 })
-export class AppChatsComponent implements OnInit, AfterViewChecked, AfterViewInit {
+export class AppChatsComponent implements OnInit, OnDestroy, AfterViewChecked, AfterViewInit {
 
   @ViewChildren('messageInputBox') vc;
   @ViewChild('scrollMe') private myScrollContainer: ElementRef;
+
+  // private userSubscription: ISubscription;
 
   // ==============================================
   // Material Variables
@@ -75,11 +78,12 @@ export class AppChatsComponent implements OnInit, AfterViewChecked, AfterViewIni
   // ==============================================
 
   constructor(private media: ObservableMedia, public _snackBar: MatSnackBar, private cdr: ChangeDetectorRef,
-    private _socketService: SocketService, private _chatsService: ChatsService, private router: Router,
-    private _sharedDataService: SharedDataService, public dialog: MatDialog) {
+    private _socketService: SocketService, public _chatsService: ChatsService, private router: Router,
+    private _sharedDataService: SharedDataService, public dialog: MatDialog, private userService: UserService) {
       // console.log('>>> IN CONSTRUCTOR');
+    // this.userSubscription = this.userService.userResult.subscribe(user => this.loggedInUser = user);
     this.loggedInUser = this._chatsService.getCurrentLoggedInUser();
-
+    // this._chatsService.setLoggedInUser(this.loggedInUser);
     this.initChatSideBarWithWithNewUsers();
     // console.log('Back to constructor, active user:', this.activeChatUser);
     // console.log('Back to constructor, connectedUsers user:', this.connectedUsers);
@@ -128,13 +132,20 @@ export class AppChatsComponent implements OnInit, AfterViewChecked, AfterViewIni
   }
 
   ngAfterViewInit() {
-    this._socketService.send(SocketEvent.NOTIFY_SERVER_CHAT_LOADED, null);
+    // this._socketService.send(SocketEvent.NOTIFY_SERVER_CHAT_LOADED, null);
     this.vc.first.nativeElement.focus();
     this.cdr.detectChanges();
   }
 
   ngAfterViewChecked() {
     this.scrollToBottom();
+  }
+
+  ngOnDestroy() {
+    console.log('CHAT DESTROY called...');
+    this.activeChatUser = new User();
+    this.cdr.detach();
+    // this.userSubscription.unsubscribe();
   }
 
   scrollToBottom(): void {
@@ -144,7 +155,6 @@ export class AppChatsComponent implements OnInit, AfterViewChecked, AfterViewIni
   }
 
   isUserObjInConnectedUsers(newUser: User): number {
-
     for (let i = 0; i < this.connectedUsers.length; i++) {
       let chatBuddy: User = this.connectedUsers[i];
         if (chatBuddy._id === newUser._id) {
@@ -175,23 +185,55 @@ export class AppChatsComponent implements OnInit, AfterViewChecked, AfterViewIni
     this._socketService.onEvent(SocketEvent.SEND_PRIVATE_MSG)
       .subscribe((message: Message) => {
         // this.isBlankTemplate = false;
-        // console.log('Private Chat message from server (chat event): ', message);
+        console.log('Private Chat message from server (chat event): ', message);
         const temp: Message = message as Message;
 
         // If you are the receiver and the sender is not already in the connectedUsers list,
-        // add the user to list. Else, if the chat is ongoing with this sender, reload the messages.
+        // add the user to list. 
         if (!this.isUserInConnectedUsers(temp)) {
           if (this.loggedInUser._id !== temp.from._id) {
             this.connectedUsers.unshift(temp.from);
           }
         }
+        // Else, if the chat is ongoing with this sender, reload the messages.
         if (this.activeChatUser._id === temp.from._id ||
           this.loggedInUser._id === temp.from._id) {
           this.activeChatMessages.push(temp);
-        } else {
-          // TODO: push notification, notification dot if not active user
+          // // Mark the message as read
+          // this._chatsService.markChatsAsReadBetweenTwoUser(this.activeChatUser._id, this.loggedInUser._id);
         }
-        // TODO: refresh UI?
+
+        if (this.activeChatUser._id === temp.from._id) {
+          console.log('<<< In chat, marking message read >>>');
+          this._chatsService.markChatsAsReadBetweenTwoUser(this.activeChatUser._id, this.loggedInUser._id)
+            .subscribe(
+              (data: any) => {
+                console.log('All Chats read = true result: ', data);
+                const fromUID = this.activeChatUser._id;
+                // Make the unread count for that user to zero in unreadCounts[]
+                const senderIndex = this._chatsService.unreadCounts.findIndex(x => x._id === fromUID);
+                // console.log('>> Sender index: ', senderIndex);
+                // console.log('>> Unread count array: ', this.unreadCounts);
+                if (senderIndex !== -1) {
+                  this._chatsService.unreadCounts[senderIndex].unreadCount = 0;
+                }
+              },
+              (error: any) => {
+                console.error(error);
+              },
+              () => {
+                this._sharedDataService.setOverallChatUnreadCount(this.loggedInUser);
+              }
+            );
+        }
+        this._chatsService.getAllUnreadCountsForAllChatBuddies(this.connectedUsers);
+
+        // Update buddy list unread counts and the top bar overall unread count
+        // TODO: make this run after the message has been marked as read
+        // this._chatsService.getAllUnreadCountsForAllChatBuddies(this.connectedUsers);
+        // if (this.activeChatUser._id !== temp.from._id) {
+          // this._sharedDataService.setOverallChatUnreadCount(this.loggedInUser);
+        // }
       });
   }
 
@@ -204,6 +246,7 @@ export class AppChatsComponent implements OnInit, AfterViewChecked, AfterViewIni
     return false;
   }
 
+  // TODO: keep or remove?
   respondToIsItYouPMSocketRequest(message) {
     if ((message.serverPayload.from._id === this.loggedInUser._id) ||
       (message.serverPayload.to._id === this.loggedInUser._id)) {
@@ -262,6 +305,10 @@ export class AppChatsComponent implements OnInit, AfterViewChecked, AfterViewIni
       },
       err => console.error(err),
       () => {
+
+        // Get the unread labels for all users in the connectedUsers list (the side bar)
+        this._chatsService.getAllUnreadCountsForAllChatBuddies(this.connectedUsers);
+
         // See if profile message clicked. If so, add it as first user or switch to exisitng one
         if (this._sharedDataService.isProfileUserRequestPending) {
           let indexInConnectedUsers = this.isUserObjInConnectedUsers(this._sharedDataService.profileButtonChatRecipient);
@@ -306,25 +353,23 @@ export class AppChatsComponent implements OnInit, AfterViewChecked, AfterViewIni
   changeActiveUser(user) {
     // Check if a blank new conversation was halfway started while switched to an existing user. If so, remove it.
     if (this.connectedUsers.length > 0) {
+      this.activeChatUser = user;
 
-      let connection;
-        this.activeChatUser = user;
+      // Mark all PMs (from:activeChatUser, to: me) as read, then fetch the PMs between them
+      this._chatsService.markChatsAsReadBetweenTwoUsersAuto(user._id, this.loggedInUser._id);
 
       this._chatsService.getPMsBetweenActiveAndLoggedInUser(this.loggedInUser, this.activeChatUser).subscribe(
         data => {
           // console.log('\n====\nUser PMs from Server DB: ', JSON.stringify(data));
           // console.log('\n====\nUser PMs from Server DB: ', data as {messages: Message[]} );
           this.activeChatMessages = new Array();
-          let temp = data as { messages: Message[] };
+          const temp = data as { messages: Message[] };
           this.activeChatMessages = temp.messages;
         },
         err => console.error('Error fetching PMs between 2 users: ', err),
         () => {
-          // console.log('Done fetching PMs from the server DB');
-          // this.profileRecipient = new User();
-          // this.snackBarRecipient = new User();
-          // this.isProfileUserRequestPending = false;
-          // this.isSnackBarRequestPending = false;
+          // Update the unread count on the topbar icon
+          this._sharedDataService.setOverallChatUnreadCount(this.loggedInUser);
         }
       );
       this.vc.first.nativeElement.focus();
@@ -362,16 +407,16 @@ export class AppChatsComponent implements OnInit, AfterViewChecked, AfterViewIni
 
       let privateMessage: Message;
       // CASE 1: Both users online. So do a socket event
-      if (this.activeChatUser.isOnline) {
+      // if (this.activeChatUser.isOnline) {
 
         // Save the message in the DB
-        privateMessage = this.createPMObject(false, MessageTypes.MSG);
-      }
+      //   privateMessage = this.createPMObject(false, MessageTypes.MSG);
+      // }
       // CASE 2: The recipient is offline. So an HTTP request instead of socket event
-      else {
+      // else {
         privateMessage = this.createPMObject(false, MessageTypes.MSG);
 
-      }
+      // }
       // console.log('Sending message: ', privateMessage);
       // this.awaitMessageSaveResponse(privateMessage);
       this._socketService.send(Action.SEND_PRIVATE_MSG, privateMessage);

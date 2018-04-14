@@ -4,6 +4,9 @@ import * as io from 'socket.io';
 
 export class User {
     public _id: string;
+    public google: {
+        id?: string
+    };
     public firstName: string;
     public lastName: string;
     public fullName: string;

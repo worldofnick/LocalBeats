@@ -1,5 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RecaptchaModule } from 'ng-recaptcha';
+import { RecaptchaFormsModule } from 'ng-recaptcha/forms';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from "@angular/router";
 import { CommonPipesModule } from "../../pipes/common/common-pipes.module";
@@ -8,9 +10,11 @@ import {
   MatButtonModule,
   MatInputModule,
   MatCardModule,
+  MatSlideToggleModule,
   MatCheckboxModule,
   MatSelectModule,
-  MatIconModule
+  MatIconModule,
+  MatStepperModule
  } from '@angular/material';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
@@ -27,11 +31,15 @@ import { AuthRoutes } from "./auth.routing";
     MatProgressBarModule,
     MatSelectModule,
     MatButtonModule,
+    MatStepperModule,
+    MatSlideToggleModule,
     MatInputModule,
     MatCardModule,
     MatCheckboxModule,
     MatIconModule,
     FlexLayoutModule,
+    RecaptchaFormsModule,
+    RecaptchaModule.forRoot(),
     RouterModule.forChild(AuthRoutes)
   ],
   declarations: [AuthComponent, RegisterComponent]

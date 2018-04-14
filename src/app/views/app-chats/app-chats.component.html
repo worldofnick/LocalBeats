@@ -1,4 +1,4 @@
-<mat-card class="p-0" style="background-color: rgb(255, 255, 255); height: 70vh; border-radius: 25px; margin: 10px 10px 15px; box-shadow: rgba(150, 150, 150, 0.2) 0px 10px 6px -6px; border-style: solid; border-color: rgba(245, 245, 245, 0.9); border-width: 1px; padding: 10px;">
+<mat-card *ngIf="this.loggedInUser !== null && this.loggedInUser !== undefined" class="p-0" style="background-color: rgb(255, 255, 255); height: 70vh; border-radius: 25px; margin: 10px 10px 15px; box-shadow: rgba(150, 150, 150, 0.2) 0px 10px 6px -6px; border-style: solid; border-color: rgba(245, 245, 245, 0.9); border-width: 1px; padding: 10px;">
   <mat-sidenav-container class="chat-container" style="background-color: rgba(245,245,245, 0.9);">
     <!-- Left sidebar -->
     <mat-sidenav class="chat-sidenav" #chatSidebar [opened]="isSidenavOpen" mode="side" style="height: 70vh;">
@@ -22,7 +22,11 @@
             <img [src]="user.profilePicUrl" alt="">
             <span class="status-dot"></span>
           </a>
-          <h6 matLine>{{user.firstName + ' ' + user.lastName}}</h6>
+          <h6 matLine class="sideBarText">{{user.firstName}}<br><strong>{{user.lastName}}</strong></h6>
+          <span *ngFor="let unreadBuddy of _chatsService.unreadCounts">
+              <div *ngIf="unreadBuddy._id === user._id && unreadBuddy.unreadCount !== 0" 
+              class="unreadCount">{{unreadBuddy.unreadCount}}</div>
+          </span>
           <!-- CHANGE TO INTERPOLATION ! <p matLine class="text-muted">{{user.lastMsg}}</p> -->
           <!--<p matLine class="text-muted">{{this.activeChatMessages[this.activeChatMessages.length - 1]}}</p>-->
         </mat-list-item>
@@ -39,7 +43,7 @@
           <mat-icon>short_text</mat-icon>
         </button>
 
-        <div class="active-chat-user" fxLayout="row" fxLayoutAlign="start center">
+        <div class="active-chat-user" fxLayout="row" fxLayoutAlign="start center" *ngIf="this.activeChatUser !== undefined && this.activeChatUser !== null">
           <button class="topbarChatTransparentButton" (click)="topBarGoToProfileClicked()">
             <a [ngClass]="{online: activeChatUser.isOnline}" class="toolbar-avatar mr-1">
               <img [src]="activeChatUser.profilePicUrl" alt="">

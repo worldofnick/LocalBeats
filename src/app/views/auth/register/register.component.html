@@ -1,138 +1,201 @@
-<div class="page-wrap height-100">
-    <div class="session-form-hold">
-      <mat-progress-bar mode="determinate" class="session-progress"></mat-progress-bar>
-      <mat-card>
-        <mat-card-content>
-          <div class="text-center pb-1">
-            <h1 class="mb-05">LocalBeats</h1>
-            <p class="text-muted m-0">Sign up to use our service</p>
-          </div>
-          <form [formGroup]="signupForm"  (ngSubmit)="signup()">
-          <div class="">
-              <mat-form-field class="full-width">
-                <input 
-                  type="input-text"
-                  name="firstName"
-                  matInput
-                  [formControl]="signupForm.controls['firstName']"
-                  placeholder="First Name" 
-                  value="">
-              </mat-form-field>
-              <small 
-                *ngIf="signupForm.controls['firstName'].hasError('required') && signupForm.controls['firstName'].touched" 
-                class="form-error-msg"> First Name is required </small>
+<div class="container-login100" style="background-image: url('../../../../assets/images/bg-01.jpg');">
+  <div>
+    <!-- <mat-progress-bar mode="determinate" class="session-progress"></mat-progress-bar> -->
+    <mat-card class="wrap-login100 p-l-30 p-r-30 p-t-30 p-b-30">
+      <mat-card-content>
+
+        <div class="login100-form-title text-center p-t-20 p-b-20">
+          Join the beats ❤︎
+        </div>
+
+        <mat-vertical-stepper linear=true #stepper="matVerticalStepper">
+
+          <mat-step [stepControl]="signupForm" editable="false">
+
+            <div class="flex-c p-b-12">
+              <button *ngIf="socialGooglePayload === undefined" (click)="socialSignUp('google')" 
+              class="login100-social-item-long-button" style="color:white; background-color:rgb(66,133,244)">
+                  <i class="fa fa-google"></i> &nbsp; &nbsp; Sign up with Google
+              </button>
+              <p *ngIf="socialGooglePayload !== undefined" class="text-muted">Google account linked!</p>
             </div>
-            <div class="">
-                <mat-form-field class="full-width">
-                  <input 
-                    type="input-text"
-                    name="lastName"
-                    matInput
-                    [formControl]="signupForm.controls['lastName']"
-                    placeholder="Last Name" 
-                    value="">
-                </mat-form-field>
-                <small 
-                  *ngIf="signupForm.controls['lastName'].hasError('required') && signupForm.controls['lastName'].touched" 
-                  class="form-error-msg"> Last Name is required </small>
+
+            <form [formGroup]="signupForm">
+              <ng-template matStepLabel>Identification</ng-template>
+
+              <div class="wrap-input100 validate-input m-b-15">
+                <!-- <mat-form-field class="full-width"> -->
+                  <input type="input-text" name="firstName" matInput [formControl]="signupForm.controls['firstName']" placeholder="Given Name"
+                    value="" class="input100">
+                    <span class="focus-input100"></span>
+                <!-- </mat-form-field> -->
               </div>
-            <div class="">
-              <mat-form-field class="full-width">
-                <input
-                  matInput
-                  type="email"
-                  name="email"
-                  [formControl]="signupForm.controls['email']"
-                  placeholder="Your Email"
-                  value="">
-              </mat-form-field>
-              <small 
-                *ngIf="signupForm.controls['email'].hasError('required') && signupForm.controls['email'].touched" 
-                class="form-error-msg"> Email is required </small>
-  
-                <small 
-                  *ngIf="signupForm.controls['email'].hasError('email') && signupForm.controls['email'].touched" 
-                  class="form-error-msg"> Invaild email address </small>
-            </div>
-  
-            <div class="">
-              <mat-form-field class="full-width">
-                <input 
-                  type="password"
-                  name="password"
-                  matInput
-                  [formControl]="signupForm.controls['password']"
-                  placeholder="Password" 
-                  value="">
-              </mat-form-field>
-              <small 
-                *ngIf="signupForm.controls['password'].hasError('required') && signupForm.controls['password'].touched" 
-                class="form-error-msg"> Password is required </small>
-            </div>
-            
-            <div class="">
-              <mat-form-field class="full-width">
-                <input
-                  type="password"
-                  name="confirmPassword"
-                  matInput
-                  [formControl]="signupForm.controls['confirmPassword']"
-                  placeholder="Confirm Password"
-                  value="">
-              </mat-form-field>
-              <small *ngIf="signupForm.controls['confirmPassword'].hasError('required') && signupForm.controls['confirmPassword'].touched" class="form-error-msg">Confirm password is required.</small>
-              <small *ngIf="signupForm.controls['confirmPassword'].hasError('equalTo')" class="form-error-msg">Passwords do not match.</small>
+              <small *ngIf="signupForm.controls['firstName'].hasError('required') && signupForm.controls['firstName'].touched" 
+                class="text-center p-l-10 m-b-5 form-error-msg">
+                  Given Name is required </small>
+
+
+              <div class="wrap-input100 validate-input m-b-15">
+                <!-- <mat-form-field class="full-width"> -->
+                  <input type="input-text" name="lastName" matInput [formControl]="signupForm.controls['lastName']" placeholder="Family Name"
+                    value="" class="input100">
+                    <span class="focus-input100"></span>
+                <!-- </mat-form-field> -->
+              </div>
+              <small *ngIf="signupForm.controls['lastName'].hasError('required') && signupForm.controls['lastName'].touched" 
+              class="text-center p-l-10 m-b-5 form-error-msg">
+                  Family Name is required </small>
+
+
+              <div class="wrap-input100 validate-input m-b-15">
+                <!-- <mat-form-field class="full-width"> -->
+                  <input class="input100" matInput type="email" name="email" [formControl]="signupForm.controls['email']" placeholder="Your Email" value="">
+                  <span class="focus-input100"></span>
+                <!-- </mat-form-field> -->
+              </div>
+              <small *ngIf="signupForm.controls['email'].hasError('required') && signupForm.controls['email'].touched" 
+              class="text-center p-l-10 m-b-5 form-error-msg">
+                  Email is required </small>
+
+                <small *ngIf="signupForm.controls['email'].hasError('email') && signupForm.controls['email'].touched" 
+                class="text-center p-l-10 m-b-5 form-error-msg">
+                  Invaild email address </small>
+
+                  <div class="wrap-input100 validate-input m-b-20">
+                      <input class="input100"
+                        type="password"
+                        name="password"
+                        matInput
+                        [formControl]="signupForm.controls['password']"
+                        placeholder="Password" 
+                        value="">
+                        <span class="focus-input100"></span>
+                  </div>
+                  <small 
+                      *ngIf="signupForm.controls['password'].hasError('required') && signupForm.controls['password'].touched" 
+                      class="text-center p-l-10 m-b-5 form-error-msg"> Password is required </small>
+                  
+                  <div class="wrap-input100 validate-input m-b-15">                    
+                      <input class="input100"
+                        type="password"
+                        name="confirmPassword"
+                        matInput
+                        [formControl]="signupForm.controls['confirmPassword']"
+                        placeholder="Confirm Password"
+                        value="">
+                        <span class="focus-input100"></span>
+                  </div>
+                  <small *ngIf="signupForm.controls['confirmPassword'].hasError('required') && signupForm.controls['confirmPassword'].touched" class="text-center p-l-10 m-b-5 form-error-msg">Confirm password is required.</small>
+                    <small *ngIf="signupForm.controls['confirmPassword'].hasError('equalTo')" class="text-center p-l-10 m-b-5 form-error-msg">Passwords do not match.</small>
+
+              <div class="wrap-input100 validate-input m-b-15">
+                <!-- <mat-form-field> -->
+                  <input class="input100" matInput placeholder="City, State" autocorrect="off" autocapitalize="off" spellcheck="off" type="text" #searchplaces
+                    [formControl]="signupForm.controls['location']">
+                    <span class="focus-input100"></span>
+                <!-- </mat-form-field> -->
+              </div>
+              <small *ngIf="signupForm.controls['location'].hasError('required') && signupForm.controls['location'].touched" 
+              class="text-center p-l-10 m-b-5 form-error-msg">
+                  Location is required </small>
+
+                <div class="flex-c p-b-5">
+                    <button matStepperNext class="login100-social-item" style="color:darkslategray">
+                        <i class="fa fa-chevron-down"></i>
+                      </button>
+                    </div>
+              <!-- <div> -->
+                <!-- <button mat-button matStepperNext>Next</button> -->
+              <!-- </div> -->
+
+            </form>
+          </mat-step>
+
+          <mat-step [stepControl]="preferencesFormGroup" editable="false">
+            <form [formGroup]="preferencesFormGroup">
+              <ng-template matStepLabel>Preferences</ng-template>
+
+              <div class="pb-1 p-b-5 p-l-5 p-r-5 p-t-5">
+                <mat-form-field>
+                  <mat-select placeholder="Preferred Music" [formControl]="preferencesFormGroup.controls['genres']" multiple>
+                    <mat-select-trigger class="additional-selection">
+                      {{(preferencesFormGroup.controls['genres'].value ? preferencesFormGroup.controls['genres'].value[0] : '') | capitalize}}
+                      <span *ngIf="preferencesFormGroup.controls['genres'].value?.length > 1">
+                        (+{{preferencesFormGroup.controls['genres'].value.length - 1}} others)
+                      </span>
+                    </mat-select-trigger>
+                    <mat-option *ngFor="let genre of genresList" [value]="genre">{{genre | capitalize}}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+
+              <div class="pb-1 p-b-5 p-l-5 p-r-5 p-t-5">
+                <mat-form-field>
+                  <mat-select placeholder="Preferred Events" [formControl]="preferencesFormGroup.controls['events']" multiple>
+                    <mat-select-trigger class="additional-selection">
+                      {{(preferencesFormGroup.controls['events'].value ? preferencesFormGroup.controls['events'].value[0] : '') | capitalize}}
+                      <span *ngIf="preferencesFormGroup.controls['events'].value?.length > 1">
+                        (+{{preferencesFormGroup.controls['events'].value.length - 1}} others)
+                      </span>
+                    </mat-select-trigger>
+                    <mat-option *ngFor="let event of eventsList" [value]="event">{{event | capitalize}}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+
+              <div class="pb-1">
+                <mat-checkbox name="isArtist" [formControl]="preferencesFormGroup.controls['isArtist']" class="pb-1">
+                  I like to play music for income
+                </mat-checkbox>
+              </div>
+
+              <!-- <div>
+                <button mat-button matStepperNext [disabled]="preferencesFormGroup.invalid" (click)="signup()">Next</button>
+              </div> -->
+              <div class="flex-c p-b-5">
+                <button matStepperNext [disabled]="preferencesFormGroup.invalid" (click)="signup()" 
+                class="login100-social-item" style="color:darkslategray">
+                    <i class="fa fa-chevron-down"></i>
+                  </button>
+                </div>
+            </form>
+          </mat-step>
+
+
+          <mat-step>
+            <ng-template matStepLabel>Almost there...</ng-template>
+
+            <div *ngIf="this.isMagicLinkBeingSent">
+              <p class="text-center text-muted m-0">Sending you a confirmation link...
+                <br>
+                <br>This will only take a couple of moments...
             </div>
 
-            <div class="pb-1">
-              <mat-form-field>
-                <input matInput placeholder="City, State" autocorrect="off" autocapitalize="off" spellcheck="off" type="text" #searchplaces [formControl]="signupForm.controls['location']">
-              </mat-form-field>
+            <div *ngIf="this.wasMagicLinkSuccessfullySent && !this.isMagicLinkBeingSent">
+                <strong>⚠️ Do NOT close this window</strong><br><br>
+                A magic link has been sent to:
+                <br><strong>{{this.user.email}}</strong>
+                <br>
+                <br> Please click the link in it to <strong>continue</strong> your session in <strong>this</strong> window.
+                <br>
+                <br>(Note: It may take a couple of minutes to receive the email.)
             </div>
 
-            <div class="pb-1">
-              <mat-form-field>
-                <mat-select placeholder="Preferred Music" [formControl]="signupForm.controls['genres']" multiple>
-                  <mat-select-trigger class="additional-selection">
-                    {{(signupForm.controls['genres'].value ? signupForm.controls['genres'].value[0] : '') | capitalize}}
-                    <span *ngIf="signupForm.controls['genres'].value?.length > 1">
-                      (+{{signupForm.controls['genres'].value.length - 1}} others)
-                    </span>
-                  </mat-select-trigger>
-                  <mat-option *ngFor="let genre of genresList" [value]="genre">{{genre | capitalize}}</mat-option>
-                </mat-select>
-              </mat-form-field>
+            <div *ngIf="error">
+              <p class="text-center text-muted m-0">Oops!
+                <br>{{errorMessage}}
             </div>
+          </mat-step>
 
-            <div class="pb-1">
-              <mat-form-field>
-                <mat-select placeholder="Preferred Events" [formControl]="signupForm.controls['events']" multiple>
-                  <mat-select-trigger class="additional-selection">
-                    {{(signupForm.controls['events'].value ? signupForm.controls['events'].value[0] : '') | capitalize}}
-                    <span *ngIf="signupForm.controls['events'].value?.length > 1">
-                      (+{{signupForm.controls['events'].value.length - 1}} others)
-                    </span>
-                  </mat-select-trigger>
-                  <mat-option *ngFor="let event of eventsList" [value]="event">{{event | capitalize}}</mat-option>
-                </mat-select>
-              </mat-form-field>
-            </div>
-            
-            <div class="pb-1">
-              <mat-checkbox
-                name="isArtist"
-                [formControl]="signupForm.controls['isArtist']"
-                class="pb-1">I am an Artist</mat-checkbox>
-            </div>
-  
-            <button mat-raised-button class="mat-primary full-width mb-1" [disabled]="signupForm.invalid">Sign up</button>
-            <small *ngIf="error" class="form-error-msg">{{errorMessage}}</small>
-            <div class="text-center">
-              <a routerLink="/auth" class="mat-primary text-center full-width">Sign in to existing account</a>
-            </div>
-          </form>
-        </mat-card-content>
-      </mat-card>
-    </div>
+        </mat-vertical-stepper>
+
+        <!-- <small *ngIf="error" class="form-error-msg">{{errorMessage}}</small> -->
+        <!-- <hr><br>
+        <div class="text-center">
+          <a routerLink="/auth" class="mat-primary text-center full-width">Sign in to existing account</a>
+        </div> -->
+
+      </mat-card-content>
+    </mat-card>
   </div>
-  
+</div>

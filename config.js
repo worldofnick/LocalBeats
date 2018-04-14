@@ -19,6 +19,22 @@ module.exports = {
     soundcloud: {
       clientID: '4e3fe497717451e398ca2719842a7e20'
     },
+    google: {
+      clientID: '373678164015-979i32np2i2mdqnml2e7g2tkavp5jnd1.apps.googleusercontent.com'
+    },
+    reCaptcha: {
+      secret: '6LeFK1IUAAAAAAbGQ5CBAtmycaq2_N5GJvtwLL2z'
+    },
+    sendGrid: {
+      service: 'SendGrid',
+      user: 'apikey',
+      apiKey: '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'
+    },
+    local: {
+      // authCallbackUri : 'http://localhost:4200/callback?localAccessAuth=',
+      authCallbackUri : 'https://www.localbeats.live/callback?localAccessAuth=',
+      authSameTabUri: 'https://www.localbeats.live/api/auth/verifyLocalJwt/'
+    },
     // Configuration for Stripe.
     stripe: {
       secretKey: 'sk_test_XnYNA52kavV92IkcJyh1dQBw',

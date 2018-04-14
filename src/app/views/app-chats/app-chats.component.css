@@ -1,20 +1,35 @@
 .new-conversation-form {
-    min-width: 400px;
-    max-width: 500px;
-    font-size: 12pt;
-    font-family: Roboto, Arial, sans-serif;
-    width: 100%;
-    margin: 0px 0px;
-  }
+  min-width: 400px;
+  max-width: 500px;
+  font-size: 12pt;
+  font-family: Roboto, Arial, sans-serif;
+  width: 100%;
+  margin: 0px 0px;
+}
 
 .topbarChatTransparentButton {
-  background-color: rgba(255,255,255,0);
+  background-color: rgba(255, 255, 255, 0);
   color: white;
   border: 0px;
   /* width: 100%; */
 }
 
-  
-  /* .example-full-width {
+.sideBarText {
+  color: rgba(0, 0, 0, 0.65);
+}
+
+.unreadCount {
+  width: 40px;
+  height: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 20px;
+  color: #fff;
+  text-align: center;
+  border-radius: 4px;
+  background-color: rgba(255, 97,89, 0.8);
+}
+
+/* .example-full-width {
     width: 100%;
   } */

@@ -12,6 +12,7 @@ import * as domHelper from '../../../helpers/dom.helper';
 import { ThemeService } from '../../../services/theme/theme.service';
 import { UserService } from '../../../services/auth/user.service';
 import { SearchService } from '../../../services/search/search.service';
+import { SharedDataService } from '../../../services/shared/shared-data.service';
 import * as socketIO from 'socket.io-client';
 import { NotificationService } from '../../../services/notification/notification.service';
 import { SearchTerms, Location } from '../../../models/search';
@@ -75,6 +76,7 @@ export class TopbarComponent implements OnInit, OnDestroy {
     private mapsAPILoader: MapsAPILoader,
     private ngZone: NgZone,
     private changeDetector: ChangeDetectorRef,
+    public _sharedDataService: SharedDataService,
     private _socketService: SocketService,
     public dialog: MatDialog
     ) {

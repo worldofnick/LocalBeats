@@ -10,16 +10,16 @@ var Notifications = mongoose.model('Notification');
 // ====== USER ROUTES ======
 
 exports.listAllUsers = function (req, res) {
-  User.find({}, { hashPassword: 0 }, function (err, users) {
+  User.find({}, function (err, users) {
     if (err)
       return res.send(err);
-    users.hashPassword = undefined;
+    // users.hashPassword = undefined;
     return res.status(200).send({ "users": users });
   });
 };
 
 exports.getUserByID = function (req, res) {
-  User.findById(req.params.uid, { hashPassword: 0 }).populate('notifications').exec(function (err, user) {
+  User.findById(req.params.uid).populate('notifications').exec(function (err, user) {
       if (err) {
           return res.status(500).send("Failed to get user");
       } else {
@@ -35,7 +35,7 @@ exports.updateUserByID = function (req, res, next) {
       return res.status(520).send({ message: "Error finding the user from this UID...", error: err });
     }
 
-    user.hashPassword = undefined;
+    // user.hashPassword = undefined;
     if(req.body.user.spotifyID != undefined) {
       console.log("Spotify ID: " + req.body.user.spotifyID);
       next();
