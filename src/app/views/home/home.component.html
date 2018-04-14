@@ -156,7 +156,7 @@
     <div class="section-header">
       <h2>Send Us An Email</h2>
     </div>
-    <form [formGroup]="contactForm">
+    <form [formGroup]="contactForm" (ngSubmit)="contactUs()">
       <div fxLayout="row" fxLayout.lt-md="column" fxLayoutWrap="wrap">
         <div fxFlex="100">
           <div class="pb-1">

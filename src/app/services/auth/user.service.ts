@@ -22,6 +22,7 @@ const httpOptions = {
 export class UserService {
     public connection: string = environment.apiURL + 'api/auth';
     public userConnection: string = environment.apiURL + 'api/users';
+    public contactConnection: string = environment.apiURL + 'api/contactUs';
     private persistedUser = new BehaviorSubject<User>(null);
     public userResult = this.persistedUser.asObservable();
 
@@ -80,6 +81,16 @@ export class UserService {
     //             }
     //         });
     // }
+
+    public contactUs(name: string, subject: string, email: string, message: string): Observable<Object> {
+        return this.http.post(this.contactConnection, {name: name, subject: subject, email: email, message: message}, { headers: this.headers})
+            .map((response: Response) => {
+                return response.json().message;
+            }).catch((error: Response) => {
+                return Observable.throw(error.json().message);
+            })
+    }
+
     public signupUser(newUser: User): Observable<Object> {
         const current = this.connection + '/register';
         return this.http.post(current, newUser, { headers: this.headers })

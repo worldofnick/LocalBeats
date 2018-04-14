@@ -72,6 +72,7 @@ var notificationRoutes 		= require('./backend/routes/notificationRoutes.js');
 var messagesRoutes 		    = require('./backend/routes/messageRoutes.js');
 var reviewsRoutes   		    = require('./backend/routes/reviewsRoutes.js');
 var stripeRoutes 		      = require('./backend/routes/stripeRoutes.js');
+var contactRoutes         = require('./backend/routes/contactRoutes.js');
 userRoutes(app);
 authenticationRoutes(app);
 eventsRoutes(app);
@@ -81,6 +82,7 @@ notificationRoutes(app);
 messagesRoutes(app);
 reviewsRoutes(app);
 stripeRoutes(app);
+contactRoutes(app);
 
 var privateChatSocket     = require('./backend/socket/chatSocket.js');
 privateChatSocket.socketServer(io);
