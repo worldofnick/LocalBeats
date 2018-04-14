@@ -144,8 +144,8 @@ export class UserService {
             }).catch((error: Response) => {
                 if (error.status === 404) {
                     return Observable.throw('You are not registered with this email. Please register before continuing...');
-                    // } else if (error.status === 401) {
-                    //     return Observable.throw('Wrong password.  Please try again.');
+                } else if (error.status === 401) {
+                    return Observable.throw('Wrong password. Please try again.');
                 } else {
                     return Observable.throw('Something went wrong on our end. Please try again later...');
                 }
@@ -170,6 +170,8 @@ export class UserService {
                 // TODO: add more speicifc errors
                 if (error.status === 404) {
                     return Observable.throw('\'' + returningUser.email + '\' cannot be found. Check if it correct and try again.');
+                } else if (error.status === 401) {
+                    return Observable.throw('Incorrect password. Please try again');
                 } else if (error.status === 520) {
                     return Observable.throw('Unable to send the email. Please try again later...');
                 } else {

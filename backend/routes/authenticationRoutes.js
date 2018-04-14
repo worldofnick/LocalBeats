@@ -32,8 +32,8 @@ module.exports = function(app) {
 	app.route('/api/auth/authenticate/demo')
 		.post(autheticationHandler.signInDemoMode);
 
-	// app.route('/api/auth/passwordChange/:uid')
-	// 	.put(autheticationHandler.changePassword);
+	app.route('/api/auth/passwordChange/:uid')
+		.put(autheticationHandler.changePassword);
 
 	app.route('/api/auth/logout')
 		.post(autheticationHandler.logout);

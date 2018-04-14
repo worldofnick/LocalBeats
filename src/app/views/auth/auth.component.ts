@@ -43,7 +43,6 @@ export class AuthComponent implements OnInit {
 
   ngOnInit() {
     this.error = false;
-    // this.rememberMe = false;
 
     this._socketService.onEvent(SocketEvent.MAGIC_LOGIN_RESULT)
     .subscribe((message: Message) => {
@@ -73,29 +72,10 @@ export class AuthComponent implements OnInit {
       soundcloud: null,
       stripeAccountId: null
     };
-    // Checks to see if the user credentials have been stored locally via 'remember me'
-    // Populates them in the form if they exist
-    // const data = JSON.parse(localStorage.getItem('rememberMe'));
-    // if (data) {
-    //   this.user.email = data.email;
-    //   // this.user.password = data.password;
-    //   this.rememberMe = true;
-    // } else {
-    //   this.rememberMe = false;
-    // }
-    // if (this.rememberMe) {
-    //   this.signinForm = new FormGroup({
-    //     username: new FormControl(this.user.email.valueOf(), Validators.required),
-    //     // password: new FormControl(this.user.password.valueOf(), Validators.required),
-    //     rememberMe: new FormControl(this.rememberMe)
-    //   });
-    // } else {
     this.signinForm = new FormGroup({
       username: new FormControl('', Validators.required),
-      // password: new FormControl('', Validators.required),
-      //   rememberMe: new FormControl(this.rememberMe)
+      password: new FormControl('', Validators.required),
     });
-    // }
   }
 
   /**
@@ -108,6 +88,7 @@ export class AuthComponent implements OnInit {
   signin() {
     const signinData = this.signinForm.value;
     this.user.email = this.signinForm.controls['username'].value;
+    this.user.password = this.signinForm.controls['password'].value;
     // this.submitButton.disabled = true;
     // this.progressBar.mode = 'indeterminate';
 

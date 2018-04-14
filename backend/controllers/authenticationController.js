@@ -13,7 +13,7 @@ var config = require('../../config.js');
 
 exports.register = function (req, res) {
   var newUser = new User(req.body);
-  // newUser.hashPassword = bcrypt.hashSync(req.body.password, 10);   // save a hashed password to DB
+  newUser.hashPassword = bcrypt.hashSync(req.body.password, 10);   // save a hashed password to DB
   if (newUser._id == null) {
     newUser._id = undefined;
   }
@@ -51,23 +51,23 @@ exports.register = function (req, res) {
   });
 };
 
-// /**
-//  * Function that handles password change.
-//  * @param {*} req : {user: {<user_object>}, newPassword: "<pass>"}
-//  * @param {*} res : The user object
-//  */
-// exports.changePassword = function (req, res) {
-//   var oldUser = new User(req.body.user);
+/**
+ * Function that handles password change.
+ * @param {*} req : {user: {<user_object>}, newPassword: "<pass>"}
+ * @param {*} res : The user object
+ */
+exports.changePassword = function (req, res) {
+  var oldUser = new User(req.body.user);
 
-//   // var newUser = new User(req.body.user);
-//   var newHashPassword = bcrypt.hashSync(req.body.newPassword, 10);
+  // var newUser = new User(req.body.user);
+  var newHashPassword = bcrypt.hashSync(req.body.newPassword, 10);
 
-//   User.findByIdAndUpdate(req.params.uid, { hashPassword: newHashPassword }, { new: true }, function (err, user) {
-//     if (err) return res.status(500).send("There was a problem updating the password.");
-//     user.hashPassword = undefined;
-//     return res.status(200).send({ user: user });
-//   });
-// };
+  User.findByIdAndUpdate(req.params.uid, { hashPassword: newHashPassword }, { new: true }, function (err, user) {
+    if (err) return res.status(500).send("There was a problem updating the password.");
+    user.hashPassword = undefined;
+    return res.status(200).send({ user: user });
+  });
+};
 
 /**
  * Tells who the user is based on the token provided in the 
@@ -93,6 +93,9 @@ exports.signInDemoMode = function (req, res) {
   User.findOne({ email: req.body.email }, function (err, user) {
     if (err) return res.status(500).send('Error on the sign-in server.');
     if (!user) return res.status(404).send('No such user (' + req.body.email + ') in the database...');
+    if (!user.comparePassword(req.body.password)) {
+      return res.status(401).send('Incorrect password');
+    }
     var token = jwt.sign({ id: user._id }, config.secret, {
       expiresIn: 86400 // expires in 24 hours
     });
@@ -111,6 +114,7 @@ exports.signInDemoMode = function (req, res) {
 };
 
 exports.sendMagicLink = function (req, res) {
+  console.log('REQUeST: ', req.body);
   const receivedEmail = req.body.email;
   // Find the user with the requested email
   User.findOne({ email: req.body.email }, function (err, foundUser) {
@@ -119,6 +123,9 @@ exports.sendMagicLink = function (req, res) {
     }
     if (!foundUser) {
       return res.status(404).send('No such user (' + req.body.email + ') in the database...');
+    }
+    if (!foundUser.comparePassword(req.body.password)) {
+      return res.status(401).send('Incorrect password');
     }
 
     console.log('>> Found User: ', foundUser);

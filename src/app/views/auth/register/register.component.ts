@@ -207,7 +207,7 @@ export class RegisterComponent implements OnInit {
           this.userService.getNotificationsCountForUser(data.user._id);
           this.userService.getNotificationsForUser(data.user._id);
           this.sharedDataService.setOverallChatUnreadCount(data.user as User);
-          this.router.navigate(['/profile']);
+          this.router.navigate(['/']);
         } else {
           this.userService.requestMagicLink(this.user).subscribe(
             (responseData: any) => {
@@ -249,7 +249,7 @@ export class RegisterComponent implements OnInit {
           this.userService.getNotificationsCountForUser(result.user._id);
           this.userService.getNotificationsForUser(result.user._id);
           this.sharedDataService.setOverallChatUnreadCount(result.user as User);
-          this.router.navigate(['/profile']);
+          this.router.navigate(['/']);
         } else {
           console.log('Not for you');
         }

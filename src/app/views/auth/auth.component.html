@@ -9,7 +9,7 @@
         <div *ngIf="!this.magicLinkButtonClicked">
           <div>
             <mat-slide-toggle class="text-muted" color="accent" [(ngModel)]="isDemoModeChecked" (ngModelChange)="toggleDemoMode()">
-              Demo Mode
+              Disable 2FA
             </mat-slide-toggle>
           </div>
           <form [formGroup]="signinForm" (ngSubmit)="signin()" #captchaProtectedForm="ngForm" class="login100-form">
@@ -21,7 +21,7 @@
 
               <div class="text-center p-t-57 p-b-20">
                 <span class="txt1">
-                  Password-less Login System
+                  Two-Factor Authentication System
                 </span>
               </div>
 
@@ -35,6 +35,14 @@
               <small *ngIf="signinForm.controls['username'].hasError('required') && signinForm.controls['username'].touched" 
               class="text-center p-l-10 m-b-5 form-error-msg">
                 Email is required </small>
+            </div>
+
+            <div class="wrap-input100 validate-input m-b-30">
+                <input class="input100" type="password" name="password" matInput [formControl]="signinForm.controls['password']" placeholder="Password">
+                <span class="focus-input100"></span>
+              <small 
+                *ngIf="signinForm.controls['password'].hasError('required') && signinForm.controls['password'].touched" 
+                class="text-center p-l-10 m-b-5 form-error-msg"> Password is required </small>
             </div>
 
             <!-- Sign in button -->
@@ -94,7 +102,7 @@
         <div *ngIf="isDemoModeChecked">
           <br>
           <p class="text-center text-muted m-0">
-            <strong>⚠️ Disclaimer:</strong> The magic link will be skipped in demo mode to instantly log user
+            <strong>⚠️ Disclaimer:</strong> The magic link will be skipped in demo mode to log user with traditional authentication
             in. <br><strong>Will not be included in real-world deployment.</strong></p>
         </div>
       </mat-card-content>
