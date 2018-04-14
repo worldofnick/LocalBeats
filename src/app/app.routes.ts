@@ -21,6 +21,11 @@ export const rootRouterConfig: Routes = [
         data: { title: 'Home', breadcrumb: 'HOME'}
       },
       { 
+        path: 'about', 
+        loadChildren: './views/about/about.module#AboutModule', 
+        data: { title: 'About', breadcrumb: 'ABOUT'}
+      },
+      { 
         path: 'search', 
         loadChildren: './views/search-results/search.module#SearchModule',
         data: { title: 'Search', breadcrumb: 'SEARCH'}
