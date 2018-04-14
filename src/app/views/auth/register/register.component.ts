@@ -56,6 +56,9 @@ export class RegisterComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    const password = new FormControl('', Validators.required);
+    const confirmPassword = new FormControl('', CustomValidators.equalTo(password));
+
     this._socketService.onEvent(SocketEvent.MAGIC_LOGIN_RESULT)
     .subscribe((message: Message) => {
       console.log('Magic link result: ', message);
@@ -72,6 +75,8 @@ export class RegisterComponent implements OnInit {
       firstName: new FormControl('', Validators.required),
       lastName: new FormControl('', Validators.required),
       email: new FormControl('', [Validators.required, Validators.email]),
+      password: password,
+      confirmPassword: confirmPassword,
       location: new FormControl('', Validators.required)
     });
 
@@ -158,7 +163,7 @@ export class RegisterComponent implements OnInit {
       lastName: signupData.lastName,
       fullName: signupData.firstName + ' ' + signupData.lastName,
       email: signupData.email,
-      password: null,
+      password: signupData.password,
       spotify: null,
       google: null,
       soundcloud: null,

@@ -23,7 +23,7 @@
             <form [formGroup]="signupForm">
               <ng-template matStepLabel>Identification</ng-template>
 
-              <div class="wrap-input100 validate-input m-b-20">
+              <div class="wrap-input100 validate-input m-b-15">
                 <!-- <mat-form-field class="full-width"> -->
                   <input type="input-text" name="firstName" matInput [formControl]="signupForm.controls['firstName']" placeholder="Given Name"
                     value="" class="input100">
@@ -35,19 +35,19 @@
                   Given Name is required </small>
 
 
-              <div class="wrap-input100 validate-input m-b-20">
+              <div class="wrap-input100 validate-input m-b-15">
                 <!-- <mat-form-field class="full-width"> -->
-                  <input type="input-text" name="lastName" matInput [formControl]="signupForm.controls['lastName']" placeholder="Last Name"
+                  <input type="input-text" name="lastName" matInput [formControl]="signupForm.controls['lastName']" placeholder="Family Name"
                     value="" class="input100">
                     <span class="focus-input100"></span>
                 <!-- </mat-form-field> -->
               </div>
               <small *ngIf="signupForm.controls['lastName'].hasError('required') && signupForm.controls['lastName'].touched" 
               class="text-center p-l-10 m-b-5 form-error-msg">
-                  Last Name is required </small>
+                  Family Name is required </small>
 
 
-              <div class="wrap-input100 validate-input m-b-20">
+              <div class="wrap-input100 validate-input m-b-15">
                 <!-- <mat-form-field class="full-width"> -->
                   <input class="input100" matInput type="email" name="email" [formControl]="signupForm.controls['email']" placeholder="Your Email" value="">
                   <span class="focus-input100"></span>
@@ -61,8 +61,34 @@
                 class="text-center p-l-10 m-b-5 form-error-msg">
                   Invaild email address </small>
 
+                  <div class="wrap-input100 validate-input m-b-20">
+                      <input class="input100"
+                        type="password"
+                        name="password"
+                        matInput
+                        [formControl]="signupForm.controls['password']"
+                        placeholder="Password" 
+                        value="">
+                        <span class="focus-input100"></span>
+                  </div>
+                  <small 
+                      *ngIf="signupForm.controls['password'].hasError('required') && signupForm.controls['password'].touched" 
+                      class="text-center p-l-10 m-b-5 form-error-msg"> Password is required </small>
+                  
+                  <div class="wrap-input100 validate-input m-b-15">                    
+                      <input class="input100"
+                        type="password"
+                        name="confirmPassword"
+                        matInput
+                        [formControl]="signupForm.controls['confirmPassword']"
+                        placeholder="Confirm Password"
+                        value="">
+                        <span class="focus-input100"></span>
+                  </div>
+                  <small *ngIf="signupForm.controls['confirmPassword'].hasError('required') && signupForm.controls['confirmPassword'].touched" class="text-center p-l-10 m-b-5 form-error-msg">Confirm password is required.</small>
+                    <small *ngIf="signupForm.controls['confirmPassword'].hasError('equalTo')" class="text-center p-l-10 m-b-5 form-error-msg">Passwords do not match.</small>
 
-              <div class="wrap-input100 validate-input m-b-20">
+              <div class="wrap-input100 validate-input m-b-15">
                 <!-- <mat-form-field> -->
                   <input class="input100" matInput placeholder="City, State" autocorrect="off" autocapitalize="off" spellcheck="off" type="text" #searchplaces
                     [formControl]="signupForm.controls['location']">
