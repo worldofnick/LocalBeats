@@ -94,7 +94,7 @@
               </mat-list>
 
               <!-- Spotify album widget for clicked album listItem -->
-              <iframe *ngIf="this.onSpotifyWidget" [src]="this.trustedAlbumUrl" width=100% height=100% frameborder="0" allowtransparency="true"></iframe>
+              <iframe *ngIf="this.onSpotifyWidget && (this.user.spotify !== undefined && this.user.spotify !== null)" [src]="this.trustedAlbumUrl" width=100% height=100% frameborder="0" allowtransparency="true"></iframe>
             </div>
           </mat-tab>
 
