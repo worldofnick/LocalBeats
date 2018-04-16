@@ -24,6 +24,13 @@ export class NavigationComponent {
         state: 'home'
       },
       {
+        name: 'About',
+        type: 'link',
+        tooltip: 'About',
+        icon: 'album',
+        state: 'about'
+      },
+      {
         name: 'Log in',
         type: 'link',
         tooltip: 'Log in',

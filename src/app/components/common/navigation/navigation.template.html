@@ -6,7 +6,7 @@
     sideNavAccordion 
     class="sidebar-list-item" 
     role="listitem"
-    *ngIf="!item.disabled && ((item.name != 'Home' || item.name != 'Log in') && user) || item.name == 'Home' || (item.name == 'Log in' && user == null)"
+    *ngIf="item.name == 'About' || (!item.disabled && ((item.name != 'Home' || item.name != 'Log in') && user) || item.name == 'Home' || (item.name == 'Log in' && user == null))"
     [ngClass]="{'has-submenu': item.type === 'dropDown'}"
     routerLinkActive="open">
       <a routerLink="/{{item.state}}" *ngIf="item.type === 'link'">

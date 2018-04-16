@@ -258,13 +258,31 @@ export class HomeComponent implements OnInit {
 
   }
 
-
   private pageEvent(pageEvent: PageEvent) {
     this.pageIndex = pageEvent.pageIndex;
     this.pageSize = pageEvent.pageSize;
     this.updateResults();
     // Scroll to top of page
     window.scrollTo(0, 0);
+  }
+
+  private contactUs() {
+    let name = this.contactForm.controls['name'].value;
+    let email = this.contactForm.controls['email'].value;
+    let subject = this.contactForm.controls['subject'].value;
+    let message = this.contactForm.controls['message'].value;
+    this._userService.contactUs(name, subject, email, message).subscribe(
+      (text: any) => {
+        let snackBarRef = this.snackBar.open(text, "", {
+          duration: 1500,
+        });
+      },
+      (error) => {
+        let snackBarRef = this.snackBar.open(error, "", {
+          duration: 1500,
+        });
+      }
+    )
   }
 
   private pageEvent2(pageEvent: PageEvent) {
