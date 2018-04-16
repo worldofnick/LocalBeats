@@ -20,7 +20,7 @@ import { Notification } from 'app/models/notification';
   selector: 'app-auth',
   templateUrl: './auth.component.html',
   styleUrls: ['../../../assets/styles/main.css', '../../../assets/styles/util.css',
-  './auth.component.css']
+    './auth.component.css']
 })
 export class AuthComponent implements OnInit {
   @ViewChild(MatProgressBar) progressBar: MatProgressBar;
@@ -35,6 +35,8 @@ export class AuthComponent implements OnInit {
   errorMessage: string = '';
   magicLinkButtonClicked: boolean = false;
   isDemoModeChecked = false;
+  numOfWrongPasswordAttemps: number;
+  isPasswordResetApproved = false;
 
   constructor(private userService: UserService, private sharedDataService: SharedDataService,
     private router: Router, private chatsService: ChatsService,
@@ -43,12 +45,14 @@ export class AuthComponent implements OnInit {
 
   ngOnInit() {
     this.error = false;
+    this.numOfWrongPasswordAttemps = 0;
+    this.isPasswordResetApproved = false;
 
     this._socketService.onEvent(SocketEvent.MAGIC_LOGIN_RESULT)
-    .subscribe((message: Message) => {
-      console.log('Magic link result: ', message);
-      this.handleSameTabMagicLogin(message.serverPayload);
-    });
+      .subscribe((message: Message) => {
+        console.log('Magic link result: ', message);
+        this.handleSameTabMagicLogin(message.serverPayload);
+      });
 
     this.user = {
       _id: null,
@@ -111,11 +115,14 @@ export class AuthComponent implements OnInit {
           (data: any) => {
             // Correctly authenticated, redirect
             this.error = false;
-            this.userService.userLoaded(data.user, data.token, false, false);
-            this.userService.getNotificationsCountForUser(data.user._id);
-            this.userService.getNotificationsForUser(data.user._id);
-            this.sharedDataService.setOverallChatUnreadCount(data.user as User);
-            this.router.navigate(['/']);
+            this.userService.magicLinkDemiSignIn(data.user as User).subscribe(
+              (result: any) => {
+                this.userService.userLoaded(result.user, result.token, false, false);
+                this.userService.getNotificationsCountForUser(result.user._id);
+                this.userService.getNotificationsForUser(result.user._id);
+                this.sharedDataService.setOverallChatUnreadCount(result.user);
+                this.router.navigate(['/']);
+              });
           },
           (error) => {
             console.log('Google Error: ', error);
@@ -126,18 +133,16 @@ export class AuthComponent implements OnInit {
   }
 
   toggleDemoMode() {
-    console.log('>> Toggle is at : ', this.isDemoModeChecked);
+    // console.log('>> Toggle is at : ', this.isDemoModeChecked);
   }
 
   cpatchaResolved(captchaResponse: string) {
     // Contact server and verify the captchaResponse. If valid, proceed with
     // sending a magic link and logging in. Else, reset the box with an error message
-    console.log(`Resolved captcha with response ${captchaResponse}:`);
-
     if (captchaResponse !== null) {
       this.userService.verifyCaptchaToken(captchaResponse).subscribe(
         (data: any) => {
-          console.log('>> SUCCESS: ', data);
+          // console.log('>> SUCCESS: ', data);
           this.magicLinkLogin();
         },
         (error: any) => {
@@ -160,24 +165,49 @@ export class AuthComponent implements OnInit {
         },
         (error) => {
           // Show user error message
+          this.numOfWrongPasswordAttemps++;
           this.magicLinkButtonClicked = false;
           this.handleErrors(error);
         });
     } else {
       this.userService.demoModeSignInUser(this.user).subscribe(
         (data: any) => {
+          console.log('>> In 200, data: ', data);
           // Correctly authenticated, redirect
           this.error = false;
-          this.userService.userLoaded(data.user, data.token, false, false);
-          this.userService.getNotificationsCountForUser(data.user._id);
-          this.userService.getNotificationsForUser(data.user._id);
-          this.sharedDataService.setOverallChatUnreadCount(data.user as User);
-          this.router.navigate(['/']);
+          this.userService.magicLinkDemiSignIn(data.user as User).subscribe(
+            (result: any) => {
+              this.userService.userLoaded(result.user, result.token, false, false);
+              this.userService.getNotificationsCountForUser(result.user._id);
+              this.userService.getNotificationsForUser(result.user._id);
+              this.sharedDataService.setOverallChatUnreadCount(result.user);
+              this.router.navigate(['/']);
+            });
         },
         (error) => {
+          this.numOfWrongPasswordAttemps++;
           this.handleErrors(error);
         });
     }
+  }
+
+  passwordResetLinkClicked() {
+    this.user.email = this.signinForm.controls['username'].value;
+    this.userService.requestPasswordResetMagicLink(this.user).subscribe(
+      (data: any) => {
+        // Magic link successfully sent!
+        this.error = false;
+        this.magicLinkButtonClicked = true;
+        this.isPasswordResetApproved = true;
+        // this.progressBar.mode = 'determinate';
+      },
+      (error) => {
+        // Show user error message
+        this.numOfWrongPasswordAttemps++;
+        this.isPasswordResetApproved = false;
+        this.magicLinkButtonClicked = false;
+        this.handleErrors(error);
+      });
   }
 
   handleErrors(error) {
@@ -191,26 +221,29 @@ export class AuthComponent implements OnInit {
   }
 
   handleSameTabMagicLogin(result) {
-    console.log('>> Result payload: ', result);
+    // console.log('>> Result payload: ', result);
     if (this.user !== null && this.user !== undefined) {
-      console.log('>> This user: ', this.user);
+      // console.log('>> This user: ', this.user);
       if (result.statusCode === 200) {
         if (result.user.email === this.user.email) {
-          console.log('>> In 200');
+          console.log('>> In 200, result: ', result.user as User);
           this.error = false;
-          this.userService.userLoaded(result.user, result.token, false, false);
-          this.userService.getNotificationsCountForUser(result.user._id);
-          this.userService.getNotificationsForUser(result.user._id);
-          this.sharedDataService.setOverallChatUnreadCount(result.user as User);
-          this.router.navigate(['/']);
+          this.userService.magicLinkDemiSignIn(result.user as User).subscribe(
+            (data: any) => {
+              this.userService.userLoaded(data.user, data.token, false, false);
+              this.userService.getNotificationsCountForUser(data.user._id);
+              this.userService.getNotificationsForUser(data.user._id);
+              this.sharedDataService.setOverallChatUnreadCount(data.user);
+              this.router.navigate(['/']);
+            });
         } else {
-          console.log('Not for you');
+          // console.log('Not for you');
         }
       } else if (result.statusCode === 404) {
         this.magicLinkButtonClicked = false;
         this.router.navigate(['/auth', 'register']);
       } else {
-        console.log('>> In error');
+        // console.log('>> In error');
         this.magicLinkButtonClicked = false;
         this.handleErrors('Something went wrong on the server side... Please try again later');
       }

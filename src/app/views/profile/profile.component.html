@@ -94,7 +94,7 @@
               </mat-list>
 
               <!-- Spotify album widget for clicked album listItem -->
-              <iframe *ngIf="this.onSpotifyWidget" [src]="this.trustedAlbumUrl" width=100% height=100% frameborder="0" allowtransparency="true"></iframe>
+              <iframe *ngIf="this.onSpotifyWidget && (this.user.spotify !== undefined && this.user.spotify !== null)" [src]="this.trustedAlbumUrl" width=100% height=100% frameborder="0" allowtransparency="true"></iframe>
             </div>
           </mat-tab>
 
@@ -144,7 +144,7 @@
 
       <mat-card-actions>
         <!-- <h4 mat-subheader *ngIf="!this.onSpotifyWidget">Album Count : {{this.user.spotify.albums.length}}</h4> -->
-        <button mat-button *ngIf="this.onSpotifyWidget" (click)="backToSpotifyAlbumsClicked()">
+        <button mat-button *ngIf="this.onSpotifyWidget && (this.user.spotify !== undefined && this.user.spotify !== null)" (click)="backToSpotifyAlbumsClicked()">
           <mat-icon>arrow_back</mat-icon> Back to Albums</button>
       </mat-card-actions>
     </mat-card>

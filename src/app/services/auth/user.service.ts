@@ -152,6 +152,29 @@ export class UserService {
             });
     }
 
+    public magicLinkDemiSignIn(returningUser: User): Observable<Object> {
+        const current = this.connection + '/authenticate/demiSignIn';
+        return this.http.post(current, returningUser, { headers: this.headers })
+            .map((response: Response) => {
+                const data = response.json();
+                this.accessToken = data.token;
+                sessionStorage.setItem('token', JSON.stringify({ accessToken: this.accessToken }));
+                this.user = data.user as User;
+                // Notify server that a new user user logged in
+                this._socketService.send(Action.NEW_LOG_IN, {
+                    from: this.user,
+                    action: Action.NEW_LOG_IN
+                });
+                return data;
+            }).catch((error: Response) => {
+                if (error.status === 404) {
+                    return Observable.throw('You are not registered with this email. Please register before continuing...');
+                } else {
+                    return Observable.throw('Something went wrong on our end. Please try again later...');
+                }
+            });
+    }
+
     public requestMagicLink(returningUser: User): Observable<Object> {
         const requestUrl = this.connection + '/magicLink';
         return this.http.post(requestUrl, returningUser, { headers: this.headers })
@@ -172,6 +195,32 @@ export class UserService {
                     return Observable.throw('\'' + returningUser.email + '\' cannot be found. Check if it correct and try again.');
                 } else if (error.status === 401) {
                     return Observable.throw('Incorrect password. Please try again');
+                } else if (error.status === 520) {
+                    return Observable.throw('Unable to send the email. Please try again later...');
+                } else {
+                    return Observable.throw('An unknown error has occured... Please try again later.');
+                }
+            });
+    }
+
+    public requestPasswordResetMagicLink(returningUser: User): Observable<Object> {
+        const requestUrl = this.connection + '/password/reset';
+        return this.http.post(requestUrl, returningUser, { headers: this.headers })
+            .map((response: Response) => {
+                console.log('>> In request magic link...');
+                const data = response.json();
+
+                // TODO: anything else?
+
+                // this.accessToken = data.token;
+                // sessionStorage.setItem('token', JSON.stringify({ accessToken: this.accessToken }))
+                // this.user = data.user as User;
+                console.log('>> Magic link response: ', data);
+                return data;
+            }).catch((error: Response) => {
+                // TODO: add more speicifc errors
+                if (error.status === 404) {
+                    return Observable.throw('\'' + returningUser.email + '\' cannot be found. Check if it correct and try again.');
                 } else if (error.status === 520) {
                     return Observable.throw('Unable to send the email. Please try again later...');
                 } else {

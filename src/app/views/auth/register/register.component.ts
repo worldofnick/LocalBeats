@@ -208,11 +208,14 @@ export class RegisterComponent implements OnInit {
         console.log('Sign in data: ', data);
         if (data.user.google !== null && data.user.google !== undefined) {
           this.error = false;
-          this.userService.userLoaded(data.user, data.token, false, false);
-          this.userService.getNotificationsCountForUser(data.user._id);
-          this.userService.getNotificationsForUser(data.user._id);
-          this.sharedDataService.setOverallChatUnreadCount(data.user as User);
-          this.router.navigate(['/']);
+          this.userService.magicLinkDemiSignIn(data.user as User).subscribe(
+            (result: any) => {
+              this.userService.userLoaded(result.user, result.token, false, false);
+              this.userService.getNotificationsCountForUser(result.user._id);
+              this.userService.getNotificationsForUser(result.user._id);
+              this.sharedDataService.setOverallChatUnreadCount(result.user);
+              this.router.navigate(['/']);
+            });
         } else {
           this.userService.requestMagicLink(this.user).subscribe(
             (responseData: any) => {
@@ -250,11 +253,14 @@ export class RegisterComponent implements OnInit {
         if (result.user.email === this.user.email) {
           console.log('>> In 200');
           this.error = false;
-          this.userService.userLoaded(result.user, result.token, false, false);
-          this.userService.getNotificationsCountForUser(result.user._id);
-          this.userService.getNotificationsForUser(result.user._id);
-          this.sharedDataService.setOverallChatUnreadCount(result.user as User);
-          this.router.navigate(['/']);
+          this.userService.magicLinkDemiSignIn(result.user as User).subscribe(
+            (data: any) => {
+              this.userService.userLoaded(data.user, data.token, false, false);
+              this.userService.getNotificationsCountForUser(data.user._id);
+              this.userService.getNotificationsForUser(data.user._id);
+              this.sharedDataService.setOverallChatUnreadCount(data.user);
+              this.router.navigate(['/']);
+            });
         } else {
           console.log('Not for you');
         }

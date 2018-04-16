@@ -11,6 +11,9 @@ module.exports = function(app) {
 	app.route('/api/auth/magicLink')
 		.post(autheticationHandler.sendMagicLink);
 
+	app.route('/api/auth/password/reset')
+		.post(autheticationHandler.sendResetPasswordLink);
+
 	app.route('/api/auth/captcha/verify')
 		.post(autheticationHandler.verifyReCaptchaWithGet);
 	
@@ -31,6 +34,9 @@ module.exports = function(app) {
 
 	app.route('/api/auth/authenticate/demo')
 		.post(autheticationHandler.signInDemoMode);
+
+	app.route('/api/auth/authenticate/demiSignIn')
+		.post(autheticationHandler.demiSignIn);
 
 	app.route('/api/auth/passwordChange/:uid')
 		.put(autheticationHandler.changePassword);
