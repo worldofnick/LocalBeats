@@ -180,6 +180,32 @@ export class UserService {
             });
     }
 
+    public requestPasswordResetMagicLink(returningUser: User): Observable<Object> {
+        const requestUrl = this.connection + '/password/reset';
+        return this.http.post(requestUrl, returningUser, { headers: this.headers })
+            .map((response: Response) => {
+                console.log('>> In request magic link...');
+                const data = response.json();
+
+                // TODO: anything else?
+
+                // this.accessToken = data.token;
+                // sessionStorage.setItem('token', JSON.stringify({ accessToken: this.accessToken }))
+                // this.user = data.user as User;
+                console.log('>> Magic link response: ', data);
+                return data;
+            }).catch((error: Response) => {
+                // TODO: add more speicifc errors
+                if (error.status === 404) {
+                    return Observable.throw('\'' + returningUser.email + '\' cannot be found. Check if it correct and try again.');
+                } else if (error.status === 520) {
+                    return Observable.throw('Unable to send the email. Please try again later...');
+                } else {
+                    return Observable.throw('An unknown error has occured... Please try again later.');
+                }
+            });
+    }
+
     // TODO: complete it
     public verifyLocalAccessToken(urlJwt: string): Observable<Object> {
         const requestUrl = this.connection + '/verifyLocalJwt';

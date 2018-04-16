@@ -9,7 +9,7 @@
         <div *ngIf="!this.magicLinkButtonClicked">
           <div>
             <mat-slide-toggle class="text-muted" color="accent" [(ngModel)]="isDemoModeChecked" (ngModelChange)="toggleDemoMode()">
-              Disable 2FA
+              Test Mode
             </mat-slide-toggle>
           </div>
           <form [formGroup]="signinForm" (ngSubmit)="signin()" #captchaProtectedForm="ngForm" class="login100-form">
@@ -32,17 +32,15 @@
                 <span class="focus-input100"></span>
               </div>
               <!-- </mat-form-field> -->
-              <small *ngIf="signinForm.controls['username'].hasError('required') && signinForm.controls['username'].touched" 
-              class="text-center p-l-10 m-b-5 form-error-msg">
+              <small *ngIf="signinForm.controls['username'].hasError('required') && signinForm.controls['username'].touched" class="text-center p-l-10 m-b-5 form-error-msg">
                 Email is required </small>
             </div>
 
             <div class="wrap-input100 validate-input m-b-30">
-                <input class="input100" type="password" name="password" matInput [formControl]="signinForm.controls['password']" placeholder="Password">
-                <span class="focus-input100"></span>
-              <small 
-                *ngIf="signinForm.controls['password'].hasError('required') && signinForm.controls['password'].touched" 
-                class="text-center p-l-10 m-b-5 form-error-msg"> Password is required </small>
+              <input class="input100" type="password" name="password" matInput [formControl]="signinForm.controls['password']" placeholder="Password">
+              <span class="focus-input100"></span>
+              <small *ngIf="signinForm.controls['password'].hasError('required') && signinForm.controls['password'].touched" class="text-center p-l-10 m-b-5 form-error-msg">
+              Password is required </small>
             </div>
 
             <!-- Sign in button -->
@@ -52,9 +50,15 @@
                 Send me a magic link!
               </button>
               <button *ngIf="isDemoModeChecked" class="login100-form-btn" [disabled]="signinForm.invalid" (click)="invisible.execute()">
-                  Skip magic and sign in
+                Skip magic and sign in
               </button>
               <small *ngIf="error" class="text-center p-l-10 m-t-30 m-b-20 form-error-msg">{{errorMessage}}</small>
+
+              <div *ngIf="this.numOfWrongPasswordAttemps > 0" class="text-center">
+                <button class="txt2 hov1 m-b-20" [disabled]="signinForm.invalid" (click)="passwordResetLinkClicked()">
+                  Reset My Password...
+                </button>
+              </div>
             </div>
 
             <div class="text-center p-t-57 p-b-20">
@@ -83,27 +87,33 @@
         </div>
         <div *ngIf="this.magicLinkButtonClicked && !error">
           <!-- <p class="text-center text-muted m-0"> -->
-            <strong>⚠️ Do NOT close this window</strong><br><br>
-            A magic link has been sent to:
-            <br><strong>{{this.user.email}}</strong>
-            <br>
-            <br> Please click the link in it to <strong>continue</strong> your session in <strong>this</strong> window.
-            <br>
-            <br>(Note: It may take a couple of minutes to receive the email.)
+          <strong>⚠️ Do NOT close this window</strong>
+          <br>
+          <br> A magic link has been sent to:
+          <br>
+          <strong>{{this.user.email}}</strong>
+          <br>
+          <br> Please click the link in it to
+          <strong>continue</strong> your session in
+          <strong>this</strong> window.
+          <br>
+          <br>(Note: It may take a couple of minutes to receive the email.)
           <!-- </p> -->
         </div>
 
         <div *ngIf="this.magicLinkButtonClicked && error">
-            <p class="text-center text-muted m-0" style="color: Tomato">
-                🛑 Something went wrong:<br><br>{{errorMessage}}
-            </p>
-          </div>
+          <p class="text-center text-muted m-0" style="color: Tomato">
+            🛑 Something went wrong:
+            <br>
+            <br>{{errorMessage}}
+          </p>
+        </div>
 
         <div *ngIf="isDemoModeChecked">
           <br>
           <p class="text-center text-muted m-0">
-            <strong>⚠️ Disclaimer:</strong> The magic link will be skipped in demo mode to log user with traditional authentication
-            in. <br><strong>Will not be included in real-world deployment.</strong></p>
+            <strong>⚠️ The magic link email verification is disabled</strong>
+          </p>
         </div>
       </mat-card-content>
     </mat-card>

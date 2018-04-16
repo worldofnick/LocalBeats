@@ -11,6 +11,9 @@ module.exports = function(app) {
 	app.route('/api/auth/magicLink')
 		.post(autheticationHandler.sendMagicLink);
 
+	app.route('/api/auth/password/reset')
+		.post(autheticationHandler.sendResetPasswordLink);
+
 	app.route('/api/auth/captcha/verify')
 		.post(autheticationHandler.verifyReCaptchaWithGet);
 	

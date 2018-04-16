@@ -165,6 +165,55 @@ exports.sendMagicLink = function (req, res) {
   });
 }
 
+exports.sendResetPasswordLink = function (req, res) {
+  console.log('REQUeST: ', req.body);
+  const receivedEmail = req.body.email;
+  // Find the user with the requested email
+  User.findOne({ email: req.body.email }, function (err, foundUser) {
+    if (err) {
+      return res.status(500).send('Error on the sign-in server.');
+    }
+    if (!foundUser) {
+      return res.status(404).send('No such user (' + req.body.email + ') in the database...');
+    }
+
+    // console.log('>> Found User: ', foundUser);
+    // If the user's found, generate a JWT token with its uid
+    let localAccessToken = jwt.sign({ id: foundUser._id }, config.secret, {
+      expiresIn: 86400 // expires in 24 hours
+    });
+    // console.log('>> Local access token: ', localAccessToken);
+
+    // foundUser.hashPassword = undefined;
+
+    // Send email with JWT link
+    const callbackUrl = config.local.authCallbackUri + localAccessToken;
+    const sameTabUrl = config.local.authSameTabUri + localAccessToken;
+    let message = {
+      from: 'auth@localBeats.com',
+      to: foundUser.email,
+      subject: 'localBeats Password-less Login Magic Link',
+      text: 'Hello, ' + foundUser.firstName,
+      html: '<p><b>Hello, ' + foundUser.firstName + '!<br>' +
+        '<br>Click this link to get verified and continue your session: <br><br>' +
+        sameTabUrl +
+        '<br><br><br>But, if you accidently closed your localBeats window, ' +
+        '<a href="' + callbackUrl +
+        '">click here to start a new session</a>' +
+        '<br><br>Thanks'
+    };
+
+    mailer.sendEmail(message.from, message.to, message.subject, message.html)
+      .then(data => {
+        console.log('success: ', data);
+        res.status(200).send({ user: foundUser, message: 'Magic link sent!' });
+      }, error => {
+        console.log('Failure: ', error);
+        res.status(520).send('Unable to send the email... Try again later');
+      });
+  });
+}
+
 exports.verifyLocalJwtAndReturnUser = function (req, res) {
   console.log('>> Body received: ', req.body);
 
