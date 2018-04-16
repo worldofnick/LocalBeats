@@ -144,7 +144,7 @@
 
       <mat-card-actions>
         <!-- <h4 mat-subheader *ngIf="!this.onSpotifyWidget">Album Count : {{this.user.spotify.albums.length}}</h4> -->
-        <button mat-button *ngIf="this.onSpotifyWidget" (click)="backToSpotifyAlbumsClicked()">
+        <button mat-button *ngIf="this.onSpotifyWidget && (this.user.spotify !== undefined && this.user.spotify !== null)" (click)="backToSpotifyAlbumsClicked()">
           <mat-icon>arrow_back</mat-icon> Back to Albums</button>
       </mat-card-actions>
     </mat-card>
