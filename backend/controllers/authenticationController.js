@@ -113,6 +113,27 @@ exports.signInDemoMode = function (req, res) {
   });
 };
 
+exports.demiSignIn = function (req, res) {
+  User.findOne({ email: req.body.email }, function (err, user) {
+    if (err) return res.status(500).send('Error on the sign-in server.');
+    if (!user) return res.status(404).send('No such user (' + req.body.email + ') in the database...');
+    var token = jwt.sign({ id: user._id }, config.secret, {
+      expiresIn: 86400 // expires in 24 hours
+    });
+    // user.hashPassword = undefined;
+
+    User.findByIdAndUpdate(user._id, { isOnline: true }, { new: true }, function (err, authUser) {
+      if (err) {
+        console.log('Cant chnage online status (auth controller)...');
+      }
+      authUser.hashPassword = undefined;
+      console.log('Authenticated user: ', authUser);
+    });
+
+    res.status(200).send({ auth: true, token: token, user: user });
+  });
+};
+
 exports.sendMagicLink = function (req, res) {
   console.log('REQUeST: ', req.body);
   const receivedEmail = req.body.email;

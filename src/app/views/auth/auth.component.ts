@@ -36,6 +36,7 @@ export class AuthComponent implements OnInit {
   magicLinkButtonClicked: boolean = false;
   isDemoModeChecked = false;
   numOfWrongPasswordAttemps: number;
+  isPasswordResetApproved = false;
 
   constructor(private userService: UserService, private sharedDataService: SharedDataService,
     private router: Router, private chatsService: ChatsService,
@@ -45,6 +46,7 @@ export class AuthComponent implements OnInit {
   ngOnInit() {
     this.error = false;
     this.numOfWrongPasswordAttemps = 0;
+    this.isPasswordResetApproved = false;
 
     this._socketService.onEvent(SocketEvent.MAGIC_LOGIN_RESULT)
       .subscribe((message: Message) => {
@@ -113,11 +115,14 @@ export class AuthComponent implements OnInit {
           (data: any) => {
             // Correctly authenticated, redirect
             this.error = false;
-            this.userService.userLoaded(data.user, data.token, false, false);
-            this.userService.getNotificationsCountForUser(data.user._id);
-            this.userService.getNotificationsForUser(data.user._id);
-            this.sharedDataService.setOverallChatUnreadCount(data.user as User);
-            this.router.navigate(['/']);
+            this.userService.magicLinkDemiSignIn(data.user as User).subscribe(
+              (result: any) => {
+                this.userService.userLoaded(result.user, result.token, false, false);
+                this.userService.getNotificationsCountForUser(result.user._id);
+                this.userService.getNotificationsForUser(result.user._id);
+                this.sharedDataService.setOverallChatUnreadCount(result.user);
+                this.router.navigate(['/']);
+              });
           },
           (error) => {
             console.log('Google Error: ', error);
@@ -167,13 +172,17 @@ export class AuthComponent implements OnInit {
     } else {
       this.userService.demoModeSignInUser(this.user).subscribe(
         (data: any) => {
+          console.log('>> In 200, data: ', data);
           // Correctly authenticated, redirect
           this.error = false;
-          this.userService.userLoaded(data.user, data.token, false, false);
-          this.userService.getNotificationsCountForUser(data.user._id);
-          this.userService.getNotificationsForUser(data.user._id);
-          this.sharedDataService.setOverallChatUnreadCount(data.user as User);
-          this.router.navigate(['/']);
+          this.userService.magicLinkDemiSignIn(data.user as User).subscribe(
+            (result: any) => {
+              this.userService.userLoaded(result.user, result.token, false, false);
+              this.userService.getNotificationsCountForUser(result.user._id);
+              this.userService.getNotificationsForUser(result.user._id);
+              this.sharedDataService.setOverallChatUnreadCount(result.user);
+              this.router.navigate(['/']);
+            });
         },
         (error) => {
           this.numOfWrongPasswordAttemps++;
@@ -189,11 +198,13 @@ export class AuthComponent implements OnInit {
         // Magic link successfully sent!
         this.error = false;
         this.magicLinkButtonClicked = true;
+        this.isPasswordResetApproved = true;
         // this.progressBar.mode = 'determinate';
       },
       (error) => {
         // Show user error message
         this.numOfWrongPasswordAttemps++;
+        this.isPasswordResetApproved = false;
         this.magicLinkButtonClicked = false;
         this.handleErrors(error);
       });
@@ -215,13 +226,16 @@ export class AuthComponent implements OnInit {
       // console.log('>> This user: ', this.user);
       if (result.statusCode === 200) {
         if (result.user.email === this.user.email) {
-          // console.log('>> In 200');
+          console.log('>> In 200, result: ', result.user as User);
           this.error = false;
-          this.userService.userLoaded(result.user, result.token, false, false);
-          this.userService.getNotificationsCountForUser(result.user._id);
-          this.userService.getNotificationsForUser(result.user._id);
-          this.sharedDataService.setOverallChatUnreadCount(result.user as User);
-          this.router.navigate(['/']);
+          this.userService.magicLinkDemiSignIn(result.user as User).subscribe(
+            (data: any) => {
+              this.userService.userLoaded(data.user, data.token, false, false);
+              this.userService.getNotificationsCountForUser(data.user._id);
+              this.userService.getNotificationsForUser(data.user._id);
+              this.sharedDataService.setOverallChatUnreadCount(data.user);
+              this.router.navigate(['/']);
+            });
         } else {
           // console.log('Not for you');
         }

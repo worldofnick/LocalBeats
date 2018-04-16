@@ -18,9 +18,9 @@ export class CallbackComponent implements OnInit {
   localAuthToken: string;
 
   constructor(private route: ActivatedRoute, private snackBar: MatSnackBar,
-              private userService: UserService, private router: Router,
-              private sharedDataService: SharedDataService,
-              private _spotifyClientService: SpotifyClientService) { }
+    private userService: UserService, private router: Router,
+    private sharedDataService: SharedDataService,
+    private _spotifyClientService: SpotifyClientService) { }
 
   ngOnInit() {
     const callbackUrl = window.location.href;
@@ -44,14 +44,14 @@ export class CallbackComponent implements OnInit {
     this._spotifyClientService.requestRefreshAndAccessTokens(this.spotifyCode).then((tokens: any) => {
       // console.log('Callback token data: ', tokens);
       return tokens;
-    }).then( (tokens: any) => {
+    }).then((tokens: any) => {
       if (tokens !== false) {
         this.getSpotifyProfileDataOfMe(tokens);
       } else {
         let snackBarRef = this.snackBar.open('Unable to link account. So please try again later.', '', {
           duration: 6000,
         });
-        this.router.navigate(['/profile']);
+        this.router.navigate(['/']);
       }
     });
   }
@@ -73,7 +73,7 @@ export class CallbackComponent implements OnInit {
         let snackBarRef = this.snackBar.open('Unable to link account. So please try again later.', '', {
           duration: 6000,
         });
-        this.router.navigate(['/profile']);
+        this.router.navigate(['/']);
       }
     });
   }
@@ -86,17 +86,17 @@ export class CallbackComponent implements OnInit {
     // console.log('>> IN GTE ALBUMS');
     // console.log('Getting the albums of ' + responseWithUserPayload.user.spotify.email);
     this._spotifyClientService.requestAlbumsOwnedByAnArtist(responseWithUserPayload.user)
-      .then( (listOfSpotifyAlbumObjects: any) => {
-        if ( listOfSpotifyAlbumObjects !== false ) {
+      .then((listOfSpotifyAlbumObjects: any) => {
+        if (listOfSpotifyAlbumObjects !== false) {
           this.saveToUserAndRedirect(responseWithUserPayload, listOfSpotifyAlbumObjects);
         } else {
           let snackBarRef = this.snackBar.open('You are not registered as an artist on spotify...', '', {
             duration: 6000,
           });
-          this.router.navigate(['/profile']);
+          this.router.navigate(['/']);
         }
       })
-      .catch( (error: any) => {
+      .catch((error: any) => {
         console.log(error);
       });
   }
@@ -107,35 +107,35 @@ export class CallbackComponent implements OnInit {
    * @param listOfSpotifyAlbumObjects contains the list of albums
    */
   saveToUserAndRedirect(responseWithUserPayload: any, listOfSpotifyAlbumObjects: any) {
-      // console.log('List of albums: ', listOfSpotifyAlbumObjects);
-      // console.log('>> IN SAVE USER');
-      const spotifyObject = {
-        email: responseWithUserPayload.user.spotify.email,
-        id: responseWithUserPayload.user.spotify.id,
-        uri: responseWithUserPayload.user.spotify.uri,
-        href: responseWithUserPayload.user.spotify.href,
-        accessToken: responseWithUserPayload.user.spotify.accessToken,
-        refreshToken: responseWithUserPayload.user.spotify.refreshToken,
-        albums: listOfSpotifyAlbumObjects.albums.items
-      };
+    // console.log('List of albums: ', listOfSpotifyAlbumObjects);
+    // console.log('>> IN SAVE USER');
+    const spotifyObject = {
+      email: responseWithUserPayload.user.spotify.email,
+      id: responseWithUserPayload.user.spotify.id,
+      uri: responseWithUserPayload.user.spotify.uri,
+      href: responseWithUserPayload.user.spotify.href,
+      accessToken: responseWithUserPayload.user.spotify.accessToken,
+      refreshToken: responseWithUserPayload.user.spotify.refreshToken,
+      albums: listOfSpotifyAlbumObjects.albums.items
+    };
 
-      // Save the spotify profile and the albums to user service object
-      let newUser = this.userService.user;
-      newUser.spotify = spotifyObject;
-      // console.log('Spotify Object to save: ', newUser);
-      this.userService.user = newUser;
-      this.userService.onEditProfile(this.userService.user).then((user: User) => {
-        // Redirect to the profile page to setup and display the spotify widget
+    // Save the spotify profile and the albums to user service object
+    let newUser = this.userService.user;
+    newUser.spotify = spotifyObject;
+    // console.log('Spotify Object to save: ', newUser);
+    this.userService.user = newUser;
+    this.userService.onEditProfile(this.userService.user).then((user: User) => {
+      // Redirect to the profile page to setup and display the spotify widget
+      this.router.navigate(['/profile']);
+      let snackBarRef = this.snackBar.open('Spotify linking successful 🎉',
+        'Go to Music Corner...', { duration: 3500 });
+      // let snackBarRef = this.snackBar.open('Spotify linking successful 🎉', '', { duration: 3500 });
+
+      snackBarRef.onAction().subscribe(() => {
+        // console.log('Going to the music corner...');
         this.router.navigate(['/profile']);
-        // let snackBarRef = this.snackBar.open('Spotify linking successful 🎉',
-        //     'Go to Music Corner...', { duration: 3500 });
-        let snackBarRef = this.snackBar.open('Spotify linking successful 🎉', '', { duration: 3500 });
-
-      //   snackBarRef.onAction().subscribe(() => {
-      //     // console.log('Going to the music corner...');
-      //     this.router.navigate(['/profile']);
-      // });
       });
+    });
   }
 
   /**
@@ -145,16 +145,16 @@ export class CallbackComponent implements OnInit {
   extractSpotifyCode(): string {
     const callbackURL = window.location.href;
     // console.log('URL: ', callbackURL);
-    if (callbackURL.indexOf('spotify') >= 0 ) {
+    if (callbackURL.indexOf('spotify') >= 0) {
       const typeIndex = callbackURL.indexOf('spotify');
       // console.log('Index: ', typeIndex);
-      if(callbackURL.indexOf('?code=') >= 0 ) {
+      if (callbackURL.indexOf('?code=') >= 0) {
         const codeStartIndex = callbackURL.indexOf('?code=');
-        const code = callbackURL.substr(codeStartIndex+6);
+        const code = callbackURL.substr(codeStartIndex + 6);
         // console.log("Code: ", code);
         return code;
-      } else if (callbackURL.indexOf('?error=') >= 0 ) {
-        this.router.navigate(['/profile']);
+      } else if (callbackURL.indexOf('?error=') >= 0) {
+        this.router.navigate(['/']);
         return '';
       }
     }
@@ -162,7 +162,7 @@ export class CallbackComponent implements OnInit {
 
   extractAuthCode(): string {
     const callbackUrl = window.location.href;
-    if ( callbackUrl.indexOf('?localAccessAuth=') >= 0 ) {
+    if (callbackUrl.indexOf('?localAccessAuth=') >= 0) {
       const codeStartIndex = callbackUrl.indexOf('?localAccessAuth=');
       const code = callbackUrl.substr(codeStartIndex + 17);
       console.log('Code: ', code);
@@ -177,11 +177,14 @@ export class CallbackComponent implements OnInit {
     this.userService.verifyLocalAccessToken(this.localAuthToken).subscribe(
       (data: any) => {
         console.log('>> Data received: ', data);
-        this.userService.userLoaded(data.user, data.token, false, false);
-        this.userService.getNotificationsCountForUser(data.user._id);
-        this.userService.getNotificationsForUser(data.user._id);
-        this.sharedDataService.setOverallChatUnreadCount(data.user as User);
-        this.router.navigate(['/']);
+        this.userService.magicLinkDemiSignIn(data.user as User).subscribe(
+          (result: any) => {
+            this.userService.userLoaded(result.user, result.token, false, false);
+            this.userService.getNotificationsCountForUser(result.user._id);
+            this.userService.getNotificationsForUser(result.user._id);
+            this.sharedDataService.setOverallChatUnreadCount(result.user);
+            this.router.navigate(['/']);
+          });
       },
       (error: any) => {
         console.log('>> Error: ', error);
