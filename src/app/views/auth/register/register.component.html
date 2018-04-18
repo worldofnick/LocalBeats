@@ -5,12 +5,12 @@
       <mat-card-content>
 
         <div class="login100-form-title text-center p-t-20 p-b-20">
-          Join the beats ❤︎
+          Register an Account
         </div>
 
         <mat-vertical-stepper linear=true #stepper="matVerticalStepper">
 
-          <mat-step [stepControl]="signupForm" editable="false">
+          <mat-step [stepControl]="signupForm" editable="true">
 
             <div class="flex-c p-b-12">
               <button *ngIf="socialGooglePayload === undefined" (click)="socialSignUp('google')" 
@@ -115,9 +115,9 @@
             <form [formGroup]="preferencesFormGroup">
               <ng-template matStepLabel>Preferences</ng-template>
 
-              <div class="pb-1 p-b-5 p-l-5 p-r-5 p-t-5">
+              <div class="pb-1 p-b-5 p-l-5 p-r-5 p-t-5 m-b-5 m-l-5 m-r-5 m-t-5">
                 <mat-form-field>
-                  <mat-select class="p-b-5 p-l-5 p-r-5 p-t-5" placeholder="Preferred Music" [formControl]="preferencesFormGroup.controls['genres']" multiple>
+                  <mat-select class="m-b-5 m-l-5 m-r-5 m-t-5" placeholder="Preferred Music" [formControl]="preferencesFormGroup.controls['genres']" multiple>
                     <mat-select-trigger class="additional-selection">
                       {{(preferencesFormGroup.controls['genres'].value ? preferencesFormGroup.controls['genres'].value[0] : '') | capitalize}}
                       <span *ngIf="preferencesFormGroup.controls['genres'].value?.length > 1">
@@ -129,9 +129,9 @@
                 </mat-form-field>
               </div>
 
-              <div class="pb-1 p-b-5 p-l-5 p-r-5 p-t-5">
+              <div class="pb-1 p-b-5 p-l-5 p-r-5 p-t-5 m-b-5 m-l-5 m-r-5 m-t-5">
                 <mat-form-field>
-                  <mat-select placeholder="Preferred Events" [formControl]="preferencesFormGroup.controls['events']" multiple>
+                  <mat-select class="m-b-5 m-l-5 m-r-5 m-t-5" placeholder="Preferred Events" [formControl]="preferencesFormGroup.controls['events']" multiple>
                     <mat-select-trigger class="additional-selection">
                       {{(preferencesFormGroup.controls['events'].value ? preferencesFormGroup.controls['events'].value[0] : '') | capitalize}}
                       <span *ngIf="preferencesFormGroup.controls['events'].value?.length > 1">
@@ -145,7 +145,7 @@
 
               <div class="pb-1">
                 <mat-checkbox name="isArtist" [formControl]="preferencesFormGroup.controls['isArtist']" class="pb-1">
-                  I like to play music for income
+                  I am an artist
                 </mat-checkbox>
               </div>
 
