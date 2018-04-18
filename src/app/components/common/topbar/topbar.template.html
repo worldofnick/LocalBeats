@@ -109,16 +109,24 @@
     </form>
   </div>  
   <span fxFlex></span>
-
-    <button 
-    mat-icon-button
-    matTooltip="About" 
-    [style.overflow]="'visible'"
-    routerLink="/about"
-    class="topbar-button-right">
-    <mat-icon>album</mat-icon>
-    </button>
-
+  <button
+  fxHide.lt-sm="true" 
+  mat-icon-button
+  matTooltip="Home" 
+  [style.overflow]="'visible'"
+  routerLink="/home"
+  class="topbar-button-right">
+  <mat-icon>home</mat-icon>
+  </button>
+  <button
+  fxHide.lt-sm="true" 
+  mat-icon-button
+  matTooltip="About" 
+  [style.overflow]="'visible'"
+  routerLink="/about"
+  class="topbar-button-right">
+  <mat-icon>album</mat-icon>
+  </button>
   <div *ngIf="user; else login"
   fxHide.lt-sm="true">
     <button 
