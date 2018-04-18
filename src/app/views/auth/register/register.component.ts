@@ -141,6 +141,8 @@ export class RegisterComponent implements OnInit {
               {
                 firstName: payload.response.given_name,
                 lastName: payload.response.family_name,
+                password: '',
+                confirmPassword: '',
                 email: payload.response.email,
                 location: null
               });
