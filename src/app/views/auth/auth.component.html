@@ -39,9 +39,9 @@
             <div class="wrap-input100 validate-input m-b-30">
               <input class="input100" type="password" name="password" matInput [formControl]="signinForm.controls['password']" placeholder="Password">
               <span class="focus-input100"></span>
-              <small *ngIf="signinForm.controls['password'].hasError('required') && signinForm.controls['password'].touched" class="text-center p-l-10 m-b-5 form-error-msg">
-              Password is required </small>
             </div>
+            <small *ngIf="signinForm.controls['password'].hasError('required') && signinForm.controls['password'].touched" class="text-center p-l-10 m-b-5 form-error-msg">
+              Password is required </small>
 
             <!-- Sign in button -->
             <div class="container-login100-form-btn">
