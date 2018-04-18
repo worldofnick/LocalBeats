@@ -978,8 +978,8 @@ export class EventManagementComponent implements OnInit {
 
   sortBookings(leftside: Booking, rightside: Booking, sortType: BookingSortType): number {
     if(sortType == BookingSortType.needsResponse) {
-      if(!leftside.artViewed && rightside.artViewed) return -1;
-      if(leftside.artViewed && !rightside.artViewed) return 1;
+      if(!leftside.hostViewed && rightside.hostViewed) return -1;
+      if(leftside.hostViewed && !rightside.hostViewed) return 1;
     } else if(sortType == BookingSortType.bidDes) {
       if(leftside.currentPrice < rightside.currentPrice) return -1;
       if(leftside.currentPrice > rightside.currentPrice) return 1;
@@ -988,6 +988,13 @@ export class EventManagementComponent implements OnInit {
       if(leftside.currentPrice > rightside.currentPrice) return -1;
     }
     return 0;
+  }
+
+  manageApplications(pagedEventIndex: number) {
+    let eventIndex = this.events.findIndex(e => e.event._id == this.pagedEvents[pagedEventIndex].event._id);
+    console.log(this.events[eventIndex].event.open);
+    this.events[eventIndex].event.open = !this.events[eventIndex].event.open;
+    this.eventService.updateEvent(this.events[eventIndex].event);
   }
 
   sortEvents(sortType: EventSortType) {
