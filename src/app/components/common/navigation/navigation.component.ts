@@ -39,14 +39,10 @@ export class NavigationComponent {
       },
       {
         name: 'Profile',
-        type: 'dropDown',
+        type: 'link',
         tooltip: 'Profile',
         icon: 'person',
-        state: 'profile',
-        sub: [
-          {name: 'Overview', state: 'overview'},
-          {name: 'Settings', state: 'settings'}
-        ]
+        state: 'profile'
       },
       {
         name: 'Chat',
