@@ -25,26 +25,26 @@
 
               <div class="wrap-input100 validate-input m-b-15">
                 <!-- <mat-form-field class="full-width"> -->
-                  <input type="input-text" name="firstName" matInput [formControl]="signupForm.controls['firstName']" placeholder="Given Name"
+                  <input type="input-text" name="firstName" matInput [formControl]="signupForm.controls['firstName']" placeholder="First Name"
                     value="" class="input100">
                     <span class="focus-input100"></span>
                 <!-- </mat-form-field> -->
               </div>
               <small *ngIf="signupForm.controls['firstName'].hasError('required') && signupForm.controls['firstName'].touched" 
                 class="text-center p-l-10 m-b-5 form-error-msg">
-                  Given Name is required </small>
+                  First Name is required </small>
 
 
               <div class="wrap-input100 validate-input m-b-15">
                 <!-- <mat-form-field class="full-width"> -->
-                  <input type="input-text" name="lastName" matInput [formControl]="signupForm.controls['lastName']" placeholder="Family Name"
+                  <input type="input-text" name="lastName" matInput [formControl]="signupForm.controls['lastName']" placeholder="Last Name"
                     value="" class="input100">
                     <span class="focus-input100"></span>
                 <!-- </mat-form-field> -->
               </div>
               <small *ngIf="signupForm.controls['lastName'].hasError('required') && signupForm.controls['lastName'].touched" 
               class="text-center p-l-10 m-b-5 form-error-msg">
-                  Family Name is required </small>
+                  Last Name is required </small>
 
 
               <div class="wrap-input100 validate-input m-b-15">
@@ -59,7 +59,7 @@
 
                 <small *ngIf="signupForm.controls['email'].hasError('email') && signupForm.controls['email'].touched" 
                 class="text-center p-l-10 m-b-5 form-error-msg">
-                  Invaild email address </small>
+                  Invalid email address </small>
 
                   <div class="wrap-input100 validate-input m-b-20">
                       <input class="input100"
@@ -117,7 +117,7 @@
 
               <div class="pb-1 p-b-5 p-l-5 p-r-5 p-t-5">
                 <mat-form-field>
-                  <mat-select placeholder="Preferred Music" [formControl]="preferencesFormGroup.controls['genres']" multiple>
+                  <mat-select class="p-b-5 p-l-5 p-r-5 p-t-5" placeholder="Preferred Music" [formControl]="preferencesFormGroup.controls['genres']" multiple>
                     <mat-select-trigger class="additional-selection">
                       {{(preferencesFormGroup.controls['genres'].value ? preferencesFormGroup.controls['genres'].value[0] : '') | capitalize}}
                       <span *ngIf="preferencesFormGroup.controls['genres'].value?.length > 1">
@@ -173,7 +173,7 @@
 
             <div *ngIf="this.wasMagicLinkSuccessfullySent && !this.isMagicLinkBeingSent">
                 <strong>⚠️ Do NOT close this window</strong><br><br>
-                A magic link has been sent to:
+                A verification link has been sent to:
                 <br><strong>{{this.user.email}}</strong>
                 <br>
                 <br> Please click the link in it to <strong>continue</strong> your session in <strong>this</strong> window.

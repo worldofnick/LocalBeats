@@ -9,7 +9,7 @@
         <div *ngIf="!this.magicLinkButtonClicked">
           <div>
             <mat-slide-toggle class="text-muted" color="accent" [(ngModel)]="isDemoModeChecked" (ngModelChange)="toggleDemoMode()">
-              Test Mode
+              Demo Mode
             </mat-slide-toggle>
           </div>
           <form [formGroup]="signinForm" (ngSubmit)="signin()" #captchaProtectedForm="ngForm" class="login100-form">
@@ -47,10 +47,10 @@
             <div class="container-login100-form-btn">
               <re-captcha size="invisible" #invisible (resolved)="cpatchaResolved($event)" siteKey="6LeFK1IUAAAAAEakef3Qt8YiYVi45hMZJd_eiWSG"></re-captcha>
               <button *ngIf="isDemoModeChecked === false" class="login100-form-btn" [disabled]="signinForm.invalid" (click)="invisible.execute()">
-                Send me a magic link!
+                Mail me a verification link!
               </button>
               <button *ngIf="isDemoModeChecked" class="login100-form-btn" [disabled]="signinForm.invalid" (click)="invisible.execute()">
-                Skip magic and sign in
+                Skip email and Signin
               </button>
               <small *ngIf="error" class="text-center p-l-10 m-t-30 m-b-20 form-error-msg">{{errorMessage}}</small>
 
@@ -89,7 +89,7 @@
           <!-- <p class="text-center text-muted m-0"> -->
           <strong>⚠️ Do NOT close this window</strong>
           <br>
-          <br> A magic link has been sent to:
+          <br> A verification link has been sent to:
           <br>
           <strong>{{this.user.email}}</strong>
           <br>
@@ -112,7 +112,7 @@
         <div *ngIf="isDemoModeChecked">
           <br>
           <p class="text-center text-muted m-0">
-            <strong>⚠️ The Magic-link Email Authentication is disabled</strong>
+            <strong>⚠️ The Email Authentication is disabled</strong>
           </p>
         </div>
       </mat-card-content>
