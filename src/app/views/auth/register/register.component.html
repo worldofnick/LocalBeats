@@ -118,13 +118,13 @@
               <div class="pb-1 p-b-5 p-l-5 p-r-5 p-t-5 m-b-5 m-l-5 m-r-5 m-t-5">
                 <mat-form-field>
                   <mat-select class="m-b-5 m-l-5 m-r-5 m-t-5" placeholder="Preferred Music" [formControl]="preferencesFormGroup.controls['genres']" multiple>
-                    <mat-select-trigger class="additional-selection">
+                    <mat-select-trigger class="additional-selection m-b-5 m-l-5 m-r-5 m-t-5">
                       {{(preferencesFormGroup.controls['genres'].value ? preferencesFormGroup.controls['genres'].value[0] : '') | capitalize}}
                       <span *ngIf="preferencesFormGroup.controls['genres'].value?.length > 1">
                         (+{{preferencesFormGroup.controls['genres'].value.length - 1}} others)
                       </span>
                     </mat-select-trigger>
-                    <mat-option *ngFor="let genre of genresList" [value]="genre">{{genre | capitalize}}</mat-option>
+                    <mat-option class="m-b-5 m-l-5 m-r-5 m-t-5" *ngFor="let genre of genresList" [value]="genre">{{genre | capitalize}}</mat-option>
                   </mat-select>
                 </mat-form-field>
               </div>
