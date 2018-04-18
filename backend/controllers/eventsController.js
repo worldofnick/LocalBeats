@@ -33,13 +33,13 @@ function getDefaultImage(eventType) {
   if (eventType == "birthday") {
     return "https://i.imgur.com/COiWRnm.jpg";
   } else if (eventType == "wedding") {
-    return "https://i.imgur.com/kqIx4ii.jpg";
+    return "https://i.imgur.com/9YsvwFG.jpg";
   } else if (eventType == "party") {
     return "https://i.imgur.com/TY1Qr5C.jpg";
   } else if (eventType == "live music") {
     return "https://i.imgur.com/HpWZCJh.jpg";
   } else if (eventType == "business") {
-    return "https://i.imgur.com/5azJhu4.jpg";
+    return "https://i.imgur.com/uaLtO86.jpg";
   } else if (eventType == "festival") {
     return "https://i.imgur.com/MhKFrxn.jpg";
   }
