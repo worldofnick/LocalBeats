@@ -24,6 +24,7 @@ export class Event {
     public location: number[]
     public eventPicUrl: string
     public cancellationPolicy: CancellationPolicy
+    public open: boolean
 }
 
 export enum CancellationPolicy {

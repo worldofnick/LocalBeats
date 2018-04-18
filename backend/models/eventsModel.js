@@ -25,6 +25,7 @@ var EventsSchema = new Schema({
     deposit         : {type: Number},
     isBooked        : {type: Boolean, default: false},
     eventPicUrl     : {type: String},
+    open            : {type: Boolean, default: true},
     cancellationPolicy    : {type: String, default: 'flexible'},
     location: {
       type: [Number],  // [<longitude>, <latitude>]

@@ -211,6 +211,8 @@
             <mat-divider class="mt-05 mb-1"></mat-divider>
             <button (click)="onEditEvent(item.event, j)" class="text-muted" mat-icon-button matTooltip="Edit Event"><mat-icon>mode_edit</mat-icon></button>
             <button *ngIf="item.confirmations.length == 0 && item.completions.length == 0" (click)="onDeleteEvent(item.event, j)" class="text-muted" mat-icon-button matTooltip="Delete Event"><mat-icon>delete</mat-icon></button>
+            <button *ngIf="item.event.open" (click)="manageApplications(j)" class="text-muted" mat-icon-button matTooltip="Close to New Applications"><mat-icon>do_not_disturb</mat-icon></button>
+            <button *ngIf="!item.event.open" (click)="manageApplications(j)" class="text-muted" mat-icon-button matTooltip="Open to New Applications"><mat-icon>add_circle_outline</mat-icon></button>
           </mat-card-content>
         </mat-card>
       </div>
