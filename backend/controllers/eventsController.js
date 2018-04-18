@@ -31,20 +31,20 @@ exports.getEventByID = function (req, res) {
 function getDefaultImage(eventType) {
   eventType = eventType.toLowerCase(); // just in case
   if (eventType == "birthday") {
-    return "https://i.imgur.com/COiWRnm.jpg";
+    return "https://i.imgur.com/dLzog8K.jpg";
   } else if (eventType == "wedding") {
-    return "https://i.imgur.com/9YsvwFG.jpg";
+    return "https://i.imgur.com/OaIO9Qt.jpg";
   } else if (eventType == "party") {
     return "https://i.imgur.com/TY1Qr5C.jpg";
   } else if (eventType == "live music") {
-    return "https://i.imgur.com/HpWZCJh.jpg";
+    return "https://i.imgur.com/VqFLOp7.jpg";
   } else if (eventType == "business") {
-    return "https://i.imgur.com/uaLtO86.jpg";
+    return "https://i.imgur.com/kvf5OTx.jpg";
   } else if (eventType == "festival") {
-    return "https://i.imgur.com/MhKFrxn.jpg";
+    return "https://i.imgur.com/BonL1L9.jpg";
   }
 
-  return "https://i.imgur.com/TY1Qr5C.jpg";
+  return "https://i.imgur.com/dLzog8K.jpg";
 }
 
 exports.defaultPic = function (req, res) {
