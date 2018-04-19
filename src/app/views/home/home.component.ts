@@ -18,6 +18,7 @@ import { SharedDataService } from '../../services/shared/shared-data.service';
 import { PageEvent } from '@angular/material';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { allResolved } from 'q';
+import { PACKAGE_ROOT_URL } from '@angular/core/src/application_tokens';
 
 
 
@@ -29,7 +30,6 @@ import { allResolved } from 'q';
 export class HomeComponent implements OnInit {
   private user: User = null;
   private userSubscription: ISubscription;
-  private loginSub: ISubscription;
   @Input('backgroundGray') public backgroundGray;
   contactForm: FormGroup;
 
@@ -73,7 +73,10 @@ export class HomeComponent implements OnInit {
 
     this.initIoConnection();            // Listen to server for any registered events inside this method
     this.showSnackBarIfNeeded();
-    this.userSubscription = this._userService.userResult.subscribe(user => this.user = user);
+    this.userSubscription = this._userService.userResult.subscribe(user => {
+      this.user = user;
+      this.setupSuggestions();
+    });
 
 
     this.contactForm = this.fb.group({
@@ -91,11 +94,6 @@ export class HomeComponent implements OnInit {
       this.setCurrentPosition();
       this.setupDefaultSuggestions();
     }
-    // listening for real time notification
-    this.loginSub = this._socketService.onEvent(SocketEvent.NEW_LOG_IN)
-      .subscribe((message: Message) => {
-        this.setupSuggestions();
-      });
 
   }
 
@@ -121,6 +119,9 @@ export class HomeComponent implements OnInit {
     this.currentSearch.event_types = ['all events'];
     this.currentSearch.searchType = 'ARec';
     this.searchType = 'Artist';
+    if (this._userService.isAuthenticated()){
+      this.currentSearch.uid = this._userService.user._id;
+    }
     this.searchService.userSearch(this.currentSearch).then((users: User[]) => {
       this.allResultsArtists = users;
       this.updateResults2();
@@ -142,6 +143,9 @@ export class HomeComponent implements OnInit {
     this.currentSearch.genres = ['all genres'];
     this.currentSearch.event_types = ['all events'];
     // this.suggestedTitle = 'Events In Salt Lake City';
+    if (this._userService.isAuthenticated()){
+      this.currentSearch.uid = this._userService.user._id;
+    }
 
     this.searchService.eventSearch(this.currentSearch).then((events: Event[]) => {
       this.allResults = events;
@@ -226,7 +230,6 @@ export class HomeComponent implements OnInit {
 
   ngOnDestroy() {
     this.userSubscription.unsubscribe();
-    this.loginSub.unsubscribe();
   }
 
 
