@@ -42,7 +42,7 @@ ng build --watch
 Navigate to the site
 
 ```
-localhost:3000
+localhost:4200
 ```
 
 
