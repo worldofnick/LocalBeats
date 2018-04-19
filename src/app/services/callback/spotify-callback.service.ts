@@ -15,20 +15,6 @@ export class SpotifyCallbackService {
 
     constructor(private http: Http, private _socketService: SocketService) { }
 
-    //   // Redirect user to stripe website
-    //   public authorizeSpotify(): Promise<string> {
-    //     const current = this.authorizeConnection + '/authorize';
-    //     console.log('Spotify AUth server url: ', current);
-    //     return this.http.post(current, { headers: this.headers })
-    //         .toPromise()
-    //         .then((response: Response) => {
-    //           const data = response.json();
-    //           console.log('Data SPotift: ', data);
-    //           return data.redirect_url;
-    //         })
-    //         .catch(this.handleError);
-    //   }
-
     private handleError(error: any): Promise<any> {
         let errMsg = (error.message) ? error.message :
             error.status ? `${error.status} - ${error.statusText}` : 'Server error';

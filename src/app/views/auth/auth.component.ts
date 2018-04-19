@@ -133,7 +133,6 @@ export class AuthComponent implements OnInit {
     if (captchaResponse !== null) {
       this.userService.verifyCaptchaToken(captchaResponse).subscribe(
         (data: any) => {
-          // console.log('>> SUCCESS: ', data);
           this.magicLinkLogin();
         },
         (error: any) => {
@@ -206,14 +205,10 @@ export class AuthComponent implements OnInit {
     }
     this.errorMessage = error;
     this.error = true;
-    // this.submitButton.disabled = false;
-    // this.progressBar.mode = 'determinate';
   }
 
   handleSameTabMagicLogin(result) {
-    // console.log('>> Result payload: ', result);
     if (this.user !== null && this.user !== undefined) {
-      // console.log('>> This user: ', this.user);
       if (result.statusCode === 200) {
         if (result.user.email === this.user.email) {
           this.error = false;
@@ -232,7 +227,6 @@ export class AuthComponent implements OnInit {
         this.magicLinkButtonClicked = false;
         this.router.navigate(['/auth', 'register']);
       } else {
-        // console.log('>> In error');
         this.magicLinkButtonClicked = false;
         this.handleErrors('Something went wrong on the server side... Please try again later');
       }

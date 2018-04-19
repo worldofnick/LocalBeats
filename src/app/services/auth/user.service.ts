@@ -57,29 +57,6 @@ export class UserService {
         }
     }
 
-    // public signupUser(newUser: User): Observable<Object> {
-    //     const current = this.connection + '/register';
-    //     return this.http.post(current, newUser, { headers: this.headers })
-    //         .map((response: Response) => {
-    //             const data = response.json();
-    //             this.accessToken = data.token;
-    //             sessionStorage.setItem('token', JSON.stringify({ accessToken: this.accessToken }))
-    //             this.user = data.user as User;
-    //             // Notify server that a new user user logged in
-    //             this._socketService.send(Action.NEW_LOG_IN, {
-    //                 from: this.user,
-    //                 action: Action.NEW_LOG_IN
-    //             });
-    //             return data;
-    //         }).catch((error: Response) => {
-    //             if (error.status === 400) {
-    //                 return Observable.throw('Email is already in use.  Please try a different email.');
-    //             } else {
-    //                 return Observable.throw('Error Unknown');
-    //             }
-    //         });
-    // }
-
     public contactUs(name: string, subject: string, email: string, message: string): Observable<Object> {
         return this.http.post(this.contactConnection, {name: name, subject: subject, email: email, message: message}, { headers: this.headers})
             .map((response: Response) => {
@@ -392,10 +369,6 @@ export class UserService {
                 }
 
                 this._socketService.socket.emit('tellTopBar', temp.length)
-                // this._socketService.send(Action.REQUEST_NOTIFICATION_COUNT, {
-                //     from: 'tellTopBar',
-                //     action: Action.SMN_LOGGED_OUT
-                // });
 
                 return temp.length;
             })
@@ -406,28 +379,20 @@ export class UserService {
     public getNotificationsForUser(ID: any): Promise<Notification[]> {
         let userConnection: string = environment.apiURL + 'api/notification';
         const current = userConnection + '/' + ID;
-        // const current = userConnection + '/5a7113ac9d89a873c89fe5ff';
 
-        //console.log("getting: ");
-        //console.log(current);
         return this.http.get(current)
             .toPromise()
             .then((response: Response) => {
                 const data = response.json();
-                // this.accessToken = data.token;
-                // console.log(this.accessToken)
                 //inserting test notifications until i can actually send them.
                 let temp = data.notifications as Notification[];
-                // console.log(data);
                 let t: Notification[] = [];
 
                 if (temp == null) {
-                    // this.io.emit('tellNotificationPanel', t)
                     return t;
                 }
 
                 this._socketService.socket.emit('tellNotificationPanel', temp)
-                // this._socketService.socket.emit('tellTopBar', temp.length)
 
                 return temp;
             })
