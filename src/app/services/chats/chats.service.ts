@@ -50,7 +50,6 @@ export class ChatsService {
     };
     this.http.post(url, JSON.stringify(bodyObject), httpOptions).subscribe(
       (data: any) => {
-        console.log('>> GOT unread counts every: ', data);
         this.unreadCounts = data.buddies as Array<any>;
       },
       (error: any) => {
@@ -83,12 +82,8 @@ export class ChatsService {
     const url = SERVER_URL + 'api/messages/update/read/' + fromUID + '/' + toUID;
     this.http.put(url, {}, httpOptions).subscribe(
       (data: any) => {
-        console.log('All Chats read = true result: ', data);
-
         // Make the unread count for that user to zero in unreadCounts[]
         const senderIndex = this.unreadCounts.findIndex(x => x._id === fromUID);
-        // console.log('>> Sender index: ', senderIndex);
-        // console.log('>> Unread count array: ', this.unreadCounts);
         if (senderIndex !== -1) {
           this.unreadCounts[senderIndex].unreadCount = 0;
         }
@@ -101,7 +96,6 @@ export class ChatsService {
 
   markThisMessageAsRead(messageID: string) {
     const url = SERVER_URL + 'api/messages/update/read/' + messageID;
-    console.log('Mark message read URL: ', url);
     return this.http.put(url, {}, httpOptions);
   }
 

@@ -102,21 +102,15 @@ export class AppChatsComponent implements OnInit, OnDestroy, AfterViewChecked, A
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      // console.log('The dialog was closed with result: ', result);
       if (result === undefined) {
-        console.log('Undefined object. No action taken');
       }
       else if ( result.recipientUser._id === undefined ) {
-        console.log('Not a user object. No action taken');
       }
       else {
         if ( this.isUserObjInConnectedUsers(result.recipientUser) !== -1 ) {
-          // console.log('Already chatting with ' + result.recipientUser.firstName + '. Switching to that thread');
           this.changeActiveUser(result.recipientUser);
         } else {
-          // console.log('Starting new chat with ' + result.recipientUser.firstName);
           let recipient: User = result.recipientUser as User;
-          // console.log('New recipient: ', recipient);
           this.connectedUsers.unshift(recipient);
           this.changeActiveUser(recipient);
         }
@@ -125,14 +119,11 @@ export class AppChatsComponent implements OnInit, OnDestroy, AfterViewChecked, A
   }
 
   ngOnInit() {
-    // console.log('>>> IN NGONINIT');
     this.initIoConnection();
     this.chatSideBarInit();
-    // console.log('On open, connectd users: ', this.connectedUsers);
   }
 
   ngAfterViewInit() {
-    // this._socketService.send(SocketEvent.NOTIFY_SERVER_CHAT_LOADED, null);
     this.vc.first.nativeElement.focus();
     this.cdr.detectChanges();
   }
@@ -142,10 +133,8 @@ export class AppChatsComponent implements OnInit, OnDestroy, AfterViewChecked, A
   }
 
   ngOnDestroy() {
-    console.log('CHAT DESTROY called...');
     this.activeChatUser = new User();
     this.cdr.detach();
-    // this.userSubscription.unsubscribe();
   }
 
   scrollToBottom(): void {
@@ -172,20 +161,16 @@ export class AppChatsComponent implements OnInit, OnDestroy, AfterViewChecked, A
     // Every time there is a new login/out, it reloads the chat side Bar.
     this._socketService.onEvent(SocketEvent.NEW_LOG_IN)                       // TODO: optimize to reload only online status and new, deleted users
       .subscribe((message: Message) => {
-        // console.log('New user logged in (chat event): ', message);
         this.reloadChatSideBarWithNewConnectedUsers();                   // reload the connectedUsers navBar
       });
 
     this._socketService.onEvent(SocketEvent.SMN_LOGGED_OUT)
       .subscribe((message: Message) => {
-        // console.log('Some user logged out (chat event): ', message);
         this.reloadChatSideBarWithNewConnectedUsers();                   // reload the connectedUsers navBar
       });
 
     this._socketService.onEvent(SocketEvent.SEND_PRIVATE_MSG)
       .subscribe((message: Message) => {
-        // this.isBlankTemplate = false;
-        console.log('Private Chat message from server (chat event): ', message);
         const temp: Message = message as Message;
 
         // If you are the receiver and the sender is not already in the connectedUsers list,
@@ -204,16 +189,12 @@ export class AppChatsComponent implements OnInit, OnDestroy, AfterViewChecked, A
         }
 
         if (this.activeChatUser._id === temp.from._id) {
-          console.log('<<< In chat, marking message read >>>');
           this._chatsService.markChatsAsReadBetweenTwoUser(this.activeChatUser._id, this.loggedInUser._id)
             .subscribe(
               (data: any) => {
-                console.log('All Chats read = true result: ', data);
                 const fromUID = this.activeChatUser._id;
                 // Make the unread count for that user to zero in unreadCounts[]
                 const senderIndex = this._chatsService.unreadCounts.findIndex(x => x._id === fromUID);
-                // console.log('>> Sender index: ', senderIndex);
-                // console.log('>> Unread count array: ', this.unreadCounts);
                 if (senderIndex !== -1) {
                   this._chatsService.unreadCounts[senderIndex].unreadCount = 0;
                 }
@@ -253,16 +234,12 @@ export class AppChatsComponent implements OnInit, OnDestroy, AfterViewChecked, A
 
       this._chatsService.getPMsBetweenActiveAndLoggedInUser(this.loggedInUser, this.activeChatUser).subscribe(
         data => {
-          // console.log('\n====\nUser PMs from Server DB: ', JSON.stringify(data));
-          // console.log('\n====\nUser PMs from Server DB: ', data as {messages: Message[]} );
           this.activeChatMessages = new Array();
           let temp = data as { messages: Message[] };
           this.activeChatMessages = temp.messages;
         },
         err => console.error('Error fetching PMs between 2 users: ', err),
         () => {
-          // console.log('Done fetching PMs from the server DB');
-          // console.log('Sending myself with messages[]: ', this.activeChatMessages);
           this._socketService.send(Action.REQUEST_PM_SOCKET_ID, { serverPayload: this.activeChatMessages });
         }
       );
@@ -274,18 +251,15 @@ export class AppChatsComponent implements OnInit, OnDestroy, AfterViewChecked, A
   reloadChatSideBarWithNewConnectedUsers() {
     this._chatsService.getAllConversationBuddiesOfThisUser().subscribe(
       data => {
-        // console.log('User DATA: ', data);
         const temp = data as { users: User[] };
         this.connectedUsers = new Array();
         for (let buddy of temp.users) {
           this.connectedUsers.push(buddy);
         }
-        // console.log('Side Bar Connected Users:', this.connectedUsers);
       },
       err => console.error(err),
       () => {
         this.initiateAutocompleteOptions();
-        // console.log('Done reloading users in chat side bar');
         // this.chatSideBarInit();
       }
     );
@@ -300,7 +274,6 @@ export class AppChatsComponent implements OnInit, OnDestroy, AfterViewChecked, A
         for (let buddy of temp.users) {
           this.connectedUsers.push(buddy);
         }
-        // console.log('Initial list of connected Users:', this.connectedUsers);
         this.activeChatUser = this.connectedUsers[0]; // TODO: change to whatever filter applied later
       },
       err => console.error(err),
@@ -327,7 +300,6 @@ export class AppChatsComponent implements OnInit, OnDestroy, AfterViewChecked, A
         }
 
         this.initiateAutocompleteOptions();
-        // console.log('Done initializing users in chat side bar');
         // Reload the active user's messages
         this.changeActiveUser(this.activeChatUser);
       }
@@ -338,14 +310,11 @@ export class AppChatsComponent implements OnInit, OnDestroy, AfterViewChecked, A
     this.options = [];
     this._chatsService.getConnectionUsers().subscribe(
       data => {
-        // console.log('User DATA: ', data);
         const temp = data as { users: User[] };
         this.options = temp.users;
-        // console.log('Options: ', this.options);
       },
       err => console.error(err),
       () => {
-        // console.log('Done initializing autocomplete users');
       }
     );
   }
@@ -360,8 +329,6 @@ export class AppChatsComponent implements OnInit, OnDestroy, AfterViewChecked, A
 
       this._chatsService.getPMsBetweenActiveAndLoggedInUser(this.loggedInUser, this.activeChatUser).subscribe(
         data => {
-          // console.log('\n====\nUser PMs from Server DB: ', JSON.stringify(data));
-          // console.log('\n====\nUser PMs from Server DB: ', data as {messages: Message[]} );
           this.activeChatMessages = new Array();
           const temp = data as { messages: Message[] };
           this.activeChatMessages = temp.messages;

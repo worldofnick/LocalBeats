@@ -59,7 +59,6 @@ export class SpotifyClientService {
                                     refresh_token: tokens.refresh_token}, { headers: this.headers })
         .toPromise()
         .then((response: Response) => {
-          console.log('REPSONSE: ', response);
           if (response.status < 300) {
             const userObjectWithProfileData = response.json();
             // console.log('User Object with Profile recieved: ', userObjectWithProfileData);
@@ -124,7 +123,6 @@ export class SpotifyClientService {
     return this.http.get(current)
         .toPromise()
         .then((response: Response) => {
-          console.log('Modified User: ', response.json());
           return (response.json());
         })
         .catch(this.handleError);

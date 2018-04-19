@@ -37,7 +37,6 @@ exports.updateUserByID = function (req, res, next) {
 
     // user.hashPassword = undefined;
     if(req.body.user.spotifyID != undefined) {
-      console.log("Spotify ID: " + req.body.user.spotifyID);
       next();
     }else {
       return res.status(200).send({ user: user });

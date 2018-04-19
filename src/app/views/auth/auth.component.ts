@@ -50,7 +50,6 @@ export class AuthComponent implements OnInit {
 
     this._socketService.onEvent(SocketEvent.MAGIC_LOGIN_RESULT)
       .subscribe((message: Message) => {
-        console.log('Magic link result: ', message);
         this.handleSameTabMagicLogin(message.serverPayload);
       });
 
@@ -93,11 +92,6 @@ export class AuthComponent implements OnInit {
     const signinData = this.signinForm.value;
     this.user.email = this.signinForm.controls['username'].value;
     this.user.password = this.signinForm.controls['password'].value;
-    // this.submitButton.disabled = true;
-    // this.progressBar.mode = 'indeterminate';
-
-    console.log('Magic link clicked by Username: ' + this.user.email + 'with demo: ', this.isDemoModeChecked);
-    // After this, the cpatchaResolved is automatically called
   }
 
   public socialSignIn(socialPlatform: string) {
@@ -106,10 +100,8 @@ export class AuthComponent implements OnInit {
       socialPlatformProvider = GoogleLoginProvider.PROVIDER_ID;
     }
 
-    console.log('>> In social login mmethod: ', socialPlatformProvider);
     this.socialAuthService.signIn(socialPlatformProvider).then(
       (userData) => {
-        console.log(socialPlatform + 'sign in data : ', userData);
         // Now sign-in with userData
         this.userService.signInWithGoogleAccount(userData.idToken).subscribe(
           (data: any) => {
@@ -125,7 +117,6 @@ export class AuthComponent implements OnInit {
               });
           },
           (error) => {
-            console.log('Google Error: ', error);
             this.handleErrors(error);
           });
       }
@@ -172,7 +163,6 @@ export class AuthComponent implements OnInit {
     } else {
       this.userService.demoModeSignInUser(this.user).subscribe(
         (data: any) => {
-          console.log('>> In 200, data: ', data);
           // Correctly authenticated, redirect
           this.error = false;
           this.userService.magicLinkDemiSignIn(data.user as User).subscribe(
@@ -226,7 +216,6 @@ export class AuthComponent implements OnInit {
       // console.log('>> This user: ', this.user);
       if (result.statusCode === 200) {
         if (result.user.email === this.user.email) {
-          console.log('>> In 200, result: ', result.user as User);
           this.error = false;
           this.userService.magicLinkDemiSignIn(result.user as User).subscribe(
             (data: any) => {

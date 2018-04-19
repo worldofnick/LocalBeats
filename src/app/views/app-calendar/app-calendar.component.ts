@@ -95,12 +95,10 @@ export class AppCalendarComponent implements OnInit {
   constructor(public dialogBox: MatDialog, private eventService: EventService,
     private userService: UserService, private bookingService: BookingService,
     private router: Router) { 
-      console.log('constructor calendar');
     }
 
 
   ngOnInit() {
-    console.log('initialize calendar');
     this.eventService.getEventsByUID(this.userService.user._id).then( (eventList: Event[]) => {
       for (let event of eventList) {
         const calendarEvent: CalendarEvent = {

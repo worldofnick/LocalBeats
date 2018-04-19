@@ -1,7 +1,6 @@
 import { Routes } from '@angular/router';
 
 import { AdminLayoutComponent } from './components/common/layouts/admin-layout/admin-layout.component';
-import { AuthLayoutComponent } from './components/common/layouts/auth-layout/auth-layout.component';
 
 import { UserGuard } from './services/auth/user-guard.service';
 
@@ -29,12 +28,6 @@ export const rootRouterConfig: Routes = [
         path: 'search', 
         loadChildren: './views/search-results/search.module#SearchModule',
         data: { title: 'Search', breadcrumb: 'SEARCH'}
-      },
-      { 
-        path: 'dashboard', 
-        loadChildren: './views/dashboard/dashboard.module#DashboardModule',
-        canActivate: [UserGuard], 
-        data: { title: 'Dashboard', breadcrumb: 'DASHBOARD'}
       },
       {
         path: 'profile', 
@@ -77,10 +70,6 @@ export const rootRouterConfig: Routes = [
         data: { title: 'Callback', breadcrumb: 'CALLBACK'}
       }
     ]
-  },
-  { 
-    path: '**', 
-    redirectTo: 'sessions/404'
   }
 ];
 

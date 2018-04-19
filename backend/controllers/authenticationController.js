@@ -24,13 +24,11 @@ exports.register = function (req, res) {
 
   newUser.save(function (err, user) {  // callback function with err and success value
     if (err) {
-      console.log('>> Error:', err);
       return res.status(400).send({
         message: "Unable to save the user...",
         error: err
       });
     } else {
-      // user.hashPassword = undefined;
       user.__v = undefined;
       // create a token
       var token = jwt.sign({ id: user._id },
@@ -38,14 +36,6 @@ exports.register = function (req, res) {
           expiresIn: 86400 // expires in 24 hours
         }
       );
-
-      // User.findByIdAndUpdate(user._id, { isOnline: true }, { new: true }, function (err, authUser) {
-      //   if (err) {
-      //     console.log('Cant chnage online status (sign up)...');
-      //   }
-      //   authUser.hashPassword = undefined;
-      // });
-
       return res.status(200).send({ auth: true, token: token, user: user });
     }
   });
@@ -103,10 +93,9 @@ exports.signInDemoMode = function (req, res) {
 
     User.findByIdAndUpdate(user._id, { isOnline: true }, { new: true }, function (err, authUser) {
       if (err) {
-        console.log('Cant chnage online status (auth controller)...');
+
       }
       authUser.hashPassword = undefined;
-      console.log('Authenticated user: ', authUser);
     });
 
     res.status(200).send({ auth: true, token: token, user: user });
@@ -124,10 +113,9 @@ exports.demiSignIn = function (req, res) {
 
     User.findByIdAndUpdate(user._id, { isOnline: true }, { new: true }, function (err, authUser) {
       if (err) {
-        console.log('Cant chnage online status (auth controller)...');
+
       }
       authUser.hashPassword = undefined;
-      console.log('Authenticated user: ', authUser);
     });
 
     res.status(200).send({ auth: true, token: token, user: user });
@@ -135,7 +123,6 @@ exports.demiSignIn = function (req, res) {
 };
 
 exports.sendMagicLink = function (req, res) {
-  console.log('REQUeST: ', req.body);
   const receivedEmail = req.body.email;
   // Find the user with the requested email
   User.findOne({ email: req.body.email }, function (err, foundUser) {
@@ -149,12 +136,10 @@ exports.sendMagicLink = function (req, res) {
       return res.status(401).send('Incorrect password');
     }
 
-    console.log('>> Found User: ', foundUser);
     // If the user's found, generate a JWT token with its uid
     let localAccessToken = jwt.sign({ id: foundUser._id }, config.secret, {
       expiresIn: 86400 // expires in 24 hours
     });
-    console.log('>> Local access token: ', localAccessToken);
 
     // foundUser.hashPassword = undefined;
 
@@ -177,17 +162,14 @@ exports.sendMagicLink = function (req, res) {
 
     mailer.sendEmail(message.from, message.to, message.subject, message.html)
       .then(data => {
-        console.log('success: ', data);
         res.status(200).send({ user: foundUser, message: 'Magic link sent!' });
       }, error => {
-        console.log('Failure: ', error);
         res.status(520).send('Unable to send the email... Try again later');
       });
   });
 }
 
 exports.sendResetPasswordLink = function (req, res) {
-  console.log('REQUeST: ', req.body);
   const receivedEmail = req.body.email;
   // Find the user with the requested email
   User.findOne({ email: req.body.email }, function (err, foundUser) {
@@ -198,14 +180,10 @@ exports.sendResetPasswordLink = function (req, res) {
       return res.status(404).send('No such user (' + req.body.email + ') in the database...');
     }
 
-    // console.log('>> Found User: ', foundUser);
     // If the user's found, generate a JWT token with its uid
     let localAccessToken = jwt.sign({ id: foundUser._id }, config.secret, {
       expiresIn: 86400 // expires in 24 hours
     });
-    // console.log('>> Local access token: ', localAccessToken);
-
-    // foundUser.hashPassword = undefined;
 
     // Send email with JWT link
     const callbackUrl = config.local.authCallbackUri + localAccessToken;
@@ -226,22 +204,17 @@ exports.sendResetPasswordLink = function (req, res) {
 
     mailer.sendEmail(message.from, message.to, message.subject, message.html)
       .then(data => {
-        console.log('success: ', data);
         res.status(200).send({ user: foundUser, message: 'Magic link sent!' });
       }, error => {
-        console.log('Failure: ', error);
         res.status(520).send('Unable to send the email... Try again later');
       });
   });
 }
 
 exports.verifyLocalJwtAndReturnUser = function (req, res) {
-  console.log('>> Body received: ', req.body);
-
   // Verify received JWT against the secret
   jwt.verify(req.body.jwt, config.secret, function (err, decodedToken) {
     if (err) {
-      console.log('>> Invalid token');
       res.status(520).send({ auth: false, message: 'Token expired or is invalid. Request another magic link.' });
     }
 
@@ -262,10 +235,7 @@ exports.verifyLocalJwtAndReturnUser = function (req, res) {
       // Update the isOnline status
       User.findByIdAndUpdate(foundUser._id, { isOnline: true }, { new: true }, function (err, authUser) {
         if (err) {
-          console.log('Cant chnage online status (auth controller)...');
         }
-        // authUser.hashPassword = undefined;
-        console.log('Authenticated user: ', authUser);
       });
 
       // foundUser.hashPassword = undefined;
@@ -275,12 +245,10 @@ exports.verifyLocalJwtAndReturnUser = function (req, res) {
 }
 
 exports.verifyTokenFromUrlAndSendSocketResultToClient = function (req, res) {
-  console.log('>> Token in url: ', req.params.token);
 
   // Verify received JWT against the secret
   jwt.verify(req.params.token, config.secret, function (err, decodedToken) {
     if (err) {
-      console.log('>> Invalid token');
       const message = 'Invalid Token';
       socketServer.broadcastResultToAllClientsViaSocket(false, null, null, 520, message); 
       res.status(520).send('This token has expired or is invalid. Request another magic link.<br>The page has already been refreshed for you in the other tab <br><strong>Please close this tab now</strong>');
@@ -307,10 +275,7 @@ exports.verifyTokenFromUrlAndSendSocketResultToClient = function (req, res) {
       // Update the isOnline status
       User.findByIdAndUpdate(foundUser._id, { isOnline: true }, { new: true }, function (err, authUser) {
         if (err) {
-          console.log('Cant chnage online status (auth controller)...');
         }
-        // authUser.hashPassword = undefined;
-        console.log('Authenticated user: ', authUser);
       });
 
       // foundUser.hashPassword = undefined;
@@ -322,7 +287,6 @@ exports.verifyTokenFromUrlAndSendSocketResultToClient = function (req, res) {
 }
 
 exports.verifyReCaptchaWithGet = function (req, res) {
-  console.log('CPATCHA BODY: ', req.body);
 
   var authOptions = {
     url : 'https://www.google.com/recaptcha/api/siteverify?secret=' + config.reCaptcha.secret
@@ -330,7 +294,6 @@ exports.verifyReCaptchaWithGet = function (req, res) {
   }
   request.get(authOptions, function(err, response, body) {
     if (err) {
-      // console.log('>> CAPTCHA: ', err);
       return res.status(404).send({
         success: false,
         error: err,
@@ -338,13 +301,11 @@ exports.verifyReCaptchaWithGet = function (req, res) {
       });
     }
     if (response.statusCode === 200 && JSON.parse(response.body).success === true) {
-      // console.log('>> CAPTCHA: ', response.body);
       res.status(200).send({
         success: true,
         response: response.body
       });
     } else {
-      // console.log('>> CAPTCHA: ', response.body);
       res.status(404).send({
         success: false,
         response: response.body,
@@ -355,14 +316,11 @@ exports.verifyReCaptchaWithGet = function (req, res) {
 }
 
 exports.signInWithGoogle = function (req, res) {
-  console.log('BODY GOOGLE SOCIAL: ', req.body);
-
   var authOptions = {
     url : 'https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=' + req.body.idToken
   }
   request.get(authOptions, function(err, response, body) {
     if (err) {
-      console.log('>> SOCIAL GOOGLE: ', err);
       return res.status(404).send({
         success: false,
         error: JSON.parse(err),
@@ -371,7 +329,6 @@ exports.signInWithGoogle = function (req, res) {
     }
     const jsonResponse = JSON.parse(response.body);
     if (response.statusCode === 200 && jsonResponse.aud === config.google.clientID) {
-      console.log('>> SOCIAL GOOGLE: ', jsonResponse);
 
       User.findOne({ "google.id": jsonResponse.sub }, function (err, user) {
         if (err) {
@@ -393,16 +350,12 @@ exports.signInWithGoogle = function (req, res) {
     
         User.findByIdAndUpdate(user._id, { isOnline: true }, { new: true }, function (err, authUser) {
           if (err) {
-            console.log('Cant chnage online status (auth controller)...');
           }
-          // authUser.hashPassword = undefined;
-          console.log('Authenticated user: ', authUser);
         });
     
         res.status(200).send({ auth: true, token: token, user: user });
       });
     } else {
-      console.log('>> SOCIAL GOOGLE: ', jsonResponse);
       res.status(404).send({
         success: false,
         response: jsonResponse,
@@ -413,14 +366,11 @@ exports.signInWithGoogle = function (req, res) {
 }
 
 exports.verifyGoogleIdToken = function (req, res) {
-  console.log('BODY GOOGLE SOCIAL: ', req.body);
-
   var authOptions = {
     url : 'https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=' + req.body.idToken
   }
   request.get(authOptions, function(err, response, body) {
     if (err) {
-      console.log('>> SOCIAL GOOGLE: ', err);
       return res.status(404).send({
         success: false,
         error: JSON.parse(err),
@@ -429,15 +379,12 @@ exports.verifyGoogleIdToken = function (req, res) {
     }
     const jsonResponse = JSON.parse(response.body);
     if (response.statusCode === 200 && jsonResponse.aud === config.google.clientID) {
-      console.log('>> SOCIAL GOOGLE: ', jsonResponse);
-
       // Send back response 200 and obtained payload
       res.status(200).send({
         success: true,
         response: jsonResponse
       });
     } else {
-      console.log('>> SOCIAL GOOGLE: ', jsonResponse);
       res.status(404).send({
         success: false,
         response: jsonResponse,
@@ -468,10 +415,7 @@ exports.loginRequired = function (req, res, next) {
 exports.logout = function (req, res) {
   User.findByIdAndUpdate(req.body._id, { isOnline: false }, { new: true }, function (err, authUser) {
     if (err) {
-      console.log('Cant chnage online status (logout controller)...');
     }
-    // authUser.hashPassword = undefined;
-    console.log('Logged out user: ', authUser);
   });
 
   res.status(200).send({ auth: false, token: null });

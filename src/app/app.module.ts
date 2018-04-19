@@ -15,7 +15,6 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { AppComponent } from './app.component';
 import { RecaptchaModule } from 'ng-recaptcha';
 import { RoutePartsService } from './services/route-parts/route-parts.service';
-import { NavigationService } from "./services/navigation/navigation.service";
 import { SearchService } from './services/search/search.service';
 import { UserService } from './services/auth/user.service';
 import { BookingService } from './services/booking/booking.service';
@@ -76,7 +75,6 @@ export function getAuthServiceConfigs() {
   declarations: [AppComponent],
   providers: [
     RoutePartsService, 
-    NavigationService,
     SearchService,
     ReviewService,
     SocketService,

@@ -34,7 +34,6 @@ import { TopbarComponent } from './topbar/topbar.component';
 import { NavigationComponent } from './navigation/navigation.component';
 import { NotificationsComponent } from './notifications/notifications.component';
 import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout.component';
-import { AuthLayoutComponent } from './layouts/auth-layout/auth-layout.component';
 import { CommonDirectivesModule } from '../../directives/common/common-directives.module';
 import { ThemeService } from '../../services/theme/theme.service';
 import { BreadcrumbComponent } from './breadcrumb/breadcrumb.component';
@@ -77,7 +76,6 @@ import { SocketService } from 'app/services/chats/socket.service';
   ],
   declarations: [
     AdminLayoutComponent,
-    AuthLayoutComponent,
     TopbarComponent, 
     NavigationComponent, 
     NotificationsComponent, BreadcrumbComponent

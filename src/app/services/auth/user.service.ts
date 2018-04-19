@@ -47,8 +47,6 @@ export class UserService {
     private initIoConnection(persisted: boolean): void {
         this.ioConnection = this._socketService.onEvent(SocketEvent.NEW_LOG_IN)
             .subscribe((message: Message) => {
-                // this.messages.push(message);
-                // console.log('Server Msg to user service', message);
             });
         if (persisted) {
             let message: Message = {
@@ -190,15 +188,8 @@ export class UserService {
         const requestUrl = this.connection + '/magicLink';
         return this.http.post(requestUrl, returningUser, { headers: this.headers })
             .map((response: Response) => {
-                console.log('>> In request magic link...');
                 const data = response.json();
 
-                // TODO: anything else?
-
-                // this.accessToken = data.token;
-                // sessionStorage.setItem('token', JSON.stringify({ accessToken: this.accessToken }))
-                // this.user = data.user as User;
-                console.log('>> Magic link response: ', data);
                 return data;
             }).catch((error: Response) => {
                 // TODO: add more speicifc errors
@@ -218,18 +209,9 @@ export class UserService {
         const requestUrl = this.connection + '/password/reset';
         return this.http.post(requestUrl, returningUser, { headers: this.headers })
             .map((response: Response) => {
-                console.log('>> In request magic link...');
                 const data = response.json();
-
-                // TODO: anything else?
-
-                // this.accessToken = data.token;
-                // sessionStorage.setItem('token', JSON.stringify({ accessToken: this.accessToken }))
-                // this.user = data.user as User;
-                console.log('>> Magic link response: ', data);
                 return data;
             }).catch((error: Response) => {
-                // TODO: add more speicifc errors
                 if (error.status === 404) {
                     return Observable.throw('\'' + returningUser.email + '\' cannot be found. Check if it correct and try again.');
                 } else if (error.status === 520) {
@@ -245,7 +227,6 @@ export class UserService {
         const requestUrl = this.connection + '/verifyLocalJwt';
         return this.http.post(requestUrl, { jwt: urlJwt }, { headers: this.headers })
             .map((response: Response) => {
-                console.log('>> In verify local access JWT: ', response.json());
                 const data = response.json();
 
                 this.accessToken = data.token;
@@ -272,7 +253,6 @@ export class UserService {
         const requestUrl = this.connection + '/captcha/verify';
         return this.http.post(requestUrl, { response: reponseToken }, { headers: this.headers })
             .map((response: Response) => {
-                console.log('>> In verify captcha: ', response.json());
                 return response.json();
             }).catch((error: Response) => {
                 if (error.status === 404) {
@@ -287,7 +267,6 @@ export class UserService {
         const requestUrl = this.connection + '/social/google/verifyIdToken';
         return this.http.post(requestUrl, { idToken: idToken }, { headers: this.headers })
             .map((response: Response) => {
-                console.log('>> In verify google: ', response.json());
                 return response.json();
             }).catch((error: Response) => {
                 if (error.status === 404) {
@@ -302,7 +281,6 @@ export class UserService {
         const requestUrl = this.connection + '/social/google/signin';
         return this.http.post(requestUrl, { idToken: idToken }, { headers: this.headers })
             .map((response: Response) => {
-                console.log('>> In verify google: ', response.json());
                 return response.json();
             }).catch((error: Response) => {
                 if (error.status === 404) {
@@ -347,8 +325,6 @@ export class UserService {
             .toPromise()
             .then((response: Response) => {
                 const data = response.json();
-                // this.accessToken = data.token;
-                // console.log(this.accessToken)
                 let temp = data.user as User;
                 return temp
             })
@@ -405,18 +381,11 @@ export class UserService {
 
     public getNotificationsCountForUser(ID: any): Promise<Number> {
         let userConnection: string = environment.apiURL + 'api/notification';
-        // app.route('/api/notification/:uid')
         const current = userConnection + '/' + ID;
-        // const current = userConnection + '/5a7113ac9d89a873c89fe5ff';
-        //console.log("getting: ");
-        //console.log(current);
         return this.http.get(current)
             .toPromise()
             .then((response: Response) => {
                 const data = response.json();
-                // console.log(data)
-                // this.accessToken = data.token;
-                // console.log(this.accessToken)
                 let temp = data.notifications as Notification[];
                 if (temp == null) {
                     return 0;

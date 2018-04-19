@@ -992,7 +992,6 @@ export class EventManagementComponent implements OnInit {
 
   manageApplications(pagedEventIndex: number) {
     let eventIndex = this.events.findIndex(e => e.event._id == this.pagedEvents[pagedEventIndex].event._id);
-    console.log(this.events[eventIndex].event.open);
     this.events[eventIndex].event.open = !this.events[eventIndex].event.open;
     this.eventService.updateEvent(this.events[eventIndex].event);
   }

@@ -27,8 +27,6 @@ exports.socketServer = function (io) {
     thisIo = io;
     // Default 'connection' event listerner
     io.on('connect', (socket) => {
-        console.log("\n=======================\nConnection client with Socket ID:", socket.id);
-        console.log('=======================');
 
         // ============================================
         // Authentication Event Handlers
@@ -36,24 +34,14 @@ exports.socketServer = function (io) {
 
         // Default 'disconnect' event listerner
         socket.on('disconnect', function () {
-            console.log('\n=======================\nUser disconnected at Socket ID:',
-                socket.id, '\nRemoving it from the socket hashTable');
-            console.log('=======================');
         });
 
         socket.on('newUserLoggedIn', (payload) => {
 
             let socketArray = [socket.id];
-            console.log('Socket array = ', socketArray);
-            console.log('\n=======================\n', payload.from.firstName,
-                'logged in.\nAdding', payload.from.firstName, ' UID to socket hashTable');
 
             // Add user socket to hash table
             socketsHash[payload.from._id] = socketArray;
-            console.log('Added', payload.from.firstName, 'UID to hash table with SID:', socketsHash[payload.from._id]);
-            console.log('Socket Hash Table:', socketsHash);
-
-            console.log('=======================');
 
             // Notify all clients that a new client logged in
             io.emit('newUserLoggedIn', { serverMessage: payload.from.firstName + ' logged in', serverPayload: payload.from });
@@ -61,32 +49,20 @@ exports.socketServer = function (io) {
 
         socket.on('persistedLogin', (payload) => {
 
-            console.log('\n=======================\n', payload.from.firstName,
-                'did a persist log in.\nReplaces', payload.from.firstName, ' UID to socket hashTable');
-
             if (socketsHash[payload.from._id] === undefined) {
                 let socketArray = [socket.id];
                 socketsHash[payload.from._id] = socketArray;
-                console.log('Added', payload.from.firstName, 'UID to hash table with SID:', socketsHash[payload.from._id]);
-                console.log('Socket Hash Table:', socketsHash);
-                console.log('=======================');
             } else {
                 let socketArrayForUser = socketsHash[payload.from._id];
                 socketArrayForUser.push(socket.id);
                 socketsHash[payload.from._id] = socketArrayForUser;
             }
-            console.log('Persisted', payload.from.firstName, 'UID to hash table with SID:', socketsHash[payload.from._id]);
-            console.log('Socket Hash Table:', socketsHash);
-
-            console.log('=======================');
 
             // Notify all clients that a new client logged in
             io.emit('newUserLoggedIn', { serverMessage: payload.from.firstName + ' logged in', serverPayload: payload.from });
         });
 
         socket.on('someUserLoggedOut', (payload) => {
-            console.log('\n=======================\n', payload.from.firstName,
-                'logged out.\nRemoving', payload.from.firstName, 'from socket hashTable');
 
             // Delete user socket from hash table
             if (socketsHash[payload.from._id] !== undefined) {
@@ -107,20 +83,15 @@ exports.socketServer = function (io) {
                 } else {
                     socketsHash[payload.from._id] = socketArrayOfUser;
                 }
-
-                console.log('Removed a socket for ', payload.from.firstName, ' from hash table:', socketsHash);
-                console.log('=======================');
                 // Notify all clients that a client logged out
                 io.emit('someUserLoggedOut', { serverMessage: payload.from.firstName + ' logged out', serverPayload: payload.from });
                 }
         });
 
         socket.on('addBeatBotToUserMessage', (payload) => {
-            console.log('Adding beat bot to new user...');
 
             User.findOne({ email: 'beatbot@localbeats.com' }, function (err, user) {
                 if (err || !user) {
-                    console.log('>>> Beatbot user not found!!!');
                 }
                 let newMessage = new Message();
                 newMessage.from = user;
@@ -129,44 +100,14 @@ exports.socketServer = function (io) {
 
                 newMessage.save(function (err, message) {
                     if (err) {
-                        console.log('Unable to save the message...');
                     }
-                    console.log('Greeting bot added');
                 });
             });
         });
 
-        // ============================================
-        // Private Messaging Event Handlers - P2P
-        // ============================================
-
-        // socket.on('requestNewMsgFromProfileButtonClick', (messagePayload) => {
-        //     profileButtonMsgPayload = messagePayload;
-        // });
-
-        // socket.on('openPmSnackBarThread', (messagePayload) => {
-        //     pmSnackBarPayload = messagePayload;
-        // });
-
-        // socket.on('chatComponentDoneLoading', (payload) => {
-        //     // console.log('Conditional 1: ', Object.keys(profileButtonMsgPayload).length !== 0 && profileButtonMsgPayload.constructor !== Object);
-        //     // console.log('Conditional 2: ', Object.keys(profileButtonMsgPayload).length !== 0 && profileButtonMsgPayload.constructor === Object);
-        //     if (Object.keys(profileButtonMsgPayload).length !== 0 && profileButtonMsgPayload.constructor === Object) {
-        //         socket.emit('requestNewMsgFromProfileButtonClick', profileButtonMsgPayload);
-        //         profileButtonMsgPayload = new Object();
-        //     }
-        //     if (Object.keys(pmSnackBarPayload).length !== 0 && pmSnackBarPayload.constructor === Object) {
-        //         console.log('\Emitting profile payload:', pmSnackBarPayload);
-        //         socket.emit('openPmSnackBarThread', pmSnackBarPayload);
-        //         pmSnackBarPayload = new Object();
-        //     }
-        // });
-
 
         //TODO look at this for sending live notifications
         socket.on('sendPrivateMessage', (payload) => {
-            // console.log('\n-----\nPM received from socket: ', socket.id);
-            // console.log('\n-----\nPM payload: ', payload);
 
             // Svae the message to DB
             let newMessage = new Message();
@@ -180,20 +121,16 @@ exports.socketServer = function (io) {
             // TODO: SAVE THE DATA TO DB
             newMessage.save(function (err, message) {
                 if (err) {
-                    console.log("Unable to save the message...");
                 }
-                console.log("Save successful: ", message);
             });
 
             // Send the message to all the recipients (currently also the sender)
             let fromSocketsArray = socketsHash[payload.from._id];
             let toSocketsArray = socketsHash[payload.to._id];
             let allSocketsOfFromAndTo = fromSocketsArray.concat(toSocketsArray);
-            // console.log('>> All sockets: ', allSocketsOfFromAndTo);
 
             if (allSocketsOfFromAndTo !== undefined && allSocketsOfFromAndTo !== null) {
                 for (let i = 0; i < allSocketsOfFromAndTo.length; i++) {
-                    // console.log('> Sending message to', allSocketsOfFromAndTo[i]);
                     io.to(allSocketsOfFromAndTo[i]).emit('sendPrivateMessage', payload);
                 }
             }
@@ -270,18 +207,11 @@ exports.socketServer = function (io) {
                 }
             }
 
-            console.log('TELL NOTIFICATION PANEL: ', sendArray);
-
             if (sendArray !== undefined && sendArray !== null) {
                 for (let i = 0; i < sendArray.length; i++) {
                     io.to(sendArray[i]).emit('notifications', notifications)
                 }
             }
-            // TODO: remove later after testing. Non-iterable hash array
-            // for(let senderSocket of sendArray) {
-            //     // console.log(notifications);
-            //     io.to(senderSocket).emit('notifications', notifications)
-            // }
         })
 
         socket.on('notificationsForUser', userID => {

@@ -34,7 +34,6 @@ export class NotificationsComponent implements OnInit {
 
     //initial getting of notifications
     this._socketService.onEvent(SocketEvent.REQUEST_NOTIFICATIONS).subscribe((notificationsList: Notification[])=>{
-      // console.log('NotificationList got from server: ', notificationsList);
       this.notifications = [];
       for(let notification of notificationsList){
         let newNotification:Notification = new Notification(notification._id, notification.senderID, notification.receiverID,

@@ -3,7 +3,6 @@
 
 $black-87-opacity: rgba(0,0,0, .87);
 
-// You can define colors here (using http://mcg.mbitson.com)
 $md-primary: (
     50 : #e5eff4,
     100 : #bdd7e3,
@@ -70,18 +69,13 @@ $md-accent: (
     )
 );
 
-
-
-// mandatory stuff for theming
 $localbeats-primary: mat-palette($md-primary);
 $localbeats-accent:  mat-palette($md-accent);
 
-// include the custom theme components into a theme object
 $localbeats-theme: mat-light-theme($localbeats-primary, $localbeats-accent);
 
 $primary-dark: darken( map-get($md-primary, 500), 8% );
 
-// include the custom theme object into the angular material theme
 .localbeats-blue {
     @include angular-material-theme($localbeats-theme);
 
@@ -115,11 +109,9 @@ $primary-dark: darken( map-get($md-primary, 500), 8% );
     .default-bg {
         background: #ffffff !important;
     }
-    /* Hopscotch Tour */ 
     div.hopscotch-bubble {
         border-color: $primary-dark;
     }
-    /* up arrow  */
     div.hopscotch-bubble .hopscotch-bubble-arrow-container.up .hopscotch-bubble-arrow-border {
         border-bottom: 17px solid $primary-dark;
     }
@@ -127,7 +119,6 @@ $primary-dark: darken( map-get($md-primary, 500), 8% );
         border-bottom: 17px solid map-get($md-primary, 500);
         top: -16px;
     }
-    /* right arrow */
     div.hopscotch-bubble .hopscotch-bubble-arrow-container.right .hopscotch-bubble-arrow-border {
         border-left: 17px solid $primary-dark;
     }
@@ -135,7 +126,6 @@ $primary-dark: darken( map-get($md-primary, 500), 8% );
         border-left: 17px solid map-get($md-primary, 500);
         left: -1px;
     }
-    /* bottom arrow */
     div.hopscotch-bubble .hopscotch-bubble-arrow-container.down .hopscotch-bubble-arrow-border {
         border-top: 17px solid $primary-dark;
     }
@@ -143,7 +133,6 @@ $primary-dark: darken( map-get($md-primary, 500), 8% );
         border-top: 17px solid map-get($md-primary, 500);
         top: -18px;
     }
-    /* Left Arrow */
     div.hopscotch-bubble .hopscotch-bubble-arrow-container.left .hopscotch-bubble-arrow-border {
         border-right: 17px solid $primary-dark;
     }
@@ -151,7 +140,6 @@ $primary-dark: darken( map-get($md-primary, 500), 8% );
         left: 1px;
         border-right: 17px solid map-get($md-primary, 500);
     }
-
     .mat-bg-accent,
     div.hopscotch-bubble .hopscotch-bubble-number,
     div.hopscotch-bubble .hopscotch-nav-button.next:hover,
