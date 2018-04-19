@@ -1,6 +1,6 @@
 {
-  "name": "MEAN Contact List",
-  "description": "Example contact list app using MEAN",
+  "name": "Localbeats",
+  "description": "Localbeats",
   "keywords": [
     "MEAN",
     "Angular",
@@ -8,7 +8,7 @@
     "MongoDB",
     "mLab"
   ],
-  "repository": "https://github.com/chrisckchang/mean-contactlist-angular2",
+  "repository": "https://github.com/worldofnick/LocalBeats",
   "success_url": "/",
   "formation": {
     "web": {
