@@ -13,7 +13,7 @@ Install [npm](https://www.npmjs.com/get-npm)
 
 ### Installing and Running
 
-A step by step series of examples that tell you have to get a development env running
+A step by step series of examples that tell you have to get a development enviorment running
 
 Download and unzip `localbeats.zip`
 
