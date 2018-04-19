@@ -2,15 +2,19 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { 
-  MatIconModule,
-  MatCardModule,
-  MatInputModule,
-  MatMenuModule,
-  MatProgressBarModule,
-  MatButtonModule,
-  MatChipsModule,
   MatListModule,
-  MatGridListModule
+  MatIconModule,
+  MatButtonModule,
+  MatCardModule,
+  MatMenuModule,
+  MatSlideToggleModule,
+  MatGridListModule,
+  MatChipsModule,
+  MatCheckboxModule,
+  MatRadioModule,
+  MatTabsModule,
+  MatInputModule,
+  MatProgressBarModule
  } from '@angular/material';
 import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -26,15 +30,19 @@ import { AboutRoutes } from "./about.routing";
 @NgModule({
   imports: [
     CommonModule,
+    MatListModule,
     MatIconModule,
-    MatInputModule,
+    MatButtonModule,
     MatCardModule,
     MatMenuModule,
-    MatProgressBarModule,
-    MatButtonModule,
-    MatChipsModule,
-    MatListModule,
+    MatSlideToggleModule,
     MatGridListModule,
+    MatChipsModule,
+    MatCheckboxModule,
+    MatRadioModule,
+    MatTabsModule,
+    MatInputModule,
+    MatProgressBarModule,
     FlexLayoutModule,
     ChartsModule,
     NgxDatatableModule,
