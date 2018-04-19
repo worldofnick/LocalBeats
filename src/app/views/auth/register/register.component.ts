@@ -192,6 +192,12 @@ export class RegisterComponent implements OnInit {
       this.user.location = [this.longitude, this.latitude];
       this.user.city = this.city;
       this.user.state = this.state;
+    } else {
+      this.user.location = [-111.84494389999999,
+        40.7677324];
+      this.user.city = 'Salt Lake City';
+      this.user.state = 'UT';
+
     }
 
     // this.submitButton.disabled = true;
