@@ -347,7 +347,6 @@ export class CreateEventsComponent implements OnInit {
     this.event.fromDate = this.basicForm.get('date').value[0];
     this.event.toDate = this.basicForm.get('date').value[1];
     this.event.cancellationPolicy = this.basicForm.get('cancellationPolicy').value;
-    // console.log("event: ", this.event)
 
 
     if (!this.updating) {

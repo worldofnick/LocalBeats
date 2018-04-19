@@ -60,22 +60,6 @@ export class ChatsService {
   markChatsAsReadBetweenTwoUser(fromUID: string, toUID: string) {
     const url = SERVER_URL + 'api/messages/update/read/' + fromUID + '/' + toUID;
     return this.http.put(url, {}, httpOptions);
-    // this.http.put(url, {}, httpOptions).subscribe(
-    //   (data: any) => {
-    //     console.log('All Chats read = true result: ', data);
-
-    //     // Make the unread count for that user to zero in unreadCounts[]
-    //     const senderIndex = this.unreadCounts.findIndex(x => x._id === fromUID);
-    //     // console.log('>> Sender index: ', senderIndex);
-    //     // console.log('>> Unread count array: ', this.unreadCounts);
-    //     if (senderIndex !== -1) {
-    //       this.unreadCounts[senderIndex].unreadCount = 0;
-    //     }
-    //   },
-    //   (error: any) => {
-    //     console.error(error);
-    //   }
-    // );
   }
 
   markChatsAsReadBetweenTwoUsersAuto(fromUID: string, toUID: string) {
@@ -116,22 +100,5 @@ export class ChatsService {
     let body = JSON.stringify(message);
     return this.http.post(SERVER_URL + 'api/messages/', body, httpOptions);
   }
-
-  // setOverallUnreadCountForthiUserInSharedData(loggedInUser: User): number {
-  //   const url = SERVER_URL + 'api/messages/counts/' + loggedInUser._id;
-  //   console.log('> Overall count URL: ', url);
-  //   this.http.get(url).subscribe(
-  //     (payload: any) => {
-  //       if (payload !== undefined && payload !== null) {
-  //         console.log('>> Unread COUNT = ', payload);
-  //         console.log('>> Only count: ', payload.unreadMessagesCount);
-  //         return payload.unreadMessagesCount as number;
-  //       }
-  //     },
-  //     err => {
-  //       console.error(err);
-  //     });
-  //     return 0;
-  // }
 
 }
