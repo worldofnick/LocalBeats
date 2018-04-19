@@ -26,7 +26,6 @@ export class ProfileOverviewComponent implements OnInit {
 
   @Input() user: User;
   @Input() onOwnProfile: boolean;
-  private loginSub: ISubscription;
 
   averageRating: any;
   numberCompletedReviews: any = 0;
