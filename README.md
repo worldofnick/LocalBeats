@@ -21,6 +21,11 @@ Download and unzip `localbeats.zip`
 cd <unzipped directory>
 ```
 
+Install the [Angular CLI](https://github.com/angular/angular-cli#installation)
+```
+npm install -g @angular/cli
+```
+
 Install the dependencies
 
 ```
