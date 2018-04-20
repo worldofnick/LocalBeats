@@ -105,7 +105,7 @@ export class EventManagementComponent implements OnInit {
     paymentStatues: PaymentStatus[],
     cancelledPaymentStatues: PaymentStatus[]}[] = [];
   // MatPaginator Inputs
-  pageSize = 3;
+  pageSize = 9;
   pageIndex = 0;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
