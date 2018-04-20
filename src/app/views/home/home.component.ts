@@ -20,8 +20,6 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { allResolved } from 'q';
 import { PACKAGE_ROOT_URL } from '@angular/core/src/application_tokens';
 
-
-
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -33,7 +31,6 @@ export class HomeComponent implements OnInit {
   @Input('backgroundGray') public backgroundGray;
   contactForm: FormGroup;
 
-
   // suggested info
   searchTypes: string[] = ['artist', 'host', 'event'];
   genresList: string[] = ['rock', 'country', 'jazz', 'blues', 'rap'];
@@ -43,7 +40,6 @@ export class HomeComponent implements OnInit {
 
   results: any[] = [];
   allResults: any[] = [];
-
 
   resultsArtists: any[] = [];
   allResultsArtists: any[] = [];
@@ -69,15 +65,12 @@ export class HomeComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-
-
     this.initIoConnection();            // Listen to server for any registered events inside this method
     this.showSnackBarIfNeeded();
     this.userSubscription = this._userService.userResult.subscribe(user => {
       this.user = user;
       this.setupSuggestions();
     });
-
 
     this.contactForm = this.fb.group({
       name: ['', [Validators.required]],
@@ -86,22 +79,17 @@ export class HomeComponent implements OnInit {
       message: ['', Validators.required]
     });
 
-
-
     if (this._userService.isAuthenticated()) {
       this.setupSuggestions();
     } else {
       this.setCurrentPosition();
       this.setupDefaultSuggestions();
     }
-
   }
 
   setupDefaultSuggestions() {
-
-   this.defaultArtistSearch();
-   this.defaultEventSearch();
-
+    this.defaultArtistSearch();
+    this.defaultEventSearch();
   }
 
 
@@ -119,14 +107,13 @@ export class HomeComponent implements OnInit {
     this.currentSearch.event_types = ['all events'];
     this.currentSearch.searchType = 'ARec';
     this.searchType = 'Artist';
-    if (this._userService.isAuthenticated()){
+    if (this._userService.isAuthenticated()) {
       this.currentSearch.uid = this._userService.user._id;
     }
     this.searchService.userSearch(this.currentSearch).then((users: User[]) => {
       this.allResultsArtists = users;
       this.updateResults2();
     });
-
   }
 
   defaultEventSearch() {
@@ -143,7 +130,7 @@ export class HomeComponent implements OnInit {
     this.currentSearch.genres = ['all genres'];
     this.currentSearch.event_types = ['all events'];
     // this.suggestedTitle = 'Events In Salt Lake City';
-    if (this._userService.isAuthenticated()){
+    if (this._userService.isAuthenticated()) {
       this.currentSearch.uid = this._userService.user._id;
     }
 
@@ -161,78 +148,70 @@ export class HomeComponent implements OnInit {
         this.longitude = position.coords.longitude;
       });
     }
-    // console.log(this.latitude, this.longitude);
   }
 
   setupSuggestions() {
     if (this._userService.user !== null && this._userService.user !== undefined) {
       // set suggestions type
-    if (this._userService.user.isArtist) {
-      // user is an artist
-      this.searchType = 'Rec';
-      this.suggestedTitle = 'Suggested Events:';
-    } else {
-      // user is event host.
-      this.searchType = 'Artist';
-      this.suggestedTitle = 'Suggested Artists:';
-    }
-
-
-    // set current search. then configure it.
-    this.currentSearch = new SearchTerms('', '', null, null, null, null, null, null,null);
-
-    // configure genres.
-    if (this._userService.user.genres == null || this._userService.user.genres.length == 0) {
-      this.currentSearch.genres = ['all genres'];
-    } else {
-      this.currentSearch.genres = this._userService.user.genres;
-    }
-
-    // configure event types
-    if (this._userService.user.eventTypes == null || this._userService.user.eventTypes.length == 0) {
-      this.currentSearch.event_types = ['all events'];
-    } else {
-      this.currentSearch.event_types = this._userService.user.eventTypes;
-    }
-
-    // configure location
-    this.currentSearch.location = {
-      longitude: this._userService.user.location[0],
-      latitude: this._userService.user.location[1]
-    };
-
-    // configure uid
-    this.currentSearch.uid = this._userService.user._id;
-
-
-    // user is an artist so search for event
-    this.currentSearch.searchType = 'ARec';
-    this.searchService.eventSearch(this.currentSearch).then((events: Event[]) => {
-      this.allResults = events;
-      if(this.allResults.length == 0){
-        this.defaultEventSearch();
+      if (this._userService.user.isArtist) {
+        // user is an artist
+        this.searchType = 'Rec';
+        this.suggestedTitle = 'Suggested Events:';
+      } else {
+        // user is event host.
+        this.searchType = 'Artist';
+        this.suggestedTitle = 'Suggested Artists:';
       }
-      this.updateResults();
-    });
 
-    // its an event host. so search for artists.
-    this.currentSearch.searchType = 'ERec';
-    this.searchService.userSearch(this.currentSearch).then((users: User[]) => {
-      this.allResultsArtists = users;
-      if(this.allResultsArtists.length == 0){
-        this.defaultArtistSearch();
+      // set current search. then configure it.
+      this.currentSearch = new SearchTerms('', '', null, null, null, null, null, null, null);
+
+      // configure genres.
+      if (this._userService.user.genres == null || this._userService.user.genres.length == 0) {
+        this.currentSearch.genres = ['all genres'];
+      } else {
+        this.currentSearch.genres = this._userService.user.genres;
       }
-      this.updateResults2();
-    });
+      // configure event types
+      if (this._userService.user.eventTypes == null || this._userService.user.eventTypes.length == 0) {
+        this.currentSearch.event_types = ['all events'];
+      } else {
+        this.currentSearch.event_types = this._userService.user.eventTypes;
+      }
+      // configure location
+      this.currentSearch.location = {
+        longitude: this._userService.user.location[0],
+        latitude: this._userService.user.location[1]
+      };
 
+      // configure uid
+      this.currentSearch.uid = this._userService.user._id;
+
+      // user is an artist so search for event
+      this.currentSearch.searchType = 'ARec';
+      this.searchService.eventSearch(this.currentSearch).then((events: Event[]) => {
+        this.allResults = events;
+        if (this.allResults.length == 0) {
+          this.defaultEventSearch();
+        }
+        this.updateResults();
+      });
+
+      // its an event host. so search for artists.
+      this.currentSearch.searchType = 'ERec';
+      this.searchService.userSearch(this.currentSearch).then((users: User[]) => {
+        this.allResultsArtists = users;
+        if (this.allResultsArtists.length == 0) {
+          this.defaultArtistSearch();
+        }
+        this.updateResults2();
+      });
     }
   }
 
   ngOnDestroy() {
     this.userSubscription.unsubscribe();
   }
-
-
 
   private updateResults() {
     let startingIndex = (this.pageIndex + 1) * this.pageSize - this.pageSize;
@@ -244,7 +223,6 @@ export class HomeComponent implements OnInit {
     for (i = startingIndex; i < endIndex && i < this.allResults.length; i++) {
       this.results.push(this.allResults[i]);
     }
-
   }
 
 
@@ -258,7 +236,6 @@ export class HomeComponent implements OnInit {
     for (i = startingIndex; i < endIndex && i < this.allResultsArtists.length; i++) {
       this.resultsArtists.push(this.allResultsArtists[i]);
     }
-
   }
 
   private pageEvent(pageEvent: PageEvent) {
@@ -327,58 +304,9 @@ export class HomeComponent implements OnInit {
    * Listens to the server for any registered events and takes action accordingly.
    */
   initIoConnection() {
-    // this._socketService.onEvent(SocketEvent.SEND_PRIVATE_MSG)
-    //   .subscribe((message: Message) => {
-    //     console.log('PM from server (main app module): ', message);
-    //     const temp: Message = message as Message;
-    //     this.openNewMessageSnackBar(temp);
-    //     if (temp.to._id === this._userService.user._id) {
-    //       this._sharedDataService.setOverallChatUnreadCount(this._userService.user);
-    //     }
-    //   });
-
-    // this._socketService.onEvent(SocketEvent.SEND_NOTIFICATION)
-    //   .subscribe((message: Notification) => {
-    //     console.log('Notification from server (home app module): ', message);
-    //     const temp: Notification = message as Notification;
-    //     this.openNotificationSnackBar(temp);
-    //   });
-
     this._socketService.onEvent(SocketEvent.YOU_LOGGED_OUT)
       .subscribe((message: Message) => {
         this.setupDefaultSuggestions();
       });
   }
-
-  // /**
-  //  * Display a snack bar pop-up whenever this user gets a new PM
-  //  * @param message The original PM that is received
-  //  */
-  // openNewMessageSnackBar(message: Message) {
-  //   // Only if on the recipient's profile:
-  //   if (this._userService.user._id !== message.from._id) {
-  //     let snackBarRef = this.snackBar.open('You have a new message from ' + message.from.firstName +
-  //       ' ' + message.from.lastName, 'Go to message...', { duration: 3500 });
-
-  //     snackBarRef.onAction().subscribe(() => {
-  //       console.log('Going to the message...');
-  //       this._sharedDataService.setProfileMessageSharedProperties(message.from);
-  //       this.router.navigate(['/chat']);
-  //       // this._socketService.send(Action.OPEN_SNACK_BAR_PM, message);
-  //     });
-  //   };
-  // }
-
-  // /**
-  //  * Display a snack bar pop-up whenever this user gets a new notification
-  //  * @param message The original notification that is received
-  //  */
-  // openNotificationSnackBar(message: Notification) {
-  //   let snackBarRef = this.snackBar.open('You have a new notification from ' + message.senderID.firstName + ' ' + message.senderID.lastName,
-  //     'Go to...', { duration: 3500 });
-
-  //   snackBarRef.onAction().subscribe(() => {
-  //     this.router.navigate(message.route);
-  //   });
-  // }
 }

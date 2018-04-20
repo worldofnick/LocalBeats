@@ -60,17 +60,15 @@ export class RegisterComponent implements OnInit {
     const confirmPassword = new FormControl('', CustomValidators.equalTo(password));
 
     this._socketService.onEvent(SocketEvent.MAGIC_LOGIN_RESULT)
-    .subscribe((message: Message) => {
-      console.log('Magic link result: ', message);
-      this.handleSameTabMagicLogin(message.serverPayload);
-    });
+      .subscribe((message: Message) => {
+        this.handleSameTabMagicLogin(message.serverPayload);
+      });
 
     this.searchService.eventTypes().then((types: string[]) => {
       this.eventsList = types;
     }).then(() => this.searchService.genres().then((types: string[]) => {
       this.genresList = types;
     }));
-    // TODO: remove second group's properties
     this.signupForm = new FormGroup({
       firstName: new FormControl('', Validators.required),
       lastName: new FormControl('', Validators.required),
@@ -130,8 +128,6 @@ export class RegisterComponent implements OnInit {
 
     this.socialAuthService.signIn(socialPlatformProvider).then(
       (userData) => {
-        console.log(socialPlatform + 'sign in data : ', userData);
-
         // Verify the token and get payload
         this.userService.verifyGoogleSocialIdToken(userData.idToken).subscribe(
           (payload: any) => {
@@ -155,7 +151,6 @@ export class RegisterComponent implements OnInit {
   }
 
   signup() {
-
     const signupData = this.signupForm.value;
     const preferencesData = this.preferencesFormGroup.value;
 
@@ -199,12 +194,6 @@ export class RegisterComponent implements OnInit {
       this.user.state = 'UT';
 
     }
-
-    // this.submitButton.disabled = true;
-    // this.progressBar.mode = 'indeterminate';
-
-    console.log('>> User object: ', this.user);
-
     // Add the user to DB, and if successful, send a magic link to email
     this.userService.signupUser(this.user).subscribe(
       (data: any) => {
@@ -213,7 +202,6 @@ export class RegisterComponent implements OnInit {
         this.isMagicLinkBeingSent = true;
         this.wasMagicLinkSuccessfullySent = false;
 
-        console.log('Sign in data: ', data);
         if (data.user.google !== null && data.user.google !== undefined) {
           this.error = false;
           this.userService.magicLinkDemiSignIn(data.user as User).subscribe(
@@ -231,7 +219,6 @@ export class RegisterComponent implements OnInit {
               this.error = false;
               this.isMagicLinkBeingSent = false;
               this.wasMagicLinkSuccessfullySent = true;
-              // this.progressBar.mode = 'determinate';
             },
             (error) => {
               this.errorHandler(error);
@@ -250,16 +237,12 @@ export class RegisterComponent implements OnInit {
     this.error = true;
     this.isMagicLinkBeingSent = false;
     this.wasMagicLinkSuccessfullySent = false;
-    // this.progressBar.mode = 'determinate';
   }
 
   handleSameTabMagicLogin(result) {
-    console.log('>> Result payload: ', result);
     if (this.user !== null && this.user !== undefined) {
-      console.log('>> This user: ', this.user);
       if (result.statusCode === 200) {
         if (result.user.email === this.user.email) {
-          console.log('>> In 200');
           this.error = false;
           this.userService.magicLinkDemiSignIn(result.user as User).subscribe(
             (data: any) => {
@@ -270,10 +253,8 @@ export class RegisterComponent implements OnInit {
               this.router.navigate(['/']);
             });
         } else {
-          console.log('Not for you');
         }
       } else {
-        console.log('>> In error');
         this.errorHandler(result.message);
       }
     }

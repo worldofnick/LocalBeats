@@ -37,7 +37,6 @@ exports.updateUserByID = function (req, res, next) {
 
     // user.hashPassword = undefined;
     if(req.body.user.spotifyID != undefined) {
-      console.log("Spotify ID: " + req.body.user.spotifyID);
       next();
     }else {
       return res.status(200).send({ user: user });
@@ -54,9 +53,6 @@ exports.deleteUserByID = function (req, res) {
       if (user == null) {
         return res.status(200).send("User was already deleted.");
       } else {
-        // Remove all events
-        // Remove all bookings
-        // Remove all toReviews
         return res.status(200).send("User " + user.email + " is removed");
       }
     }

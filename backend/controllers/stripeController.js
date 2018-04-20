@@ -97,7 +97,6 @@ exports.stripeTransfers = async function (req, res) {
     // Retrieve the URL from the response and redirect the user to Stripe.
     res.send({"redirect_url": loginLink.url});
   } catch (err) {
-    console.log('Failed to create a Stripe login link.');
     res.send({"redirect_url": 'http://localbeats.live/auth'});
   }
 

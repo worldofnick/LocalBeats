@@ -30,7 +30,6 @@ exports.sendTokens = function(req, res) {
 }
 
 exports.refreshAccessTokenMiddleware = function(req, res, next) {
-  console.log('Token req is from refreshAccess middlware: ', req.body);
   var spotifyUserProfile = undefined;
   var authOptions = { 
     url : config.spotify.tokenUri,
@@ -45,21 +44,16 @@ exports.refreshAccessTokenMiddleware = function(req, res, next) {
   };
   request.post(authOptions, function (err, response, body) {
     if (err === null && response.statusCode === 200) {
-      //TODO: get the user id, save it and then return the user id along with the tokens
-      console.log('Refresh Middleware response: ', body);
-
       req.body.access_token = body.access_token;
       req.body.expires_in = body.expires_in;
       next();
     } else {
-      console.log('Error refreshing spotify token', err, ', Code: ', response.statusCode, response.body);
       return res.status(500).send({ auth: false, message: 'Failed to refresh Spotify Token' });
     }
   });
 }
 
 exports.getMeAndSavetoDB = function(req, res) {
-  console.log('Me body: ', req.body);
   // Get the user profile from /v1/me and add it to this user's model
   var authOptions = {
     url : 'https://api.spotify.com/v1/me',
@@ -69,7 +63,6 @@ exports.getMeAndSavetoDB = function(req, res) {
   }
   request.get(authOptions, function(err, response, body) {
     if (err === null && response.statusCode === 200) {
-      console.log('Profile body received: ', body);
       const spotifyProfileObject = JSON.parse(body);
       
       let payload = {
@@ -84,18 +77,14 @@ exports.getMeAndSavetoDB = function(req, res) {
       User.findByIdAndUpdate(req.body.user._id, payload, { new: true }, function (err, user) {
         if (err) {
           return res.status(520).send({ message: "Error saving the spotify profile data to user object", error: err });
-          console.log('Error saving the spotify profile data to user object');
         }
     
         // user.hashPassword = undefined;
-        res.send( {
-          user: user
-        });
+        res.send( { user: user });
       });
       
     } else {
       return res.status(530).send({ message: "Error getting spotify user profile", error: err });
-      console.log('Error getting spotify user profile', err, ', Code: ', response.statusCode, response.body);    
     }
   });
 }
@@ -121,7 +110,6 @@ exports.removeSoundcloudFromUID = function (req, res) {
 }
 
 exports.getAccessRefreshTokens = function (req, res) {
-  console.log('Get access refresh request body is: ', req.body);
   var spotifyUserProfile = undefined;
   var authOptions = { 
     url : config.spotify.tokenUri,
@@ -137,9 +125,6 @@ exports.getAccessRefreshTokens = function (req, res) {
   };
   request.post(authOptions, function (err, response, body) {
     if (err === null && response.statusCode === 200) {
-      //TODO: get the user id, save it and then return the user id along with the tokens
-      console.log('Access Refresh Token response: ', body);
-
       return res.status(200).send(
         {
           access_token: body.access_token,
@@ -150,7 +135,6 @@ exports.getAccessRefreshTokens = function (req, res) {
       );
     } else {
       return res.status(530).send({ message: "Error getting spotify user tokens", error: err });
-      console.log('Error getting spotify tokens', err, ', Code: ', response.statusCode, response.body);
     }
   });
 }
@@ -192,8 +176,7 @@ exports.getAllAlbumsOfArtist = function (req, res) {
         });
     } else {
       res.status(530).send({ message: 'Error getting albums from the artist:' +req.params.artistID,
-                             original_response: JSON.parse(response.body)});
-      console.log('Error getting spotify user albums', err, ', Code: ', response.statusCode, response.body);    
+                             original_response: JSON.parse(response.body)});   
     }
   });
 }
@@ -209,8 +192,7 @@ exports.getSoundcloudUserProfile = function(req, res) {
           soundcloud: JSON.parse(body)
         });
     } else {
-      res.status(response.statusCode).send({ message: 'An error occured...', original_response: JSON.parse(response.body)});
-      console.log('Error getting soundcloud profile info', err, ', Code: ', response.statusCode, response.body);    
+      res.status(response.statusCode).send({ message: 'An error occured...', original_response: JSON.parse(response.body)});  
     }
   });
 }
@@ -224,12 +206,7 @@ exports.grantClientCredentials = function () {
 
       // Save the access token so that it's used in future calls
       spotifyApi.setAccessToken(data.body['access_token']);
-      // console.log("-------------\nThe spotify CC grant body is :\n-------------");
-      // console.log(data.body);
-      // console.log("---------------\nSPOTIFY API VAR\n---------------");
-      // console.log(spotifyApi);
     }, function (err) {
-      console.log('Something went wrong when retrieving an access token', err.message);
     });
 };
 
@@ -241,11 +218,9 @@ exports.grantClientCredentials = function () {
 exports.getAllPlaylists = function (req, res) {
   spotifyApi.getUserPlaylists(req.params.username)
     .then(function (data) {
-      // console.log('IS JSON EMPYT?: ', isResultEmpty(data.body));
       return res.status(200).send({ playlists: data.body });
     }, function (err) {
       return res.status(530).send({ message: "Invalid spotifyID...", error: err });
-      // console.log('Invalid spotifyID...', err);
     });
 };
 
@@ -257,7 +232,6 @@ exports.getAllPlaylists = function (req, res) {
 exports.getFirstPlaylist = function (req, res) {
   spotifyApi.getUserPlaylists(req.params.username)
     .then(function (data) {
-      // console.log('IS JSON EMPYT?: ', isResultEmpty(data.body));
       if (!isResultEmpty(data.body)) {
         for (var playlist of data.body.items) {
           if (playlist.owner.id == req.params.username) {
@@ -272,7 +246,6 @@ exports.getFirstPlaylist = function (req, res) {
 
     }, function (err) {
       return res.status(530).send({ message: "Invalid spotifyID...", error: err });
-      // console.log('Invalid spotifyID...', err);
     });
 };
 
@@ -290,7 +263,6 @@ exports.getFirstPlaylistByUIDAfterProfileUpdate = function (req, res) {
     }
     spotifyApi.getUserPlaylists(user.spotifyID)
       .then(function (data) {
-        // console.log('IS JSON EMPYT?: ', isResultEmpty(data.body));
         if (!isResultEmpty(data.body)) {
           for (var playlist of data.body.items) {
             if (playlist.owner.id == user.spotifyID) {
@@ -308,7 +280,6 @@ exports.getFirstPlaylistByUIDAfterProfileUpdate = function (req, res) {
 
       }, function (err) {
         return res.status(530).send({ message: "Invalid spotifyID...", error: err });
-        // console.log('Invalid spotifyID...', err);
       });
   });
 };
@@ -322,11 +293,9 @@ exports.getFirstPlaylistByUIDAfterProfileUpdate = function (req, res) {
 exports.getPlaylistByID = function (req, res) {
   spotifyApi.getPlaylist(req.params.username, req.params.playlist_id)
     .then(function (data) {
-      // console.log('\n-------------\nPlaylist: \n-------------\n', data.body);
       return res.status(200).send({ uri: data.body.uri });
     }, function (err) {
       return res.status(530).send({ message: "Invalid spotifyID...", error: err });
-      // console.log('Invalid spotifyID...', err);
     });
 };
 
@@ -343,14 +312,10 @@ exports.getAllPlaylistsByUID = function (req, res) {
       return res.status(520).send({ message: "Invalid UID in spotify findByID", error: err });
     }
     theUser = new User(user);
-    // console.log("USER: ");
-    // console.log(theUser.spotifyID);
     spotifyApi.getUserPlaylists(theUser.spotifyID)
       .then(function (data) {
-        // console.log('IS JSON EMPYT?: ', isResultEmpty(data.body));
         return res.status(200).send({ playlists: data.body });
       }, function (err) {
-        // console.log('Invalid spotifyID...', err);
         return res.status(530).send({ message: "Invalid spotifyID...", error: err });
       });
   });
@@ -368,7 +333,6 @@ exports.getFirstPlaylistByUID = function (req, res) {
     }
     spotifyApi.getUserPlaylists(user.spotifyID)
       .then(function (data) {
-        // console.log('IS JSON EMPYT?: ', isResultEmpty(data.body));
         if (!isResultEmpty(data.body)) {
           for (var playlist of data.body.items) {
             if (playlist.owner.id == user.spotifyID) {
@@ -383,7 +347,6 @@ exports.getFirstPlaylistByUID = function (req, res) {
 
       }, function (err) {
         return res.status(530).send({ message: "Invalid spotifyID...", error: err });
-        // console.log('Invalid spotifyID...', err);
       });
   });
 };
@@ -399,15 +362,11 @@ exports.getPlaylistByUIDandPID = function (req, res) {
     if (err) {
       return res.status(520).send({ message: "Invalid UID in spotify findByID", error: err });
     }
-    // console.log("USER: ");
-    // console.log(user.spotifyID);
     spotifyApi.getPlaylist(user.spotifyID, req.params.playlist_id)
       .then(function (data) {
-        // console.log('\n-------------\nPlaylist: \n-------------\n', data.body);
         return res.status(200).send({ uri: data.body.uri });
       }, function (err) {
         return res.status(530).send({ message: "Invalid spotifyID...", error: err });
-        // console.log('Invalid spotifyID...', err);
       });
   });
 };

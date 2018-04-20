@@ -124,10 +124,8 @@ export class CreateEventsComponent implements OnInit {
 
     let ID = this.EID["id"];
     if (ID == null) {
-      // console.log("creating event");
       this.updating = false;
     } else {
-      // console.log(ID);
       this.updating = true;
     }
 
@@ -282,7 +280,6 @@ export class CreateEventsComponent implements OnInit {
           this.showCropper = false;
           this.croppedImage = null;
         }).catch(err => {
-          console.log(err);
           this.progressBar.mode = 'determinate';
           this.showCropper = false;
           this.croppedImage = null;
@@ -362,7 +359,6 @@ export class CreateEventsComponent implements OnInit {
     this.event.fromDate = this.basicForm.get('date').value[0];
     this.event.toDate = this.basicForm.get('date').value[1];
     this.event.cancellationPolicy = this.basicForm.get('cancellationPolicy').value;
-    // console.log("event: ", this.event)
 
 
     if (!this.updating) {

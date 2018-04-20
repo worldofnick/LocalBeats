@@ -47,8 +47,6 @@ export class UserService {
     private initIoConnection(persisted: boolean): void {
         this.ioConnection = this._socketService.onEvent(SocketEvent.NEW_LOG_IN)
             .subscribe((message: Message) => {
-                // this.messages.push(message);
-                // console.log('Server Msg to user service', message);
             });
         if (persisted) {
             let message: Message = {
@@ -59,36 +57,15 @@ export class UserService {
         }
     }
 
-    // public signupUser(newUser: User): Observable<Object> {
-    //     const current = this.connection + '/register';
-    //     return this.http.post(current, newUser, { headers: this.headers })
-    //         .map((response: Response) => {
-    //             const data = response.json();
-    //             this.accessToken = data.token;
-    //             sessionStorage.setItem('token', JSON.stringify({ accessToken: this.accessToken }))
-    //             this.user = data.user as User;
-    //             // Notify server that a new user user logged in
-    //             this._socketService.send(Action.NEW_LOG_IN, {
-    //                 from: this.user,
-    //                 action: Action.NEW_LOG_IN
-    //             });
-    //             return data;
-    //         }).catch((error: Response) => {
-    //             if (error.status === 400) {
-    //                 return Observable.throw('Email is already in use.  Please try a different email.');
-    //             } else {
-    //                 return Observable.throw('Error Unknown');
-    //             }
-    //         });
-    // }
-
     public contactUs(name: string, subject: string, email: string, message: string): Observable<Object> {
-        return this.http.post(this.contactConnection, {name: name, subject: subject, email: email, message: message}, { headers: this.headers})
+        return this.http.post(this.contactConnection,
+            { name: name, subject: subject, email: email, message: message },
+            { headers: this.headers })
             .map((response: Response) => {
                 return response.json().message;
             }).catch((error: Response) => {
                 return Observable.throw(error.json().message);
-            })
+            });
     }
 
     public signupUser(newUser: User): Observable<Object> {
@@ -106,7 +83,6 @@ export class UserService {
             });
     }
 
-    // post("/api/users/uid")
     public onEditProfile(newUser: User): Promise<User> {
         const current = this.userConnection + '/' + newUser._id;
         return this.http.put(current, { user: newUser }, { headers: this.headers })
@@ -137,7 +113,6 @@ export class UserService {
         });
     }
 
-    // post("/api/authenticate")
     public demoModeSignInUser(returningUser: User): Observable<Object> {
         const current = this.connection + '/authenticate/demo';
         return this.http.post(current, returningUser, { headers: this.headers })
@@ -190,18 +165,10 @@ export class UserService {
         const requestUrl = this.connection + '/magicLink';
         return this.http.post(requestUrl, returningUser, { headers: this.headers })
             .map((response: Response) => {
-                console.log('>> In request magic link...');
                 const data = response.json();
 
-                // TODO: anything else?
-
-                // this.accessToken = data.token;
-                // sessionStorage.setItem('token', JSON.stringify({ accessToken: this.accessToken }))
-                // this.user = data.user as User;
-                console.log('>> Magic link response: ', data);
                 return data;
             }).catch((error: Response) => {
-                // TODO: add more speicifc errors
                 if (error.status === 404) {
                     return Observable.throw('\'' + returningUser.email + '\' cannot be found. Check if it correct and try again.');
                 } else if (error.status === 401) {
@@ -218,18 +185,9 @@ export class UserService {
         const requestUrl = this.connection + '/password/reset';
         return this.http.post(requestUrl, returningUser, { headers: this.headers })
             .map((response: Response) => {
-                console.log('>> In request magic link...');
                 const data = response.json();
-
-                // TODO: anything else?
-
-                // this.accessToken = data.token;
-                // sessionStorage.setItem('token', JSON.stringify({ accessToken: this.accessToken }))
-                // this.user = data.user as User;
-                console.log('>> Magic link response: ', data);
                 return data;
             }).catch((error: Response) => {
-                // TODO: add more speicifc errors
                 if (error.status === 404) {
                     return Observable.throw('\'' + returningUser.email + '\' cannot be found. Check if it correct and try again.');
                 } else if (error.status === 520) {
@@ -240,12 +198,10 @@ export class UserService {
             });
     }
 
-    // TODO: complete it
     public verifyLocalAccessToken(urlJwt: string): Observable<Object> {
         const requestUrl = this.connection + '/verifyLocalJwt';
         return this.http.post(requestUrl, { jwt: urlJwt }, { headers: this.headers })
             .map((response: Response) => {
-                console.log('>> In verify local access JWT: ', response.json());
                 const data = response.json();
 
                 this.accessToken = data.token;
@@ -272,7 +228,6 @@ export class UserService {
         const requestUrl = this.connection + '/captcha/verify';
         return this.http.post(requestUrl, { response: reponseToken }, { headers: this.headers })
             .map((response: Response) => {
-                console.log('>> In verify captcha: ', response.json());
                 return response.json();
             }).catch((error: Response) => {
                 if (error.status === 404) {
@@ -287,7 +242,6 @@ export class UserService {
         const requestUrl = this.connection + '/social/google/verifyIdToken';
         return this.http.post(requestUrl, { idToken: idToken }, { headers: this.headers })
             .map((response: Response) => {
-                console.log('>> In verify google: ', response.json());
                 return response.json();
             }).catch((error: Response) => {
                 if (error.status === 404) {
@@ -302,7 +256,6 @@ export class UserService {
         const requestUrl = this.connection + '/social/google/signin';
         return this.http.post(requestUrl, { idToken: idToken }, { headers: this.headers })
             .map((response: Response) => {
-                console.log('>> In verify google: ', response.json());
                 return response.json();
             }).catch((error: Response) => {
                 if (error.status === 404) {
@@ -313,13 +266,6 @@ export class UserService {
             });
     }
 
-    /**
-     * 
-     * @param user 
-     * change password
-     * /api/auth/passwordChange/:uid')
-     */
-    // /api/auth/passwordChange/:uid')
     public updatePassword(user: User): Promise<User> {
         const current = this.connection + '/passwordChange/' + user._id;
         let newPassword: string = user.password;
@@ -333,22 +279,12 @@ export class UserService {
             .catch(this.handleError);
     }
 
-    // get user
-    ///api/users/:uid
-    /**
-     * 
-     * @param userToGet 
-     * 
-     * 
-     */
     public getUserByID(ID: String): Promise<User> {
         const current = this.userConnection + '/' + ID;
         return this.http.get(current)
             .toPromise()
             .then((response: Response) => {
                 const data = response.json();
-                // this.accessToken = data.token;
-                // console.log(this.accessToken)
                 let temp = data.user as User;
                 return temp
             })
@@ -371,15 +307,11 @@ export class UserService {
                     action: Action.YOU_LOGGED_OUT
                 });
 
-
-
                 // Notify server that a new user user logged in
                 this._socketService.send(Action.SMN_LOGGED_OUT, {
                     from: from,
                     action: Action.SMN_LOGGED_OUT
                 });
-
-
 
                 this.userLoaded(null, null, false, true);
             })
@@ -390,43 +322,23 @@ export class UserService {
         return this.accessToken != null;
     }
 
-
-
-
-
-    /***********************
-     * 
-     * 
+    /***************************
      * N O T I F I C A T I O N S
-     * 
-     * 
-     *************************/
-
+     ***************************/
 
     public getNotificationsCountForUser(ID: any): Promise<Number> {
         let userConnection: string = environment.apiURL + 'api/notification';
-        // app.route('/api/notification/:uid')
         const current = userConnection + '/' + ID;
-        // const current = userConnection + '/5a7113ac9d89a873c89fe5ff';
-        //console.log("getting: ");
-        //console.log(current);
         return this.http.get(current)
             .toPromise()
             .then((response: Response) => {
                 const data = response.json();
-                // console.log(data)
-                // this.accessToken = data.token;
-                // console.log(this.accessToken)
                 let temp = data.notifications as Notification[];
                 if (temp == null) {
                     return 0;
                 }
 
                 this._socketService.socket.emit('tellTopBar', temp.length)
-                // this._socketService.send(Action.REQUEST_NOTIFICATION_COUNT, {
-                //     from: 'tellTopBar',
-                //     action: Action.SMN_LOGGED_OUT
-                // });
 
                 return temp.length;
             })
@@ -437,28 +349,20 @@ export class UserService {
     public getNotificationsForUser(ID: any): Promise<Notification[]> {
         let userConnection: string = environment.apiURL + 'api/notification';
         const current = userConnection + '/' + ID;
-        // const current = userConnection + '/5a7113ac9d89a873c89fe5ff';
 
-        //console.log("getting: ");
-        //console.log(current);
         return this.http.get(current)
             .toPromise()
             .then((response: Response) => {
                 const data = response.json();
-                // this.accessToken = data.token;
-                // console.log(this.accessToken)
-                //inserting test notifications until i can actually send them.
+                // Inserting test notifications until i can actually send them.
                 let temp = data.notifications as Notification[];
-                // console.log(data);
                 let t: Notification[] = [];
 
                 if (temp == null) {
-                    // this.io.emit('tellNotificationPanel', t)
                     return t;
                 }
 
-                this._socketService.socket.emit('tellNotificationPanel', temp)
-                // this._socketService.socket.emit('tellTopBar', temp.length)
+                this._socketService.socket.emit('tellNotificationPanel', temp);
 
                 return temp;
             })

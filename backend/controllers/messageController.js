@@ -11,7 +11,6 @@ exports.getAllMessages = function (req, res) {
 
     Message.find({}).populate('from to').exec(function (err, messages) {
         if (err) {
-            console.log('Error getting all messages: ', err);
             return res.status(400).send({
                 reason: "Unable to get all the messages...",
                 error: err
@@ -35,7 +34,6 @@ exports.getAllFromToMessages = function (req, res) {
         .populate('from to').sort({ sentAt: 1 })
         .exec(function (err, messages) {
             if (err) {
-                console.log('Error getting messages (from , to): ', err);
                 return res.status(400).send({
                     reason: "Unable to get (from, to) messages...",
                     error: err
@@ -75,7 +73,6 @@ exports.getAllActiveConversationsFrom = function (req, res) {
     ], (asyncError, asyncResults) => {
 
         if (asyncError !== null) {
-            console.log('Error getting conversation buddies: ', asyncError);
             return res.status(400).send({
                 reason: "Unable to get conversation buddies...",
                 error: asyncError
@@ -93,7 +90,6 @@ exports.getAllActiveConversationsFrom = function (req, res) {
         User.find({}).where('_id').in(resultIds)
             .exec(function (err, toUsers) {
                 if (err) {
-                    console.log('Error getting user objects for TO ids: ', err);
                     return res.status(400).send({
                         reason: "Unable to get user objects for TO user ids",
                         error: err
@@ -113,7 +109,6 @@ exports.getOverallUnreadCountForUser = function (req, res) {
 
     Message.find({ isRead: false }).where('to').in(thisUserId).count({}, function (error, unreadCount) {
         if (error) {
-            console.log('Error getting overall unread count: ', error);
             return res.status(400).send({
                 reason: "Unable to get overall unread count...",
                 error: error
@@ -158,7 +153,6 @@ exports.getUnreadCountBetweenThisUserAndPassedArrayOfBuddies = function (req, re
         }
     ], function (error, result) {
         if (error) {
-            console.log('Error getting total unread between 2 buddies: ', error);
             return res.status(400).send({
                 reason: "Error getting total unread between you and list of senders...",
                 error: error
@@ -194,7 +188,6 @@ exports.markAllMessagesReadBetweenTwoUsers = function (req, res) {
 exports.markThisMessageAsRead = function (req, res) {
     Message.findByIdAndUpdate(req.params.messageID, { isRead: true }, { new: true }, function (err, newMsg) {
         if (err) {
-          console.log('Cant update the message');
           return res.status(400).send({ reason: 'Cant update the message', error: err });
         }
         return res.status(200).send({ message: newMsg });
@@ -225,7 +218,6 @@ exports.saveMessage = function (req, res) {
 exports.clearMessagesDB = function (req, res) {
     Message.remove({}).exec(function (err, messages) {
         if (err) {
-            console.log('Error deleting all messages: ', err);
             return res.status(400).send({
                 reason: "Unable to delete all messages...",
                 error: err
@@ -236,5 +228,4 @@ exports.clearMessagesDB = function (req, res) {
 };
 
 exports.removeAllConversationsWithAUser = function (req, res) {
-    console.log('(Not Yet Implemented (removeAllConversationsWithAUser)');
 };

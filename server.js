@@ -43,7 +43,6 @@ app.use(morgan('dev'));
 const server = http.Server(app);
 const io     = socketIO(server);
 server.listen(port, function () {
-  console.log('\n=========\nBackend HTTP server and socket listening on port: ', port, '\n=========\n');
 });
 app.set('io', io);
 

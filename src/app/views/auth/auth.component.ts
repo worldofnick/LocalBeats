@@ -50,7 +50,6 @@ export class AuthComponent implements OnInit {
 
     this._socketService.onEvent(SocketEvent.MAGIC_LOGIN_RESULT)
       .subscribe((message: Message) => {
-        console.log('Magic link result: ', message);
         this.handleSameTabMagicLogin(message.serverPayload);
       });
 
@@ -82,22 +81,10 @@ export class AuthComponent implements OnInit {
     });
   }
 
-  /**
-   * Password less sign in handler.
-   * Steps:
-   * 1. REST call server to send verification magic link to the provided email
-   * 2. If error (email invalid or not in DB), display email not valid error message
-   *    Else, redirect to the mail-client website?
-   */
   signin() {
     const signinData = this.signinForm.value;
     this.user.email = this.signinForm.controls['username'].value;
     this.user.password = this.signinForm.controls['password'].value;
-    // this.submitButton.disabled = true;
-    // this.progressBar.mode = 'indeterminate';
-
-    console.log('Magic link clicked by Username: ' + this.user.email + 'with demo: ', this.isDemoModeChecked);
-    // After this, the cpatchaResolved is automatically called
   }
 
   public socialSignIn(socialPlatform: string) {
@@ -106,10 +93,8 @@ export class AuthComponent implements OnInit {
       socialPlatformProvider = GoogleLoginProvider.PROVIDER_ID;
     }
 
-    console.log('>> In social login mmethod: ', socialPlatformProvider);
     this.socialAuthService.signIn(socialPlatformProvider).then(
       (userData) => {
-        console.log(socialPlatform + 'sign in data : ', userData);
         // Now sign-in with userData
         this.userService.signInWithGoogleAccount(userData.idToken).subscribe(
           (data: any) => {
@@ -125,7 +110,6 @@ export class AuthComponent implements OnInit {
               });
           },
           (error) => {
-            console.log('Google Error: ', error);
             this.handleErrors(error);
           });
       }
@@ -133,7 +117,7 @@ export class AuthComponent implements OnInit {
   }
 
   toggleDemoMode() {
-    // console.log('>> Toggle is at : ', this.isDemoModeChecked);
+    // Do nothing for now. DO NOT REMOVE
   }
 
   cpatchaResolved(captchaResponse: string) {
@@ -142,7 +126,6 @@ export class AuthComponent implements OnInit {
     if (captchaResponse !== null) {
       this.userService.verifyCaptchaToken(captchaResponse).subscribe(
         (data: any) => {
-          // console.log('>> SUCCESS: ', data);
           this.magicLinkLogin();
         },
         (error: any) => {
@@ -161,7 +144,6 @@ export class AuthComponent implements OnInit {
           // Magic link successfully sent!
           this.error = false;
           this.magicLinkButtonClicked = true;
-          // this.progressBar.mode = 'determinate';
         },
         (error) => {
           // Show user error message
@@ -172,7 +154,6 @@ export class AuthComponent implements OnInit {
     } else {
       this.userService.demoModeSignInUser(this.user).subscribe(
         (data: any) => {
-          console.log('>> In 200, data: ', data);
           // Correctly authenticated, redirect
           this.error = false;
           this.userService.magicLinkDemiSignIn(data.user as User).subscribe(
@@ -199,7 +180,6 @@ export class AuthComponent implements OnInit {
         this.error = false;
         this.magicLinkButtonClicked = true;
         this.isPasswordResetApproved = true;
-        // this.progressBar.mode = 'determinate';
       },
       (error) => {
         // Show user error message
@@ -216,17 +196,12 @@ export class AuthComponent implements OnInit {
     }
     this.errorMessage = error;
     this.error = true;
-    // this.submitButton.disabled = false;
-    // this.progressBar.mode = 'determinate';
   }
 
   handleSameTabMagicLogin(result) {
-    // console.log('>> Result payload: ', result);
     if (this.user !== null && this.user !== undefined) {
-      // console.log('>> This user: ', this.user);
       if (result.statusCode === 200) {
         if (result.user.email === this.user.email) {
-          console.log('>> In 200, result: ', result.user as User);
           this.error = false;
           this.userService.magicLinkDemiSignIn(result.user as User).subscribe(
             (data: any) => {
@@ -237,13 +212,12 @@ export class AuthComponent implements OnInit {
               this.router.navigate(['/']);
             });
         } else {
-          // console.log('Not for you');
+          // Do nothing for now
         }
       } else if (result.statusCode === 404) {
         this.magicLinkButtonClicked = false;
         this.router.navigate(['/auth', 'register']);
       } else {
-        // console.log('>> In error');
         this.magicLinkButtonClicked = false;
         this.handleErrors('Something went wrong on the server side... Please try again later');
       }

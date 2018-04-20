@@ -40,7 +40,6 @@ export class AppComponent implements OnInit {
     const token = sessionStorage.getItem('token');
     if(token) {
       let decodedToken = jwtHelper.decodeToken(token);
-      console.log(decodedToken);
       this.userService.getUserByID(decodedToken.id).then((user:User) => {
         this.userService.userLoaded(user, token, true, false);
         this.userService.getNotificationsCountForUser(user._id);
@@ -49,47 +48,6 @@ export class AppComponent implements OnInit {
       });
     }
     this.changePageTitle();
-    
-    // Init User Tour
-    setTimeout(() => {
-      hopscotch.startTour(this.tourSteps());
-    }, 2000);
-  }
-  /*
-  ***** Tour Steps ****
-  * You can supply tourSteps directly in hopscotch.startTour instead of 
-  * returning value by invoking tourSteps method,
-  * but DOM query methods(querySelector, getElementsByTagName etc) will not work
-  */
-  tourSteps(): any {
-    let self = this;
-    return {
-      id: 'hello-localbeats',
-      showPrevButton: true,
-      onEnd: function() {
-        self.snackBar.open('Awesome! Now let\'s explore LocalsBeats\'s cool features.', 'close', { duration: 5000 });
-      },
-      onClose: function() {
-        self.snackBar.open('You just closed User Tour!', 'close', { duration: 3000 });
-      },
-      steps: [
-        {
-          title: 'Your Dashboard',
-          content: '100+ awesome components, pipes and directives.',
-          target: 'dashboard-topbtn', // Element ID
-          placement: 'left',
-          xOffset: 0,
-          yOffset: 20
-        },
-        {
-          title: 'Front Page',
-          content: 'Welcome to LocalBeats',
-          target: 'frontend-btn', // Element ID
-          placement: 'top',
-          xOffset: 20
-        }
-      ]
-    }
   }
   changePageTitle() {
     this.router.events.filter(event => event instanceof NavigationEnd).subscribe((routeChange) => {
@@ -110,7 +68,6 @@ export class AppComponent implements OnInit {
   initIoConnection() {
     this._socketService.onEvent(SocketEvent.SEND_PRIVATE_MSG)
       .subscribe((message: Message) => {
-        console.log('PM from server (main app module): ', message);
         const temp: Message = message as Message;
         this.openNewMessageSnackBar(temp);
         if (temp.to._id === this.userService.user._id) {
@@ -120,7 +77,6 @@ export class AppComponent implements OnInit {
 
     this._socketService.onEvent(SocketEvent.SEND_NOTIFICATION)
       .subscribe((message: Notification) => {
-        console.log('Notification from server (home app module): ', message);
         const temp: Notification = message as Notification;
         this.openNotificationSnackBar(temp);
       });
@@ -137,7 +93,6 @@ export class AppComponent implements OnInit {
         ' ' + message.from.lastName, 'Go to message...', { duration: 3500 });
 
       snackBarRef.onAction().subscribe(() => {
-        console.log('Going to the message...');
         this._sharedDataService.setProfileMessageSharedProperties(message.from);
         this.router.navigate(['/chat']);
         // this._socketService.send(Action.OPEN_SNACK_BAR_PM, message);

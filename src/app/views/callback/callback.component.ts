@@ -24,7 +24,6 @@ export class CallbackComponent implements OnInit {
 
   ngOnInit() {
     const callbackUrl = window.location.href;
-    console.log('>> URL: ' + callbackUrl);
 
     if (callbackUrl.indexOf('spotify') >= 0) {
       this.spotifyCode = this.extractSpotifyCode();
@@ -97,7 +96,6 @@ export class CallbackComponent implements OnInit {
         }
       })
       .catch((error: any) => {
-        console.log(error);
       });
   }
 
@@ -165,7 +163,6 @@ export class CallbackComponent implements OnInit {
     if (callbackUrl.indexOf('?localAccessAuth=') >= 0) {
       const codeStartIndex = callbackUrl.indexOf('?localAccessAuth=');
       const code = callbackUrl.substr(codeStartIndex + 17);
-      console.log('Code: ', code);
       return code;
     }
     return '';
@@ -176,7 +173,6 @@ export class CallbackComponent implements OnInit {
     // TODO: contact server and log in and redirect
     this.userService.verifyLocalAccessToken(this.localAuthToken).subscribe(
       (data: any) => {
-        console.log('>> Data received: ', data);
         this.userService.magicLinkDemiSignIn(data.user as User).subscribe(
           (result: any) => {
             this.userService.userLoaded(result.user, result.token, false, false);
@@ -187,7 +183,6 @@ export class CallbackComponent implements OnInit {
           });
       },
       (error: any) => {
-        console.log('>> Error: ', error);
         this.router.navigate(['/auth']);
         this.snackBar.open(error, '', {
           duration: 7000,

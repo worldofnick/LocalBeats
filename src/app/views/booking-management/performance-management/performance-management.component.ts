@@ -101,7 +101,7 @@ export class PerformanceManagementComponent implements OnInit {
     cancelledPaymentStatues: PaymentStatus[]};
 
   // MatPaginator Inputs
-  pageSize = 3;
+  pageSize = 9;
   applicationPageIndex = 0;
   requestPageIndex = 0;
   confirmationPageIndex = 0;
