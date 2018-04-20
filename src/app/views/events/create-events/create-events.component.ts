@@ -328,7 +328,13 @@ export class CreateEventsComponent implements OnInit {
   onCreateEvent(form: NgForm) {
 
 
-    this.event.location = [this.longitude, this.latitude]
+    if(this.latitude != null){
+      this.event.location = [this.longitude, this.latitude]
+
+    }else{
+      this.event.location = [-111.84494389999999,
+        40.7677324];
+    }
 
     if(this.place){
 
@@ -336,6 +342,12 @@ export class CreateEventsComponent implements OnInit {
       const state = this.place.address_components[2].short_name
       this.event.state = state;
       this.event.city = city;
+      console.log('in place')
+    }else{
+      this.event.location = [-111.84494389999999,
+        40.7677324];
+      this.event.city = 'Salt Lake City';
+      this.event.state = 'UT';
     }
 
     this.event.eventName = this.basicForm.get('eventName').value;
