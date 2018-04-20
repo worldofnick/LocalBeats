@@ -144,7 +144,6 @@ exports.sendMagicLink = function (req, res) {
     // foundUser.hashPassword = undefined;
 
     // Send email with JWT link
-    const callbackUrl = config.local.authCallbackUri + localAccessToken;
     const sameTabUrl = config.local.authSameTabUri + localAccessToken;
     let message = {
       from: 'auth@localBeats.com',
@@ -154,9 +153,6 @@ exports.sendMagicLink = function (req, res) {
       html: '<p><b>Hello, ' + foundUser.firstName + '!<br>' +
         '<br>Click this link to get verified and continue your session: <br><br>' +
         sameTabUrl +
-        '<br><br><br>But, if you accidently closed your localBeats window, ' +
-        '<a href="' + callbackUrl +
-        '">click here to start a new session</a>' +
         '<br><br>Thanks'
     };
 
