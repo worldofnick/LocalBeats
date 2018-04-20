@@ -14,11 +14,7 @@ import { environment } from '../../../environments/environment';
 
 import * as io from 'socket.io-client';
 
-// const httpOptions = {
-//   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
-// };
-
-const SERVER_URL = environment.apiURL; //TODO: or env.url + port (heroku)
+const SERVER_URL = environment.apiURL;
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
 };
@@ -52,10 +48,10 @@ export class SocketService {
   }
 
   public sendNotification(eventName: SocketEvent, notificationPayload: SocketNotification):void {
-    //save notification to db.
+    // Save notification to db.
     let body = JSON.stringify(notificationPayload);
     this.http.post(SERVER_URL + 'api/notification/', body, httpOptions);
-    
+
     this.socket.emit(eventName, notificationPayload);
   }
 

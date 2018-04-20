@@ -11,8 +11,6 @@ import { SocketEvent } from './model/event';
 import { SocketService} from './socket.service';
 import { environment } from '../../../environments/environment';
 
-// import * as io from 'socket.io-client';
-
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
 };
@@ -21,8 +19,6 @@ const SERVER_URL = environment.apiURL;
 
 @Injectable()
 export class ChatsService {
-
-  // private socket;
   private loggedInUser: User = new User();
   public unreadCounts = new Array();
 
@@ -33,8 +29,6 @@ export class ChatsService {
   // ==============================================
   getConnectionUsers() {
     return this.http.get(SERVER_URL + 'api/users/');
-    
-    //TODO: can just update the user model to have these fields
   }
 
   // Returns { users: [User] } JSON

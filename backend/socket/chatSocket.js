@@ -1,6 +1,5 @@
 'use strict';
 
-// var pendingMessages = new Array();  // why not just send the whole 
 let socketsHash = new Array();
 var mongoose = require('mongoose');
 var User = mongoose.model('User');
@@ -11,17 +10,19 @@ var profileButtonMsgPayload = new Object();
 var pmSnackBarPayload = new Object();
 let thisIo;
 
-exports.broadcastResultToAllClientsViaSocket = function(auth, token, user, code, message) {
+exports.broadcastResultToAllClientsViaSocket = function (auth, token, user, code, message) {
     if (thisIo !== undefined || thisIo !== null) {
-        thisIo.emit('magicLoginResult', {serverPayload: {
-            token: token, 
-            user: user, 
-            auth: auth,
-            statusCode: code,
-            message: message
-        }});
+        thisIo.emit('magicLoginResult', {
+            serverPayload: {
+                token: token,
+                user: user,
+                auth: auth,
+                statusCode: code,
+                message: message
+            }
+        });
     }
-  }
+}
 
 exports.socketServer = function (io) {
     thisIo = io;
@@ -69,7 +70,7 @@ exports.socketServer = function (io) {
                 let socketArrayOfUser = socketsHash[payload.from._id];
 
                 // adams code to fix home page bug with suggestions when logging out.
-                for(let i = 0; i < socketArrayOfUser.length; i++){
+                for (let i = 0; i < socketArrayOfUser.length; i++) {
                     io.to(socketArrayOfUser[i]).emit('youLoggedOut', payload);
                 }
 
@@ -85,13 +86,14 @@ exports.socketServer = function (io) {
                 }
                 // Notify all clients that a client logged out
                 io.emit('someUserLoggedOut', { serverMessage: payload.from.firstName + ' logged out', serverPayload: payload.from });
-                }
+            }
         });
 
         socket.on('addBeatBotToUserMessage', (payload) => {
 
             User.findOne({ email: 'beatbot@localbeats.com' }, function (err, user) {
                 if (err || !user) {
+                    // Dont do anything
                 }
                 let newMessage = new Message();
                 newMessage.from = user;
@@ -100,13 +102,12 @@ exports.socketServer = function (io) {
 
                 newMessage.save(function (err, message) {
                     if (err) {
+                        // Dont do anything
                     }
                 });
             });
         });
 
-
-        //TODO look at this for sending live notifications
         socket.on('sendPrivateMessage', (payload) => {
 
             // Svae the message to DB
@@ -118,9 +119,9 @@ exports.socketServer = function (io) {
             newMessage.messageType = payload.messageType;
             newMessage.attachmentURL = payload.attachmentURL;
             newMessage.content = payload.content;
-            // TODO: SAVE THE DATA TO DB
             newMessage.save(function (err, message) {
                 if (err) {
+                    // Dont do anything
                 }
             });
 
@@ -136,18 +137,6 @@ exports.socketServer = function (io) {
             }
         });
 
-        // Send a request to every client asking for the PM recipient to pind server back 
-        // with its socket ID. When it does, it sends it the PMs received.
-        // socket.on('requestSocketIdForPM', (messagePayload) => {           //TODO: can remove the need to send socketID at the client.
-        //     console.log('PM forwarding to: ', socket.id);
-
-        //     // SEND ALL THE DATA FROM DB TO RECEIVER
-        //     console.log("\n----\nSending Messages: ", messagePayload.serverPayload);
-        //     // for(let message in pendingMessages) {
-        //         socket.emit('sendPrivateMessage', messagePayload.serverPayload);
-        //     // } 
-        // });
-
         // ============================================
         // Notifications Socket Controls
         // ============================================
@@ -162,46 +151,33 @@ exports.socketServer = function (io) {
                     io.to(socketArray[i]).emit('notificationCount', number);
                 }
             }
-            // TODO: remove later after testing. Non-iterable hash array
-            // for(senderSocket of socketArray) {
-            //     io.to(senderSocket).emit('notificationCount', number);
-            // }
         });
 
         // TODO add parans for function
         socket.on('tellTopBar', numberOfNotifications => {
             let sendArray = new Array();
-            for(let key in socketsHash) {
+            for (let key in socketsHash) {
                 let socketArray = socketsHash[key];
-                // console.log('Array: ', socketArray);
-                for(let currentSocket of socketArray) {
-                    // console.log('CURRENT SOCKE: ', currentSocket);
-                    if(currentSocket === socket.id) {
+                for (let currentSocket of socketArray) {
+                    if (currentSocket === socket.id) {
                         sendArray = socketArray;
                     }
                 }
             }
-            // console.log('TELL TOP BAR: ', sendArray);
 
             if (sendArray !== undefined && sendArray !== null) {
                 for (let i = 0; i < sendArray.length; i++) {
                     io.to(sendArray[i]).emit('notificationCount', numberOfNotifications);
                 }
             }
-            // TODO: remove later after testing. Non-iterable hash array
-            // for(let senderSocket of sendArray) {
-            //     io.to(senderSocket).emit('notificationCount', numberOfNotifications);
-            // }
         })
 
         socket.on('tellNotificationPanel', notifications => {
             let sendArray = new Array();
-            for(let key in socketsHash) {
+            for (let key in socketsHash) {
                 let socketArray = socketsHash[key];
-                // console.log('Array: ', socketArray);
-                for(let currentSocket of socketArray) {
-                    // console.log('CURRENT SOCKE: ', currentSocket);
-                    if(currentSocket === socket.id) {
+                for (let currentSocket of socketArray) {
+                    if (currentSocket === socket.id) {
                         sendArray = socketArray;
                     }
                 }
@@ -215,8 +191,6 @@ exports.socketServer = function (io) {
         })
 
         socket.on('notificationsForUser', userID => {
-            // var notifications = notificationController.getNotificationsForUser(userID)
-            
             let socketArray = socketsHash[userID];
 
             if (socketArray !== undefined && socketArray !== null) {
@@ -224,22 +198,12 @@ exports.socketServer = function (io) {
                     io.to(socketArray[i]).emit('notifications', 'test,test,test,test');
                 }
             }
-            // TODO: remove later after testing. Non-iterable hash array
-            // for(senderSocket of socketArray) {
-            //     io.to(senderSocket).emit('notifications', 'test,test,test,test');
-            // }
         });
 
         socket.on('sendNotification', (payload) => {
-            // console.log('\n-----\N Notification received from socket: ', socket.id);
-            // console.log('\n-----\N Notif payload: ', payload);
-
-            // Send the message to all the recipients (currently also the sender)
             let recipientSocketArray = socketsHash[payload.receiverID._id];
-            // console.log('> Sending notification to', recipientSocketArray);
 
-
-            // save notification to db
+            // Save notification to db
             let notification = new Notifications(); // build notification "someone has requested you to play blah"
             notification.senderID = payload.senderID;
             notification.message = payload.message;
@@ -251,7 +215,6 @@ exports.socketServer = function (io) {
                 if (err) {
                     return res.status(500).send("Failed to create booking notification");
                 }
-                // console.log('right here', notification);
                 payload._id = notification._id;
 
 
@@ -260,25 +223,20 @@ exports.socketServer = function (io) {
                         io.to(recipientSocketArray[i]).emit('sendNotification', payload);
                     }
                 }
-                // TODO: remove later after testing. Non-iterable hash array
-                // for(let recipientSocket of recipientSocketArray) {
-                //     io.to(recipientSocket).emit('sendNotification', payload);
-                // }
             });
 
         });
+
         // ===========
-        // Having profile reflect settings after updating - live.
+        // To reflect profile settings after live-updating
         // ===========
 
         socket.on('updateProfile', (payload) => {
             let sendArray = new Array();
-            for(let key in socketsHash) {
+            for (let key in socketsHash) {
                 let socketArray = socketsHash[key];
-                // console.log('Array: ', socketArray);
-                for(let currentSocket of socketArray) {
-                    // console.log('CURRENT SOCKE: ', currentSocket);
-                    if(currentSocket === socket.id) {
+                for (let currentSocket of socketArray) {
+                    if (currentSocket === socket.id) {
                         sendArray = socketArray;
                     }
                 }
@@ -289,11 +247,6 @@ exports.socketServer = function (io) {
                     io.to(sendArray[i]).emit('updateProfile', payload);
                 }
             }
-            // TODO: remove later after testing. Non-iterable hash array
-            // for(let senderSocket of sendArray) {
-            //     // console.log(notifications);
-            //     io.to(senderSocket).emit('updateProfile', payload);
-            // }
         })
     });
 }

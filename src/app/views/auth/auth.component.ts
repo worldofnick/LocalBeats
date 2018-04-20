@@ -81,13 +81,6 @@ export class AuthComponent implements OnInit {
     });
   }
 
-  /**
-   * Password less sign in handler.
-   * Steps:
-   * 1. REST call server to send verification magic link to the provided email
-   * 2. If error (email invalid or not in DB), display email not valid error message
-   *    Else, redirect to the mail-client website?
-   */
   signin() {
     const signinData = this.signinForm.value;
     this.user.email = this.signinForm.controls['username'].value;
@@ -124,7 +117,7 @@ export class AuthComponent implements OnInit {
   }
 
   toggleDemoMode() {
-    // console.log('>> Toggle is at : ', this.isDemoModeChecked);
+    // Do nothing for now. DO NOT REMOVE
   }
 
   cpatchaResolved(captchaResponse: string) {
@@ -151,7 +144,6 @@ export class AuthComponent implements OnInit {
           // Magic link successfully sent!
           this.error = false;
           this.magicLinkButtonClicked = true;
-          // this.progressBar.mode = 'determinate';
         },
         (error) => {
           // Show user error message
@@ -188,7 +180,6 @@ export class AuthComponent implements OnInit {
         this.error = false;
         this.magicLinkButtonClicked = true;
         this.isPasswordResetApproved = true;
-        // this.progressBar.mode = 'determinate';
       },
       (error) => {
         // Show user error message
@@ -221,7 +212,7 @@ export class AuthComponent implements OnInit {
               this.router.navigate(['/']);
             });
         } else {
-          // console.log('Not for you');
+          // Do nothing for now
         }
       } else if (result.statusCode === 404) {
         this.magicLinkButtonClicked = false;

@@ -18,7 +18,7 @@ import { Router } from '@angular/router';
 import { ReviewService } from '../../services/reviews/review.service';
 import { SpotifyClientService } from '../../services/music/spotify-client.service';
 import { DomSanitizer, SafeResourceUrl, SafeUrl } from '@angular/platform-browser';
-import {MatListModule} from '@angular/material/list';
+import { MatListModule } from '@angular/material/list';
 import { MatSnackBar } from '@angular/material';
 import { PageEvent } from '@angular/material';
 import { MatPaginatorModule } from '@angular/material/paginator';
@@ -36,17 +36,17 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterViewChecked {
   onOwnProfile: boolean = null;
   userID: any = null;
   requested: boolean = null;
-  clickedRequestArtist:boolean = false;
+  clickedRequestArtist: boolean = false;
   clickedOverview = false;
   clickedSettings = false;
 
-  events:any[];
+  events: any[];
   requestedArtistEvents: any[] = [];
   requestedArtistBookings: any[] = [];
   appliedEvents: Event[] = [];
   appliedBookings: any[] = [];
-  deleteStatus:Number;
-  hasApplied:Boolean = true;
+  deleteStatus: Number;
+  hasApplied: Boolean = true;
 
   averageRating: any;
   numberCompletedReviews: any = 0;
@@ -56,9 +56,6 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterViewChecked {
   results: any[] = [];
   allResults: any[] = [];
 
-  // userID: any = null;
-  // reviews: Review[] = [];
-
   // Spotify and Soundcloud
   onSpotifyWidget = false;
   trustedAlbumUrl: SafeResourceUrl;
@@ -66,22 +63,16 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterViewChecked {
   soundcloudIdFormInput: string;
 
   constructor(private route: ActivatedRoute,
-    private router : Router,
+    private router: Router,
     public userService: UserService,
     private bookingService: BookingService,
     private eventService: EventService, public snackBar: MatSnackBar,
     private reviewService: ReviewService,
-    private notificationService: NotificationService, private cdRef:ChangeDetectorRef,
+    private notificationService: NotificationService, private cdRef: ChangeDetectorRef,
     private sanitizer: DomSanitizer, private _sharedDataService: SharedDataService,
-    private _socketService: SocketService, private _spotifyClientService: SpotifyClientService) {
-
-    //  router.events.subscribe((url: any) => this.clickedOverview = router.url == "/profile/overview");
-
-  }
+    private _socketService: SocketService, private _spotifyClientService: SpotifyClientService) { }
 
   ngOnInit() {
-
-
     this.userSubscription = this.userService.userResult.subscribe(user => this.user = user);
     this.activeView = this.route.snapshot.params['view'];
 
@@ -92,7 +83,7 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterViewChecked {
 
     if (this.userID["id"] == null) {
       this.onOwnProfile = true;
-      this.userService.getUserByID(this.userService.user._id).then( (updated: User) => {
+      this.userService.getUserByID(this.userService.user._id).then((updated: User) => {
         this.userService.user = updated;
         this.user = this.userService.user;
         this.clickedOver();
@@ -105,7 +96,6 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterViewChecked {
       let ID: String = this.userID["id"];
       this.userService.getUserByID(ID).then((gottenUser: User) => {
         this.user = gottenUser;
-        // console.log('Profile got user: ', gottenUser);
         // Retreive and store the latest spotify albums of this user
         this.clickedOver();
         this.getSpotifyAlbumsAndSave();
@@ -113,18 +103,16 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterViewChecked {
     }
 
     // received socket emition from server about updating profile
-    this._socketService.onEvent(SocketEvent.UPDATE_PROFILE).subscribe((user: User)=>{
+    this._socketService.onEvent(SocketEvent.UPDATE_PROFILE).subscribe((user: User) => {
       this.user = user;
     });
-
-    // console.log('User object: ', this.user);
   }
 
- 
+
 
 
   hasRequested() {
-    if(!this.userService.isAuthenticated()){
+    if (!this.userService.isAuthenticated()) {
       return;
     }
     this.bookingService.getUserBookings(this.userService.user, 'host').then((bookings: any[]) => {
@@ -139,24 +127,22 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   ngAfterViewChecked(): void {
-		this.cdRef.detectChanges();
-	}
+    this.cdRef.detectChanges();
+  }
 
   ngOnDestroy() {
     this.cdRef.detach();
     this.userSubscription.unsubscribe();
   }
 
-  
-
   clickedOver() {
     this.clickedOverview = true;
     this.clickedRequestArtist = false;
     this.clickedSettings = false;
-    
+
   }
 
-  onRequestArtist(){
+  onRequestArtist() {
     this.clickedRequestArtist = true;
     this.clickedOverview = false;
     this.clickedSettings = false;
@@ -208,9 +194,8 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterViewChecked {
    */
   onMusicTabSelectChange(event) {
     if (event.index === 0) {
-      // console.log('Spotify tab is selected!');
+      // Do nothing. Spotify Tab is selected
     } else {
-      // console.log('Soundcloud tab is selected!');
       if (this.user.soundcloud !== undefined && this.user.soundcloud !== null) {
         this.sanitizeSoundcloudUrl();
       }
@@ -222,14 +207,11 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterViewChecked {
    *  set it to the user object's albums property
    */
   getSpotifyAlbumsAndSave() {
-    // console.log('Profile user: ', this.user);
-    // console.log(this.user.spotify !== null && this.user.spotify !== undefined);
-    if ( this.user !== null && this.user !== undefined ) {
+    if (this.user !== null && this.user !== undefined) {
       if (this.user.spotify !== null && this.user.spotify !== undefined) {
         this._spotifyClientService.requestAlbumsOwnedByAnArtist(this.user)
           .then((listOfSpotifyAlbumObjects: any) => {
             this.user.spotify.albums = listOfSpotifyAlbumObjects.albums.items;
-            // console.log('Saved albums: ', this.user);
           });
       }
     }
@@ -241,7 +223,6 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterViewChecked {
    * @param album The spotify album object that was clicked
    */
   public onAlbumRowClicked(album) {
-    // console.log('Album ', album, 'clicked' );
     this.onSpotifyWidget = true;
 
     let dangerousAlbumUrl = 'https://open.spotify.com/embed?uri=spotify%3Aalbum%3A' + album.id + '&theme=white';
@@ -264,8 +245,6 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterViewChecked {
    */
   registerSoundcloudClicked(event) {
     if (event.keyCode === 13 && !event.shiftKey) {
-      // console.log('Entered soundcloud id: %s', this.soundcloudIdFormInput);
-
       // If the user entered non-blank id and hit send, communicate with server
       if (this.soundcloudIdFormInput.trim().length > 0) {
         // Get user profile data from the server which contacts soundcloud API
@@ -276,8 +255,7 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterViewChecked {
               avatar_url: updatedUser.soundcloud.avatar_url,
               username: updatedUser.soundcloud.username
             };
-            // console.log('This User: ', this.user);
-            this.userService.onEditProfile(this.user).then( (savedUser: User) => {
+            this.userService.onEditProfile(this.user).then((savedUser: User) => {
               this.userService.user = this.user;
               this.sanitizeSoundcloudUrl();
             });
@@ -289,7 +267,6 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterViewChecked {
           }
         });
       }
-
       this.soundcloudIdFormInput = '';
     }
   }
@@ -299,11 +276,11 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterViewChecked {
    */
   public sanitizeSoundcloudUrl() {
     const dangerousAlbumUrl = 'https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/users/' +
-    this.user.soundcloud.id + '&color=%23ff5500&auto_play=false&hide_related=false&show_comments=true&' +
-    'show_user=true&show_reposts=false&show_teaser=true&visual=true';
+      this.user.soundcloud.id + '&color=%23ff5500&auto_play=false&hide_related=false&show_comments=true&' +
+      'show_user=true&show_reposts=false&show_teaser=true&visual=true';
     this.trustedSoundcloudUrl = this.sanitizer.bypassSecurityTrustResourceUrl(dangerousAlbumUrl);
   }
-  
+
   // ======================================
   // Social Accounts Tab Methods
   // ======================================
@@ -312,7 +289,6 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.user.spotify = undefined;
     this.userService.user = this.user;
     this._spotifyClientService.removeSpotifyFromUser(this.user).then((unlinkedUser: User) => {
-      // this.user = unlinkedUser;
       this.userService.user = this.user;
       let snackBarRef = this.snackBar.open('Spotify Account Unlinked', '', {
         duration: 1500,
@@ -324,13 +300,10 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.user.soundcloud = undefined;
     this.userService.user = this.user;
     this._spotifyClientService.removeSoundcloudFromUser(this.user).then((unlinkedUser: User) => {
-      // this.user = unlinkedUser;
       this.userService.user = this.user;
       let snackBarRef = this.snackBar.open('Soundcloud Account Unlinked', '', {
         duration: 1500,
       });
     });
   }
-
- 
 }

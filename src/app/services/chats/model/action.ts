@@ -13,7 +13,8 @@ export enum Action {
     REQUEST_MSG_FROM_PROFILE_BUTTON = 'requestNewMsgFromProfileButtonClick',
     NOTIFY_SERVER_CHAT_LOADED = 'chatComponentDoneLoading',
     OPEN_SNACK_BAR_PM = 'openPmSnackBarThread',
-    //notifications
+
+    // Notifications
     REQUEST_NOTIFICATIONS = 'notifications',
     REQUEST_NOTIFICATION_COUNT = 'notificationCount',
     TELL_NOTIFICATION_PANEL = 'tellNotificationPanel',

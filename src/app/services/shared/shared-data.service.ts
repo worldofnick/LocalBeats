@@ -56,7 +56,6 @@ export class SharedDataService {
       });
   }
 
-  // TODO: keep or remove later
   public resetUnreadChatCountForThisUser() {
     this.overallUnreadChatCountForThisUser = 0;
   }

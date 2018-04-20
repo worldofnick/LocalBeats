@@ -58,12 +58,14 @@ export class UserService {
     }
 
     public contactUs(name: string, subject: string, email: string, message: string): Observable<Object> {
-        return this.http.post(this.contactConnection, {name: name, subject: subject, email: email, message: message}, { headers: this.headers})
+        return this.http.post(this.contactConnection,
+            { name: name, subject: subject, email: email, message: message },
+            { headers: this.headers })
             .map((response: Response) => {
                 return response.json().message;
             }).catch((error: Response) => {
                 return Observable.throw(error.json().message);
-            })
+            });
     }
 
     public signupUser(newUser: User): Observable<Object> {
@@ -81,7 +83,6 @@ export class UserService {
             });
     }
 
-    // post("/api/users/uid")
     public onEditProfile(newUser: User): Promise<User> {
         const current = this.userConnection + '/' + newUser._id;
         return this.http.put(current, { user: newUser }, { headers: this.headers })
@@ -112,7 +113,6 @@ export class UserService {
         });
     }
 
-    // post("/api/authenticate")
     public demoModeSignInUser(returningUser: User): Observable<Object> {
         const current = this.connection + '/authenticate/demo';
         return this.http.post(current, returningUser, { headers: this.headers })
@@ -169,7 +169,6 @@ export class UserService {
 
                 return data;
             }).catch((error: Response) => {
-                // TODO: add more speicifc errors
                 if (error.status === 404) {
                     return Observable.throw('\'' + returningUser.email + '\' cannot be found. Check if it correct and try again.');
                 } else if (error.status === 401) {
@@ -199,7 +198,6 @@ export class UserService {
             });
     }
 
-    // TODO: complete it
     public verifyLocalAccessToken(urlJwt: string): Observable<Object> {
         const requestUrl = this.connection + '/verifyLocalJwt';
         return this.http.post(requestUrl, { jwt: urlJwt }, { headers: this.headers })
@@ -268,13 +266,6 @@ export class UserService {
             });
     }
 
-    /**
-     * 
-     * @param user 
-     * change password
-     * /api/auth/passwordChange/:uid')
-     */
-    // /api/auth/passwordChange/:uid')
     public updatePassword(user: User): Promise<User> {
         const current = this.connection + '/passwordChange/' + user._id;
         let newPassword: string = user.password;
@@ -288,14 +279,6 @@ export class UserService {
             .catch(this.handleError);
     }
 
-    // get user
-    ///api/users/:uid
-    /**
-     * 
-     * @param userToGet 
-     * 
-     * 
-     */
     public getUserByID(ID: String): Promise<User> {
         const current = this.userConnection + '/' + ID;
         return this.http.get(current)
@@ -324,15 +307,11 @@ export class UserService {
                     action: Action.YOU_LOGGED_OUT
                 });
 
-
-
                 // Notify server that a new user user logged in
                 this._socketService.send(Action.SMN_LOGGED_OUT, {
                     from: from,
                     action: Action.SMN_LOGGED_OUT
                 });
-
-
 
                 this.userLoaded(null, null, false, true);
             })
@@ -343,18 +322,9 @@ export class UserService {
         return this.accessToken != null;
     }
 
-
-
-
-
-    /***********************
-     * 
-     * 
+    /***************************
      * N O T I F I C A T I O N S
-     * 
-     * 
-     *************************/
-
+     ***************************/
 
     public getNotificationsCountForUser(ID: any): Promise<Number> {
         let userConnection: string = environment.apiURL + 'api/notification';
@@ -384,7 +354,7 @@ export class UserService {
             .toPromise()
             .then((response: Response) => {
                 const data = response.json();
-                //inserting test notifications until i can actually send them.
+                // Inserting test notifications until i can actually send them.
                 let temp = data.notifications as Notification[];
                 let t: Notification[] = [];
 
@@ -392,7 +362,7 @@ export class UserService {
                     return t;
                 }
 
-                this._socketService.socket.emit('tellNotificationPanel', temp)
+                this._socketService.socket.emit('tellNotificationPanel', temp);
 
                 return temp;
             })

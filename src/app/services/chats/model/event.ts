@@ -13,7 +13,8 @@ export enum SocketEvent {
     REQUEST_MSG_FROM_PROFILE_BUTTON = 'requestNewMsgFromProfileButtonClick',
     NOTIFY_SERVER_CHAT_LOADED = 'chatComponentDoneLoading',
     OPEN_SNACK_BAR_PM = 'openPmSnackBarThread',
-    //notifications
+
+    // Notifications
     REQUEST_NOTIFICATIONS = 'notifications',
     TELL_TOP_BAR = 'tellTopBar',
     TELL_NOTIFICATION_PANEL = 'tellNotificationPanel',

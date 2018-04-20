@@ -60,16 +60,15 @@ export class RegisterComponent implements OnInit {
     const confirmPassword = new FormControl('', CustomValidators.equalTo(password));
 
     this._socketService.onEvent(SocketEvent.MAGIC_LOGIN_RESULT)
-    .subscribe((message: Message) => {
-      this.handleSameTabMagicLogin(message.serverPayload);
-    });
+      .subscribe((message: Message) => {
+        this.handleSameTabMagicLogin(message.serverPayload);
+      });
 
     this.searchService.eventTypes().then((types: string[]) => {
       this.eventsList = types;
     }).then(() => this.searchService.genres().then((types: string[]) => {
       this.genresList = types;
     }));
-    // TODO: remove second group's properties
     this.signupForm = new FormGroup({
       firstName: new FormControl('', Validators.required),
       lastName: new FormControl('', Validators.required),
@@ -129,7 +128,6 @@ export class RegisterComponent implements OnInit {
 
     this.socialAuthService.signIn(socialPlatformProvider).then(
       (userData) => {
-
         // Verify the token and get payload
         this.userService.verifyGoogleSocialIdToken(userData.idToken).subscribe(
           (payload: any) => {
@@ -153,7 +151,6 @@ export class RegisterComponent implements OnInit {
   }
 
   signup() {
-
     const signupData = this.signupForm.value;
     const preferencesData = this.preferencesFormGroup.value;
 
@@ -197,11 +194,6 @@ export class RegisterComponent implements OnInit {
       this.user.state = 'UT';
 
     }
-
-    // this.submitButton.disabled = true;
-    // this.progressBar.mode = 'indeterminate';
-
-
     // Add the user to DB, and if successful, send a magic link to email
     this.userService.signupUser(this.user).subscribe(
       (data: any) => {
@@ -227,7 +219,6 @@ export class RegisterComponent implements OnInit {
               this.error = false;
               this.isMagicLinkBeingSent = false;
               this.wasMagicLinkSuccessfullySent = true;
-              // this.progressBar.mode = 'determinate';
             },
             (error) => {
               this.errorHandler(error);
@@ -246,7 +237,6 @@ export class RegisterComponent implements OnInit {
     this.error = true;
     this.isMagicLinkBeingSent = false;
     this.wasMagicLinkSuccessfullySent = false;
-    // this.progressBar.mode = 'determinate';
   }
 
   handleSameTabMagicLogin(result) {
