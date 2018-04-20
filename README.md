@@ -21,6 +21,10 @@ Download and unzip `localbeats.zip`
 cd <unzipped directory>
 ```
 
+```
+cd localbeats
+```
+
 Install the dependencies
 
 ```
@@ -64,6 +68,6 @@ This projcet is deployed to [localbeats.live](https://www.localbeats.live) via H
 *  **Snehashish Mishra** 
 *  **Nick Porter**
 
-## Acknowledgments
+## Notes
 
-* To the course staff for pushing us do our best work.
+* Redirects from Stripe and other services may not work since the app is running on localhost.
