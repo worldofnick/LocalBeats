@@ -23,6 +23,10 @@ cd <unzipped directory>
 
 ```
 cd localbeats
+
+Install the [Angular CLI](https://github.com/angular/angular-cli#installation)
+```
+npm install -g @angular/cli
 ```
 
 Install the dependencies
